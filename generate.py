@@ -35,7 +35,7 @@ ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
 # TA_MAType enums
-Sma, Ema, Wma, Dema, Tema, Trima, Kama, Mama, T3 = range(9)
+SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
 
 RetCodes = {
   0 : "Success",
@@ -63,13 +63,31 @@ RetCodes = {
 cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
     TA_RetCode TA_Initialize()
-    TA_RetCode TA_Shutdown()"""
+    TA_RetCode TA_Shutdown()
+    char *TA_GetVersionString()"""
 
 # ! can't use const in function declaration (cython 0.12 restriction)
 # just removing them does the trick
 for f in functions:
-    print '    %s' % f.replace('const', '').replace(';', '').replace('void', '')
+    f = f.replace('const', '')
+    f = f.replace(';', '')
+    f = f.replace('void', '')
+    f = f.strip()
+    print '    %s' % f
 print
+
+print """
+__version__ = TA_GetVersionString()
+"""
+
+# cleanup variable names to make them more pythonic
+def cleanup(name):
+    if name.startswith('in'):
+        return name[2:].lower()
+    elif name.startswith('optIn'):
+        return name[5:].lower()
+    else:
+        return name.lower()
 
 # print functions
 names = []
@@ -100,10 +118,12 @@ for f in functions:
         i += 1
 
         if var.endswith('[]'):
+            var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray[np.float_t, ndim=1] %s' % var[:-2],
+            print 'np.ndarray[np.float_t, ndim=1] %s' % var,
 
         elif var.startswith('opt'):
+            var = cleanup(var)
             if arg.startswith('double'):
                 print '%s=-4e37' % var,  # TA_REAL_DEFAULT
             elif arg.startswith('int'):
@@ -115,11 +135,12 @@ for f in functions:
 
     print '):'
 
-    print '    cdef int startIdx = 0'
+    print '    cdef int startidx = 0'
     for arg in args:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
-            print '    cdef int endIdx = %s.shape[0] - 1' % var[:-2]
+            var = cleanup(var[:-2])
+            print '    cdef int endidx = %s.shape[0] - 1' % var
             break
 
     print '    cdef int lookback = %s_Lookback(' % name,
@@ -127,14 +148,14 @@ for f in functions:
     for i, opt in enumerate(opts):
         if i > 0:
             print ',',
-        print opt.split()[-1],
+        print cleanup(opt.split()[-1]),
     print ')'
-    print '    cdef int temp = max(lookback, startIdx )'
-    print '    cdef int allocationSize'
-    print '    if ( temp > endIdx ):'
-    print '        allocationSize = 0'
+    print '    cdef int temp = max(lookback, startidx )'
+    print '    cdef int allocation'
+    print '    if ( temp > endidx ):'
+    print '        allocation = 0'
     print '    else:'
-    print '        allocationSize = endIdx - temp + 1'
+    print '        allocation = endidx - temp + 1'
 
     for arg in args:
         var = arg.split()[-1]
@@ -143,16 +164,18 @@ for f in functions:
             continue
 
         if var.endswith('[]'):
+            var = cleanup(var[:-2])
             if 'double' in arg:
                 vartype = 'np.float_t'
             elif 'int' in arg:
                 vartype = 'np.int_t'
             else:
                 assert False, args
-            print '    cdef np.ndarray[%s, ndim=1] %s = numpy.zeros(allocationSize)' % (vartype, var[:-2])
+            print '    cdef np.ndarray[%s, ndim=1] %s = numpy.zeros(allocation)' % (vartype, var)
 
         elif var.startswith('*'):
-            print '    cdef int %s' % var[1:]
+            var = cleanup(var[1:])
+            print '    cdef int %s' % var
 
         else:
             assert False, arg
@@ -168,18 +191,20 @@ for f in functions:
         var = arg.split()[-1]
 
         if var.endswith('[]'):
+            var = cleanup(var[:-2])
             if 'double' in arg:
-                print '<double *>%s.data' % var[:-2],
+                print '<double *>%s.data' % var,
             elif 'int' in arg:
-                print '<int *>%s.data' % var[:-2],
+                print '<int *>%s.data' % var,
             else:
                 assert False, arg
 
         elif var.startswith('*'):
-            print '&%s' % var[1:],
+            var = cleanup(var[1:])
+            print '&%s' % var,
 
         else:
-            print var,
+            print cleanup(var),
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
@@ -198,7 +223,7 @@ for f in functions:
             if i > 0:
                 print ',',
             i += 1
-            print var,
+            print cleanup(var),
         else:
             assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
     print ')'
