@@ -8,11 +8,12 @@ TEST_LEN = 1000
 r = numpy.arange(TEST_LEN)
 idata = numpy.random.random((TEST_LEN))
 
-(bidx, elements, odata) = talib.moving_average(idata)
+#(bidx, elements, odata) = talib.ACOS(idata)
+(bidx, elements, odata) = talib.MA(idata)
 
-(bidx, elements, upper, middle, lower) = talib.bollinger_bands(idata)
+(bidx, elements, upper, middle, lower) = talib.BBANDS(idata)
 
-(bidx, elements, kama) = talib.kama(idata)
+(bidx, elements, kama) = talib.KAMA(idata)
 
 pylab.plot(r, idata, 'b-', label="original")
 pylab.plot(r, odata, 'g-', label="MA")
