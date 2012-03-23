@@ -1,6 +1,6 @@
 # TA-Lib
 
-From [TA-LIB‘s](http://ta-lib.org) homepage:
+From [TA-LIB's](http://ta-lib.org) homepage:
 
 > TA-Lib is widely used by trading software developers requiring to perform
 > technical analysis of financial market data.

@@ -5,6 +5,7 @@ import re
 # FIXME: should we check retCode from initialize and shutdown?
 # FIXME: should we pass startIdx and endIdx into function?
 # FIXME: should we parse the function docstrings from the c header?
+# FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
 with open('/usr/local/include/ta-lib/ta_func.h') as f:
