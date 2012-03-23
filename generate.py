@@ -4,6 +4,7 @@ import re
 # FIXME: initialize once, then shutdown at the end, rather than each call?
 # FIXME: should we check retCode from initialize and shutdown?
 # FIXME: should we pass startIdx and endIdx into function?
+# FIXME: should we parse the function docstrings from the c header?
 
 functions = []
 with open('/usr/local/include/ta-lib/ta_func.h') as f:
