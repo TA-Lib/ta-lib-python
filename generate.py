@@ -1,7 +1,8 @@
 
 import re
 
-# fixme: use lookback to do exact allocations
+# FIXME: initialize once, then shutdown at the end, rather than each call?
+# FIXME: should we check retCode from initialize and shutdown?
 
 functions = []
 with open('/usr/local/include/ta-lib/ta_func.h') as f:
@@ -34,10 +35,6 @@ cimport numpy as np
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
-cdef struct TA_RetCodeInfo:
-    char *enumStr
-    char *infoStr
-
 # TA_MAType enums
 MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
 
@@ -46,8 +43,7 @@ cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()
-    char *TA_GetVersionString()
-    void TA_SetRetCodeInfo( TA_RetCode theRetCode, TA_RetCodeInfo *retCodeInfo )"""
+    char *TA_GetVersionString()"""
 
 # ! can't use const in function declaration (cython 0.12 restriction)
 # just removing them does the trick
@@ -163,11 +159,7 @@ for f in functions:
         else:
             assert False, arg
 
-    print '    cdef TA_RetCodeInfo info'
-    print '    retCode = TA_Initialize()'
-    print '    if retCode != TA_SUCCESS:'
-    print '        TA_SetRetCodeInfo(retCode, &info)'
-    print '        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))'
+    print '    TA_Initialize()'
     print '    retCode = %s(' % name,
 
     for i, arg in enumerate(args):
@@ -193,8 +185,7 @@ for f in functions:
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
-    print '        TA_SetRetCodeInfo(retCode, &info)'
-    print '        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))'
+    print '        raise Exception("%d" % retCode)'
     print '    TA_Shutdown()'
 
     print '    return (',

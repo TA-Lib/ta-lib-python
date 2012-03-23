@@ -3,12 +3,17 @@ import pylab
 
 import talib
 
-TEST_LEN = 1000
+TEST_LEN = 10000
 
 r = numpy.arange(TEST_LEN)
 idata = numpy.random.random((TEST_LEN))
 
-(bidx, elements, odata) = talib.MA(idata)
+import time
+t0 = time.time()
+for i in range(1000):
+    (bidx, elements, odata) = talib.MA(idata)
+t1 = time.time()
+print '%.6f' % ((t1 - t0) / 1000.)
 
 (bidx, elements, upper, middle, lower) = talib.BBANDS(idata)
 
