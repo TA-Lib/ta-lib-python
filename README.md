@@ -11,8 +11,9 @@ From [TA-LIB's](http://ta-lib.org) homepage:
 > * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
 Unfortunately, the included Python bindings use SWIG, are a little difficult
-to install, and aren't as efficient as they could be.  This project uses
-Cython and Numpy to efficiently and cleanly bind to TA-Lib.
+to install (particularly on Mac OS X), and aren't as efficient as they could
+be.  This project uses Cython and Numpy to efficiently and cleanly bind to
+TA-Lib -- producing results 2-4 times faster than the SWIG interface.
 
 ## Example
 
