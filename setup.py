@@ -31,7 +31,6 @@ setup(
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
     download_url = 'http://github.com/mrjbq7/ta-lib/zipball/master#egg=TA-Lib-0.4.0',
-    packages=['talib'],
     classifiers = [
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering :: Mathematics",
