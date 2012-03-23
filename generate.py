@@ -355,13 +355,14 @@ for f in functions:
         elif var.startswith('*'):
             var = var[1:]
         if var.startswith('out'):
-            if i > 0:
-                print ',',
-            i += 1
-            print cleanup(var),
+            if var != "outNBElement":
+                if i > 0:
+                    print ',',
+                i += 1
+                print cleanup(var),
         else:
             assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
     print ')'
     print
 
-print '__all__ = [%s]' % ','.join(names)
+print '__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names])

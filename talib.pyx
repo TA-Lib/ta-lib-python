@@ -353,7 +353,7 @@ def ACOS( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume ):
     """AD(high, low, close, volume)
@@ -376,7 +376,7 @@ def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     """ADD(real0, real1)"""
@@ -397,7 +397,7 @@ def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , fastperiod=-2**31 , slowperiod=-2**31 ):
     """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
@@ -420,7 +420,7 @@ def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """ADX(high, low, close[, timeperiod=?])
@@ -443,7 +443,7 @@ def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """ADXR(high, low, close[, timeperiod=?])
@@ -466,7 +466,7 @@ def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
     """APO(real[, fastperiod=?, slowperiod=?, matype=?])
@@ -489,7 +489,7 @@ def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     """AROON(high, low[, timeperiod=?])
@@ -513,7 +513,7 @@ def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outaroondown , outaroonup )
+    return ( outbegidx , outaroondown , outaroonup )
 
 def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     """AROONOSC(high, low[, timeperiod=?])
@@ -536,7 +536,7 @@ def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ASIN( np.ndarray[np.float_t, ndim=1] real ):
     """ASIN(real)"""
@@ -557,7 +557,7 @@ def ASIN( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ATAN( np.ndarray[np.float_t, ndim=1] real ):
     """ATAN(real)"""
@@ -578,7 +578,7 @@ def ATAN( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """ATR(high, low, close[, timeperiod=?])
@@ -601,7 +601,7 @@ def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """AVGPRICE(open, high, low, close)
@@ -624,7 +624,7 @@ def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4e37 , nbdevdn=-4e37 , matype=0 ):
     """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
@@ -649,7 +649,7 @@ def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outrealupperband , outrealmiddleband , outreallowerband )
+    return ( outbegidx , outrealupperband , outrealmiddleband , outreallowerband )
 
 def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
     """BETA(real0, real1[, timeperiod=?])
@@ -672,7 +672,7 @@ def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """BOP(open, high, low, close)
@@ -695,7 +695,7 @@ def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] hi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """CCI(high, low, close[, timeperiod=?])
@@ -718,7 +718,7 @@ def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL2CROWS(open, high, low, close)
@@ -741,7 +741,7 @@ def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3BLACKCROWS(open, high, low, close)
@@ -764,7 +764,7 @@ def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3INSIDE(open, high, low, close)
@@ -787,7 +787,7 @@ def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3LINESTRIKE(open, high, low, close)
@@ -810,7 +810,7 @@ def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3OUTSIDE(open, high, low, close)
@@ -833,7 +833,7 @@ def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3STARSINSOUTH(open, high, low, close)
@@ -856,7 +856,7 @@ def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDL3WHITESOLDIERS(open, high, low, close)
@@ -879,7 +879,7 @@ def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
@@ -902,7 +902,7 @@ def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLADVANCEBLOCK(open, high, low, close)
@@ -925,7 +925,7 @@ def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLBELTHOLD(open, high, low, close)
@@ -948,7 +948,7 @@ def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLBREAKAWAY(open, high, low, close)
@@ -971,7 +971,7 @@ def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLCLOSINGMARUBOZU(open, high, low, close)
@@ -994,7 +994,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLCONCEALBABYSWALL(open, high, low, close)
@@ -1017,7 +1017,7 @@ def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLCOUNTERATTACK(open, high, low, close)
@@ -1040,7 +1040,7 @@ def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
@@ -1063,7 +1063,7 @@ def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLDOJI(open, high, low, close)
@@ -1086,7 +1086,7 @@ def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLDOJISTAR(open, high, low, close)
@@ -1109,7 +1109,7 @@ def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLDRAGONFLYDOJI(open, high, low, close)
@@ -1132,7 +1132,7 @@ def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLENGULFING(open, high, low, close)
@@ -1155,7 +1155,7 @@ def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
@@ -1178,7 +1178,7 @@ def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
@@ -1201,7 +1201,7 @@ def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLGAPSIDESIDEWHITE(open, high, low, close)
@@ -1224,7 +1224,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLGRAVESTONEDOJI(open, high, low, close)
@@ -1247,7 +1247,7 @@ def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHAMMER(open, high, low, close)
@@ -1270,7 +1270,7 @@ def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHANGINGMAN(open, high, low, close)
@@ -1293,7 +1293,7 @@ def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHARAMI(open, high, low, close)
@@ -1316,7 +1316,7 @@ def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHARAMICROSS(open, high, low, close)
@@ -1339,7 +1339,7 @@ def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHIGHWAVE(open, high, low, close)
@@ -1362,7 +1362,7 @@ def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHIKKAKE(open, high, low, close)
@@ -1385,7 +1385,7 @@ def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHIKKAKEMOD(open, high, low, close)
@@ -1408,7 +1408,7 @@ def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLHOMINGPIGEON(open, high, low, close)
@@ -1431,7 +1431,7 @@ def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLIDENTICAL3CROWS(open, high, low, close)
@@ -1454,7 +1454,7 @@ def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLINNECK(open, high, low, close)
@@ -1477,7 +1477,7 @@ def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLINVERTEDHAMMER(open, high, low, close)
@@ -1500,7 +1500,7 @@ def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLKICKING(open, high, low, close)
@@ -1523,7 +1523,7 @@ def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLKICKINGBYLENGTH(open, high, low, close)
@@ -1546,7 +1546,7 @@ def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLLADDERBOTTOM(open, high, low, close)
@@ -1569,7 +1569,7 @@ def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLLONGLEGGEDDOJI(open, high, low, close)
@@ -1592,7 +1592,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLLONGLINE(open, high, low, close)
@@ -1615,7 +1615,7 @@ def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLMARUBOZU(open, high, low, close)
@@ -1638,7 +1638,7 @@ def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLMATCHINGLOW(open, high, low, close)
@@ -1661,7 +1661,7 @@ def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLMATHOLD(open, high, low, close[, penetration=?])
@@ -1684,7 +1684,7 @@ def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
@@ -1707,7 +1707,7 @@ def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
@@ -1730,7 +1730,7 @@ def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLONNECK(open, high, low, close)
@@ -1753,7 +1753,7 @@ def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLPIERCING(open, high, low, close)
@@ -1776,7 +1776,7 @@ def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLRICKSHAWMAN(open, high, low, close)
@@ -1799,7 +1799,7 @@ def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLRISEFALL3METHODS(open, high, low, close)
@@ -1822,7 +1822,7 @@ def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSEPARATINGLINES(open, high, low, close)
@@ -1845,7 +1845,7 @@ def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSHOOTINGSTAR(open, high, low, close)
@@ -1868,7 +1868,7 @@ def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSHORTLINE(open, high, low, close)
@@ -1891,7 +1891,7 @@ def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSPINNINGTOP(open, high, low, close)
@@ -1914,7 +1914,7 @@ def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSTALLEDPATTERN(open, high, low, close)
@@ -1937,7 +1937,7 @@ def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLSTICKSANDWICH(open, high, low, close)
@@ -1960,7 +1960,7 @@ def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLTAKURI(open, high, low, close)
@@ -1983,7 +1983,7 @@ def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLTASUKIGAP(open, high, low, close)
@@ -2006,7 +2006,7 @@ def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLTHRUSTING(open, high, low, close)
@@ -2029,7 +2029,7 @@ def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLTRISTAR(open, high, low, close)
@@ -2052,7 +2052,7 @@ def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLUNIQUE3RIVER(open, high, low, close)
@@ -2075,7 +2075,7 @@ def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLUPSIDEGAP2CROWS(open, high, low, close)
@@ -2098,7 +2098,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """CDLXSIDEGAP3METHODS(open, high, low, close)
@@ -2121,7 +2121,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def CEIL( np.ndarray[np.float_t, ndim=1] real ):
     """CEIL(real)"""
@@ -2142,7 +2142,7 @@ def CEIL( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """CMO(real[, timeperiod=?])
@@ -2165,7 +2165,7 @@ def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
     """CORREL(real0, real1[, timeperiod=?])
@@ -2188,7 +2188,7 @@ def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def COS( np.ndarray[np.float_t, ndim=1] real ):
     """COS(real)"""
@@ -2209,7 +2209,7 @@ def COS( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def COSH( np.ndarray[np.float_t, ndim=1] real ):
     """COSH(real)"""
@@ -2230,7 +2230,7 @@ def COSH( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """DEMA(real[, timeperiod=?])
@@ -2253,7 +2253,7 @@ def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     """DIV(real0, real1)"""
@@ -2274,7 +2274,7 @@ def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """DX(high, low, close[, timeperiod=?])
@@ -2297,7 +2297,7 @@ def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """EMA(real[, timeperiod=?])
@@ -2320,7 +2320,7 @@ def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def EXP( np.ndarray[np.float_t, ndim=1] real ):
     """EXP(real)"""
@@ -2341,7 +2341,7 @@ def EXP( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
     """FLOOR(real)"""
@@ -2362,7 +2362,7 @@ def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
     """HT_DCPERIOD(real)
@@ -2385,7 +2385,7 @@ def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
     """HT_DCPHASE(real)
@@ -2408,7 +2408,7 @@ def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
     """HT_PHASOR(real)
@@ -2432,7 +2432,7 @@ def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinphase , outquadrature )
+    return ( outbegidx , outinphase , outquadrature )
 
 def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
     """HT_SINE(real)
@@ -2456,7 +2456,7 @@ def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outsine , outleadsine )
+    return ( outbegidx , outsine , outleadsine )
 
 def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
     """HT_TRENDLINE(real)
@@ -2479,7 +2479,7 @@ def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
     """HT_TRENDMODE(real)
@@ -2502,7 +2502,7 @@ def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """KAMA(real[, timeperiod=?])
@@ -2525,7 +2525,7 @@ def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """LINEARREG(real[, timeperiod=?])
@@ -2548,7 +2548,7 @@ def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """LINEARREG_ANGLE(real[, timeperiod=?])
@@ -2571,7 +2571,7 @@ def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """LINEARREG_INTERCEPT(real[, timeperiod=?])
@@ -2594,7 +2594,7 @@ def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """LINEARREG_SLOPE(real[, timeperiod=?])
@@ -2617,7 +2617,7 @@ def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LN( np.ndarray[np.float_t, ndim=1] real ):
     """LN(real)"""
@@ -2638,7 +2638,7 @@ def LN( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def LOG10( np.ndarray[np.float_t, ndim=1] real ):
     """LOG10(real)"""
@@ -2659,7 +2659,7 @@ def LOG10( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     """MA(real[, timeperiod=?, matype=?])
@@ -2682,7 +2682,7 @@ def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , signalperiod=-2**31 ):
     """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
@@ -2707,7 +2707,7 @@ def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
+    return ( outbegidx , outmacd , outmacdsignal , outmacdhist )
 
 def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatype=0 , slowperiod=-2**31 , slowmatype=0 , signalperiod=-2**31 , signalmatype=0 ):
     """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
@@ -2732,7 +2732,7 @@ def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatyp
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
+    return ( outbegidx , outmacd , outmacdsignal , outmacdhist )
 
 def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     """MACDFIX(real[, signalperiod=?])
@@ -2757,7 +2757,7 @@ def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
+    return ( outbegidx , outmacd , outmacdsignal , outmacdhist )
 
 def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e37 ):
     """MAMA(real[, fastlimit=?, slowlimit=?])
@@ -2781,7 +2781,7 @@ def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e3
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outmama , outfama )
+    return ( outbegidx , outmama , outfama )
 
 def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] periods , minperiod=-2**31 , maxperiod=-2**31 , matype=0 ):
     """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
@@ -2802,7 +2802,7 @@ def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] p
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MAX(real[, timeperiod=?])
@@ -2825,7 +2825,7 @@ def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MAXINDEX(real[, timeperiod=?])
@@ -2848,7 +2848,7 @@ def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low ):
     """MEDPRICE(high, low)
@@ -2871,7 +2871,7 @@ def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , timeperiod=-2**31 ):
     """MFI(high, low, close, volume[, timeperiod=?])
@@ -2894,7 +2894,7 @@ def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MIDPOINT(real[, timeperiod=?])
@@ -2917,7 +2917,7 @@ def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     """MIDPRICE(high, low[, timeperiod=?])
@@ -2940,7 +2940,7 @@ def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MIN(real[, timeperiod=?])
@@ -2963,7 +2963,7 @@ def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MININDEX(real[, timeperiod=?])
@@ -2986,7 +2986,7 @@ def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outinteger )
+    return ( outbegidx , outinteger )
 
 def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MINMAX(real[, timeperiod=?])
@@ -3010,7 +3010,7 @@ def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outmin , outmax )
+    return ( outbegidx , outmin , outmax )
 
 def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MINMAXINDEX(real[, timeperiod=?])
@@ -3034,7 +3034,7 @@ def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outminidx , outmaxidx )
+    return ( outbegidx , outminidx , outmaxidx )
 
 def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """MINUS_DI(high, low, close[, timeperiod=?])
@@ -3057,7 +3057,7 @@ def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     """MINUS_DM(high, low[, timeperiod=?])
@@ -3080,7 +3080,7 @@ def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """MOM(real[, timeperiod=?])
@@ -3103,7 +3103,7 @@ def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     """MULT(real0, real1)"""
@@ -3124,7 +3124,7 @@ def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """NATR(high, low, close[, timeperiod=?])
@@ -3147,7 +3147,7 @@ def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] volume ):
     """OBV(real, volume)
@@ -3170,7 +3170,7 @@ def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] vo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """PLUS_DI(high, low, close[, timeperiod=?])
@@ -3193,7 +3193,7 @@ def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     """PLUS_DM(high, low[, timeperiod=?])
@@ -3216,7 +3216,7 @@ def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
     """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
@@ -3239,7 +3239,7 @@ def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """ROC(real[, timeperiod=?])
@@ -3262,7 +3262,7 @@ def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """ROCP(real[, timeperiod=?])
@@ -3285,7 +3285,7 @@ def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """ROCR(real[, timeperiod=?])
@@ -3308,7 +3308,7 @@ def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """ROCR100(real[, timeperiod=?])
@@ -3331,7 +3331,7 @@ def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """RSI(real[, timeperiod=?])
@@ -3354,7 +3354,7 @@ def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , acceleration=-4e37 , maximum=-4e37 ):
     """SAR(high, low[, acceleration=?, maximum=?])
@@ -3377,7 +3377,7 @@ def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , startvalue=-4e37 , offsetonreverse=-4e37 , accelerationinitlong=-4e37 , accelerationlong=-4e37 , accelerationmaxlong=-4e37 , accelerationinitshort=-4e37 , accelerationshort=-4e37 , accelerationmaxshort=-4e37 ):
     """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
@@ -3400,7 +3400,7 @@ def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SIN( np.ndarray[np.float_t, ndim=1] real ):
     """SIN(real)"""
@@ -3421,7 +3421,7 @@ def SIN( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SINH( np.ndarray[np.float_t, ndim=1] real ):
     """SINH(real)"""
@@ -3442,7 +3442,7 @@ def SINH( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """SMA(real[, timeperiod=?])
@@ -3465,7 +3465,7 @@ def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SQRT( np.ndarray[np.float_t, ndim=1] real ):
     """SQRT(real)"""
@@ -3486,7 +3486,7 @@ def SQRT( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
     """STDDEV(real[, timeperiod=?, nbdev=?])
@@ -3509,7 +3509,7 @@ def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e3
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , slowk_period=-2**31 , slowk_matype=0 , slowd_period=-2**31 , slowd_matype=0 ):
     """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
@@ -3533,7 +3533,7 @@ def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outslowk , outslowd )
+    return ( outbegidx , outslowk , outslowd )
 
 def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
     """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -3557,7 +3557,7 @@ def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outfastk , outfastd )
+    return ( outbegidx , outfastk , outfastd )
 
 def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
     """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -3581,7 +3581,7 @@ def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_pe
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outfastk , outfastd )
+    return ( outbegidx , outfastk , outfastd )
 
 def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     """SUB(real0, real1)"""
@@ -3602,7 +3602,7 @@ def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """SUM(real[, timeperiod=?])
@@ -3625,7 +3625,7 @@ def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 ):
     """T3(real[, timeperiod=?, vfactor=?])
@@ -3648,7 +3648,7 @@ def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TAN( np.ndarray[np.float_t, ndim=1] real ):
     """TAN(real)"""
@@ -3669,7 +3669,7 @@ def TAN( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TANH( np.ndarray[np.float_t, ndim=1] real ):
     """TANH(real)"""
@@ -3690,7 +3690,7 @@ def TANH( np.ndarray[np.float_t, ndim=1] real ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """TEMA(real[, timeperiod=?])
@@ -3713,7 +3713,7 @@ def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """TRANGE(high, low, close)
@@ -3736,7 +3736,7 @@ def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """TRIMA(real[, timeperiod=?])
@@ -3759,7 +3759,7 @@ def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """TRIX(real[, timeperiod=?])
@@ -3782,7 +3782,7 @@ def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """TSF(real[, timeperiod=?])
@@ -3805,7 +3805,7 @@ def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """TYPPRICE(high, low, close)
@@ -3828,7 +3828,7 @@ def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod1=-2**31 , timeperiod2=-2**31 , timeperiod3=-2**31 ):
     """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
@@ -3851,7 +3851,7 @@ def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
     """VAR(real[, timeperiod=?, nbdev=?])
@@ -3874,7 +3874,7 @@ def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 )
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     """WCLPRICE(high, low, close)
@@ -3897,7 +3897,7 @@ def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     """WILLR(high, low, close[, timeperiod=?])
@@ -3920,7 +3920,7 @@ def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
 def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     """WMA(real[, timeperiod=?])
@@ -3943,6 +3943,6 @@ def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     if retCode != TA_SUCCESS:
         raise Exception("%d" % retCode)
     TA_Shutdown()
-    return ( outbegidx , outnbelement , outreal )
+    return ( outbegidx , outreal )
 
-__all__ = [ACOS,AD,ADD,ADOSC,ADX,ADXR,APO,AROON,AROONOSC,ASIN,ATAN,ATR,AVGPRICE,BBANDS,BETA,BOP,CCI,CDL2CROWS,CDL3BLACKCROWS,CDL3INSIDE,CDL3LINESTRIKE,CDL3OUTSIDE,CDL3STARSINSOUTH,CDL3WHITESOLDIERS,CDLABANDONEDBABY,CDLADVANCEBLOCK,CDLBELTHOLD,CDLBREAKAWAY,CDLCLOSINGMARUBOZU,CDLCONCEALBABYSWALL,CDLCOUNTERATTACK,CDLDARKCLOUDCOVER,CDLDOJI,CDLDOJISTAR,CDLDRAGONFLYDOJI,CDLENGULFING,CDLEVENINGDOJISTAR,CDLEVENINGSTAR,CDLGAPSIDESIDEWHITE,CDLGRAVESTONEDOJI,CDLHAMMER,CDLHANGINGMAN,CDLHARAMI,CDLHARAMICROSS,CDLHIGHWAVE,CDLHIKKAKE,CDLHIKKAKEMOD,CDLHOMINGPIGEON,CDLIDENTICAL3CROWS,CDLINNECK,CDLINVERTEDHAMMER,CDLKICKING,CDLKICKINGBYLENGTH,CDLLADDERBOTTOM,CDLLONGLEGGEDDOJI,CDLLONGLINE,CDLMARUBOZU,CDLMATCHINGLOW,CDLMATHOLD,CDLMORNINGDOJISTAR,CDLMORNINGSTAR,CDLONNECK,CDLPIERCING,CDLRICKSHAWMAN,CDLRISEFALL3METHODS,CDLSEPARATINGLINES,CDLSHOOTINGSTAR,CDLSHORTLINE,CDLSPINNINGTOP,CDLSTALLEDPATTERN,CDLSTICKSANDWICH,CDLTAKURI,CDLTASUKIGAP,CDLTHRUSTING,CDLTRISTAR,CDLUNIQUE3RIVER,CDLUPSIDEGAP2CROWS,CDLXSIDEGAP3METHODS,CEIL,CMO,CORREL,COS,COSH,DEMA,DIV,DX,EMA,EXP,FLOOR,HT_DCPERIOD,HT_DCPHASE,HT_PHASOR,HT_SINE,HT_TRENDLINE,HT_TRENDMODE,KAMA,LINEARREG,LINEARREG_ANGLE,LINEARREG_INTERCEPT,LINEARREG_SLOPE,LN,LOG10,MA,MACD,MACDEXT,MACDFIX,MAMA,MAVP,MAX,MAXINDEX,MEDPRICE,MFI,MIDPOINT,MIDPRICE,MIN,MININDEX,MINMAX,MINMAXINDEX,MINUS_DI,MINUS_DM,MOM,MULT,NATR,OBV,PLUS_DI,PLUS_DM,PPO,ROC,ROCP,ROCR,ROCR100,RSI,SAR,SAREXT,SIN,SINH,SMA,SQRT,STDDEV,STOCH,STOCHF,STOCHRSI,SUB,SUM,T3,TAN,TANH,TEMA,TRANGE,TRIMA,TRIX,TSF,TYPPRICE,ULTOSC,VAR,WCLPRICE,WILLR,WMA]
+__all__ = ["ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMO","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","OBV","PLUS_DI","PLUS_DM","PPO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","WCLPRICE","WILLR","WMA"]
