@@ -1,15 +1,18 @@
 # TA-Lib
 
-TA-Lib is widely used by trading software developers requiring to perform
-technical analysis of financial market data.
+From [TA-LIB‘s](http://ta-lib.org) homepage:
 
-The library is available in C/C++, Java, Perl, Python, and .NET.
+> TA-Lib is widely used by trading software developers requiring to perform
+> technical analysis of financial market data.
 
-http://ta-lib.org/
+> * Includes 200 indicators such as ADX, MACD, RSI, Stochastic, Bollinger
+>   Bands, etc.
+> * Candlestick pattern recognition
+> * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
-Unfortunately, the included Python bindings use SWIG and are a little
-difficult to install.  This project uses Cython and Numpy to efficiently and
-cleanly bind to TA-Lib.
+Unfortunately, the included Python bindings use SWIG, are a little difficult
+to install, and aren't as efficient as they could be.  This project uses
+Cython and Numpy to efficiently and cleanly bind to TA-Lib.
 
 ## Example
 
@@ -36,8 +39,7 @@ i, n, upper, middle, lower = talib.BBANDS(input)
 
 ## Indicators
 
-Includes over 200 indicators such as ADX, MACD, RSI, Stochastic, Bollinger
-Bands as well as candlestick pattern recognition:
+Some of the included indicators:
 
 ```
 AD                  Chaikin A/D Line
