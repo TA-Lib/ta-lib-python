@@ -5,30 +5,12 @@ cimport numpy as np
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
-# TA_MAType enums
-SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
+cdef struct TA_RetCodeInfo:
+    char *enumStr
+    char *infoStr
 
-RetCodes = {
-  0 : "Success",
-  1 : "LibNotInitialize",
-  2 : "BadParam",
-  3 : "AllocErr",
-  4 : "GroupNotFound",
-  5 : "FuncNotFound",
-  6 : "InvalidHandle",
-  7 : "InvalidParamHolder",
-  8 : "InvalidParamHolderType",
-  9 : "InvalidParamFunction",
-  10 : "InputNotAllInitialize",
-  11 : "OutputNotAllInitialize",
-  12 : "OutOfRangeStartIndex",
-  13 : "OutOfRangeEndIndex",
-  14 : "InvalidListType",
-  15 : "BadObject",
-  16 : "NotSupported",
-  5000 : "InternalError",
-  0xFFFF : "UnknownErr",
-}
+# TA_MAType enums
+MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
@@ -36,6 +18,8 @@ cdef extern from "ta_libc.h":
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()
     char *TA_GetVersionString()
+    void TA_SetRetCodeInfo( TA_RetCode theRetCode, TA_RetCodeInfo *retCodeInfo )
+    
     TA_RetCode TA_ACOS( int startIdx, int endIdx,  double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_ACOS_Lookback(  )
     TA_RetCode TA_AD( int startIdx, int endIdx,  double inHigh[],  double inLow[],  double inClose[],  double inVolume[], int *outBegIdx, int *outNBElement, double outReal[] )
@@ -356,7 +340,7 @@ cdef extern from "ta_libc.h":
 
 __version__ = TA_GetVersionString()
 
-def acos( np.ndarray[np.float_t, ndim=1] real ):
+def ACOS( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ACOS_Lookback( )
@@ -369,16 +353,19 @@ def acos( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ACOS( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ad( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume ):
+def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AD_Lookback( )
@@ -391,16 +378,19 @@ def ad( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_AD( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def add( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_ADD_Lookback( )
@@ -413,16 +403,19 @@ def add( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ADD( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def adosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , fastperiod=-2**31 , slowperiod=-2**31 ):
+def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , fastperiod=-2**31 , slowperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADOSC_Lookback( fastperiod , slowperiod )
@@ -435,16 +428,19 @@ def adosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ADOSC( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def adx( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADX_Lookback( timeperiod )
@@ -457,16 +453,19 @@ def adx( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ADX( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def adxr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADXR_Lookback( timeperiod )
@@ -479,16 +478,19 @@ def adxr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ADXR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def apo( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
+def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_APO_Lookback( fastperiod , slowperiod , matype )
@@ -501,16 +503,19 @@ def apo( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_APO( startidx , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def aroon( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AROON_Lookback( timeperiod )
@@ -524,16 +529,19 @@ def aroon( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outaroondown = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outaroonup = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_AROON( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data , <double *>outaroonup.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outaroondown , outaroonup )
 
-def aroonosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AROONOSC_Lookback( timeperiod )
@@ -546,16 +554,19 @@ def aroonosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_AROONOSC( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def asin( np.ndarray[np.float_t, ndim=1] real ):
+def ASIN( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ASIN_Lookback( )
@@ -568,16 +579,19 @@ def asin( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ASIN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def atan( np.ndarray[np.float_t, ndim=1] real ):
+def ATAN( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ATAN_Lookback( )
@@ -590,16 +604,19 @@ def atan( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ATAN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def atr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ATR_Lookback( timeperiod )
@@ -612,16 +629,19 @@ def atr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ATR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def avgprice( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AVGPRICE_Lookback( )
@@ -634,16 +654,19 @@ def avgprice( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_AVGPRICE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def bbands( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4e37 , nbdevdn=-4e37 , matype=0 ):
+def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4e37 , nbdevdn=-4e37 , matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
@@ -658,16 +681,19 @@ def bbands( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4
     cdef np.ndarray[np.float_t, ndim=1] outrealupperband = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outrealmiddleband = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outreallowerband = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_BBANDS( startidx , endidx , <double *>real.data , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data , <double *>outrealmiddleband.data , <double *>outreallowerband.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outrealupperband , outrealmiddleband , outreallowerband )
 
-def beta( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
+def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_BETA_Lookback( timeperiod )
@@ -680,16 +706,19 @@ def beta( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_BETA( startidx , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def bop( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_BOP_Lookback( )
@@ -702,16 +731,19 @@ def bop( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] hi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_BOP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def cci( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CCI_Lookback( timeperiod )
@@ -724,16 +756,19 @@ def cci( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CCI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def cdl2crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL2CROWS_Lookback( )
@@ -746,16 +781,19 @@ def cdl2crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL2CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3blackcrows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3BLACKCROWS_Lookback( )
@@ -768,16 +806,19 @@ def cdl3blackcrows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3BLACKCROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3inside( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3INSIDE_Lookback( )
@@ -790,16 +831,19 @@ def cdl3inside( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3INSIDE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3linestrike( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3LINESTRIKE_Lookback( )
@@ -812,16 +856,19 @@ def cdl3linestrike( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3LINESTRIKE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3outside( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3OUTSIDE_Lookback( )
@@ -834,16 +881,19 @@ def cdl3outside( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3OUTSIDE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3starsinsouth( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3STARSINSOUTH_Lookback( )
@@ -856,16 +906,19 @@ def cdl3starsinsouth( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3STARSINSOUTH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdl3whitesoldiers( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3WHITESOLDIERS_Lookback( )
@@ -878,16 +931,19 @@ def cdl3whitesoldiers( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDL3WHITESOLDIERS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlabandonedbaby( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLABANDONEDBABY_Lookback( penetration )
@@ -900,16 +956,19 @@ def cdlabandonedbaby( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLABANDONEDBABY( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdladvanceblock( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLADVANCEBLOCK_Lookback( )
@@ -922,16 +981,19 @@ def cdladvanceblock( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLADVANCEBLOCK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlbelthold( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLBELTHOLD_Lookback( )
@@ -944,16 +1006,19 @@ def cdlbelthold( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLBELTHOLD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlbreakaway( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLBREAKAWAY_Lookback( )
@@ -966,16 +1031,19 @@ def cdlbreakaway( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLBREAKAWAY( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlclosingmarubozu( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCLOSINGMARUBOZU_Lookback( )
@@ -988,16 +1056,19 @@ def cdlclosingmarubozu( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLCLOSINGMARUBOZU( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlconcealbabyswall( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCONCEALBABYSWALL_Lookback( )
@@ -1010,16 +1081,19 @@ def cdlconcealbabyswall( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLCONCEALBABYSWALL( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlcounterattack( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCOUNTERATTACK_Lookback( )
@@ -1032,16 +1106,19 @@ def cdlcounterattack( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLCOUNTERATTACK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdldarkcloudcover( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDARKCLOUDCOVER_Lookback( penetration )
@@ -1054,16 +1131,19 @@ def cdldarkcloudcover( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLDARKCLOUDCOVER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdldoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDOJI_Lookback( )
@@ -1076,16 +1156,19 @@ def cdldoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdldojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDOJISTAR_Lookback( )
@@ -1098,16 +1181,19 @@ def cdldojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdldragonflydoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDRAGONFLYDOJI_Lookback( )
@@ -1120,16 +1206,19 @@ def cdldragonflydoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLDRAGONFLYDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlengulfing( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLENGULFING_Lookback( )
@@ -1142,16 +1231,19 @@ def cdlengulfing( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLENGULFING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdleveningdojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLEVENINGDOJISTAR_Lookback( penetration )
@@ -1164,16 +1256,19 @@ def cdleveningdojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLEVENINGDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdleveningstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLEVENINGSTAR_Lookback( penetration )
@@ -1186,16 +1281,19 @@ def cdleveningstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLEVENINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlgapsidesidewhite( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLGAPSIDESIDEWHITE_Lookback( )
@@ -1208,16 +1306,19 @@ def cdlgapsidesidewhite( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLGAPSIDESIDEWHITE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlgravestonedoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLGRAVESTONEDOJI_Lookback( )
@@ -1230,16 +1331,19 @@ def cdlgravestonedoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLGRAVESTONEDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhammer( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHAMMER_Lookback( )
@@ -1252,16 +1356,19 @@ def cdlhammer( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHAMMER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhangingman( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHANGINGMAN_Lookback( )
@@ -1274,16 +1381,19 @@ def cdlhangingman( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHANGINGMAN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlharami( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHARAMI_Lookback( )
@@ -1296,16 +1406,19 @@ def cdlharami( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHARAMI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlharamicross( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHARAMICROSS_Lookback( )
@@ -1318,16 +1431,19 @@ def cdlharamicross( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHARAMICROSS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhighwave( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIGHWAVE_Lookback( )
@@ -1340,16 +1456,19 @@ def cdlhighwave( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHIGHWAVE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhikkake( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIKKAKE_Lookback( )
@@ -1362,16 +1481,19 @@ def cdlhikkake( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHIKKAKE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhikkakemod( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIKKAKEMOD_Lookback( )
@@ -1384,16 +1506,19 @@ def cdlhikkakemod( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHIKKAKEMOD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlhomingpigeon( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHOMINGPIGEON_Lookback( )
@@ -1406,16 +1531,19 @@ def cdlhomingpigeon( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLHOMINGPIGEON( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlidentical3crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLIDENTICAL3CROWS_Lookback( )
@@ -1428,16 +1556,19 @@ def cdlidentical3crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLIDENTICAL3CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlinneck( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLINNECK_Lookback( )
@@ -1450,16 +1581,19 @@ def cdlinneck( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLINNECK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlinvertedhammer( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLINVERTEDHAMMER_Lookback( )
@@ -1472,16 +1606,19 @@ def cdlinvertedhammer( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLINVERTEDHAMMER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlkicking( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLKICKING_Lookback( )
@@ -1494,16 +1631,19 @@ def cdlkicking( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLKICKING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlkickingbylength( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLKICKINGBYLENGTH_Lookback( )
@@ -1516,16 +1656,19 @@ def cdlkickingbylength( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLKICKINGBYLENGTH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlladderbottom( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLADDERBOTTOM_Lookback( )
@@ -1538,16 +1681,19 @@ def cdlladderbottom( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLLADDERBOTTOM( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdllongleggeddoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLONGLEGGEDDOJI_Lookback( )
@@ -1560,16 +1706,19 @@ def cdllongleggeddoji( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLLONGLEGGEDDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdllongline( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLONGLINE_Lookback( )
@@ -1582,16 +1731,19 @@ def cdllongline( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLLONGLINE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlmarubozu( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMARUBOZU_Lookback( )
@@ -1604,16 +1756,19 @@ def cdlmarubozu( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLMARUBOZU( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlmatchinglow( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMATCHINGLOW_Lookback( )
@@ -1626,16 +1781,19 @@ def cdlmatchinglow( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLMATCHINGLOW( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlmathold( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMATHOLD_Lookback( penetration )
@@ -1648,16 +1806,19 @@ def cdlmathold( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLMATHOLD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlmorningdojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMORNINGDOJISTAR_Lookback( penetration )
@@ -1670,16 +1831,19 @@ def cdlmorningdojistar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLMORNINGDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlmorningstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMORNINGSTAR_Lookback( penetration )
@@ -1692,16 +1856,19 @@ def cdlmorningstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLMORNINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlonneck( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLONNECK_Lookback( )
@@ -1714,16 +1881,19 @@ def cdlonneck( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLONNECK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlpiercing( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLPIERCING_Lookback( )
@@ -1736,16 +1906,19 @@ def cdlpiercing( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLPIERCING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlrickshawman( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLRICKSHAWMAN_Lookback( )
@@ -1758,16 +1931,19 @@ def cdlrickshawman( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLRICKSHAWMAN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlrisefall3methods( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLRISEFALL3METHODS_Lookback( )
@@ -1780,16 +1956,19 @@ def cdlrisefall3methods( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLRISEFALL3METHODS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlseparatinglines( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSEPARATINGLINES_Lookback( )
@@ -1802,16 +1981,19 @@ def cdlseparatinglines( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSEPARATINGLINES( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlshootingstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSHOOTINGSTAR_Lookback( )
@@ -1824,16 +2006,19 @@ def cdlshootingstar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSHOOTINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlshortline( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSHORTLINE_Lookback( )
@@ -1846,16 +2031,19 @@ def cdlshortline( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSHORTLINE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlspinningtop( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSPINNINGTOP_Lookback( )
@@ -1868,16 +2056,19 @@ def cdlspinningtop( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSPINNINGTOP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlstalledpattern( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSTALLEDPATTERN_Lookback( )
@@ -1890,16 +2081,19 @@ def cdlstalledpattern( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSTALLEDPATTERN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlsticksandwich( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSTICKSANDWICH_Lookback( )
@@ -1912,16 +2106,19 @@ def cdlsticksandwich( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLSTICKSANDWICH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdltakuri( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTAKURI_Lookback( )
@@ -1934,16 +2131,19 @@ def cdltakuri( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLTAKURI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdltasukigap( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTASUKIGAP_Lookback( )
@@ -1956,16 +2156,19 @@ def cdltasukigap( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLTASUKIGAP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlthrusting( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTHRUSTING_Lookback( )
@@ -1978,16 +2181,19 @@ def cdlthrusting( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLTHRUSTING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdltristar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTRISTAR_Lookback( )
@@ -2000,16 +2206,19 @@ def cdltristar( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLTRISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlunique3river( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLUNIQUE3RIVER_Lookback( )
@@ -2022,16 +2231,19 @@ def cdlunique3river( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLUNIQUE3RIVER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlupsidegap2crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLUPSIDEGAP2CROWS_Lookback( )
@@ -2044,16 +2256,19 @@ def cdlupsidegap2crows( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLUPSIDEGAP2CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def cdlxsidegap3methods( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLXSIDEGAP3METHODS_Lookback( )
@@ -2066,16 +2281,19 @@ def cdlxsidegap3methods( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CDLXSIDEGAP3METHODS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def ceil( np.ndarray[np.float_t, ndim=1] real ):
+def CEIL( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_CEIL_Lookback( )
@@ -2088,16 +2306,19 @@ def ceil( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CEIL( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def cmo( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_CMO_Lookback( timeperiod )
@@ -2110,16 +2331,19 @@ def cmo( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CMO( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def correl( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
+def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_CORREL_Lookback( timeperiod )
@@ -2132,16 +2356,19 @@ def correl( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_CORREL( startidx , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def cos( np.ndarray[np.float_t, ndim=1] real ):
+def COS( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_COS_Lookback( )
@@ -2154,16 +2381,19 @@ def cos( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_COS( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def cosh( np.ndarray[np.float_t, ndim=1] real ):
+def COSH( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_COSH_Lookback( )
@@ -2176,16 +2406,19 @@ def cosh( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_COSH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def dema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_DEMA_Lookback( timeperiod )
@@ -2198,16 +2431,19 @@ def dema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_DEMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def div( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_DIV_Lookback( )
@@ -2220,16 +2456,19 @@ def div( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_DIV( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def dx( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_DX_Lookback( timeperiod )
@@ -2242,16 +2481,19 @@ def dx( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_DX( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_EMA_Lookback( timeperiod )
@@ -2264,16 +2506,19 @@ def ema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_EMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def exp( np.ndarray[np.float_t, ndim=1] real ):
+def EXP( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_EXP_Lookback( )
@@ -2286,16 +2531,19 @@ def exp( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_EXP( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def floor( np.ndarray[np.float_t, ndim=1] real ):
+def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_FLOOR_Lookback( )
@@ -2308,16 +2556,19 @@ def floor( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_FLOOR( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ht_dcperiod( np.ndarray[np.float_t, ndim=1] real ):
+def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_DCPERIOD_Lookback( )
@@ -2330,16 +2581,19 @@ def ht_dcperiod( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_DCPERIOD( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ht_dcphase( np.ndarray[np.float_t, ndim=1] real ):
+def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_DCPHASE_Lookback( )
@@ -2352,16 +2606,19 @@ def ht_dcphase( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_DCPHASE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ht_phasor( np.ndarray[np.float_t, ndim=1] real ):
+def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_PHASOR_Lookback( )
@@ -2375,16 +2632,19 @@ def ht_phasor( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outinphase = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outquadrature = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_PHASOR( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outinphase.data , <double *>outquadrature.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinphase , outquadrature )
 
-def ht_sine( np.ndarray[np.float_t, ndim=1] real ):
+def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_SINE_Lookback( )
@@ -2398,16 +2658,19 @@ def ht_sine( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outsine = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outleadsine = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_SINE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outsine.data , <double *>outleadsine.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outsine , outleadsine )
 
-def ht_trendline( np.ndarray[np.float_t, ndim=1] real ):
+def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_TRENDLINE_Lookback( )
@@ -2420,16 +2683,19 @@ def ht_trendline( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_TRENDLINE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ht_trendmode( np.ndarray[np.float_t, ndim=1] real ):
+def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_TRENDMODE_Lookback( )
@@ -2442,16 +2708,19 @@ def ht_trendmode( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_HT_TRENDMODE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def kama( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_KAMA_Lookback( timeperiod )
@@ -2464,16 +2733,19 @@ def kama( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_KAMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def linearreg( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_Lookback( timeperiod )
@@ -2486,16 +2758,19 @@ def linearreg( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LINEARREG( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def linearreg_angle( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_ANGLE_Lookback( timeperiod )
@@ -2508,16 +2783,19 @@ def linearreg_angle( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LINEARREG_ANGLE( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def linearreg_intercept( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
@@ -2530,16 +2808,19 @@ def linearreg_intercept( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LINEARREG_INTERCEPT( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def linearreg_slope( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_SLOPE_Lookback( timeperiod )
@@ -2552,16 +2833,19 @@ def linearreg_slope( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LINEARREG_SLOPE( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ln( np.ndarray[np.float_t, ndim=1] real ):
+def LN( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LN_Lookback( )
@@ -2574,16 +2858,19 @@ def ln( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def log10( np.ndarray[np.float_t, ndim=1] real ):
+def LOG10( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LOG10_Lookback( )
@@ -2596,16 +2883,19 @@ def log10( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_LOG10( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
+def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MA_Lookback( timeperiod , matype )
@@ -2618,16 +2908,19 @@ def ma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MA( startidx , endidx , <double *>real.data , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def macd( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , signalperiod=-2**31 ):
+def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , signalperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
@@ -2642,16 +2935,19 @@ def macd( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
     cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MACD( startidx , endidx , <double *>real.data , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
-def macdext( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatype=0 , slowperiod=-2**31 , slowmatype=0 , signalperiod=-2**31 , signalmatype=0 ):
+def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatype=0 , slowperiod=-2**31 , slowmatype=0 , signalperiod=-2**31 , signalmatype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
@@ -2666,16 +2962,19 @@ def macdext( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatyp
     cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MACDEXT( startidx , endidx , <double *>real.data , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
-def macdfix( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
+def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACDFIX_Lookback( signalperiod )
@@ -2690,16 +2989,19 @@ def macdfix( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MACDFIX( startidx , endidx , <double *>real.data , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
-def mama( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e37 ):
+def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAMA_Lookback( fastlimit , slowlimit )
@@ -2713,16 +3015,19 @@ def mama( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e3
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outmama = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outfama = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MAMA( startidx , endidx , <double *>real.data , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data , <double *>outfama.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outmama , outfama )
 
-def mavp( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] periods , minperiod=-2**31 , maxperiod=-2**31 , matype=0 ):
+def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] periods , minperiod=-2**31 , maxperiod=-2**31 , matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAVP_Lookback( minperiod , maxperiod , matype )
@@ -2735,16 +3040,19 @@ def mavp( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] p
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MAVP( startidx , endidx , <double *>real.data , <double *>periods.data , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def max( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAX_Lookback( timeperiod )
@@ -2757,16 +3065,19 @@ def max( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MAX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def maxindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAXINDEX_Lookback( timeperiod )
@@ -2779,16 +3090,19 @@ def maxindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MAXINDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def medprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low ):
+def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MEDPRICE_Lookback( )
@@ -2801,16 +3115,19 @@ def medprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MEDPRICE( startidx , endidx , <double *>high.data , <double *>low.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def mfi( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , timeperiod=-2**31 ):
+def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MFI_Lookback( timeperiod )
@@ -2823,16 +3140,19 @@ def mfi( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MFI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def midpoint( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MIDPOINT_Lookback( timeperiod )
@@ -2845,16 +3165,19 @@ def midpoint( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MIDPOINT( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def midprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MIDPRICE_Lookback( timeperiod )
@@ -2867,16 +3190,19 @@ def midprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MIDPRICE( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def min( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MIN_Lookback( timeperiod )
@@ -2889,16 +3215,19 @@ def min( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MIN( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def minindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MININDEX_Lookback( timeperiod )
@@ -2911,16 +3240,19 @@ def minindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MININDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outinteger )
 
-def minmax( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MINMAX_Lookback( timeperiod )
@@ -2934,16 +3266,19 @@ def minmax( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outmin = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outmax = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MINMAX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data , <double *>outmax.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outmin , outmax )
 
-def minmaxindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MINMAXINDEX_Lookback( timeperiod )
@@ -2957,16 +3292,19 @@ def minmaxindex( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outnbelement
     cdef np.ndarray[np.int_t, ndim=1] outminidx = numpy.zeros(allocation)
     cdef np.ndarray[np.int_t, ndim=1] outmaxidx = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MINMAXINDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data , <int *>outmaxidx.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outminidx , outmaxidx )
 
-def minus_di( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MINUS_DI_Lookback( timeperiod )
@@ -2979,16 +3317,19 @@ def minus_di( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MINUS_DI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def minus_dm( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MINUS_DM_Lookback( timeperiod )
@@ -3001,16 +3342,19 @@ def minus_dm( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MINUS_DM( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def mom( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MOM_Lookback( timeperiod )
@@ -3023,16 +3367,19 @@ def mom( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MOM( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def mult( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_MULT_Lookback( )
@@ -3045,16 +3392,19 @@ def mult( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_MULT( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def natr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_NATR_Lookback( timeperiod )
@@ -3067,16 +3417,19 @@ def natr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_NATR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def obv( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] volume ):
+def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] volume ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_OBV_Lookback( )
@@ -3089,16 +3442,19 @@ def obv( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] vo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_OBV( startidx , endidx , <double *>real.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def plus_di( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_PLUS_DI_Lookback( timeperiod )
@@ -3111,16 +3467,19 @@ def plus_di( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_PLUS_DI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def plus_dm( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_PLUS_DM_Lookback( timeperiod )
@@ -3133,16 +3492,19 @@ def plus_dm( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_PLUS_DM( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ppo( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
+def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_PPO_Lookback( fastperiod , slowperiod , matype )
@@ -3155,16 +3517,19 @@ def ppo( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_PPO( startidx , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def roc( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROC_Lookback( timeperiod )
@@ -3177,16 +3542,19 @@ def roc( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ROC( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def rocp( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCP_Lookback( timeperiod )
@@ -3199,16 +3567,19 @@ def rocp( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ROCP( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def rocr( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCR_Lookback( timeperiod )
@@ -3221,16 +3592,19 @@ def rocr( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ROCR( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def rocr100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCR100_Lookback( timeperiod )
@@ -3243,16 +3617,19 @@ def rocr100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ROCR100( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def rsi( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_RSI_Lookback( timeperiod )
@@ -3265,16 +3642,19 @@ def rsi( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_RSI( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sar( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , acceleration=-4e37 , maximum=-4e37 ):
+def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , acceleration=-4e37 , maximum=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_SAR_Lookback( acceleration , maximum )
@@ -3287,16 +3667,19 @@ def sar( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SAR( startidx , endidx , <double *>high.data , <double *>low.data , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sarext( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , startvalue=-4e37 , offsetonreverse=-4e37 , accelerationinitlong=-4e37 , accelerationlong=-4e37 , accelerationmaxlong=-4e37 , accelerationinitshort=-4e37 , accelerationshort=-4e37 , accelerationmaxshort=-4e37 ):
+def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , startvalue=-4e37 , offsetonreverse=-4e37 , accelerationinitlong=-4e37 , accelerationlong=-4e37 , accelerationmaxlong=-4e37 , accelerationinitshort=-4e37 , accelerationshort=-4e37 , accelerationmaxshort=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
@@ -3309,16 +3692,19 @@ def sarext( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SAREXT( startidx , endidx , <double *>high.data , <double *>low.data , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sin( np.ndarray[np.float_t, ndim=1] real ):
+def SIN( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SIN_Lookback( )
@@ -3331,16 +3717,19 @@ def sin( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SIN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sinh( np.ndarray[np.float_t, ndim=1] real ):
+def SINH( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SINH_Lookback( )
@@ -3353,16 +3742,19 @@ def sinh( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SINH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SMA_Lookback( timeperiod )
@@ -3375,16 +3767,19 @@ def sma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sqrt( np.ndarray[np.float_t, ndim=1] real ):
+def SQRT( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SQRT_Lookback( )
@@ -3397,16 +3792,19 @@ def sqrt( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SQRT( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def stddev( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
+def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_STDDEV_Lookback( timeperiod , nbdev )
@@ -3419,16 +3817,19 @@ def stddev( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e3
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_STDDEV( startidx , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def stoch( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , slowk_period=-2**31 , slowk_matype=0 , slowd_period=-2**31 , slowd_matype=0 ):
+def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , slowk_period=-2**31 , slowk_matype=0 , slowd_period=-2**31 , slowd_matype=0 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
@@ -3442,16 +3843,19 @@ def stoch( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outslowk = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outslowd = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_STOCH( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data , <double *>outslowd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outslowk , outslowd )
 
-def stochf( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
+def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
@@ -3465,16 +3869,19 @@ def stochf( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_STOCHF( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outfastk , outfastd )
 
-def stochrsi( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
+def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
@@ -3488,16 +3895,19 @@ def stochrsi( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_pe
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation)
     cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_STOCHRSI( startidx , endidx , <double *>real.data , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outfastk , outfastd )
 
-def sub( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_SUB_Lookback( )
@@ -3510,16 +3920,19 @@ def sub( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SUB( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def sum( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SUM_Lookback( timeperiod )
@@ -3532,16 +3945,19 @@ def sum( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_SUM( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def t3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 ):
+def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_T3_Lookback( timeperiod , vfactor )
@@ -3554,16 +3970,19 @@ def t3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_T3( startidx , endidx , <double *>real.data , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def tan( np.ndarray[np.float_t, ndim=1] real ):
+def TAN( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TAN_Lookback( )
@@ -3576,16 +3995,19 @@ def tan( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TAN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def tanh( np.ndarray[np.float_t, ndim=1] real ):
+def TANH( np.ndarray[np.float_t, ndim=1] real ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TANH_Lookback( )
@@ -3598,16 +4020,19 @@ def tanh( np.ndarray[np.float_t, ndim=1] real ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TANH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def tema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TEMA_Lookback( timeperiod )
@@ -3620,16 +4045,19 @@ def tema( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TEMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def trange( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_TRANGE_Lookback( )
@@ -3642,16 +4070,19 @@ def trange( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TRANGE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def trima( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TRIMA_Lookback( timeperiod )
@@ -3664,16 +4095,19 @@ def trima( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TRIMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def trix( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TRIX_Lookback( timeperiod )
@@ -3686,16 +4120,19 @@ def trix( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TRIX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def tsf( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TSF_Lookback( timeperiod )
@@ -3708,16 +4145,19 @@ def tsf( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TSF( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def typprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_TYPPRICE_Lookback( )
@@ -3730,16 +4170,19 @@ def typprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_TYPPRICE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def ultosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod1=-2**31 , timeperiod2=-2**31 , timeperiod3=-2**31 ):
+def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod1=-2**31 , timeperiod2=-2**31 , timeperiod3=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
@@ -3752,16 +4195,19 @@ def ultosc( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_ULTOSC( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def var( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
+def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_VAR_Lookback( timeperiod , nbdev )
@@ -3774,16 +4220,19 @@ def var( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 )
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_VAR( startidx , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def wclprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_WCLPRICE_Lookback( )
@@ -3796,16 +4245,19 @@ def wclprice( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_WCLPRICE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def willr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_WILLR_Lookback( timeperiod )
@@ -3818,16 +4270,19 @@ def willr( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_WILLR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-def wma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_WMA_Lookback( timeperiod )
@@ -3840,13 +4295,16 @@ def wma( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     cdef int outbegidx
     cdef int outnbelement
     cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef TA_RetCodeInfo info
     retCode = TA_Initialize()
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     retCode = TA_WMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))
+        TA_SetRetCodeInfo(retCode, &info)
+        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))
     TA_Shutdown()
     return ( outbegidx , outnbelement , outreal )
 
-__all__ = [acos,ad,add,adosc,adx,adxr,apo,aroon,aroonosc,asin,atan,atr,avgprice,bbands,beta,bop,cci,cdl2crows,cdl3blackcrows,cdl3inside,cdl3linestrike,cdl3outside,cdl3starsinsouth,cdl3whitesoldiers,cdlabandonedbaby,cdladvanceblock,cdlbelthold,cdlbreakaway,cdlclosingmarubozu,cdlconcealbabyswall,cdlcounterattack,cdldarkcloudcover,cdldoji,cdldojistar,cdldragonflydoji,cdlengulfing,cdleveningdojistar,cdleveningstar,cdlgapsidesidewhite,cdlgravestonedoji,cdlhammer,cdlhangingman,cdlharami,cdlharamicross,cdlhighwave,cdlhikkake,cdlhikkakemod,cdlhomingpigeon,cdlidentical3crows,cdlinneck,cdlinvertedhammer,cdlkicking,cdlkickingbylength,cdlladderbottom,cdllongleggeddoji,cdllongline,cdlmarubozu,cdlmatchinglow,cdlmathold,cdlmorningdojistar,cdlmorningstar,cdlonneck,cdlpiercing,cdlrickshawman,cdlrisefall3methods,cdlseparatinglines,cdlshootingstar,cdlshortline,cdlspinningtop,cdlstalledpattern,cdlsticksandwich,cdltakuri,cdltasukigap,cdlthrusting,cdltristar,cdlunique3river,cdlupsidegap2crows,cdlxsidegap3methods,ceil,cmo,correl,cos,cosh,dema,div,dx,ema,exp,floor,ht_dcperiod,ht_dcphase,ht_phasor,ht_sine,ht_trendline,ht_trendmode,kama,linearreg,linearreg_angle,linearreg_intercept,linearreg_slope,ln,log10,ma,macd,macdext,macdfix,mama,mavp,max,maxindex,medprice,mfi,midpoint,midprice,min,minindex,minmax,minmaxindex,minus_di,minus_dm,mom,mult,natr,obv,plus_di,plus_dm,ppo,roc,rocp,rocr,rocr100,rsi,sar,sarext,sin,sinh,sma,sqrt,stddev,stoch,stochf,stochrsi,sub,sum,t3,tan,tanh,tema,trange,trima,trix,tsf,typprice,ultosc,var,wclprice,willr,wma]
+__all__ = [ACOS,AD,ADD,ADOSC,ADX,ADXR,APO,AROON,AROONOSC,ASIN,ATAN,ATR,AVGPRICE,BBANDS,BETA,BOP,CCI,CDL2CROWS,CDL3BLACKCROWS,CDL3INSIDE,CDL3LINESTRIKE,CDL3OUTSIDE,CDL3STARSINSOUTH,CDL3WHITESOLDIERS,CDLABANDONEDBABY,CDLADVANCEBLOCK,CDLBELTHOLD,CDLBREAKAWAY,CDLCLOSINGMARUBOZU,CDLCONCEALBABYSWALL,CDLCOUNTERATTACK,CDLDARKCLOUDCOVER,CDLDOJI,CDLDOJISTAR,CDLDRAGONFLYDOJI,CDLENGULFING,CDLEVENINGDOJISTAR,CDLEVENINGSTAR,CDLGAPSIDESIDEWHITE,CDLGRAVESTONEDOJI,CDLHAMMER,CDLHANGINGMAN,CDLHARAMI,CDLHARAMICROSS,CDLHIGHWAVE,CDLHIKKAKE,CDLHIKKAKEMOD,CDLHOMINGPIGEON,CDLIDENTICAL3CROWS,CDLINNECK,CDLINVERTEDHAMMER,CDLKICKING,CDLKICKINGBYLENGTH,CDLLADDERBOTTOM,CDLLONGLEGGEDDOJI,CDLLONGLINE,CDLMARUBOZU,CDLMATCHINGLOW,CDLMATHOLD,CDLMORNINGDOJISTAR,CDLMORNINGSTAR,CDLONNECK,CDLPIERCING,CDLRICKSHAWMAN,CDLRISEFALL3METHODS,CDLSEPARATINGLINES,CDLSHOOTINGSTAR,CDLSHORTLINE,CDLSPINNINGTOP,CDLSTALLEDPATTERN,CDLSTICKSANDWICH,CDLTAKURI,CDLTASUKIGAP,CDLTHRUSTING,CDLTRISTAR,CDLUNIQUE3RIVER,CDLUPSIDEGAP2CROWS,CDLXSIDEGAP3METHODS,CEIL,CMO,CORREL,COS,COSH,DEMA,DIV,DX,EMA,EXP,FLOOR,HT_DCPERIOD,HT_DCPHASE,HT_PHASOR,HT_SINE,HT_TRENDLINE,HT_TRENDMODE,KAMA,LINEARREG,LINEARREG_ANGLE,LINEARREG_INTERCEPT,LINEARREG_SLOPE,LN,LOG10,MA,MACD,MACDEXT,MACDFIX,MAMA,MAVP,MAX,MAXINDEX,MEDPRICE,MFI,MIDPOINT,MIDPRICE,MIN,MININDEX,MINMAX,MINMAXINDEX,MINUS_DI,MINUS_DM,MOM,MULT,NATR,OBV,PLUS_DI,PLUS_DM,PPO,ROC,ROCP,ROCR,ROCR100,RSI,SAR,SAREXT,SIN,SINH,SMA,SQRT,STDDEV,STOCH,STOCHF,STOCHRSI,SUB,SUM,T3,TAN,TANH,TEMA,TRANGE,TRIMA,TRIX,TSF,TYPPRICE,ULTOSC,VAR,WCLPRICE,WILLR,WMA]

@@ -34,37 +34,20 @@ cimport numpy as np
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
-# TA_MAType enums
-SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
+cdef struct TA_RetCodeInfo:
+    char *enumStr
+    char *infoStr
 
-RetCodes = {
-  0 : "Success",
-  1 : "LibNotInitialize",
-  2 : "BadParam",
-  3 : "AllocErr",
-  4 : "GroupNotFound",
-  5 : "FuncNotFound",
-  6 : "InvalidHandle",
-  7 : "InvalidParamHolder",
-  8 : "InvalidParamHolderType",
-  9 : "InvalidParamFunction",
-  10 : "InputNotAllInitialize",
-  11 : "OutputNotAllInitialize",
-  12 : "OutOfRangeStartIndex",
-  13 : "OutOfRangeEndIndex",
-  14 : "InvalidListType",
-  15 : "BadObject",
-  16 : "NotSupported",
-  5000 : "InternalError",
-  0xFFFF : "UnknownErr",
-}
+# TA_MAType enums
+MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()
-    char *TA_GetVersionString()"""
+    char *TA_GetVersionString()
+    void TA_SetRetCodeInfo( TA_RetCode theRetCode, TA_RetCodeInfo *retCodeInfo )"""
 
 # ! can't use const in function declaration (cython 0.12 restriction)
 # just removing them does the trick
@@ -101,8 +84,8 @@ for f in functions:
     args = f[i:].split(',')
     args = [re.sub('[\(\);]', '', s).strip() for s in args]
 
-    names.append(name[3:].lower())
-    print "def %s(" % name[3:].lower(),
+    names.append(name[3:])
+    print "def %s(" % name[3:],
     i = 0
     for arg in args:
         var = arg.split()[-1]
@@ -180,9 +163,11 @@ for f in functions:
         else:
             assert False, arg
 
+    print '    cdef TA_RetCodeInfo info'
     print '    retCode = TA_Initialize()'
     print '    if retCode != TA_SUCCESS:'
-    print '        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))'
+    print '        TA_SetRetCodeInfo(retCode, &info)'
+    print '        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))'
     print '    retCode = %s(' % name,
 
     for i, arg in enumerate(args):
@@ -208,7 +193,8 @@ for f in functions:
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
-    print '        raise Exception("%s (%d)" % (RetCodes[retCode], retCode))'
+    print '        TA_SetRetCodeInfo(retCode, &info)'
+    print '        raise Exception("%s (%d) %s" % (info.enumStr, retCode, info.infoStr))'
     print '    TA_Shutdown()'
 
     print '    return (',
