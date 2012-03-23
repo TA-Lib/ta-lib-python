@@ -7,3 +7,6 @@ generate:
 clean:
 	rm -rf build talib.so talib.c
 
+test:
+	nosetests
+
