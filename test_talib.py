@@ -60,8 +60,8 @@ def test_MIN():
 
 def test_BBANDS():
     i, upper, middle, lower = talib.BBANDS(series, timeperiod=20,
-                                              nbdevup=2.0, nbdevdn=2.0,
-                                              matype=talib.MA_EMA)
+                                           nbdevup=2.0, nbdevdn=2.0,
+                                           matype=talib.MA_EMA)
     assert len(upper) == len(middle) == len(lower)
     assert len(series) - len(upper) == i
     assert abs(upper[0] - 98.0734) < 1e-3
