@@ -15,15 +15,21 @@ cleanly bind to TA-Lib.
 
 All of the following examples require:
 
-    import numpy
-    import talib
+```python
+import numpy
+import talib
 
-    input = numpy.random.random(100)
+input = numpy.random.random(100)
+```
 
 Calculate a moving average:
 
-    index, elements, output = talib.MA(input)
+```python
+i, n, output = talib.MA(input)
+```
 
 Calculating bollinger bands:
 
-    index, elements, upper, middle, lower = talib.BBANDS(input)
+```python
+i, n, upper, middle, lower = talib.BBANDS(input)
+```
