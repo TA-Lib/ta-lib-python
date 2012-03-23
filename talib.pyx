@@ -335,6 +335,7 @@ cdef extern from "ta_libc.h":
 __version__ = TA_GetVersionString()
 
 def ACOS( np.ndarray[np.float_t, ndim=1] real ):
+    """ACOS(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ACOS_Lookback( )
@@ -355,6 +356,9 @@ def ACOS( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume ):
+    """AD(high, low, close, volume)
+
+    Chaikin A/D Line"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AD_Lookback( )
@@ -375,6 +379,7 @@ def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     return ( outbegidx , outnbelement , outreal )
 
 def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+    """ADD(real0, real1)"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_ADD_Lookback( )
@@ -395,6 +400,9 @@ def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     return ( outbegidx , outnbelement , outreal )
 
 def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , fastperiod=-2**31 , slowperiod=-2**31 ):
+    """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
+
+    Chaikin A/D Oscillator"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADOSC_Lookback( fastperiod , slowperiod )
@@ -415,6 +423,9 @@ def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outreal )
 
 def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """ADX(high, low, close[, timeperiod=?])
+
+    Average Directional Movement Index"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADX_Lookback( timeperiod )
@@ -435,6 +446,9 @@ def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     return ( outbegidx , outnbelement , outreal )
 
 def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """ADXR(high, low, close[, timeperiod=?])
+
+    Average Directional Movement Index Rating"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ADXR_Lookback( timeperiod )
@@ -455,6 +469,9 @@ def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     return ( outbegidx , outnbelement , outreal )
 
 def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
+    """APO(real[, fastperiod=?, slowperiod=?, matype=?])
+
+    Absolute Price Oscillator"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_APO_Lookback( fastperiod , slowperiod , matype )
@@ -475,6 +492,9 @@ def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     return ( outbegidx , outnbelement , outreal )
 
 def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+    """AROON(high, low[, timeperiod=?])
+
+    Aroon"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AROON_Lookback( timeperiod )
@@ -496,6 +516,9 @@ def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outaroondown , outaroonup )
 
 def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+    """AROONOSC(high, low[, timeperiod=?])
+
+    Aroon Oscillator"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AROONOSC_Lookback( timeperiod )
@@ -516,6 +539,7 @@ def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def ASIN( np.ndarray[np.float_t, ndim=1] real ):
+    """ASIN(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ASIN_Lookback( )
@@ -536,6 +560,7 @@ def ASIN( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def ATAN( np.ndarray[np.float_t, ndim=1] real ):
+    """ATAN(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ATAN_Lookback( )
@@ -556,6 +581,9 @@ def ATAN( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """ATR(high, low, close[, timeperiod=?])
+
+    Average True Range"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ATR_Lookback( timeperiod )
@@ -576,6 +604,9 @@ def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     return ( outbegidx , outnbelement , outreal )
 
 def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """AVGPRICE(open, high, low, close)
+
+    Average Price"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_AVGPRICE_Lookback( )
@@ -596,6 +627,9 @@ def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4e37 , nbdevdn=-4e37 , matype=0 ):
+    """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+
+    Bollinger Bands"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
@@ -618,6 +652,9 @@ def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4
     return ( outbegidx , outnbelement , outrealupperband , outrealmiddleband , outreallowerband )
 
 def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
+    """BETA(real0, real1[, timeperiod=?])
+
+    Beta"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_BETA_Lookback( timeperiod )
@@ -638,6 +675,9 @@ def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outreal )
 
 def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """BOP(open, high, low, close)
+
+    Balance Of Power"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_BOP_Lookback( )
@@ -658,6 +698,9 @@ def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] hi
     return ( outbegidx , outnbelement , outreal )
 
 def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """CCI(high, low, close[, timeperiod=?])
+
+    Commodity Channel Index"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CCI_Lookback( timeperiod )
@@ -678,6 +721,9 @@ def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     return ( outbegidx , outnbelement , outreal )
 
 def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL2CROWS(open, high, low, close)
+
+    Two Crows"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL2CROWS_Lookback( )
@@ -698,6 +744,9 @@ def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3BLACKCROWS(open, high, low, close)
+
+    Three Black Crows"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3BLACKCROWS_Lookback( )
@@ -718,6 +767,9 @@ def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3INSIDE(open, high, low, close)
+
+    Three Inside Up/Down"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3INSIDE_Lookback( )
@@ -738,6 +790,9 @@ def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3LINESTRIKE(open, high, low, close)
+
+    Three-Line Strike """
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3LINESTRIKE_Lookback( )
@@ -758,6 +813,9 @@ def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3OUTSIDE(open, high, low, close)
+
+    Three Outside Up/Down"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3OUTSIDE_Lookback( )
@@ -778,6 +836,9 @@ def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3STARSINSOUTH(open, high, low, close)
+
+    Three Stars In The South"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3STARSINSOUTH_Lookback( )
@@ -798,6 +859,9 @@ def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     return ( outbegidx , outnbelement , outinteger )
 
 def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDL3WHITESOLDIERS(open, high, low, close)
+
+    Three Advancing White Soldiers"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDL3WHITESOLDIERS_Lookback( )
@@ -818,6 +882,9 @@ def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
+
+    Abandoned Baby"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLABANDONEDBABY_Lookback( penetration )
@@ -838,6 +905,9 @@ def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLADVANCEBLOCK(open, high, low, close)
+
+    Advance Block"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLADVANCEBLOCK_Lookback( )
@@ -858,6 +928,9 @@ def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLBELTHOLD(open, high, low, close)
+
+    Belt-hold"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLBELTHOLD_Lookback( )
@@ -878,6 +951,9 @@ def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLBREAKAWAY(open, high, low, close)
+
+    Breakaway"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLBREAKAWAY_Lookback( )
@@ -898,6 +974,9 @@ def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLCLOSINGMARUBOZU(open, high, low, close)
+
+    Closing Marubozu"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCLOSINGMARUBOZU_Lookback( )
@@ -918,6 +997,9 @@ def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLCONCEALBABYSWALL(open, high, low, close)
+
+    Concealing Baby Swallow"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCONCEALBABYSWALL_Lookback( )
@@ -938,6 +1020,9 @@ def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLCOUNTERATTACK(open, high, low, close)
+
+    Counterattack"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLCOUNTERATTACK_Lookback( )
@@ -958,6 +1043,9 @@ def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
+
+    Dark Cloud Cover"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDARKCLOUDCOVER_Lookback( penetration )
@@ -978,6 +1066,9 @@ def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLDOJI(open, high, low, close)
+
+    Doji"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDOJI_Lookback( )
@@ -998,6 +1089,9 @@ def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLDOJISTAR(open, high, low, close)
+
+    Doji Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDOJISTAR_Lookback( )
@@ -1018,6 +1112,9 @@ def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLDRAGONFLYDOJI(open, high, low, close)
+
+    Dragonfly Doji"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLDRAGONFLYDOJI_Lookback( )
@@ -1038,6 +1135,9 @@ def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLENGULFING(open, high, low, close)
+
+    Engulfing Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLENGULFING_Lookback( )
@@ -1058,6 +1158,9 @@ def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
+
+    Evening Doji Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLEVENINGDOJISTAR_Lookback( penetration )
@@ -1078,6 +1181,9 @@ def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
+
+    Evening Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLEVENINGSTAR_Lookback( penetration )
@@ -1098,6 +1204,9 @@ def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLGAPSIDESIDEWHITE(open, high, low, close)
+
+    Up/Down-gap side-by-side white lines"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLGAPSIDESIDEWHITE_Lookback( )
@@ -1118,6 +1227,9 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLGRAVESTONEDOJI(open, high, low, close)
+
+    Gravestone Doji"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLGRAVESTONEDOJI_Lookback( )
@@ -1138,6 +1250,9 @@ def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHAMMER(open, high, low, close)
+
+    Hammer"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHAMMER_Lookback( )
@@ -1158,6 +1273,9 @@ def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHANGINGMAN(open, high, low, close)
+
+    Hanging Man"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHANGINGMAN_Lookback( )
@@ -1178,6 +1296,9 @@ def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHARAMI(open, high, low, close)
+
+    Harami Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHARAMI_Lookback( )
@@ -1198,6 +1319,9 @@ def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHARAMICROSS(open, high, low, close)
+
+    Harami Cross Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHARAMICROSS_Lookback( )
@@ -1218,6 +1342,9 @@ def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHIGHWAVE(open, high, low, close)
+
+    High-Wave Candle"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIGHWAVE_Lookback( )
@@ -1238,6 +1365,9 @@ def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHIKKAKE(open, high, low, close)
+
+    Hikkake Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIKKAKE_Lookback( )
@@ -1258,6 +1388,9 @@ def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHIKKAKEMOD(open, high, low, close)
+
+    Modified Hikkake Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHIKKAKEMOD_Lookback( )
@@ -1278,6 +1411,9 @@ def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLHOMINGPIGEON(open, high, low, close)
+
+    Homing Pigeon"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLHOMINGPIGEON_Lookback( )
@@ -1298,6 +1434,9 @@ def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLIDENTICAL3CROWS(open, high, low, close)
+
+    Identical Three Crows"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLIDENTICAL3CROWS_Lookback( )
@@ -1318,6 +1457,9 @@ def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLINNECK(open, high, low, close)
+
+    In-Neck Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLINNECK_Lookback( )
@@ -1338,6 +1480,9 @@ def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLINVERTEDHAMMER(open, high, low, close)
+
+    Inverted Hammer"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLINVERTEDHAMMER_Lookback( )
@@ -1358,6 +1503,9 @@ def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLKICKING(open, high, low, close)
+
+    Kicking"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLKICKING_Lookback( )
@@ -1378,6 +1526,9 @@ def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLKICKINGBYLENGTH(open, high, low, close)
+
+    Kicking - bull/bear determined by the longer marubozu"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLKICKINGBYLENGTH_Lookback( )
@@ -1398,6 +1549,9 @@ def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLLADDERBOTTOM(open, high, low, close)
+
+    Ladder Bottom"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLADDERBOTTOM_Lookback( )
@@ -1418,6 +1572,9 @@ def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLLONGLEGGEDDOJI(open, high, low, close)
+
+    Long Legged Doji"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLONGLEGGEDDOJI_Lookback( )
@@ -1438,6 +1595,9 @@ def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLLONGLINE(open, high, low, close)
+
+    Long Line Candle"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLLONGLINE_Lookback( )
@@ -1458,6 +1618,9 @@ def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLMARUBOZU(open, high, low, close)
+
+    Marubozu"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMARUBOZU_Lookback( )
@@ -1478,6 +1641,9 @@ def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLMATCHINGLOW(open, high, low, close)
+
+    Matching Low"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMATCHINGLOW_Lookback( )
@@ -1498,6 +1664,9 @@ def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLMATHOLD(open, high, low, close[, penetration=?])
+
+    Mat Hold"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMATHOLD_Lookback( penetration )
@@ -1518,6 +1687,9 @@ def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
+
+    Morning Doji Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMORNINGDOJISTAR_Lookback( penetration )
@@ -1538,6 +1710,9 @@ def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , penetration=-4e37 ):
+    """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
+
+    Morning Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLMORNINGSTAR_Lookback( penetration )
@@ -1558,6 +1733,9 @@ def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLONNECK(open, high, low, close)
+
+    On-Neck Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLONNECK_Lookback( )
@@ -1578,6 +1756,9 @@ def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLPIERCING(open, high, low, close)
+
+    Piercing Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLPIERCING_Lookback( )
@@ -1598,6 +1779,9 @@ def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLRICKSHAWMAN(open, high, low, close)
+
+    Rickshaw Man"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLRICKSHAWMAN_Lookback( )
@@ -1618,6 +1802,9 @@ def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLRISEFALL3METHODS(open, high, low, close)
+
+    Rising/Falling Three Methods"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLRISEFALL3METHODS_Lookback( )
@@ -1638,6 +1825,9 @@ def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSEPARATINGLINES(open, high, low, close)
+
+    Separating Lines"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSEPARATINGLINES_Lookback( )
@@ -1658,6 +1848,9 @@ def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSHOOTINGSTAR(open, high, low, close)
+
+    Shooting Star"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSHOOTINGSTAR_Lookback( )
@@ -1678,6 +1871,9 @@ def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSHORTLINE(open, high, low, close)
+
+    Short Line Candle"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSHORTLINE_Lookback( )
@@ -1698,6 +1894,9 @@ def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSPINNINGTOP(open, high, low, close)
+
+    Spinning Top"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSPINNINGTOP_Lookback( )
@@ -1718,6 +1917,9 @@ def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSTALLEDPATTERN(open, high, low, close)
+
+    Stalled Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSTALLEDPATTERN_Lookback( )
@@ -1738,6 +1940,9 @@ def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLSTICKSANDWICH(open, high, low, close)
+
+    Stick Sandwich"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLSTICKSANDWICH_Lookback( )
@@ -1758,6 +1963,9 @@ def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLTAKURI(open, high, low, close)
+
+    Takuri (Dragonfly Doji with very long lower shadow)"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTAKURI_Lookback( )
@@ -1778,6 +1986,9 @@ def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLTASUKIGAP(open, high, low, close)
+
+    Tasuki Gap"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTASUKIGAP_Lookback( )
@@ -1798,6 +2009,9 @@ def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLTHRUSTING(open, high, low, close)
+
+    Thrusting Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTHRUSTING_Lookback( )
@@ -1818,6 +2032,9 @@ def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLTRISTAR(open, high, low, close)
+
+    Tristar Pattern"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLTRISTAR_Lookback( )
@@ -1838,6 +2055,9 @@ def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLUNIQUE3RIVER(open, high, low, close)
+
+    Unique 3 River"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLUNIQUE3RIVER_Lookback( )
@@ -1858,6 +2078,9 @@ def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLUPSIDEGAP2CROWS(open, high, low, close)
+
+    Upside Gap Two Crows"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLUPSIDEGAP2CROWS_Lookback( )
@@ -1878,6 +2101,9 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     return ( outbegidx , outnbelement , outinteger )
 
 def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """CDLXSIDEGAP3METHODS(open, high, low, close)
+
+    Upside/Downside Gap Three Methods"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_CDLXSIDEGAP3METHODS_Lookback( )
@@ -1898,6 +2124,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     return ( outbegidx , outnbelement , outinteger )
 
 def CEIL( np.ndarray[np.float_t, ndim=1] real ):
+    """CEIL(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_CEIL_Lookback( )
@@ -1918,6 +2145,9 @@ def CEIL( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """CMO(real[, timeperiod=?])
+
+    Chande Momentum Oscillator"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_CMO_Lookback( timeperiod )
@@ -1938,6 +2168,9 @@ def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 , timeperiod=-2**31 ):
+    """CORREL(real0, real1[, timeperiod=?])
+
+    Pearson's Correlation Coefficient (r)"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_CORREL_Lookback( timeperiod )
@@ -1958,6 +2191,7 @@ def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1
     return ( outbegidx , outnbelement , outreal )
 
 def COS( np.ndarray[np.float_t, ndim=1] real ):
+    """COS(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_COS_Lookback( )
@@ -1978,6 +2212,7 @@ def COS( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def COSH( np.ndarray[np.float_t, ndim=1] real ):
+    """COSH(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_COSH_Lookback( )
@@ -1998,6 +2233,9 @@ def COSH( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """DEMA(real[, timeperiod=?])
+
+    Double Exponential Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_DEMA_Lookback( timeperiod )
@@ -2018,6 +2256,7 @@ def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+    """DIV(real0, real1)"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_DIV_Lookback( )
@@ -2038,6 +2277,9 @@ def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     return ( outbegidx , outnbelement , outreal )
 
 def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """DX(high, low, close[, timeperiod=?])
+
+    Directional Movement Index"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_DX_Lookback( timeperiod )
@@ -2058,6 +2300,9 @@ def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     return ( outbegidx , outnbelement , outreal )
 
 def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """EMA(real[, timeperiod=?])
+
+    Exponential Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_EMA_Lookback( timeperiod )
@@ -2078,6 +2323,7 @@ def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def EXP( np.ndarray[np.float_t, ndim=1] real ):
+    """EXP(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_EXP_Lookback( )
@@ -2098,6 +2344,7 @@ def EXP( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
+    """FLOOR(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_FLOOR_Lookback( )
@@ -2118,6 +2365,9 @@ def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_DCPERIOD(real)
+
+    Hilbert Transform - Dominant Cycle Period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_DCPERIOD_Lookback( )
@@ -2138,6 +2388,9 @@ def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_DCPHASE(real)
+
+    Hilbert Transform - Dominant Cycle Phase"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_DCPHASE_Lookback( )
@@ -2158,6 +2411,9 @@ def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_PHASOR(real)
+
+    Hilbert Transform - Phasor Components"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_PHASOR_Lookback( )
@@ -2179,6 +2435,9 @@ def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outinphase , outquadrature )
 
 def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_SINE(real)
+
+    Hilbert Transform - SineWave"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_SINE_Lookback( )
@@ -2200,6 +2459,9 @@ def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outsine , outleadsine )
 
 def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_TRENDLINE(real)
+
+    Hilbert Transform - Instantaneous Trendline"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_TRENDLINE_Lookback( )
@@ -2220,6 +2482,9 @@ def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
+    """HT_TRENDMODE(real)
+
+    Hilbert Transform - Trend vs Cycle Mode"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_HT_TRENDMODE_Lookback( )
@@ -2240,6 +2505,9 @@ def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outinteger )
 
 def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """KAMA(real[, timeperiod=?])
+
+    Kaufman Adaptive Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_KAMA_Lookback( timeperiod )
@@ -2260,6 +2528,9 @@ def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """LINEARREG(real[, timeperiod=?])
+
+    Linear Regression"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_Lookback( timeperiod )
@@ -2280,6 +2551,9 @@ def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """LINEARREG_ANGLE(real[, timeperiod=?])
+
+    Linear Regression Angle"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_ANGLE_Lookback( timeperiod )
@@ -2300,6 +2574,9 @@ def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """LINEARREG_INTERCEPT(real[, timeperiod=?])
+
+    Linear Regression Intercept"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
@@ -2320,6 +2597,9 @@ def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31
     return ( outbegidx , outnbelement , outreal )
 
 def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """LINEARREG_SLOPE(real[, timeperiod=?])
+
+    Linear Regression Slope"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LINEARREG_SLOPE_Lookback( timeperiod )
@@ -2340,6 +2620,7 @@ def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def LN( np.ndarray[np.float_t, ndim=1] real ):
+    """LN(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LN_Lookback( )
@@ -2360,6 +2641,7 @@ def LN( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def LOG10( np.ndarray[np.float_t, ndim=1] real ):
+    """LOG10(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_LOG10_Lookback( )
@@ -2380,6 +2662,9 @@ def LOG10( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
+    """MA(real[, timeperiod=?, matype=?])
+
+    All Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MA_Lookback( timeperiod , matype )
@@ -2400,6 +2685,9 @@ def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     return ( outbegidx , outnbelement , outreal )
 
 def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , signalperiod=-2**31 ):
+    """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
+
+    Moving Average Convergence/Divergence"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
@@ -2422,6 +2710,9 @@ def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
 def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatype=0 , slowperiod=-2**31 , slowmatype=0 , signalperiod=-2**31 , signalmatype=0 ):
+    """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
+
+    MACD with controllable MA type"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
@@ -2444,6 +2735,9 @@ def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatyp
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
 def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
+    """MACDFIX(real[, signalperiod=?])
+
+    Moving Average Convergence/Divergence Fix 12/26"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MACDFIX_Lookback( signalperiod )
@@ -2466,6 +2760,9 @@ def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     return ( outbegidx , outnbelement , outmacd , outmacdsignal , outmacdhist )
 
 def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e37 ):
+    """MAMA(real[, fastlimit=?, slowlimit=?])
+
+    MESA Adaptive Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAMA_Lookback( fastlimit , slowlimit )
@@ -2487,6 +2784,7 @@ def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e3
     return ( outbegidx , outnbelement , outmama , outfama )
 
 def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] periods , minperiod=-2**31 , maxperiod=-2**31 , matype=0 ):
+    """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAVP_Lookback( minperiod , maxperiod , matype )
@@ -2507,6 +2805,9 @@ def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] p
     return ( outbegidx , outnbelement , outreal )
 
 def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MAX(real[, timeperiod=?])
+
+    Highest value over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAX_Lookback( timeperiod )
@@ -2527,6 +2828,9 @@ def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MAXINDEX(real[, timeperiod=?])
+
+    Index of highest value over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MAXINDEX_Lookback( timeperiod )
@@ -2547,6 +2851,9 @@ def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outinteger )
 
 def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low ):
+    """MEDPRICE(high, low)
+
+    Median Price"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MEDPRICE_Lookback( )
@@ -2567,6 +2874,9 @@ def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , np.ndarray[np.float_t, ndim=1] volume , timeperiod=-2**31 ):
+    """MFI(high, low, close, volume[, timeperiod=?])
+
+    Money Flow Index"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MFI_Lookback( timeperiod )
@@ -2587,6 +2897,9 @@ def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     return ( outbegidx , outnbelement , outreal )
 
 def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MIDPOINT(real[, timeperiod=?])
+
+    MidPoint over period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MIDPOINT_Lookback( timeperiod )
@@ -2607,6 +2920,9 @@ def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+    """MIDPRICE(high, low[, timeperiod=?])
+
+    Midpoint Price over period"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MIDPRICE_Lookback( timeperiod )
@@ -2627,6 +2943,9 @@ def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MIN(real[, timeperiod=?])
+
+    Lowest value over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MIN_Lookback( timeperiod )
@@ -2647,6 +2966,9 @@ def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MININDEX(real[, timeperiod=?])
+
+    Index of lowest value over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MININDEX_Lookback( timeperiod )
@@ -2667,6 +2989,9 @@ def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outinteger )
 
 def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MINMAX(real[, timeperiod=?])
+
+    Lowest and highest values over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MINMAX_Lookback( timeperiod )
@@ -2688,6 +3013,9 @@ def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outmin , outmax )
 
 def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MINMAXINDEX(real[, timeperiod=?])
+
+    Indexes of lowest and highest values over a specified period"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MINMAXINDEX_Lookback( timeperiod )
@@ -2709,6 +3037,9 @@ def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outminidx , outmaxidx )
 
 def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """MINUS_DI(high, low, close[, timeperiod=?])
+
+    Minus Directional Indicator"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MINUS_DI_Lookback( timeperiod )
@@ -2729,6 +3060,9 @@ def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+    """MINUS_DM(high, low[, timeperiod=?])
+
+    Minus Directional Movement"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_MINUS_DM_Lookback( timeperiod )
@@ -2749,6 +3083,9 @@ def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """MOM(real[, timeperiod=?])
+
+    Momentum"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_MOM_Lookback( timeperiod )
@@ -2769,6 +3106,7 @@ def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+    """MULT(real0, real1)"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_MULT_Lookback( )
@@ -2789,6 +3127,9 @@ def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outreal )
 
 def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """NATR(high, low, close[, timeperiod=?])
+
+    Normalized Average True Range"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_NATR_Lookback( timeperiod )
@@ -2809,6 +3150,9 @@ def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     return ( outbegidx , outnbelement , outreal )
 
 def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] volume ):
+    """OBV(real, volume)
+
+    On Balance Volume"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_OBV_Lookback( )
@@ -2829,6 +3173,9 @@ def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] vo
     return ( outbegidx , outnbelement , outreal )
 
 def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """PLUS_DI(high, low, close[, timeperiod=?])
+
+    Plus Directional Indicator"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_PLUS_DI_Lookback( timeperiod )
@@ -2849,6 +3196,9 @@ def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     return ( outbegidx , outnbelement , outreal )
 
 def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , timeperiod=-2**31 ):
+    """PLUS_DM(high, low[, timeperiod=?])
+
+    Plus Directional Movement"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_PLUS_DM_Lookback( timeperiod )
@@ -2869,6 +3219,9 @@ def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     return ( outbegidx , outnbelement , outreal )
 
 def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2**31 , matype=0 ):
+    """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
+
+    Percentage Price Oscillator"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_PPO_Lookback( fastperiod , slowperiod , matype )
@@ -2889,6 +3242,9 @@ def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     return ( outbegidx , outnbelement , outreal )
 
 def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """ROC(real[, timeperiod=?])
+
+    Rate of change : ((price/prevPrice)-1)*100"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROC_Lookback( timeperiod )
@@ -2909,6 +3265,9 @@ def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """ROCP(real[, timeperiod=?])
+
+    Rate of change Percentage: (price-prevPrice)/prevPrice"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCP_Lookback( timeperiod )
@@ -2929,6 +3288,9 @@ def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """ROCR(real[, timeperiod=?])
+
+    Rate of change ratio: (price/prevPrice)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCR_Lookback( timeperiod )
@@ -2949,6 +3311,9 @@ def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """ROCR100(real[, timeperiod=?])
+
+    Rate of change ratio 100 scale: (price/prevPrice)*100"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_ROCR100_Lookback( timeperiod )
@@ -2969,6 +3334,9 @@ def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """RSI(real[, timeperiod=?])
+
+    Relative Strength Index"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_RSI_Lookback( timeperiod )
@@ -2989,6 +3357,9 @@ def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , acceleration=-4e37 , maximum=-4e37 ):
+    """SAR(high, low[, acceleration=?, maximum=?])
+
+    Parabolic SAR"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_SAR_Lookback( acceleration , maximum )
@@ -3009,6 +3380,9 @@ def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     return ( outbegidx , outnbelement , outreal )
 
 def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , startvalue=-4e37 , offsetonreverse=-4e37 , accelerationinitlong=-4e37 , accelerationlong=-4e37 , accelerationmaxlong=-4e37 , accelerationinitshort=-4e37 , accelerationshort=-4e37 , accelerationmaxshort=-4e37 ):
+    """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
+
+    Parabolic SAR - Extended"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
@@ -3029,6 +3403,7 @@ def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     return ( outbegidx , outnbelement , outreal )
 
 def SIN( np.ndarray[np.float_t, ndim=1] real ):
+    """SIN(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SIN_Lookback( )
@@ -3049,6 +3424,7 @@ def SIN( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def SINH( np.ndarray[np.float_t, ndim=1] real ):
+    """SINH(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SINH_Lookback( )
@@ -3069,6 +3445,9 @@ def SINH( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """SMA(real[, timeperiod=?])
+
+    Simple Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SMA_Lookback( timeperiod )
@@ -3089,6 +3468,7 @@ def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def SQRT( np.ndarray[np.float_t, ndim=1] real ):
+    """SQRT(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SQRT_Lookback( )
@@ -3109,6 +3489,9 @@ def SQRT( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
+    """STDDEV(real[, timeperiod=?, nbdev=?])
+
+    Standard Deviation"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_STDDEV_Lookback( timeperiod , nbdev )
@@ -3129,6 +3512,9 @@ def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e3
     return ( outbegidx , outnbelement , outreal )
 
 def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , slowk_period=-2**31 , slowk_matype=0 , slowd_period=-2**31 , slowd_matype=0 ):
+    """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
+
+    Stochastic"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
@@ -3150,6 +3536,9 @@ def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outslowk , outslowd )
 
 def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
+    """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
+
+    Stochastic Fast"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
@@ -3171,6 +3560,9 @@ def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     return ( outbegidx , outnbelement , outfastk , outfastd )
 
 def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_period=-2**31 , fastd_period=-2**31 , fastd_matype=0 ):
+    """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
+
+    Stochastic Relative Strength Index"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
@@ -3192,6 +3584,7 @@ def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_pe
     return ( outbegidx , outnbelement , outfastk , outfastd )
 
 def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] real1 ):
+    """SUB(real0, real1)"""
     cdef int startidx = 0
     cdef int endidx = real0.shape[0] - 1
     cdef int lookback = TA_SUB_Lookback( )
@@ -3212,6 +3605,9 @@ def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     return ( outbegidx , outnbelement , outreal )
 
 def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """SUM(real[, timeperiod=?])
+
+    Summation"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_SUM_Lookback( timeperiod )
@@ -3232,6 +3628,9 @@ def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 ):
+    """T3(real[, timeperiod=?, vfactor=?])
+
+    Triple Exponential Moving Average (T3)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_T3_Lookback( timeperiod , vfactor )
@@ -3252,6 +3651,7 @@ def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 
     return ( outbegidx , outnbelement , outreal )
 
 def TAN( np.ndarray[np.float_t, ndim=1] real ):
+    """TAN(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TAN_Lookback( )
@@ -3272,6 +3672,7 @@ def TAN( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def TANH( np.ndarray[np.float_t, ndim=1] real ):
+    """TANH(real)"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TANH_Lookback( )
@@ -3292,6 +3693,9 @@ def TANH( np.ndarray[np.float_t, ndim=1] real ):
     return ( outbegidx , outnbelement , outreal )
 
 def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """TEMA(real[, timeperiod=?])
+
+    Triple Exponential Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TEMA_Lookback( timeperiod )
@@ -3312,6 +3716,9 @@ def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """TRANGE(high, low, close)
+
+    True Range"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_TRANGE_Lookback( )
@@ -3332,6 +3739,9 @@ def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     return ( outbegidx , outnbelement , outreal )
 
 def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """TRIMA(real[, timeperiod=?])
+
+    Triangular Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TRIMA_Lookback( timeperiod )
@@ -3352,6 +3762,9 @@ def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """TRIX(real[, timeperiod=?])
+
+    1-day Rate-Of-Change (ROC) of a Triple Smooth EMA"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TRIX_Lookback( timeperiod )
@@ -3372,6 +3785,9 @@ def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """TSF(real[, timeperiod=?])
+
+    Time Series Forecast"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_TSF_Lookback( timeperiod )
@@ -3392,6 +3808,9 @@ def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     return ( outbegidx , outnbelement , outreal )
 
 def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """TYPPRICE(high, low, close)
+
+    Typical Price"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_TYPPRICE_Lookback( )
@@ -3412,6 +3831,9 @@ def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod1=-2**31 , timeperiod2=-2**31 , timeperiod3=-2**31 ):
+    """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
+
+    Ultimate Oscillator"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
@@ -3432,6 +3854,9 @@ def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     return ( outbegidx , outnbelement , outreal )
 
 def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 ):
+    """VAR(real[, timeperiod=?, nbdev=?])
+
+    Variance"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_VAR_Lookback( timeperiod , nbdev )
@@ -3452,6 +3877,9 @@ def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 )
     return ( outbegidx , outnbelement , outreal )
 
 def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close ):
+    """WCLPRICE(high, low, close)
+
+    Weighted Close Price"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_WCLPRICE_Lookback( )
@@ -3472,6 +3900,9 @@ def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     return ( outbegidx , outnbelement , outreal )
 
 def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low , np.ndarray[np.float_t, ndim=1] close , timeperiod=-2**31 ):
+    """WILLR(high, low, close[, timeperiod=?])
+
+    Williams' %R"""
     cdef int startidx = 0
     cdef int endidx = high.shape[0] - 1
     cdef int lookback = TA_WILLR_Lookback( timeperiod )
@@ -3492,6 +3923,9 @@ def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     return ( outbegidx , outnbelement , outreal )
 
 def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
+    """WMA(real[, timeperiod=?])
+
+    Weighted Moving Average"""
     cdef int startidx = 0
     cdef int endidx = real.shape[0] - 1
     cdef int lookback = TA_WMA_Lookback( timeperiod )
