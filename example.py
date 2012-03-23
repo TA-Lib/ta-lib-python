@@ -1,12 +1,13 @@
 import numpy
-import pylab
-
 import talib
+import pylab
+import sys
 
-TEST_LEN = 100
+TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 100
 
 r = numpy.arange(TEST_LEN)
-idata = numpy.random.random((TEST_LEN))
+
+idata = numpy.random.random(TEST_LEN)
 
 i, odata = talib.MA(idata)
 
