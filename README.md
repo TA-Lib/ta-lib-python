@@ -15,27 +15,37 @@ to install (particularly on Mac OS X), and aren't as efficient as they could
 be.  This project uses Cython and Numpy to efficiently and cleanly bind to
 TA-Lib -- producing results 2-4 times faster than the SWIG interface.
 
-## Example
+## Examples
 
-All of the following examples require:
+Similar to TA-Lib, the functions return an index into the input where the
+output data begins and have default values for their parameters, unless
+specifed as keyword arguments.
+
+All of the following examples will use these definitions:
 
 ```python
 import numpy
 import talib
 
-input = numpy.random.random(100)
+data = numpy.random.random(100)
 ```
 
-Calculate a moving average:
+Calculate a simple moving average:
 
 ```python
-i, n, output = talib.MA(input)
+i, output = talib.SMA(data)
 ```
 
-Calculating bollinger bands:
+Calculating bollinger bands, with triple exponential moving average:
 
 ```python
-i, n, upper, middle, lower = talib.BBANDS(input)
+i, upper, middle, lower = talib.BBANDS(data, matype=talib.MA_T3)
+```
+
+Calculating momentum, with a time period of 5:
+
+```python
+i, output = talib.MOM(data, timeperiod=5)
 ```
 
 ## Indicators
