@@ -15,6 +15,20 @@ to install (particularly on Mac OS X), and aren't as efficient as they could
 be.  This project uses Cython and Numpy to efficiently and cleanly bind to
 TA-Lib -- producing results 2-4 times faster than the SWIG interface.
 
+## Installation
+
+You can install from PyPI:
+
+```
+$ easy_install TA-Lib
+```
+
+Or checkout the sources and run ``setup.py`` yourself:
+
+```
+$ python setup.py install
+```
+
 ## Examples
 
 Similar to TA-Lib, the functions return an index into the input where the
