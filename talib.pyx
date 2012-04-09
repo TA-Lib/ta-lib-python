@@ -347,7 +347,7 @@ def ACOS( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ACOS( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -370,7 +370,7 @@ def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_AD( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -391,7 +391,7 @@ def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ADD( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -414,7 +414,7 @@ def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ADOSC( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -437,7 +437,7 @@ def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ADX( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -460,7 +460,7 @@ def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ADXR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -483,7 +483,7 @@ def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_APO( startidx , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -506,8 +506,8 @@ def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outaroondown = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outaroonup = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outaroondown = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outaroonup = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_AROON( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data , <double *>outaroonup.data )
     if retCode != TA_SUCCESS:
@@ -530,7 +530,7 @@ def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_AROONOSC( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -551,7 +551,7 @@ def ASIN( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ASIN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -572,7 +572,7 @@ def ATAN( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ATAN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -595,7 +595,7 @@ def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ATR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -618,7 +618,7 @@ def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_AVGPRICE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -641,9 +641,9 @@ def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outrealupperband = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outrealmiddleband = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outreallowerband = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outrealupperband = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outrealmiddleband = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outreallowerband = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_BBANDS( startidx , endidx , <double *>real.data , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data , <double *>outrealmiddleband.data , <double *>outreallowerband.data )
     if retCode != TA_SUCCESS:
@@ -666,7 +666,7 @@ def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_BETA( startidx , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -689,7 +689,7 @@ def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] hi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_BOP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -712,7 +712,7 @@ def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_CCI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -735,7 +735,7 @@ def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL2CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -758,7 +758,7 @@ def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3BLACKCROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -781,7 +781,7 @@ def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3INSIDE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -804,7 +804,7 @@ def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3LINESTRIKE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -827,7 +827,7 @@ def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3OUTSIDE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -850,7 +850,7 @@ def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3STARSINSOUTH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -873,7 +873,7 @@ def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDL3WHITESOLDIERS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -896,7 +896,7 @@ def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLABANDONEDBABY( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -919,7 +919,7 @@ def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLADVANCEBLOCK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -942,7 +942,7 @@ def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLBELTHOLD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -965,7 +965,7 @@ def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLBREAKAWAY( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -988,7 +988,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLCLOSINGMARUBOZU( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1011,7 +1011,7 @@ def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLCONCEALBABYSWALL( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1034,7 +1034,7 @@ def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLCOUNTERATTACK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1057,7 +1057,7 @@ def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLDARKCLOUDCOVER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1080,7 +1080,7 @@ def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1103,7 +1103,7 @@ def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1126,7 +1126,7 @@ def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLDRAGONFLYDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1149,7 +1149,7 @@ def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLENGULFING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1172,7 +1172,7 @@ def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLEVENINGDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1195,7 +1195,7 @@ def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLEVENINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1218,7 +1218,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLGAPSIDESIDEWHITE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1241,7 +1241,7 @@ def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLGRAVESTONEDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1264,7 +1264,7 @@ def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHAMMER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1287,7 +1287,7 @@ def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHANGINGMAN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1310,7 +1310,7 @@ def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHARAMI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1333,7 +1333,7 @@ def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHARAMICROSS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1356,7 +1356,7 @@ def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHIGHWAVE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1379,7 +1379,7 @@ def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHIKKAKE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1402,7 +1402,7 @@ def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHIKKAKEMOD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1425,7 +1425,7 @@ def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLHOMINGPIGEON( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1448,7 +1448,7 @@ def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLIDENTICAL3CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1471,7 +1471,7 @@ def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLINNECK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1494,7 +1494,7 @@ def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLINVERTEDHAMMER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1517,7 +1517,7 @@ def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLKICKING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1540,7 +1540,7 @@ def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLKICKINGBYLENGTH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1563,7 +1563,7 @@ def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLLADDERBOTTOM( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1586,7 +1586,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLLONGLEGGEDDOJI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1609,7 +1609,7 @@ def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLLONGLINE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1632,7 +1632,7 @@ def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLMARUBOZU( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1655,7 +1655,7 @@ def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLMATCHINGLOW( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1678,7 +1678,7 @@ def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLMATHOLD( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1701,7 +1701,7 @@ def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLMORNINGDOJISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1724,7 +1724,7 @@ def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLMORNINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1747,7 +1747,7 @@ def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLONNECK( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1770,7 +1770,7 @@ def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLPIERCING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1793,7 +1793,7 @@ def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLRICKSHAWMAN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1816,7 +1816,7 @@ def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLRISEFALL3METHODS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1839,7 +1839,7 @@ def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSEPARATINGLINES( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1862,7 +1862,7 @@ def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSHOOTINGSTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1885,7 +1885,7 @@ def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSHORTLINE( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1908,7 +1908,7 @@ def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSPINNINGTOP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1931,7 +1931,7 @@ def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSTALLEDPATTERN( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1954,7 +1954,7 @@ def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLSTICKSANDWICH( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -1977,7 +1977,7 @@ def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLTAKURI( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2000,7 +2000,7 @@ def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLTASUKIGAP( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2023,7 +2023,7 @@ def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLTHRUSTING( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2046,7 +2046,7 @@ def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLTRISTAR( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2069,7 +2069,7 @@ def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLUNIQUE3RIVER( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2092,7 +2092,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLUPSIDEGAP2CROWS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2115,7 +2115,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_CDLXSIDEGAP3METHODS( startidx , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2136,7 +2136,7 @@ def CEIL( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_CEIL( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2159,7 +2159,7 @@ def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_CMO( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2182,7 +2182,7 @@ def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_CORREL( startidx , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2203,7 +2203,7 @@ def COS( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_COS( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2224,7 +2224,7 @@ def COSH( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_COSH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2247,7 +2247,7 @@ def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_DEMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2268,7 +2268,7 @@ def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_DIV( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2291,7 +2291,7 @@ def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_DX( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2314,7 +2314,7 @@ def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_EMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2335,7 +2335,7 @@ def EXP( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_EXP( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2356,7 +2356,7 @@ def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_FLOOR( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2379,7 +2379,7 @@ def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_HT_DCPERIOD( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2402,7 +2402,7 @@ def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_HT_DCPHASE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2425,8 +2425,8 @@ def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outinphase = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outquadrature = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outinphase = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outquadrature = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_HT_PHASOR( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outinphase.data , <double *>outquadrature.data )
     if retCode != TA_SUCCESS:
@@ -2449,8 +2449,8 @@ def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outsine = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outleadsine = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outsine = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outleadsine = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_HT_SINE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outsine.data , <double *>outleadsine.data )
     if retCode != TA_SUCCESS:
@@ -2473,7 +2473,7 @@ def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_HT_TRENDLINE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2496,7 +2496,7 @@ def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_HT_TRENDMODE( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2519,7 +2519,7 @@ def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_KAMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2542,7 +2542,7 @@ def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LINEARREG( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2565,7 +2565,7 @@ def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LINEARREG_ANGLE( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2588,7 +2588,7 @@ def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LINEARREG_INTERCEPT( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2611,7 +2611,7 @@ def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LINEARREG_SLOPE( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2632,7 +2632,7 @@ def LN( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2653,7 +2653,7 @@ def LOG10( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_LOG10( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2676,7 +2676,7 @@ def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MA( startidx , endidx , <double *>real.data , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2699,9 +2699,9 @@ def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MACD( startidx , endidx , <double *>real.data , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
@@ -2724,9 +2724,9 @@ def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatyp
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MACDEXT( startidx , endidx , <double *>real.data , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
@@ -2749,9 +2749,9 @@ def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outmacd = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdsignal = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmacdhist = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MACDFIX( startidx , endidx , <double *>real.data , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
@@ -2774,8 +2774,8 @@ def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e3
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outmama = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outfama = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outmama = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outfama = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MAMA( startidx , endidx , <double *>real.data , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data , <double *>outfama.data )
     if retCode != TA_SUCCESS:
@@ -2796,7 +2796,7 @@ def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] p
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MAVP( startidx , endidx , <double *>real.data , <double *>periods.data , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2819,7 +2819,7 @@ def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MAX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2842,7 +2842,7 @@ def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_MAXINDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -2865,7 +2865,7 @@ def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MEDPRICE( startidx , endidx , <double *>high.data , <double *>low.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2888,7 +2888,7 @@ def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MFI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2911,7 +2911,7 @@ def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MIDPOINT( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2934,7 +2934,7 @@ def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MIDPRICE( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2957,7 +2957,7 @@ def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MIN( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -2980,7 +2980,7 @@ def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outinteger = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_MININDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
@@ -3003,8 +3003,8 @@ def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outmin = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outmax = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outmin = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outmax = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MINMAX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data , <double *>outmax.data )
     if retCode != TA_SUCCESS:
@@ -3027,8 +3027,8 @@ def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int_t, ndim=1] outminidx = numpy.zeros(allocation)
-    cdef np.ndarray[np.int_t, ndim=1] outmaxidx = numpy.zeros(allocation)
+    cdef np.ndarray[np.int_t, ndim=1] outminidx = numpy.zeros(allocation, dtype=int)
+    cdef np.ndarray[np.int_t, ndim=1] outmaxidx = numpy.zeros(allocation, dtype=int)
     TA_Initialize()
     retCode = TA_MINMAXINDEX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data , <int *>outmaxidx.data )
     if retCode != TA_SUCCESS:
@@ -3051,7 +3051,7 @@ def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MINUS_DI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3074,7 +3074,7 @@ def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MINUS_DM( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3097,7 +3097,7 @@ def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MOM( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3118,7 +3118,7 @@ def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_MULT( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3141,7 +3141,7 @@ def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_NATR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3164,7 +3164,7 @@ def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] vo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_OBV( startidx , endidx , <double *>real.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3187,7 +3187,7 @@ def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_PLUS_DI( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3210,7 +3210,7 @@ def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_PLUS_DM( startidx , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3233,7 +3233,7 @@ def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_PPO( startidx , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3256,7 +3256,7 @@ def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ROC( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3279,7 +3279,7 @@ def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ROCP( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3302,7 +3302,7 @@ def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ROCR( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3325,7 +3325,7 @@ def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ROCR100( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3348,7 +3348,7 @@ def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_RSI( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3371,7 +3371,7 @@ def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SAR( startidx , endidx , <double *>high.data , <double *>low.data , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3394,7 +3394,7 @@ def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SAREXT( startidx , endidx , <double *>high.data , <double *>low.data , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3415,7 +3415,7 @@ def SIN( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SIN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3436,7 +3436,7 @@ def SINH( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SINH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3459,7 +3459,7 @@ def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3480,7 +3480,7 @@ def SQRT( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SQRT( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3503,7 +3503,7 @@ def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e3
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_STDDEV( startidx , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3526,8 +3526,8 @@ def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outslowk = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outslowd = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outslowk = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outslowd = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_STOCH( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data , <double *>outslowd.data )
     if retCode != TA_SUCCESS:
@@ -3550,8 +3550,8 @@ def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_STOCHF( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
@@ -3574,8 +3574,8 @@ def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_pe
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation)
-    cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outfastk = numpy.zeros(allocation, dtype=float)
+    cdef np.ndarray[np.float_t, ndim=1] outfastd = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_STOCHRSI( startidx , endidx , <double *>real.data , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
@@ -3596,7 +3596,7 @@ def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SUB( startidx , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3619,7 +3619,7 @@ def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_SUM( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3642,7 +3642,7 @@ def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_T3( startidx , endidx , <double *>real.data , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3663,7 +3663,7 @@ def TAN( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TAN( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3684,7 +3684,7 @@ def TANH( np.ndarray[np.float_t, ndim=1] real ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TANH( startidx , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3707,7 +3707,7 @@ def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TEMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3730,7 +3730,7 @@ def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TRANGE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3753,7 +3753,7 @@ def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TRIMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3776,7 +3776,7 @@ def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TRIX( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3799,7 +3799,7 @@ def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TSF( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3822,7 +3822,7 @@ def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_TYPPRICE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3845,7 +3845,7 @@ def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_ULTOSC( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3868,7 +3868,7 @@ def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 )
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_VAR( startidx , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3891,7 +3891,7 @@ def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_WCLPRICE( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3914,7 +3914,7 @@ def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_WILLR( startidx , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
@@ -3937,7 +3937,7 @@ def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
         allocation = endidx - temp + 1
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation)
+    cdef np.ndarray[np.float_t, ndim=1] outreal = numpy.zeros(allocation, dtype=float)
     TA_Initialize()
     retCode = TA_WMA( startidx , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
