@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-import numpy
+from numpy import zeros, int32, float64
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -304,13 +304,13 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 vartype = 'np.float64_t'
-                dtype = 'f8'
+                dtype = 'float64'
             elif 'int' in arg:
                 vartype = 'np.int32_t'
-                dtype = 'i4'
+                dtype = 'int32'
             else:
                 assert False, args
-            print '    cdef np.ndarray[%s, ndim=1] %s = numpy.zeros(allocation, dtype="%s")' % (vartype, var, dtype)
+            print '    cdef np.ndarray[%s, ndim=1] %s = zeros(allocation, dtype=%s)' % (vartype, var, dtype)
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
