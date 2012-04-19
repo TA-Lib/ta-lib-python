@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import zeros, int32, float64
+from numpy import zeros, int32, double
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -272,7 +272,6 @@ for f in functions:
     print '):'
     print '    """%s"""' % ''.join(docs)
 
-    print '    cdef int startidx = 0'
     for arg in args:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
@@ -287,12 +286,11 @@ for f in functions:
             print ',',
         print cleanup(opt.split()[-1]),
     print ')'
-    print '    cdef int temp = max(lookback, startidx )'
     print '    cdef int allocation'
-    print '    if ( temp > endidx ):'
+    print '    if (lookback > endidx):'
     print '        allocation = 0'
     print '    else:'
-    print '        allocation = endidx - temp + 1'
+    print '        allocation = endidx - lookback + 1'
 
     for arg in args:
         var = arg.split()[-1]
@@ -303,8 +301,8 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                vartype = 'np.float64_t'
-                dtype = 'float64'
+                vartype = 'np.double_t'
+                dtype = 'double'
             elif 'int' in arg:
                 vartype = 'np.int32_t'
                 dtype = 'int32'
@@ -341,7 +339,7 @@ for f in functions:
             print '&%s' % var,
 
         else:
-            print cleanup(var),
+            print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
@@ -361,7 +359,7 @@ for f in functions:
                 if i > 0:
                     print ',',
                 i += 1
-                print cleanup(var),
+                print cleanup(var) if var != 'outBegIdx' else 'lookback',
         else:
             assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
     print ')'
