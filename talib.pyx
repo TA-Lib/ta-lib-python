@@ -8,6 +8,29 @@ ctypedef int TA_MAType
 # TA_MAType enums
 MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
 
+# TA_RetCode enums
+RetCodes = {
+    0: 'Success',
+    1: 'Library Not Initialized',
+    2: 'Bad Parameter',
+    3: 'Allocation Error',
+    4: 'Group Not Found',
+    5: 'Function Not Found',
+    6: 'Invalid Handle',
+    7: 'Invalid Parameter Holder',
+    8: 'Invalid Parameter Holder Type',
+    9: 'Invalid Parameter Function',
+   10: 'Input Not All Initialized',
+   11: 'Output Not All Initialized',
+   12: 'Out-of-Range Start Index',
+   13: 'Out-of-Range End Index',
+   14: 'Invalid List Type',
+   15: 'Bad Object',
+   16: 'Not Supported',
+ 5000: 'Internal Error',
+65535: 'Unknown Error',
+}
+
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
@@ -349,7 +372,7 @@ def ACOS( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_ACOS( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -370,7 +393,7 @@ def AD( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     TA_Initialize()
     retCode = TA_AD( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -389,7 +412,7 @@ def ADD( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     TA_Initialize()
     retCode = TA_ADD( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -410,7 +433,7 @@ def ADOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_ADOSC( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -431,7 +454,7 @@ def ADX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     TA_Initialize()
     retCode = TA_ADX( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -452,7 +475,7 @@ def ADXR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     TA_Initialize()
     retCode = TA_ADXR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -473,7 +496,7 @@ def APO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     TA_Initialize()
     retCode = TA_APO( 0 , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -495,7 +518,7 @@ def AROON( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_AROON( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data , <double *>outaroonup.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outaroondown , outaroonup )
 
@@ -516,7 +539,7 @@ def AROONOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_AROONOSC( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -535,7 +558,7 @@ def ASIN( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_ASIN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -554,7 +577,7 @@ def ATAN( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_ATAN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -575,7 +598,7 @@ def ATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     TA_Initialize()
     retCode = TA_ATR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -596,7 +619,7 @@ def AVGPRICE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_AVGPRICE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -619,7 +642,7 @@ def BBANDS( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-4
     TA_Initialize()
     retCode = TA_BBANDS( 0 , endidx , <double *>real.data , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data , <double *>outrealmiddleband.data , <double *>outreallowerband.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outrealupperband , outrealmiddleband , outreallowerband )
 
@@ -640,7 +663,7 @@ def BETA( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_BETA( 0 , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -661,7 +684,7 @@ def BOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1] hi
     TA_Initialize()
     retCode = TA_BOP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -682,7 +705,7 @@ def CCI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     TA_Initialize()
     retCode = TA_CCI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -703,7 +726,7 @@ def CDL2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDL2CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -724,7 +747,7 @@ def CDL3BLACKCROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -745,7 +768,7 @@ def CDL3INSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     TA_Initialize()
     retCode = TA_CDL3INSIDE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -766,7 +789,7 @@ def CDL3LINESTRIKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -787,7 +810,7 @@ def CDL3OUTSIDE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -808,7 +831,7 @@ def CDL3STARSINSOUTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     TA_Initialize()
     retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -829,7 +852,7 @@ def CDL3WHITESOLDIERS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -850,7 +873,7 @@ def CDLABANDONEDBABY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     TA_Initialize()
     retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -871,7 +894,7 @@ def CDLADVANCEBLOCK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     TA_Initialize()
     retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -892,7 +915,7 @@ def CDLBELTHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -913,7 +936,7 @@ def CDLBREAKAWAY( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     TA_Initialize()
     retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -934,7 +957,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -955,7 +978,7 @@ def CDLCONCEALBABYSWALL( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     TA_Initialize()
     retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -976,7 +999,7 @@ def CDLCOUNTERATTACK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     TA_Initialize()
     retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -997,7 +1020,7 @@ def CDLDARKCLOUDCOVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1018,7 +1041,7 @@ def CDLDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim=1
     TA_Initialize()
     retCode = TA_CDLDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1039,7 +1062,7 @@ def CDLDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1060,7 +1083,7 @@ def CDLDRAGONFLYDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     TA_Initialize()
     retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1081,7 +1104,7 @@ def CDLENGULFING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     TA_Initialize()
     retCode = TA_CDLENGULFING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1102,7 +1125,7 @@ def CDLEVENINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1123,7 +1146,7 @@ def CDLEVENINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1144,7 +1167,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     TA_Initialize()
     retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1165,7 +1188,7 @@ def CDLGRAVESTONEDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1186,7 +1209,7 @@ def CDLHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDLHAMMER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1207,7 +1230,7 @@ def CDLHANGINGMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     TA_Initialize()
     retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1228,7 +1251,7 @@ def CDLHARAMI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDLHARAMI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1249,7 +1272,7 @@ def CDLHARAMICROSS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1270,7 +1293,7 @@ def CDLHIGHWAVE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1291,7 +1314,7 @@ def CDLHIKKAKE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     TA_Initialize()
     retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1312,7 +1335,7 @@ def CDLHIKKAKEMOD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, 
     TA_Initialize()
     retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1333,7 +1356,7 @@ def CDLHOMINGPIGEON( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     TA_Initialize()
     retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1354,7 +1377,7 @@ def CDLIDENTICAL3CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1375,7 +1398,7 @@ def CDLINNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDLINNECK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1396,7 +1419,7 @@ def CDLINVERTEDHAMMER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1417,7 +1440,7 @@ def CDLKICKING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     TA_Initialize()
     retCode = TA_CDLKICKING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1438,7 +1461,7 @@ def CDLKICKINGBYLENGTH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1459,7 +1482,7 @@ def CDLLADDERBOTTOM( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     TA_Initialize()
     retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1480,7 +1503,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1501,7 +1524,7 @@ def CDLLONGLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLLONGLINE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1522,7 +1545,7 @@ def CDLMARUBOZU( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1543,7 +1566,7 @@ def CDLMATCHINGLOW( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1564,7 +1587,7 @@ def CDLMATHOLD( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     TA_Initialize()
     retCode = TA_CDLMATHOLD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1585,7 +1608,7 @@ def CDLMORNINGDOJISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1606,7 +1629,7 @@ def CDLMORNINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1627,7 +1650,7 @@ def CDLONNECK( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDLONNECK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1648,7 +1671,7 @@ def CDLPIERCING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, nd
     TA_Initialize()
     retCode = TA_CDLPIERCING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1669,7 +1692,7 @@ def CDLRICKSHAWMAN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1690,7 +1713,7 @@ def CDLRISEFALL3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     TA_Initialize()
     retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1711,7 +1734,7 @@ def CDLSEPARATINGLINES( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1732,7 +1755,7 @@ def CDLSHOOTINGSTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     TA_Initialize()
     retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1753,7 +1776,7 @@ def CDLSHORTLINE( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     TA_Initialize()
     retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1774,7 +1797,7 @@ def CDLSPINNINGTOP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t,
     TA_Initialize()
     retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1795,7 +1818,7 @@ def CDLSTALLEDPATTERN( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float
     TA_Initialize()
     retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1816,7 +1839,7 @@ def CDLSTICKSANDWICH( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_
     TA_Initialize()
     retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1837,7 +1860,7 @@ def CDLTAKURI( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndim
     TA_Initialize()
     retCode = TA_CDLTAKURI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1858,7 +1881,7 @@ def CDLTASUKIGAP( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     TA_Initialize()
     retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1879,7 +1902,7 @@ def CDLTHRUSTING( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, n
     TA_Initialize()
     retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1900,7 +1923,7 @@ def CDLTRISTAR( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t, ndi
     TA_Initialize()
     retCode = TA_CDLTRISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1921,7 +1944,7 @@ def CDLUNIQUE3RIVER( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.float_t
     TA_Initialize()
     retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1942,7 +1965,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.floa
     TA_Initialize()
     retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1963,7 +1986,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.float_t, ndim=1] open , np.ndarray[np.flo
     TA_Initialize()
     retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -1982,7 +2005,7 @@ def CEIL( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_CEIL( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2003,7 +2026,7 @@ def CMO( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_CMO( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2024,7 +2047,7 @@ def CORREL( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1
     TA_Initialize()
     retCode = TA_CORREL( 0 , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2043,7 +2066,7 @@ def COS( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_COS( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2062,7 +2085,7 @@ def COSH( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_COSH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2083,7 +2106,7 @@ def DEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_DEMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2102,7 +2125,7 @@ def DIV( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     TA_Initialize()
     retCode = TA_DIV( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2123,7 +2146,7 @@ def DX( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] low
     TA_Initialize()
     retCode = TA_DX( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2144,7 +2167,7 @@ def EMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_EMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2163,7 +2186,7 @@ def EXP( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_EXP( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2182,7 +2205,7 @@ def FLOOR( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_FLOOR( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2203,7 +2226,7 @@ def HT_DCPERIOD( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2224,7 +2247,7 @@ def HT_DCPHASE( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_DCPHASE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2246,7 +2269,7 @@ def HT_PHASOR( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_PHASOR( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outinphase.data , <double *>outquadrature.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinphase , outquadrature )
 
@@ -2268,7 +2291,7 @@ def HT_SINE( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_SINE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outsine.data , <double *>outleadsine.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outsine , outleadsine )
 
@@ -2289,7 +2312,7 @@ def HT_TRENDLINE( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2310,7 +2333,7 @@ def HT_TRENDMODE( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -2331,7 +2354,7 @@ def KAMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_KAMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2352,7 +2375,7 @@ def LINEARREG( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_LINEARREG( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2373,7 +2396,7 @@ def LINEARREG_ANGLE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2394,7 +2417,7 @@ def LINEARREG_INTERCEPT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31
     TA_Initialize()
     retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2415,7 +2438,7 @@ def LINEARREG_SLOPE( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2434,7 +2457,7 @@ def LN( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_LN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2453,7 +2476,7 @@ def LOG10( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_LOG10( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2474,7 +2497,7 @@ def MA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
     TA_Initialize()
     retCode = TA_MA( 0 , endidx , <double *>real.data , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2497,7 +2520,7 @@ def MACD( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
     TA_Initialize()
     retCode = TA_MACD( 0 , endidx , <double *>real.data , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outmacd , outmacdsignal , outmacdhist )
 
@@ -2520,7 +2543,7 @@ def MACDEXT( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , fastmatyp
     TA_Initialize()
     retCode = TA_MACDEXT( 0 , endidx , <double *>real.data , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outmacd , outmacdsignal , outmacdhist )
 
@@ -2543,7 +2566,7 @@ def MACDFIX( np.ndarray[np.float_t, ndim=1] real , signalperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MACDFIX( 0 , endidx , <double *>real.data , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data , <double *>outmacdsignal.data , <double *>outmacdhist.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outmacd , outmacdsignal , outmacdhist )
 
@@ -2565,7 +2588,7 @@ def MAMA( np.ndarray[np.float_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e3
     TA_Initialize()
     retCode = TA_MAMA( 0 , endidx , <double *>real.data , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data , <double *>outfama.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outmama , outfama )
 
@@ -2584,7 +2607,7 @@ def MAVP( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] p
     TA_Initialize()
     retCode = TA_MAVP( 0 , endidx , <double *>real.data , <double *>periods.data , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2605,7 +2628,7 @@ def MAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MAX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2626,7 +2649,7 @@ def MAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MAXINDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -2647,7 +2670,7 @@ def MEDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_MEDPRICE( 0 , endidx , <double *>high.data , <double *>low.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2668,7 +2691,7 @@ def MFI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     TA_Initialize()
     retCode = TA_MFI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2689,7 +2712,7 @@ def MIDPOINT( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MIDPOINT( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2710,7 +2733,7 @@ def MIDPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_MIDPRICE( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2731,7 +2754,7 @@ def MIN( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MIN( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2752,7 +2775,7 @@ def MININDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MININDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outinteger )
 
@@ -2774,7 +2797,7 @@ def MINMAX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MINMAX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data , <double *>outmax.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outmin , outmax )
 
@@ -2796,7 +2819,7 @@ def MINMAXINDEX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MINMAXINDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data , <int *>outmaxidx.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outminidx , outmaxidx )
 
@@ -2817,7 +2840,7 @@ def MINUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_MINUS_DI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2838,7 +2861,7 @@ def MINUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_MINUS_DM( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2859,7 +2882,7 @@ def MOM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_MOM( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2878,7 +2901,7 @@ def MULT( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_MULT( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2899,7 +2922,7 @@ def NATR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] l
     TA_Initialize()
     retCode = TA_NATR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2920,7 +2943,7 @@ def OBV( np.ndarray[np.float_t, ndim=1] real , np.ndarray[np.float_t, ndim=1] vo
     TA_Initialize()
     retCode = TA_OBV( 0 , endidx , <double *>real.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2941,7 +2964,7 @@ def PLUS_DI( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     TA_Initialize()
     retCode = TA_PLUS_DI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2962,7 +2985,7 @@ def PLUS_DM( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1
     TA_Initialize()
     retCode = TA_PLUS_DM( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -2983,7 +3006,7 @@ def PPO( np.ndarray[np.float_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-2
     TA_Initialize()
     retCode = TA_PPO( 0 , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3004,7 +3027,7 @@ def ROC( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_ROC( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3025,7 +3048,7 @@ def ROCP( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_ROCP( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3046,7 +3069,7 @@ def ROCR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_ROCR( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3067,7 +3090,7 @@ def ROCR100( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_ROCR100( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3088,7 +3111,7 @@ def RSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_RSI( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3109,7 +3132,7 @@ def SAR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] lo
     TA_Initialize()
     retCode = TA_SAR( 0 , endidx , <double *>high.data , <double *>low.data , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3130,7 +3153,7 @@ def SAREXT( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     TA_Initialize()
     retCode = TA_SAREXT( 0 , endidx , <double *>high.data , <double *>low.data , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3149,7 +3172,7 @@ def SIN( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_SIN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3168,7 +3191,7 @@ def SINH( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_SINH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3189,7 +3212,7 @@ def SMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_SMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3208,7 +3231,7 @@ def SQRT( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_SQRT( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3229,7 +3252,7 @@ def STDDEV( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e3
     TA_Initialize()
     retCode = TA_STDDEV( 0 , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3251,7 +3274,7 @@ def STOCH( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_STOCH( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data , <double *>outslowd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outslowk , outslowd )
 
@@ -3273,7 +3296,7 @@ def STOCHF( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     TA_Initialize()
     retCode = TA_STOCHF( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outfastk , outfastd )
 
@@ -3295,7 +3318,7 @@ def STOCHRSI( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , fastk_pe
     TA_Initialize()
     retCode = TA_STOCHRSI( 0 , endidx , <double *>real.data , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data , <double *>outfastd.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outfastk , outfastd )
 
@@ -3314,7 +3337,7 @@ def SUB( np.ndarray[np.float_t, ndim=1] real0 , np.ndarray[np.float_t, ndim=1] r
     TA_Initialize()
     retCode = TA_SUB( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3335,7 +3358,7 @@ def SUM( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_SUM( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3356,7 +3379,7 @@ def T3( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37 
     TA_Initialize()
     retCode = TA_T3( 0 , endidx , <double *>real.data , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3375,7 +3398,7 @@ def TAN( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_TAN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3394,7 +3417,7 @@ def TANH( np.ndarray[np.float_t, ndim=1] real ):
     TA_Initialize()
     retCode = TA_TANH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3415,7 +3438,7 @@ def TEMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_TEMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3436,7 +3459,7 @@ def TRANGE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     TA_Initialize()
     retCode = TA_TRANGE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3457,7 +3480,7 @@ def TRIMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_TRIMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3478,7 +3501,7 @@ def TRIX( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_TRIX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3499,7 +3522,7 @@ def TSF( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_TSF( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3520,7 +3543,7 @@ def TYPPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_TYPPRICE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3541,7 +3564,7 @@ def ULTOSC( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1]
     TA_Initialize()
     retCode = TA_ULTOSC( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3562,7 +3585,7 @@ def VAR( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 )
     TA_Initialize()
     retCode = TA_VAR( 0 , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3583,7 +3606,7 @@ def WCLPRICE( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=
     TA_Initialize()
     retCode = TA_WCLPRICE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3604,7 +3627,7 @@ def WILLR( np.ndarray[np.float_t, ndim=1] high , np.ndarray[np.float_t, ndim=1] 
     TA_Initialize()
     retCode = TA_WILLR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 
@@ -3625,7 +3648,7 @@ def WMA( np.ndarray[np.float_t, ndim=1] real , timeperiod=-2**31 ):
     TA_Initialize()
     retCode = TA_WMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data )
     if retCode != TA_SUCCESS:
-        raise Exception("%d" % retCode)
+        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))
     TA_Shutdown()
     return ( lookback , outreal )
 

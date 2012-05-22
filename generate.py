@@ -41,6 +41,29 @@ ctypedef int TA_MAType
 # TA_MAType enums
 MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
 
+# TA_RetCode enums
+RetCodes = {
+    0: 'Success',
+    1: 'Library Not Initialized',
+    2: 'Bad Parameter',
+    3: 'Allocation Error',
+    4: 'Group Not Found',
+    5: 'Function Not Found',
+    6: 'Invalid Handle',
+    7: 'Invalid Parameter Holder',
+    8: 'Invalid Parameter Holder Type',
+    9: 'Invalid Parameter Function',
+   10: 'Input Not All Initialized',
+   11: 'Output Not All Initialized',
+   12: 'Out-of-Range Start Index',
+   13: 'Out-of-Range End Index',
+   14: 'Invalid List Type',
+   15: 'Bad Object',
+   16: 'Not Supported',
+ 5000: 'Internal Error',
+65535: 'Unknown Error',
+}
+
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
@@ -343,7 +366,7 @@ for f in functions:
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
-    print '        raise Exception("%d" % retCode)'
+    print '        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))'
     print '    TA_Shutdown()'
 
     print '    return (',
