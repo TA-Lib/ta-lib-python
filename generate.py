@@ -366,7 +366,7 @@ for f in functions:
 
     print ')'
     print '    if retCode != TA_SUCCESS:'
-    print '        raise Exception("%s (%s)" % (RetCodes.get(retCode, "Unknown"), retCode))'
+    print '        raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))'
     print '    TA_Shutdown()'
 
     print '    return (',
