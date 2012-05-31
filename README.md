@@ -29,6 +29,10 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
+Note: this requires that you have already installed the ``ta-lib`` library
+on your computer (you can [download it](http://ta-lib.org/hdr_dw.html) or
+use your computers package manager to install it).
+
 ## Examples
 
 Similar to TA-Lib, the functions return an index into the input where the
