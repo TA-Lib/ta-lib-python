@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import zeros, int32, double
+from numpy import zeros, int32, double, ascontiguousarray
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -268,7 +268,7 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray[np.float_t, ndim=1] %s' % var,
+            print 'np.ndarray[np.double_t, ndim=1] %s' % var,
             docs.append(var)
             docs.append(', ')
 
@@ -297,11 +297,20 @@ for f in functions:
 
     for arg in args:
         var = arg.split()[-1]
+        if 'out' in var:
+            break
+        if var.endswith('[]'):
+            var = cleanup(var[:-2])
+            print '    %s = ascontiguousarray(%s, dtype=double)' % (var, var)
+
+    for arg in args:
+        var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
             print '    cdef int endidx = %s.shape[0] - 1' % var
             break
 
+    print '    TA_Initialize()'
     print '    cdef int lookback = %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
@@ -340,7 +349,6 @@ for f in functions:
         else:
             assert False, arg
 
-    print '    TA_Initialize()'
     print '    retCode = %s(' % name,
 
     for i, arg in enumerate(args):
@@ -365,9 +373,9 @@ for f in functions:
             print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
+    print '    TA_Shutdown()'
     print '    if retCode != TA_SUCCESS:'
     print '        raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))'
-    print '    TA_Shutdown()'
 
     print '    return (',
     i = 0
