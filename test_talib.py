@@ -82,3 +82,9 @@ def test_DEMA():
     assert abs(result[i + 3] - 87.089) < 1e-3
     assert abs(result[i + 4] - 87.656) < 1e-3
 
+def test_EMAEMA():
+    result = talib.EMA(series, timeperiod=2)
+    result = talib.EMA(result, timeperiod=2)
+    i = np.where(~np.isnan(result))[0][0]
+    assert len(series) == len(result)
+    assert i == 2, i

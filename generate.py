@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import empty, nan, int32, double, ascontiguousarray
+from numpy import empty, where, isnan, nan, int32, double, ascontiguousarray
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -307,11 +307,13 @@ for f in functions:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
-            print '    cdef int endidx = %s.shape[0] - 1' % var
+            print '    cdef int length = %s.shape[0]' % var
+            print '    cdef int begidx = where(~isnan(%s))[0][0]' % var
+            print '    cdef int endidx = length - begidx - 1'
             break
 
     print '    TA_Initialize()'
-    print '    cdef int lookback = %s_Lookback(' % name,
+    print '    cdef int lookback = begidx + %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
         if i > 0:
@@ -335,9 +337,8 @@ for f in functions:
                 dtype = 'int32'
             else:
                 assert False, args
-            print '    cdef np.ndarray[%s, ndim=1] %s = empty(endidx + 1, dtype=%s)' % (vartype, var, dtype)
+            print '    cdef np.ndarray[%s, ndim=1] %s = empty(length, dtype=%s)' % (vartype, var, dtype)
             print '    %s.fill(nan)' % var
-            print '    assert id(%s) == id(ascontiguousarray(%s, dtype=%s))' % (var, var, dtype)
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
@@ -358,7 +359,7 @@ for f in functions:
             if 'out' in var:
                 data = '%s.data+lookback' % var
             else:
-                data = '%s.data' % var
+                data = '%s.data+begidx' % var
             if 'double' in arg:
                 print '<double *>%s' % data,
             elif 'int' in arg:

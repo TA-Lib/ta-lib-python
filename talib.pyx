@@ -1,5 +1,5 @@
 
-from numpy import empty, nan, int32, double, ascontiguousarray
+from numpy import empty, where, isnan, nan, int32, double, ascontiguousarray
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -360,15 +360,16 @@ __version__ = TA_GetVersionString()
 def ACOS( np.ndarray[np.double_t, ndim=1] real ):
     """ACOS(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ACOS_Lookback( )
+    cdef int lookback = begidx + TA_ACOS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ACOS( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ACOS( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -382,15 +383,16 @@ def AD( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] l
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
     volume = ascontiguousarray(volume, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_AD_Lookback( )
+    cdef int lookback = begidx + TA_AD_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_AD( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_AD( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -400,15 +402,16 @@ def ADD( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim=1]
     """ADD(real0, real1)"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ADD_Lookback( )
+    cdef int lookback = begidx + TA_ADD_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ADD( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ADD( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -422,15 +425,16 @@ def ADOSC( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
     volume = ascontiguousarray(volume, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ADOSC_Lookback( fastperiod , slowperiod )
+    cdef int lookback = begidx + TA_ADOSC_Lookback( fastperiod , slowperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ADOSC( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ADOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -443,15 +447,16 @@ def ADX( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ADX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ADX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ADX( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ADX( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -464,15 +469,16 @@ def ADXR( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1]
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ADXR_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ADXR_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ADXR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ADXR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -483,15 +489,16 @@ def APO( np.ndarray[np.double_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
 
     Absolute Price Oscillator"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_APO_Lookback( fastperiod , slowperiod , matype )
+    cdef int lookback = begidx + TA_APO_Lookback( fastperiod , slowperiod , matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_APO( 0 , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_APO( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -503,18 +510,18 @@ def AROON( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1
     Aroon"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_AROON_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_AROON_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outaroondown = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outaroondown = empty(length, dtype=double)
     outaroondown.fill(nan)
-    assert id(outaroondown) == id(ascontiguousarray(outaroondown, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outaroonup = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outaroonup = empty(length, dtype=double)
     outaroonup.fill(nan)
-    assert id(outaroonup) == id(ascontiguousarray(outaroonup, dtype=double))
-    retCode = TA_AROON( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data+lookback , <double *>outaroonup.data+lookback )
+    retCode = TA_AROON( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data+lookback , <double *>outaroonup.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -526,15 +533,16 @@ def AROONOSC( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     Aroon Oscillator"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_AROONOSC_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_AROONOSC_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_AROONOSC( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_AROONOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -543,15 +551,16 @@ def AROONOSC( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
 def ASIN( np.ndarray[np.double_t, ndim=1] real ):
     """ASIN(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ASIN_Lookback( )
+    cdef int lookback = begidx + TA_ASIN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ASIN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ASIN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -560,15 +569,16 @@ def ASIN( np.ndarray[np.double_t, ndim=1] real ):
 def ATAN( np.ndarray[np.double_t, ndim=1] real ):
     """ATAN(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ATAN_Lookback( )
+    cdef int lookback = begidx + TA_ATAN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ATAN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ATAN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -581,15 +591,16 @@ def ATR( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ATR_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ATR_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ATR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ATR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -603,15 +614,16 @@ def AVGPRICE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, ndi
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_AVGPRICE_Lookback( )
+    cdef int lookback = begidx + TA_AVGPRICE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_AVGPRICE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_AVGPRICE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -622,21 +634,20 @@ def BBANDS( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , nbdevup=-
 
     Bollinger Bands"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
+    cdef int lookback = begidx + TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outrealupperband = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outrealupperband = empty(length, dtype=double)
     outrealupperband.fill(nan)
-    assert id(outrealupperband) == id(ascontiguousarray(outrealupperband, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outrealmiddleband = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outrealmiddleband = empty(length, dtype=double)
     outrealmiddleband.fill(nan)
-    assert id(outrealmiddleband) == id(ascontiguousarray(outrealmiddleband, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outreallowerband = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreallowerband = empty(length, dtype=double)
     outreallowerband.fill(nan)
-    assert id(outreallowerband) == id(ascontiguousarray(outreallowerband, dtype=double))
-    retCode = TA_BBANDS( 0 , endidx , <double *>real.data , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data+lookback , <double *>outrealmiddleband.data+lookback , <double *>outreallowerband.data+lookback )
+    retCode = TA_BBANDS( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data+lookback , <double *>outrealmiddleband.data+lookback , <double *>outreallowerband.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -648,15 +659,16 @@ def BETA( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim=1
     Beta"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_BETA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_BETA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_BETA( 0 , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_BETA( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -670,15 +682,16 @@ def BOP( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, ndim=1] 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_BOP_Lookback( )
+    cdef int lookback = begidx + TA_BOP_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_BOP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_BOP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -691,15 +704,16 @@ def CCI( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CCI_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_CCI_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_CCI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_CCI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -713,15 +727,16 @@ def CDL2CROWS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL2CROWS_Lookback( )
+    cdef int lookback = begidx + TA_CDL2CROWS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL2CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL2CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -735,15 +750,16 @@ def CDL3BLACKCROWS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3BLACKCROWS_Lookback( )
+    cdef int lookback = begidx + TA_CDL3BLACKCROWS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -757,15 +773,16 @@ def CDL3INSIDE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, n
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3INSIDE_Lookback( )
+    cdef int lookback = begidx + TA_CDL3INSIDE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3INSIDE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3INSIDE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -779,15 +796,16 @@ def CDL3LINESTRIKE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3LINESTRIKE_Lookback( )
+    cdef int lookback = begidx + TA_CDL3LINESTRIKE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -801,15 +819,16 @@ def CDL3OUTSIDE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3OUTSIDE_Lookback( )
+    cdef int lookback = begidx + TA_CDL3OUTSIDE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -823,15 +842,16 @@ def CDL3STARSINSOUTH( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doubl
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3STARSINSOUTH_Lookback( )
+    cdef int lookback = begidx + TA_CDL3STARSINSOUTH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -845,15 +865,16 @@ def CDL3WHITESOLDIERS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDL3WHITESOLDIERS_Lookback( )
+    cdef int lookback = begidx + TA_CDL3WHITESOLDIERS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -867,15 +888,16 @@ def CDLABANDONEDBABY( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doubl
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLABANDONEDBABY_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLABANDONEDBABY_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -889,15 +911,16 @@ def CDLADVANCEBLOCK( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLADVANCEBLOCK_Lookback( )
+    cdef int lookback = begidx + TA_CDLADVANCEBLOCK_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -911,15 +934,16 @@ def CDLBELTHOLD( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLBELTHOLD_Lookback( )
+    cdef int lookback = begidx + TA_CDLBELTHOLD_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -933,15 +957,16 @@ def CDLBREAKAWAY( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t,
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLBREAKAWAY_Lookback( )
+    cdef int lookback = begidx + TA_CDLBREAKAWAY_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -955,15 +980,16 @@ def CDLCLOSINGMARUBOZU( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLCLOSINGMARUBOZU_Lookback( )
+    cdef int lookback = begidx + TA_CDLCLOSINGMARUBOZU_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -977,15 +1003,16 @@ def CDLCONCEALBABYSWALL( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.do
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLCONCEALBABYSWALL_Lookback( )
+    cdef int lookback = begidx + TA_CDLCONCEALBABYSWALL_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -999,15 +1026,16 @@ def CDLCOUNTERATTACK( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doubl
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLCOUNTERATTACK_Lookback( )
+    cdef int lookback = begidx + TA_CDLCOUNTERATTACK_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1021,15 +1049,16 @@ def CDLDARKCLOUDCOVER( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLDARKCLOUDCOVER_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1043,15 +1072,16 @@ def CDLDOJI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, ndim
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLDOJI_Lookback( )
+    cdef int lookback = begidx + TA_CDLDOJI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1065,15 +1095,16 @@ def CDLDOJISTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLDOJISTAR_Lookback( )
+    cdef int lookback = begidx + TA_CDLDOJISTAR_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1087,15 +1118,16 @@ def CDLDRAGONFLYDOJI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doubl
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLDRAGONFLYDOJI_Lookback( )
+    cdef int lookback = begidx + TA_CDLDRAGONFLYDOJI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1109,15 +1141,16 @@ def CDLENGULFING( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t,
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLENGULFING_Lookback( )
+    cdef int lookback = begidx + TA_CDLENGULFING_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLENGULFING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLENGULFING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1131,15 +1164,16 @@ def CDLEVENINGDOJISTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLEVENINGDOJISTAR_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1153,15 +1187,16 @@ def CDLEVENINGSTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLEVENINGSTAR_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLEVENINGSTAR_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1175,15 +1210,16 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.do
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLGAPSIDESIDEWHITE_Lookback( )
+    cdef int lookback = begidx + TA_CDLGAPSIDESIDEWHITE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1197,15 +1233,16 @@ def CDLGRAVESTONEDOJI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLGRAVESTONEDOJI_Lookback( )
+    cdef int lookback = begidx + TA_CDLGRAVESTONEDOJI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1219,15 +1256,16 @@ def CDLHAMMER( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHAMMER_Lookback( )
+    cdef int lookback = begidx + TA_CDLHAMMER_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHAMMER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHAMMER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1241,15 +1279,16 @@ def CDLHANGINGMAN( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHANGINGMAN_Lookback( )
+    cdef int lookback = begidx + TA_CDLHANGINGMAN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1263,15 +1302,16 @@ def CDLHARAMI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHARAMI_Lookback( )
+    cdef int lookback = begidx + TA_CDLHARAMI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHARAMI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHARAMI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1285,15 +1325,16 @@ def CDLHARAMICROSS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHARAMICROSS_Lookback( )
+    cdef int lookback = begidx + TA_CDLHARAMICROSS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1307,15 +1348,16 @@ def CDLHIGHWAVE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHIGHWAVE_Lookback( )
+    cdef int lookback = begidx + TA_CDLHIGHWAVE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1329,15 +1371,16 @@ def CDLHIKKAKE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, n
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHIKKAKE_Lookback( )
+    cdef int lookback = begidx + TA_CDLHIKKAKE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1351,15 +1394,16 @@ def CDLHIKKAKEMOD( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHIKKAKEMOD_Lookback( )
+    cdef int lookback = begidx + TA_CDLHIKKAKEMOD_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1373,15 +1417,16 @@ def CDLHOMINGPIGEON( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLHOMINGPIGEON_Lookback( )
+    cdef int lookback = begidx + TA_CDLHOMINGPIGEON_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1395,15 +1440,16 @@ def CDLIDENTICAL3CROWS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLIDENTICAL3CROWS_Lookback( )
+    cdef int lookback = begidx + TA_CDLIDENTICAL3CROWS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1417,15 +1463,16 @@ def CDLINNECK( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLINNECK_Lookback( )
+    cdef int lookback = begidx + TA_CDLINNECK_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLINNECK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLINNECK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1439,15 +1486,16 @@ def CDLINVERTEDHAMMER( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLINVERTEDHAMMER_Lookback( )
+    cdef int lookback = begidx + TA_CDLINVERTEDHAMMER_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1461,15 +1509,16 @@ def CDLKICKING( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, n
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLKICKING_Lookback( )
+    cdef int lookback = begidx + TA_CDLKICKING_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLKICKING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLKICKING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1483,15 +1532,16 @@ def CDLKICKINGBYLENGTH( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLKICKINGBYLENGTH_Lookback( )
+    cdef int lookback = begidx + TA_CDLKICKINGBYLENGTH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1505,15 +1555,16 @@ def CDLLADDERBOTTOM( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLLADDERBOTTOM_Lookback( )
+    cdef int lookback = begidx + TA_CDLLADDERBOTTOM_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1527,15 +1578,16 @@ def CDLLONGLEGGEDDOJI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLLONGLEGGEDDOJI_Lookback( )
+    cdef int lookback = begidx + TA_CDLLONGLEGGEDDOJI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1549,15 +1601,16 @@ def CDLLONGLINE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLLONGLINE_Lookback( )
+    cdef int lookback = begidx + TA_CDLLONGLINE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLLONGLINE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLLONGLINE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1571,15 +1624,16 @@ def CDLMARUBOZU( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLMARUBOZU_Lookback( )
+    cdef int lookback = begidx + TA_CDLMARUBOZU_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1593,15 +1647,16 @@ def CDLMATCHINGLOW( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLMATCHINGLOW_Lookback( )
+    cdef int lookback = begidx + TA_CDLMATCHINGLOW_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1615,15 +1670,16 @@ def CDLMATHOLD( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, n
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLMATHOLD_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLMATHOLD_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLMATHOLD( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLMATHOLD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1637,15 +1693,16 @@ def CDLMORNINGDOJISTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLMORNINGDOJISTAR_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1659,15 +1716,16 @@ def CDLMORNINGSTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLMORNINGSTAR_Lookback( penetration )
+    cdef int lookback = begidx + TA_CDLMORNINGSTAR_Lookback( penetration )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1681,15 +1739,16 @@ def CDLONNECK( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLONNECK_Lookback( )
+    cdef int lookback = begidx + TA_CDLONNECK_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLONNECK( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLONNECK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1703,15 +1762,16 @@ def CDLPIERCING( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, 
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLPIERCING_Lookback( )
+    cdef int lookback = begidx + TA_CDLPIERCING_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLPIERCING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLPIERCING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1725,15 +1785,16 @@ def CDLRICKSHAWMAN( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLRICKSHAWMAN_Lookback( )
+    cdef int lookback = begidx + TA_CDLRICKSHAWMAN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1747,15 +1808,16 @@ def CDLRISEFALL3METHODS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.do
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLRISEFALL3METHODS_Lookback( )
+    cdef int lookback = begidx + TA_CDLRISEFALL3METHODS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1769,15 +1831,16 @@ def CDLSEPARATINGLINES( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSEPARATINGLINES_Lookback( )
+    cdef int lookback = begidx + TA_CDLSEPARATINGLINES_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1791,15 +1854,16 @@ def CDLSHOOTINGSTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSHOOTINGSTAR_Lookback( )
+    cdef int lookback = begidx + TA_CDLSHOOTINGSTAR_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1813,15 +1877,16 @@ def CDLSHORTLINE( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t,
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSHORTLINE_Lookback( )
+    cdef int lookback = begidx + TA_CDLSHORTLINE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1835,15 +1900,16 @@ def CDLSPINNINGTOP( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSPINNINGTOP_Lookback( )
+    cdef int lookback = begidx + TA_CDLSPINNINGTOP_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1857,15 +1923,16 @@ def CDLSTALLEDPATTERN( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doub
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSTALLEDPATTERN_Lookback( )
+    cdef int lookback = begidx + TA_CDLSTALLEDPATTERN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1879,15 +1946,16 @@ def CDLSTICKSANDWICH( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.doubl
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLSTICKSANDWICH_Lookback( )
+    cdef int lookback = begidx + TA_CDLSTICKSANDWICH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1901,15 +1969,16 @@ def CDLTAKURI( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, nd
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLTAKURI_Lookback( )
+    cdef int lookback = begidx + TA_CDLTAKURI_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLTAKURI( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLTAKURI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1923,15 +1992,16 @@ def CDLTASUKIGAP( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t,
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLTASUKIGAP_Lookback( )
+    cdef int lookback = begidx + TA_CDLTASUKIGAP_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1945,15 +2015,16 @@ def CDLTHRUSTING( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t,
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLTHRUSTING_Lookback( )
+    cdef int lookback = begidx + TA_CDLTHRUSTING_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1967,15 +2038,16 @@ def CDLTRISTAR( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double_t, n
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLTRISTAR_Lookback( )
+    cdef int lookback = begidx + TA_CDLTRISTAR_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLTRISTAR( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLTRISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1989,15 +2061,16 @@ def CDLUNIQUE3RIVER( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.double
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLUNIQUE3RIVER_Lookback( )
+    cdef int lookback = begidx + TA_CDLUNIQUE3RIVER_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2011,15 +2084,16 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.dou
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLUPSIDEGAP2CROWS_Lookback( )
+    cdef int lookback = begidx + TA_CDLUPSIDEGAP2CROWS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2033,15 +2107,16 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.do
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CDLXSIDEGAP3METHODS_Lookback( )
+    cdef int lookback = begidx + TA_CDLXSIDEGAP3METHODS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>open.data , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2050,15 +2125,16 @@ def CDLXSIDEGAP3METHODS( np.ndarray[np.double_t, ndim=1] open , np.ndarray[np.do
 def CEIL( np.ndarray[np.double_t, ndim=1] real ):
     """CEIL(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CEIL_Lookback( )
+    cdef int lookback = begidx + TA_CEIL_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_CEIL( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_CEIL( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2069,15 +2145,16 @@ def CMO( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Chande Momentum Oscillator"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CMO_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_CMO_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_CMO( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_CMO( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2089,15 +2166,16 @@ def CORREL( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim
     Pearson's Correlation Coefficient (r)"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_CORREL_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_CORREL_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_CORREL( 0 , endidx , <double *>real0.data , <double *>real1.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_CORREL( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2106,15 +2184,16 @@ def CORREL( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim
 def COS( np.ndarray[np.double_t, ndim=1] real ):
     """COS(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_COS_Lookback( )
+    cdef int lookback = begidx + TA_COS_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_COS( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_COS( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2123,15 +2202,16 @@ def COS( np.ndarray[np.double_t, ndim=1] real ):
 def COSH( np.ndarray[np.double_t, ndim=1] real ):
     """COSH(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_COSH_Lookback( )
+    cdef int lookback = begidx + TA_COSH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_COSH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_COSH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2142,15 +2222,16 @@ def DEMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Double Exponential Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_DEMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_DEMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_DEMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_DEMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2160,15 +2241,16 @@ def DIV( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim=1]
     """DIV(real0, real1)"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_DIV_Lookback( )
+    cdef int lookback = begidx + TA_DIV_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_DIV( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_DIV( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2181,15 +2263,16 @@ def DX( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] l
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_DX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_DX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_DX( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_DX( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2200,15 +2283,16 @@ def EMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Exponential Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_EMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_EMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_EMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_EMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2217,15 +2301,16 @@ def EMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 def EXP( np.ndarray[np.double_t, ndim=1] real ):
     """EXP(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_EXP_Lookback( )
+    cdef int lookback = begidx + TA_EXP_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_EXP( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_EXP( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2234,15 +2319,16 @@ def EXP( np.ndarray[np.double_t, ndim=1] real ):
 def FLOOR( np.ndarray[np.double_t, ndim=1] real ):
     """FLOOR(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_FLOOR_Lookback( )
+    cdef int lookback = begidx + TA_FLOOR_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_FLOOR( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_FLOOR( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2253,15 +2339,16 @@ def HT_DCPERIOD( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - Dominant Cycle Period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_DCPERIOD_Lookback( )
+    cdef int lookback = begidx + TA_HT_DCPERIOD_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2272,15 +2359,16 @@ def HT_DCPHASE( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - Dominant Cycle Phase"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_DCPHASE_Lookback( )
+    cdef int lookback = begidx + TA_HT_DCPHASE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_HT_DCPHASE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_HT_DCPHASE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2291,18 +2379,18 @@ def HT_PHASOR( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - Phasor Components"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_PHASOR_Lookback( )
+    cdef int lookback = begidx + TA_HT_PHASOR_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outinphase = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outinphase = empty(length, dtype=double)
     outinphase.fill(nan)
-    assert id(outinphase) == id(ascontiguousarray(outinphase, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outquadrature = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outquadrature = empty(length, dtype=double)
     outquadrature.fill(nan)
-    assert id(outquadrature) == id(ascontiguousarray(outquadrature, dtype=double))
-    retCode = TA_HT_PHASOR( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outinphase.data+lookback , <double *>outquadrature.data+lookback )
+    retCode = TA_HT_PHASOR( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outinphase.data+lookback , <double *>outquadrature.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2313,18 +2401,18 @@ def HT_SINE( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - SineWave"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_SINE_Lookback( )
+    cdef int lookback = begidx + TA_HT_SINE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outsine = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outsine = empty(length, dtype=double)
     outsine.fill(nan)
-    assert id(outsine) == id(ascontiguousarray(outsine, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outleadsine = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outleadsine = empty(length, dtype=double)
     outleadsine.fill(nan)
-    assert id(outleadsine) == id(ascontiguousarray(outleadsine, dtype=double))
-    retCode = TA_HT_SINE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outsine.data+lookback , <double *>outleadsine.data+lookback )
+    retCode = TA_HT_SINE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outsine.data+lookback , <double *>outleadsine.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2335,15 +2423,16 @@ def HT_TRENDLINE( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - Instantaneous Trendline"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_TRENDLINE_Lookback( )
+    cdef int lookback = begidx + TA_HT_TRENDLINE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2354,15 +2443,16 @@ def HT_TRENDMODE( np.ndarray[np.double_t, ndim=1] real ):
 
     Hilbert Transform - Trend vs Cycle Mode"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_HT_TRENDMODE_Lookback( )
+    cdef int lookback = begidx + TA_HT_TRENDMODE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2373,15 +2463,16 @@ def KAMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Kaufman Adaptive Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_KAMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_KAMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_KAMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_KAMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2392,15 +2483,16 @@ def LINEARREG( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Linear Regression"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LINEARREG_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_LINEARREG_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LINEARREG( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LINEARREG( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2411,15 +2503,16 @@ def LINEARREG_ANGLE( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Linear Regression Angle"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LINEARREG_ANGLE_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_LINEARREG_ANGLE_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2430,15 +2523,16 @@ def LINEARREG_INTERCEPT( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**3
 
     Linear Regression Intercept"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2449,15 +2543,16 @@ def LINEARREG_SLOPE( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Linear Regression Slope"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LINEARREG_SLOPE_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_LINEARREG_SLOPE_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2466,15 +2561,16 @@ def LINEARREG_SLOPE( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 def LN( np.ndarray[np.double_t, ndim=1] real ):
     """LN(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LN_Lookback( )
+    cdef int lookback = begidx + TA_LN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2483,15 +2579,16 @@ def LN( np.ndarray[np.double_t, ndim=1] real ):
 def LOG10( np.ndarray[np.double_t, ndim=1] real ):
     """LOG10(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_LOG10_Lookback( )
+    cdef int lookback = begidx + TA_LOG10_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_LOG10( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_LOG10( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2502,15 +2599,16 @@ def MA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , matype=0 ):
 
     All Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MA_Lookback( timeperiod , matype )
+    cdef int lookback = begidx + TA_MA_Lookback( timeperiod , matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MA( 0 , endidx , <double *>real.data , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MA( 0 , endidx , <double *>real.data+begidx , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2521,21 +2619,20 @@ def MACD( np.ndarray[np.double_t, ndim=1] real , fastperiod=-2**31 , slowperiod=
 
     Moving Average Convergence/Divergence"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
+    cdef int lookback = begidx + TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(length, dtype=double)
     outmacd.fill(nan)
-    assert id(outmacd) == id(ascontiguousarray(outmacd, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(length, dtype=double)
     outmacdsignal.fill(nan)
-    assert id(outmacdsignal) == id(ascontiguousarray(outmacdsignal, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(length, dtype=double)
     outmacdhist.fill(nan)
-    assert id(outmacdhist) == id(ascontiguousarray(outmacdhist, dtype=double))
-    retCode = TA_MACD( 0 , endidx , <double *>real.data , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+    retCode = TA_MACD( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2546,21 +2643,20 @@ def MACDEXT( np.ndarray[np.double_t, ndim=1] real , fastperiod=-2**31 , fastmaty
 
     MACD with controllable MA type"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
+    cdef int lookback = begidx + TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(length, dtype=double)
     outmacd.fill(nan)
-    assert id(outmacd) == id(ascontiguousarray(outmacd, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(length, dtype=double)
     outmacdsignal.fill(nan)
-    assert id(outmacdsignal) == id(ascontiguousarray(outmacdsignal, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(length, dtype=double)
     outmacdhist.fill(nan)
-    assert id(outmacdhist) == id(ascontiguousarray(outmacdhist, dtype=double))
-    retCode = TA_MACDEXT( 0 , endidx , <double *>real.data , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+    retCode = TA_MACDEXT( 0 , endidx , <double *>real.data+begidx , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2571,21 +2667,20 @@ def MACDFIX( np.ndarray[np.double_t, ndim=1] real , signalperiod=-2**31 ):
 
     Moving Average Convergence/Divergence Fix 12/26"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MACDFIX_Lookback( signalperiod )
+    cdef int lookback = begidx + TA_MACDFIX_Lookback( signalperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacd = empty(length, dtype=double)
     outmacd.fill(nan)
-    assert id(outmacd) == id(ascontiguousarray(outmacd, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdsignal = empty(length, dtype=double)
     outmacdsignal.fill(nan)
-    assert id(outmacdsignal) == id(ascontiguousarray(outmacdsignal, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmacdhist = empty(length, dtype=double)
     outmacdhist.fill(nan)
-    assert id(outmacdhist) == id(ascontiguousarray(outmacdhist, dtype=double))
-    retCode = TA_MACDFIX( 0 , endidx , <double *>real.data , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+    retCode = TA_MACDFIX( 0 , endidx , <double *>real.data+begidx , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2596,18 +2691,18 @@ def MAMA( np.ndarray[np.double_t, ndim=1] real , fastlimit=-4e37 , slowlimit=-4e
 
     MESA Adaptive Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MAMA_Lookback( fastlimit , slowlimit )
+    cdef int lookback = begidx + TA_MAMA_Lookback( fastlimit , slowlimit )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outmama = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmama = empty(length, dtype=double)
     outmama.fill(nan)
-    assert id(outmama) == id(ascontiguousarray(outmama, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outfama = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outfama = empty(length, dtype=double)
     outfama.fill(nan)
-    assert id(outfama) == id(ascontiguousarray(outfama, dtype=double))
-    retCode = TA_MAMA( 0 , endidx , <double *>real.data , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data+lookback , <double *>outfama.data+lookback )
+    retCode = TA_MAMA( 0 , endidx , <double *>real.data+begidx , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data+lookback , <double *>outfama.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2617,15 +2712,16 @@ def MAVP( np.ndarray[np.double_t, ndim=1] real , np.ndarray[np.double_t, ndim=1]
     """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
     real = ascontiguousarray(real, dtype=double)
     periods = ascontiguousarray(periods, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MAVP_Lookback( minperiod , maxperiod , matype )
+    cdef int lookback = begidx + TA_MAVP_Lookback( minperiod , maxperiod , matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MAVP( 0 , endidx , <double *>real.data , <double *>periods.data , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MAVP( 0 , endidx , <double *>real.data+begidx , <double *>periods.data+begidx , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2636,15 +2732,16 @@ def MAX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Highest value over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MAX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MAX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MAX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MAX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2655,15 +2752,16 @@ def MAXINDEX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Index of highest value over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MAXINDEX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MAXINDEX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_MAXINDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_MAXINDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2675,15 +2773,16 @@ def MEDPRICE( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     Median Price"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MEDPRICE_Lookback( )
+    cdef int lookback = begidx + TA_MEDPRICE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MEDPRICE( 0 , endidx , <double *>high.data , <double *>low.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MEDPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2697,15 +2796,16 @@ def MFI( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] 
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
     volume = ascontiguousarray(volume, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MFI_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MFI_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MFI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , <double *>volume.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MFI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2716,15 +2816,16 @@ def MIDPOINT( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     MidPoint over period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MIDPOINT_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MIDPOINT_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MIDPOINT( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MIDPOINT( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2736,15 +2837,16 @@ def MIDPRICE( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     Midpoint Price over period"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MIDPRICE_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MIDPRICE_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MIDPRICE( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MIDPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2755,15 +2857,16 @@ def MIN( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Lowest value over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MIN_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MIN_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MIN( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MIN( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2774,15 +2877,16 @@ def MININDEX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Index of lowest value over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MININDEX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MININDEX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outinteger = empty(length, dtype=int32)
     outinteger.fill(nan)
-    assert id(outinteger) == id(ascontiguousarray(outinteger, dtype=int32))
-    retCode = TA_MININDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+    retCode = TA_MININDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2793,18 +2897,18 @@ def MINMAX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Lowest and highest values over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MINMAX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MINMAX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outmin = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmin = empty(length, dtype=double)
     outmin.fill(nan)
-    assert id(outmin) == id(ascontiguousarray(outmin, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outmax = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outmax = empty(length, dtype=double)
     outmax.fill(nan)
-    assert id(outmax) == id(ascontiguousarray(outmax, dtype=double))
-    retCode = TA_MINMAX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data+lookback , <double *>outmax.data+lookback )
+    retCode = TA_MINMAX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data+lookback , <double *>outmax.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2815,18 +2919,18 @@ def MINMAXINDEX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Indexes of lowest and highest values over a specified period"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MINMAXINDEX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MINMAXINDEX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.int32_t, ndim=1] outminidx = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outminidx = empty(length, dtype=int32)
     outminidx.fill(nan)
-    assert id(outminidx) == id(ascontiguousarray(outminidx, dtype=int32))
-    cdef np.ndarray[np.int32_t, ndim=1] outmaxidx = empty(endidx + 1, dtype=int32)
+    cdef np.ndarray[np.int32_t, ndim=1] outmaxidx = empty(length, dtype=int32)
     outmaxidx.fill(nan)
-    assert id(outmaxidx) == id(ascontiguousarray(outmaxidx, dtype=int32))
-    retCode = TA_MINMAXINDEX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data+lookback , <int *>outmaxidx.data+lookback )
+    retCode = TA_MINMAXINDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data+lookback , <int *>outmaxidx.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2839,15 +2943,16 @@ def MINUS_DI( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MINUS_DI_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MINUS_DI_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MINUS_DI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MINUS_DI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2859,15 +2964,16 @@ def MINUS_DM( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     Minus Directional Movement"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MINUS_DM_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MINUS_DM_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MINUS_DM( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MINUS_DM( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2878,15 +2984,16 @@ def MOM( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Momentum"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MOM_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_MOM_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MOM( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MOM( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2896,15 +3003,16 @@ def MULT( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim=1
     """MULT(real0, real1)"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_MULT_Lookback( )
+    cdef int lookback = begidx + TA_MULT_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_MULT( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_MULT( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2917,15 +3025,16 @@ def NATR( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1]
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_NATR_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_NATR_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_NATR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_NATR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2937,15 +3046,16 @@ def OBV( np.ndarray[np.double_t, ndim=1] real , np.ndarray[np.double_t, ndim=1] 
     On Balance Volume"""
     real = ascontiguousarray(real, dtype=double)
     volume = ascontiguousarray(volume, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_OBV_Lookback( )
+    cdef int lookback = begidx + TA_OBV_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_OBV( 0 , endidx , <double *>real.data , <double *>volume.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_OBV( 0 , endidx , <double *>real.data+begidx , <double *>volume.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2958,15 +3068,16 @@ def PLUS_DI( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_PLUS_DI_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_PLUS_DI_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_PLUS_DI( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_PLUS_DI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2978,15 +3089,16 @@ def PLUS_DM( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim
     Plus Directional Movement"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_PLUS_DM_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_PLUS_DM_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_PLUS_DM( 0 , endidx , <double *>high.data , <double *>low.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_PLUS_DM( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2997,15 +3109,16 @@ def PPO( np.ndarray[np.double_t, ndim=1] real , fastperiod=-2**31 , slowperiod=-
 
     Percentage Price Oscillator"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_PPO_Lookback( fastperiod , slowperiod , matype )
+    cdef int lookback = begidx + TA_PPO_Lookback( fastperiod , slowperiod , matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_PPO( 0 , endidx , <double *>real.data , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_PPO( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3016,15 +3129,16 @@ def ROC( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Rate of change : ((price/prevPrice)-1)*100"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ROC_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ROC_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ROC( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ROC( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3035,15 +3149,16 @@ def ROCP( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Rate of change Percentage: (price-prevPrice)/prevPrice"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ROCP_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ROCP_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ROCP( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ROCP( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3054,15 +3169,16 @@ def ROCR( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Rate of change ratio: (price/prevPrice)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ROCR_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ROCR_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ROCR( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ROCR( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3073,15 +3189,16 @@ def ROCR100( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Rate of change ratio 100 scale: (price/prevPrice)*100"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ROCR100_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_ROCR100_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ROCR100( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ROCR100( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3092,15 +3209,16 @@ def RSI( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Relative Strength Index"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_RSI_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_RSI_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_RSI( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_RSI( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3112,15 +3230,16 @@ def SAR( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1] 
     Parabolic SAR"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SAR_Lookback( acceleration , maximum )
+    cdef int lookback = begidx + TA_SAR_Lookback( acceleration , maximum )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SAR( 0 , endidx , <double *>high.data , <double *>low.data , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SAR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3132,15 +3251,16 @@ def SAREXT( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=
     Parabolic SAR - Extended"""
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
+    cdef int lookback = begidx + TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SAREXT( 0 , endidx , <double *>high.data , <double *>low.data , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SAREXT( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3149,15 +3269,16 @@ def SAREXT( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=
 def SIN( np.ndarray[np.double_t, ndim=1] real ):
     """SIN(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SIN_Lookback( )
+    cdef int lookback = begidx + TA_SIN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SIN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SIN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3166,15 +3287,16 @@ def SIN( np.ndarray[np.double_t, ndim=1] real ):
 def SINH( np.ndarray[np.double_t, ndim=1] real ):
     """SINH(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SINH_Lookback( )
+    cdef int lookback = begidx + TA_SINH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SINH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SINH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3185,15 +3307,16 @@ def SMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Simple Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_SMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3202,15 +3325,16 @@ def SMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 def SQRT( np.ndarray[np.double_t, ndim=1] real ):
     """SQRT(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SQRT_Lookback( )
+    cdef int lookback = begidx + TA_SQRT_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SQRT( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SQRT( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3221,15 +3345,16 @@ def STDDEV( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e
 
     Standard Deviation"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_STDDEV_Lookback( timeperiod , nbdev )
+    cdef int lookback = begidx + TA_STDDEV_Lookback( timeperiod , nbdev )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_STDDEV( 0 , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_STDDEV( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3242,18 +3367,18 @@ def STOCH( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
+    cdef int lookback = begidx + TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outslowk = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outslowk = empty(length, dtype=double)
     outslowk.fill(nan)
-    assert id(outslowk) == id(ascontiguousarray(outslowk, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outslowd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outslowd = empty(length, dtype=double)
     outslowd.fill(nan)
-    assert id(outslowd) == id(ascontiguousarray(outslowd, dtype=double))
-    retCode = TA_STOCH( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data+lookback , <double *>outslowd.data+lookback )
+    retCode = TA_STOCH( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data+lookback , <double *>outslowd.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3266,18 +3391,18 @@ def STOCHF( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
+    cdef int lookback = begidx + TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outfastk = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outfastk = empty(length, dtype=double)
     outfastk.fill(nan)
-    assert id(outfastk) == id(ascontiguousarray(outfastk, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outfastd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outfastd = empty(length, dtype=double)
     outfastd.fill(nan)
-    assert id(outfastd) == id(ascontiguousarray(outfastd, dtype=double))
-    retCode = TA_STOCHF( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
+    retCode = TA_STOCHF( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3288,18 +3413,18 @@ def STOCHRSI( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , fastk_p
 
     Stochastic Relative Strength Index"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
+    cdef int lookback = begidx + TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outfastk = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outfastk = empty(length, dtype=double)
     outfastk.fill(nan)
-    assert id(outfastk) == id(ascontiguousarray(outfastk, dtype=double))
-    cdef np.ndarray[np.double_t, ndim=1] outfastd = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outfastd = empty(length, dtype=double)
     outfastd.fill(nan)
-    assert id(outfastd) == id(ascontiguousarray(outfastd, dtype=double))
-    retCode = TA_STOCHRSI( 0 , endidx , <double *>real.data , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
+    retCode = TA_STOCHRSI( 0 , endidx , <double *>real.data+begidx , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3309,15 +3434,16 @@ def SUB( np.ndarray[np.double_t, ndim=1] real0 , np.ndarray[np.double_t, ndim=1]
     """SUB(real0, real1)"""
     real0 = ascontiguousarray(real0, dtype=double)
     real1 = ascontiguousarray(real1, dtype=double)
-    cdef int endidx = real0.shape[0] - 1
+    cdef int length = real0.shape[0]
+    cdef int begidx = where(~isnan(real0))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SUB_Lookback( )
+    cdef int lookback = begidx + TA_SUB_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SUB( 0 , endidx , <double *>real0.data , <double *>real1.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SUB( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3328,15 +3454,16 @@ def SUM( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Summation"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_SUM_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_SUM_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_SUM( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_SUM( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3347,15 +3474,16 @@ def T3( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37
 
     Triple Exponential Moving Average (T3)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_T3_Lookback( timeperiod , vfactor )
+    cdef int lookback = begidx + TA_T3_Lookback( timeperiod , vfactor )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_T3( 0 , endidx , <double *>real.data , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_T3( 0 , endidx , <double *>real.data+begidx , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3364,15 +3492,16 @@ def T3( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , vfactor=-4e37
 def TAN( np.ndarray[np.double_t, ndim=1] real ):
     """TAN(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TAN_Lookback( )
+    cdef int lookback = begidx + TA_TAN_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TAN( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TAN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3381,15 +3510,16 @@ def TAN( np.ndarray[np.double_t, ndim=1] real ):
 def TANH( np.ndarray[np.double_t, ndim=1] real ):
     """TANH(real)"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TANH_Lookback( )
+    cdef int lookback = begidx + TA_TANH_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TANH( 0 , endidx , <double *>real.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TANH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3400,15 +3530,16 @@ def TEMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Triple Exponential Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TEMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_TEMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TEMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TEMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3421,15 +3552,16 @@ def TRANGE( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TRANGE_Lookback( )
+    cdef int lookback = begidx + TA_TRANGE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TRANGE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TRANGE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3440,15 +3572,16 @@ def TRIMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Triangular Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TRIMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_TRIMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TRIMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TRIMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3459,15 +3592,16 @@ def TRIX( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     1-day Rate-Of-Change (ROC) of a Triple Smooth EMA"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TRIX_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_TRIX_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TRIX( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TRIX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3478,15 +3612,16 @@ def TSF( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Time Series Forecast"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TSF_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_TSF_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TSF( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TSF( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3499,15 +3634,16 @@ def TYPPRICE( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_TYPPRICE_Lookback( )
+    cdef int lookback = begidx + TA_TYPPRICE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_TYPPRICE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_TYPPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3520,15 +3656,16 @@ def ULTOSC( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
+    cdef int lookback = begidx + TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_ULTOSC( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_ULTOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3539,15 +3676,16 @@ def VAR( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 , nbdev=-4e37 
 
     Variance"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_VAR_Lookback( timeperiod , nbdev )
+    cdef int lookback = begidx + TA_VAR_Lookback( timeperiod , nbdev )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_VAR( 0 , endidx , <double *>real.data , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_VAR( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3560,15 +3698,16 @@ def WCLPRICE( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndi
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_WCLPRICE_Lookback( )
+    cdef int lookback = begidx + TA_WCLPRICE_Lookback( )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_WCLPRICE( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_WCLPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3581,15 +3720,16 @@ def WILLR( np.ndarray[np.double_t, ndim=1] high , np.ndarray[np.double_t, ndim=1
     high = ascontiguousarray(high, dtype=double)
     low = ascontiguousarray(low, dtype=double)
     close = ascontiguousarray(close, dtype=double)
-    cdef int endidx = high.shape[0] - 1
+    cdef int length = high.shape[0]
+    cdef int begidx = where(~isnan(high))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_WILLR_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_WILLR_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_WILLR( 0 , endidx , <double *>high.data , <double *>low.data , <double *>close.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_WILLR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3600,15 +3740,16 @@ def WMA( np.ndarray[np.double_t, ndim=1] real , timeperiod=-2**31 ):
 
     Weighted Moving Average"""
     real = ascontiguousarray(real, dtype=double)
-    cdef int endidx = real.shape[0] - 1
+    cdef int length = real.shape[0]
+    cdef int begidx = where(~isnan(real))[0][0]
+    cdef int endidx = length - begidx - 1
     TA_Initialize()
-    cdef int lookback = TA_WMA_Lookback( timeperiod )
+    cdef int lookback = begidx + TA_WMA_Lookback( timeperiod )
     cdef int outbegidx
     cdef int outnbelement
-    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(endidx + 1, dtype=double)
+    cdef np.ndarray[np.double_t, ndim=1] outreal = empty(length, dtype=double)
     outreal.fill(nan)
-    assert id(outreal) == id(ascontiguousarray(outreal, dtype=double))
-    retCode = TA_WMA( 0 , endidx , <double *>real.data , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+    retCode = TA_WMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
