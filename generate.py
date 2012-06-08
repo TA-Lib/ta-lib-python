@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import zeros, int32, double, ascontiguousarray
+from numpy import empty, nan, int32, double, ascontiguousarray
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -318,11 +318,6 @@ for f in functions:
             print ',',
         print cleanup(opt.split()[-1]),
     print ')'
-    print '    cdef int allocation'
-    print '    if (lookback > endidx):'
-    print '        allocation = 0'
-    print '    else:'
-    print '        allocation = endidx - lookback + 1'
 
     for arg in args:
         var = arg.split()[-1]
@@ -340,7 +335,9 @@ for f in functions:
                 dtype = 'int32'
             else:
                 assert False, args
-            print '    cdef np.ndarray[%s, ndim=1] %s = zeros(allocation, dtype=%s)' % (vartype, var, dtype)
+            print '    cdef np.ndarray[%s, ndim=1] %s = empty(endidx + 1, dtype=%s)' % (vartype, var, dtype)
+            print '    %s.fill(nan)' % var
+            print '    assert id(%s) == id(ascontiguousarray(%s, dtype=%s))' % (var, var, dtype)
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
@@ -358,10 +355,14 @@ for f in functions:
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
+            if 'out' in var:
+                data = '%s.data+lookback' % var
+            else:
+                data = '%s.data' % var
             if 'double' in arg:
-                print '<double *>%s.data' % var,
+                print '<double *>%s' % data,
             elif 'int' in arg:
-                print '<int *>%s.data' % var,
+                print '<int *>%s' % data,
             else:
                 assert False, arg
 
@@ -377,7 +378,7 @@ for f in functions:
     print '    if retCode != TA_SUCCESS:'
     print '        raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))'
 
-    print '    return (',
+    print '    return',
     i = 0
     for arg in args:
         var = arg.split()[-1]
@@ -386,14 +387,14 @@ for f in functions:
         elif var.startswith('*'):
             var = var[1:]
         if var.startswith('out'):
-            if var != "outNBElement":
+            if var not in ("outNBElement", "outBegIdx"):
                 if i > 0:
                     print ',',
                 i += 1
-                print cleanup(var) if var != 'outBegIdx' else 'lookback',
+                print cleanup(var),
         else:
             assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
-    print ')'
+    print
     print
 
 print '__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names])
