@@ -51,19 +51,19 @@ data = numpy.random.random(100)
 Calculate a simple moving average:
 
 ```python
-i, output = talib.SMA(data)
+output = talib.SMA(data)
 ```
 
 Calculating bollinger bands, with triple exponential moving average:
 
 ```python
-i, upper, middle, lower = talib.BBANDS(data, matype=talib.MA_T3)
+upper, middle, lower = talib.BBANDS(data, matype=talib.MA_T3)
 ```
 
 Calculating momentum, with a time period of 5:
 
 ```python
-i, output = talib.MOM(data, timeperiod=5)
+output = talib.MOM(data, timeperiod=5)
 ```
 
 ## Indicators
