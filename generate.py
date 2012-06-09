@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import empty, where, isnan, nan, int32, double, ascontiguousarray
+from numpy import where, zeros, empty, nan, int32, double, ascontiguousarray
 cimport numpy as np
 
 ctypedef int TA_RetCode
@@ -63,6 +63,9 @@ RetCodes = {
  5000: 'Internal Error',
 65535: 'Unknown Error',
 }
+
+cdef extern from "math.h":
+    bint isnan(double x)
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
@@ -308,7 +311,13 @@ for f in functions:
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
             print '    cdef int length = %s.shape[0]' % var
-            print '    cdef int begidx = where(~isnan(%s))[0][0]' % var
+            print '    cdef int begidx = 0'
+            print '    for i from 0 <= i < length:'
+            print '        if not isnan(%s[i]):' % var
+            print '            begidx = i'
+            print '            break'
+            print '    else:'
+            print '        raise Exception("inputs are all NaN")'
             print '    cdef int endidx = length - begidx - 1'
             break
 
@@ -330,15 +339,14 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                vartype = 'np.double_t'
-                dtype = 'double'
+                print '    cdef np.ndarray[np.double_t, ndim=1] %s = empty(length, dtype=double)' % var
+                print '    %s[:lookback] = nan' % var
             elif 'int' in arg:
                 vartype = 'np.int32_t'
                 dtype = 'int32'
+                print '    cdef np.ndarray[np.int32_t, ndim=1] %s = zeros(length, dtype=int32)' % var
             else:
                 assert False, args
-            print '    cdef np.ndarray[%s, ndim=1] %s = empty(length, dtype=%s)' % (vartype, var, dtype)
-            print '    %s.fill(nan)' % var
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
