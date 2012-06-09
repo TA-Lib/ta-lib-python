@@ -4,12 +4,10 @@ import sys
 
 TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
 
-if True:  # test all floats
-    data = numpy.random.random(TEST_LEN)
-else:     # test all-but-one NaNs
-    data = numpy.empty(TEST_LEN)
-    data.fill(numpy.nan)
-    data[-1] = numpy.randon.random()
+data = numpy.random.random(TEST_LEN)
+
+if False: # fill array with nans
+    data[:-1] = numpy.nan
 
 import time
 t0 = time.time()
