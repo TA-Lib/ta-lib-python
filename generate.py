@@ -73,6 +73,11 @@ cdef extern from "math.h":
 
 cdef double NaN = nan
 
+cdef extern from "numpy/arrayobject.h":
+    object PyArray_EMPTY(int, np.npy_intp*, int, int)
+
+np.import_array() # Initialize the NumPy C API
+
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
     enum: TA_SUCCESS
@@ -304,6 +309,30 @@ for f in functions:
         docs.append(desc)
     print '):'
     print '    """%s"""' % ''.join(docs)
+    print '    cdef:'
+    print '        np.npy_intp length'
+    print '        int begidx, endidx, lookback'
+    for arg in args:
+        var = arg.split()[-1]
+
+        if 'out' not in var:
+            continue
+
+        if var.endswith('[]'):
+            var = cleanup(var[:-2])
+            if 'double' in arg:
+                print '        np.ndarray[double_t, ndim=1] %s' % var
+            elif 'int' in arg:
+                print '        np.ndarray[int32_t, ndim=1] %s' % var
+            else:
+                assert False, args
+
+        elif var.startswith('*'):
+            var = cleanup(var[1:])
+            print '        int %s' % var
+
+        else:
+            assert False, arg
 
     for arg in args:
         var = arg.split()[-1]
@@ -318,19 +347,19 @@ for f in functions:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
-            print '    cdef int length = %s.shape[0]' % var
-            print '    cdef int begidx = 0'
+            print '    length = %s.shape[0]' % var
+            print '    begidx = 0'
             print '    for i from 0 <= i < length:'
             print '        if not isnan(%s[i]):' % var
             print '            begidx = i'
             print '            break'
             print '    else:'
             print '        raise Exception("inputs are all NaN")'
-            print '    cdef int endidx = length - begidx - 1'
+            print '    endidx = length - begidx - 1'
             break
 
     print '    TA_Initialize()'
-    print '    cdef int lookback = begidx + %s_Lookback(' % name,
+    print '    lookback = begidx + %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
         if i > 0:
@@ -347,24 +376,17 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print '    cdef np.ndarray[double_t, ndim=1] %s = empty(length, dtype=double)' % var
+                print '    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var
+                #print '    %s = empty(length, dtype=double)' % var
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s[i] = NaN' % var
             elif 'int' in arg:
-                vartype = 'int32_t'
-                dtype = 'int32'
-                print '    cdef np.ndarray[int32_t, ndim=1] %s = empty(length, dtype=int32)' % var
+                print '    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var
+                #print '    %s = empty(length, dtype=int32)' % var
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s[i] = 0' % var
             else:
                 assert False, args
-
-        elif var.startswith('*'):
-            var = cleanup(var[1:])
-            print '    cdef int %s' % var
-
-        else:
-            assert False, arg
 
     print '    retCode = %s(' % name,
 
