@@ -1,5 +1,5 @@
 
-from numpy import empty, nan, int32, double, ascontiguousarray
+from numpy import nan, int32, double, ascontiguousarray
 from cython import boundscheck, wraparound
 cimport numpy as np
 

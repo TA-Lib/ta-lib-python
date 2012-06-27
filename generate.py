@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import empty, nan, int32, double, ascontiguousarray
+from numpy import nan, int32, double, ascontiguousarray
 from cython import boundscheck, wraparound
 cimport numpy as np
 
@@ -378,12 +378,10 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var
-                #print '    %s = empty(length, dtype=double)' % var
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s[i] = NaN' % var
             elif 'int' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var
-                #print '    %s = empty(length, dtype=int32)' % var
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s[i] = 0' % var
             else:
