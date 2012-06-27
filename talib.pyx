@@ -1,6 +1,6 @@
 
 from numpy import empty, nan, int32, double, ascontiguousarray
-from cython import boundscheck
+from cython import boundscheck, wraparound
 cimport numpy as np
 
 ctypedef np.double_t double_t
@@ -371,6 +371,7 @@ cdef extern from "ta_libc.h":
 
 __version__ = TA_GetVersionString()
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACOS( np.ndarray[double_t, ndim=1] real not None ):
     """ACOS(real)"""
@@ -402,6 +403,7 @@ def ACOS( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None ):
     """AD(high, low, close, volume)
@@ -441,6 +443,7 @@ def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """ADD(real0, real1)"""
@@ -474,6 +477,7 @@ def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
     """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
@@ -513,6 +517,7 @@ def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ADX(high, low, close[, timeperiod=?])
@@ -550,6 +555,7 @@ def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ADXR(high, low, close[, timeperiod=?])
@@ -587,6 +593,7 @@ def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """APO(real[, fastperiod=?, slowperiod=?, matype=?])
@@ -620,6 +627,7 @@ def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """AROON(high, low[, timeperiod=?])
@@ -659,6 +667,7 @@ def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outaroondown , outaroonup
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """AROONOSC(high, low[, timeperiod=?])
@@ -694,6 +703,7 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ASIN( np.ndarray[double_t, ndim=1] real not None ):
     """ASIN(real)"""
@@ -725,6 +735,7 @@ def ASIN( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ATAN( np.ndarray[double_t, ndim=1] real not None ):
     """ATAN(real)"""
@@ -756,6 +767,7 @@ def ATAN( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ATR(high, low, close[, timeperiod=?])
@@ -793,6 +805,7 @@ def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """AVGPRICE(open, high, low, close)
@@ -832,6 +845,7 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
     """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
@@ -873,6 +887,7 @@ def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outrealupperband , outrealmiddleband , outreallowerband
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
     """BETA(real0, real1[, timeperiod=?])
@@ -908,6 +923,7 @@ def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """BOP(open, high, low, close)
@@ -947,6 +963,7 @@ def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """CCI(high, low, close[, timeperiod=?])
@@ -984,6 +1001,7 @@ def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL2CROWS(open, high, low, close)
@@ -1023,6 +1041,7 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3BLACKCROWS(open, high, low, close)
@@ -1062,6 +1081,7 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3INSIDE(open, high, low, close)
@@ -1101,6 +1121,7 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3LINESTRIKE(open, high, low, close)
@@ -1140,6 +1161,7 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3OUTSIDE(open, high, low, close)
@@ -1179,6 +1201,7 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3STARSINSOUTH(open, high, low, close)
@@ -1218,6 +1241,7 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3WHITESOLDIERS(open, high, low, close)
@@ -1257,6 +1281,7 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
@@ -1296,6 +1321,7 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLADVANCEBLOCK(open, high, low, close)
@@ -1335,6 +1361,7 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLBELTHOLD(open, high, low, close)
@@ -1374,6 +1401,7 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLBREAKAWAY(open, high, low, close)
@@ -1413,6 +1441,7 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCLOSINGMARUBOZU(open, high, low, close)
@@ -1452,6 +1481,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCONCEALBABYSWALL(open, high, low, close)
@@ -1491,6 +1521,7 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCOUNTERATTACK(open, high, low, close)
@@ -1530,6 +1561,7 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
@@ -1569,6 +1601,7 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDOJI(open, high, low, close)
@@ -1608,6 +1641,7 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDOJISTAR(open, high, low, close)
@@ -1647,6 +1681,7 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDRAGONFLYDOJI(open, high, low, close)
@@ -1686,6 +1721,7 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLENGULFING(open, high, low, close)
@@ -1725,6 +1761,7 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
@@ -1764,6 +1801,7 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
@@ -1803,6 +1841,7 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLGAPSIDESIDEWHITE(open, high, low, close)
@@ -1842,6 +1881,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLGRAVESTONEDOJI(open, high, low, close)
@@ -1881,6 +1921,7 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHAMMER(open, high, low, close)
@@ -1920,6 +1961,7 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHANGINGMAN(open, high, low, close)
@@ -1959,6 +2001,7 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHARAMI(open, high, low, close)
@@ -1998,6 +2041,7 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHARAMICROSS(open, high, low, close)
@@ -2037,6 +2081,7 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIGHWAVE(open, high, low, close)
@@ -2076,6 +2121,7 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIKKAKE(open, high, low, close)
@@ -2115,6 +2161,7 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIKKAKEMOD(open, high, low, close)
@@ -2154,6 +2201,7 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHOMINGPIGEON(open, high, low, close)
@@ -2193,6 +2241,7 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLIDENTICAL3CROWS(open, high, low, close)
@@ -2232,6 +2281,7 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLINNECK(open, high, low, close)
@@ -2271,6 +2321,7 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLINVERTEDHAMMER(open, high, low, close)
@@ -2310,6 +2361,7 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLKICKING(open, high, low, close)
@@ -2349,6 +2401,7 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLKICKINGBYLENGTH(open, high, low, close)
@@ -2388,6 +2441,7 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLADDERBOTTOM(open, high, low, close)
@@ -2427,6 +2481,7 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLONGLEGGEDDOJI(open, high, low, close)
@@ -2466,6 +2521,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLONGLINE(open, high, low, close)
@@ -2505,6 +2561,7 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLMARUBOZU(open, high, low, close)
@@ -2544,6 +2601,7 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLMATCHINGLOW(open, high, low, close)
@@ -2583,6 +2641,7 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMATHOLD(open, high, low, close[, penetration=?])
@@ -2622,6 +2681,7 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
@@ -2661,6 +2721,7 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
@@ -2700,6 +2761,7 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLONNECK(open, high, low, close)
@@ -2739,6 +2801,7 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLPIERCING(open, high, low, close)
@@ -2778,6 +2841,7 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLRICKSHAWMAN(open, high, low, close)
@@ -2817,6 +2881,7 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLRISEFALL3METHODS(open, high, low, close)
@@ -2856,6 +2921,7 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSEPARATINGLINES(open, high, low, close)
@@ -2895,6 +2961,7 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSHOOTINGSTAR(open, high, low, close)
@@ -2934,6 +3001,7 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSHORTLINE(open, high, low, close)
@@ -2973,6 +3041,7 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSPINNINGTOP(open, high, low, close)
@@ -3012,6 +3081,7 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSTALLEDPATTERN(open, high, low, close)
@@ -3051,6 +3121,7 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSTICKSANDWICH(open, high, low, close)
@@ -3090,6 +3161,7 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTAKURI(open, high, low, close)
@@ -3129,6 +3201,7 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTASUKIGAP(open, high, low, close)
@@ -3168,6 +3241,7 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTHRUSTING(open, high, low, close)
@@ -3207,6 +3281,7 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTRISTAR(open, high, low, close)
@@ -3246,6 +3321,7 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLUNIQUE3RIVER(open, high, low, close)
@@ -3285,6 +3361,7 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLUPSIDEGAP2CROWS(open, high, low, close)
@@ -3324,6 +3401,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLXSIDEGAP3METHODS(open, high, low, close)
@@ -3363,6 +3441,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CEIL( np.ndarray[double_t, ndim=1] real not None ):
     """CEIL(real)"""
@@ -3394,6 +3473,7 @@ def CEIL( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """CMO(real[, timeperiod=?])
@@ -3427,6 +3507,7 @@ def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
     """CORREL(real0, real1[, timeperiod=?])
@@ -3462,6 +3543,7 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def COS( np.ndarray[double_t, ndim=1] real not None ):
     """COS(real)"""
@@ -3493,6 +3575,7 @@ def COS( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def COSH( np.ndarray[double_t, ndim=1] real not None ):
     """COSH(real)"""
@@ -3524,6 +3607,7 @@ def COSH( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """DEMA(real[, timeperiod=?])
@@ -3557,6 +3641,7 @@ def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """DIV(real0, real1)"""
@@ -3590,6 +3675,7 @@ def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """DX(high, low, close[, timeperiod=?])
@@ -3627,6 +3713,7 @@ def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """EMA(real[, timeperiod=?])
@@ -3660,6 +3747,7 @@ def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def EXP( np.ndarray[double_t, ndim=1] real not None ):
     """EXP(real)"""
@@ -3691,6 +3779,7 @@ def EXP( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
     """FLOOR(real)"""
@@ -3722,6 +3811,7 @@ def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
     """HT_DCPERIOD(real)
@@ -3755,6 +3845,7 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_DCPHASE(real)
@@ -3788,6 +3879,7 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
     """HT_PHASOR(real)
@@ -3825,6 +3917,7 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinphase , outquadrature
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_SINE(real)
@@ -3862,6 +3955,7 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outsine , outleadsine
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_TRENDLINE(real)
@@ -3895,6 +3989,7 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_TRENDMODE(real)
@@ -3928,6 +4023,7 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """KAMA(real[, timeperiod=?])
@@ -3961,6 +4057,7 @@ def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG(real[, timeperiod=?])
@@ -3994,6 +4091,7 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**3
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_ANGLE(real[, timeperiod=?])
@@ -4027,6 +4125,7 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_INTERCEPT(real[, timeperiod=?])
@@ -4060,6 +4159,7 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timepe
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_SLOPE(real[, timeperiod=?])
@@ -4093,6 +4193,7 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LN( np.ndarray[double_t, ndim=1] real not None ):
     """LN(real)"""
@@ -4124,6 +4225,7 @@ def LN( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LOG10( np.ndarray[double_t, ndim=1] real not None ):
     """LOG10(real)"""
@@ -4155,6 +4257,7 @@ def LOG10( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int matype=0 ):
     """MA(real[, timeperiod=?, matype=?])
@@ -4188,6 +4291,7 @@ def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
     """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
@@ -4229,6 +4333,7 @@ def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , i
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
     """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
@@ -4270,6 +4375,7 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**31 ):
     """MACDFIX(real[, signalperiod=?])
@@ -4311,6 +4417,7 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**3
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
     """MAMA(real[, fastlimit=?, slowlimit=?])
@@ -4348,6 +4455,7 @@ def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmama , outfama
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
     """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
@@ -4381,6 +4489,7 @@ def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MAX(real[, timeperiod=?])
@@ -4414,6 +4523,7 @@ def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MAXINDEX(real[, timeperiod=?])
@@ -4447,6 +4557,7 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None ):
     """MEDPRICE(high, low)
@@ -4482,6 +4593,7 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int timeperiod=-2**31 ):
     """MFI(high, low, close, volume[, timeperiod=?])
@@ -4521,6 +4633,7 @@ def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MIDPOINT(real[, timeperiod=?])
@@ -4554,6 +4667,7 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """MIDPRICE(high, low[, timeperiod=?])
@@ -4589,6 +4703,7 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MIN(real[, timeperiod=?])
@@ -4622,6 +4737,7 @@ def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MININDEX(real[, timeperiod=?])
@@ -4655,6 +4771,7 @@ def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MINMAX(real[, timeperiod=?])
@@ -4692,6 +4809,7 @@ def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 )
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmin , outmax
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MINMAXINDEX(real[, timeperiod=?])
@@ -4729,6 +4847,7 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2*
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outminidx , outmaxidx
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """MINUS_DI(high, low, close[, timeperiod=?])
@@ -4766,6 +4885,7 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """MINUS_DM(high, low[, timeperiod=?])
@@ -4801,6 +4921,7 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MOM(real[, timeperiod=?])
@@ -4834,6 +4955,7 @@ def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """MULT(real0, real1)"""
@@ -4867,6 +4989,7 @@ def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """NATR(high, low, close[, timeperiod=?])
@@ -4904,6 +5027,7 @@ def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] volume not None ):
     """OBV(real, volume)
@@ -4939,6 +5063,7 @@ def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """PLUS_DI(high, low, close[, timeperiod=?])
@@ -4976,6 +5101,7 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """PLUS_DM(high, low[, timeperiod=?])
@@ -5011,6 +5137,7 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
@@ -5044,6 +5171,7 @@ def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROC(real[, timeperiod=?])
@@ -5077,6 +5205,7 @@ def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCP(real[, timeperiod=?])
@@ -5110,6 +5239,7 @@ def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCR(real[, timeperiod=?])
@@ -5143,6 +5273,7 @@ def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCR100(real[, timeperiod=?])
@@ -5176,6 +5307,7 @@ def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """RSI(real[, timeperiod=?])
@@ -5209,6 +5341,7 @@ def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double acceleration=-4e37 , double maximum=-4e37 ):
     """SAR(high, low[, acceleration=?, maximum=?])
@@ -5244,6 +5377,7 @@ def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
     """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
@@ -5279,6 +5413,7 @@ def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SIN( np.ndarray[double_t, ndim=1] real not None ):
     """SIN(real)"""
@@ -5310,6 +5445,7 @@ def SIN( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SINH( np.ndarray[double_t, ndim=1] real not None ):
     """SINH(real)"""
@@ -5341,6 +5477,7 @@ def SINH( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """SMA(real[, timeperiod=?])
@@ -5374,6 +5511,7 @@ def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SQRT( np.ndarray[double_t, ndim=1] real not None ):
     """SQRT(real)"""
@@ -5405,6 +5543,7 @@ def SQRT( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """STDDEV(real[, timeperiod=?, nbdev=?])
@@ -5438,6 +5577,7 @@ def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
     """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
@@ -5479,6 +5619,7 @@ def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outslowk , outslowd
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -5520,6 +5661,7 @@ def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outfastk , outfastd
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -5557,6 +5699,7 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outfastk , outfastd
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """SUB(real0, real1)"""
@@ -5590,6 +5733,7 @@ def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """SUM(real[, timeperiod=?])
@@ -5623,6 +5767,7 @@ def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
     """T3(real[, timeperiod=?, vfactor=?])
@@ -5656,6 +5801,7 @@ def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , dou
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TAN( np.ndarray[double_t, ndim=1] real not None ):
     """TAN(real)"""
@@ -5687,6 +5833,7 @@ def TAN( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TANH( np.ndarray[double_t, ndim=1] real not None ):
     """TANH(real)"""
@@ -5718,6 +5865,7 @@ def TANH( np.ndarray[double_t, ndim=1] real not None ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TEMA(real[, timeperiod=?])
@@ -5751,6 +5899,7 @@ def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """TRANGE(high, low, close)
@@ -5788,6 +5937,7 @@ def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TRIMA(real[, timeperiod=?])
@@ -5821,6 +5971,7 @@ def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TRIX(real[, timeperiod=?])
@@ -5854,6 +6005,7 @@ def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TSF(real[, timeperiod=?])
@@ -5887,6 +6039,7 @@ def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """TYPPRICE(high, low, close)
@@ -5924,6 +6077,7 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
     """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
@@ -5961,6 +6115,7 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """VAR(real[, timeperiod=?, nbdev=?])
@@ -5994,6 +6149,7 @@ def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , do
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """WCLPRICE(high, low, close)
@@ -6031,6 +6187,7 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """WILLR(high, low, close[, timeperiod=?])
@@ -6068,6 +6225,7 @@ def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
+@wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """WMA(real[, timeperiod=?])

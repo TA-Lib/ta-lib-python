@@ -33,7 +33,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 # print headers
 print """
 from numpy import empty, nan, int32, double, ascontiguousarray
-from cython import boundscheck
+from cython import boundscheck, wraparound
 cimport numpy as np
 
 ctypedef np.double_t double_t
@@ -263,9 +263,10 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
-    print "@boundscheck(False) # turn off bounds-checking for entire function"
-    print "def %s(" % shortname,
-    docs = ["%s(" % shortname]
+    print '@wraparound(False)  # turn off relative indexing from end of lists'
+    print '@boundscheck(False) # turn off bounds-checking for entire function'
+    print 'def %s(' % shortname,
+    docs = ['%s(' % shortname]
     i = 0
     for arg in args:
         var = arg.split()[-1]
