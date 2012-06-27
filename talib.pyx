@@ -1,5 +1,6 @@
 
 from numpy import empty, nan, int32, double, ascontiguousarray
+from cython import boundscheck
 cimport numpy as np
 
 ctypedef np.double_t double_t
@@ -365,7 +366,8 @@ cdef extern from "ta_libc.h":
 
 __version__ = TA_GetVersionString()
 
-def ACOS( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ACOS( np.ndarray[double_t, ndim=1] real not None ):
     """ACOS(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -391,7 +393,8 @@ def ACOS( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def AD( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , np.ndarray[double_t, ndim=1] volume ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None ):
     """AD(high, low, close, volume)
 
     Chaikin A/D Line"""
@@ -425,7 +428,8 @@ def AD( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ADD( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """ADD(real0, real1)"""
     if not real0.flags["C_CONTIGUOUS"]:
         real0 = ascontiguousarray(real0, dtype=double)
@@ -453,7 +457,8 @@ def ADD( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ADOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , np.ndarray[double_t, ndim=1] volume , int fastperiod=-2**31 , int slowperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
     """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
 
     Chaikin A/D Oscillator"""
@@ -487,7 +492,8 @@ def ADOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ADX( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ADX(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index"""
@@ -519,7 +525,8 @@ def ADX( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ADXR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ADXR(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index Rating"""
@@ -551,7 +558,8 @@ def ADXR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low ,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def APO( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """APO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Absolute Price Oscillator"""
@@ -579,7 +587,8 @@ def APO( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowper
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def AROON( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """AROON(high, low[, timeperiod=?])
 
     Aroon"""
@@ -612,7 +621,8 @@ def AROON( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outaroondown , outaroonup
 
-def AROONOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """AROONOSC(high, low[, timeperiod=?])
 
     Aroon Oscillator"""
@@ -642,7 +652,8 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ASIN( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ASIN( np.ndarray[double_t, ndim=1] real not None ):
     """ASIN(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -668,7 +679,8 @@ def ASIN( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ATAN( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ATAN( np.ndarray[double_t, ndim=1] real not None ):
     """ATAN(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -694,7 +706,8 @@ def ATAN( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ATR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """ATR(high, low, close[, timeperiod=?])
 
     Average True Range"""
@@ -726,7 +739,8 @@ def ATR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def AVGPRICE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """AVGPRICE(open, high, low, close)
 
     Average Price"""
@@ -760,7 +774,8 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] h
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def BBANDS( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
     """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
     Bollinger Bands"""
@@ -794,7 +809,8 @@ def BBANDS( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outrealupperband , outrealmiddleband , outreallowerband
 
-def BETA( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
     """BETA(real0, real1[, timeperiod=?])
 
     Beta"""
@@ -824,7 +840,8 @@ def BETA( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def BOP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """BOP(open, high, low, close)
 
     Balance Of Power"""
@@ -858,7 +875,8 @@ def BOP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high ,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def CCI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """CCI(high, low, close[, timeperiod=?])
 
     Commodity Channel Index"""
@@ -890,7 +908,8 @@ def CCI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def CDL2CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL2CROWS(open, high, low, close)
 
     Two Crows"""
@@ -924,7 +943,8 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3BLACKCROWS(open, high, low, close)
 
     Three Black Crows"""
@@ -958,7 +978,8 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3INSIDE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3INSIDE(open, high, low, close)
 
     Three Inside Up/Down"""
@@ -992,7 +1013,8 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1]
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3LINESTRIKE(open, high, low, close)
 
     Three-Line Strike """
@@ -1026,7 +1048,8 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3OUTSIDE(open, high, low, close)
 
     Three Outside Up/Down"""
@@ -1060,7 +1083,8 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3STARSINSOUTH(open, high, low, close)
 
     Three Stars In The South"""
@@ -1094,7 +1118,8 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDL3WHITESOLDIERS(open, high, low, close)
 
     Three Advancing White Soldiers"""
@@ -1128,7 +1153,8 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
 
     Abandoned Baby"""
@@ -1162,7 +1188,8 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLADVANCEBLOCK(open, high, low, close)
 
     Advance Block"""
@@ -1196,7 +1223,8 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLBELTHOLD(open, high, low, close)
 
     Belt-hold"""
@@ -1230,7 +1258,8 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLBREAKAWAY(open, high, low, close)
 
     Breakaway"""
@@ -1264,7 +1293,8 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCLOSINGMARUBOZU(open, high, low, close)
 
     Closing Marubozu"""
@@ -1298,7 +1328,8 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCONCEALBABYSWALL(open, high, low, close)
 
     Concealing Baby Swallow"""
@@ -1332,7 +1363,8 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLCOUNTERATTACK(open, high, low, close)
 
     Counterattack"""
@@ -1366,7 +1398,8 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
 
     Dark Cloud Cover"""
@@ -1400,7 +1433,8 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDOJI(open, high, low, close)
 
     Doji"""
@@ -1434,7 +1468,8 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] hi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDOJISTAR(open, high, low, close)
 
     Doji Star"""
@@ -1468,7 +1503,8 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLDRAGONFLYDOJI(open, high, low, close)
 
     Dragonfly Doji"""
@@ -1502,7 +1538,8 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLENGULFING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLENGULFING(open, high, low, close)
 
     Engulfing Pattern"""
@@ -1536,7 +1573,8 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Evening Doji Star"""
@@ -1570,7 +1608,8 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
 
     Evening Star"""
@@ -1604,7 +1643,8 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLGAPSIDESIDEWHITE(open, high, low, close)
 
     Up/Down-gap side-by-side white lines"""
@@ -1638,7 +1678,8 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLGRAVESTONEDOJI(open, high, low, close)
 
     Gravestone Doji"""
@@ -1672,7 +1713,8 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHAMMER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHAMMER(open, high, low, close)
 
     Hammer"""
@@ -1706,7 +1748,8 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHANGINGMAN(open, high, low, close)
 
     Hanging Man"""
@@ -1740,7 +1783,8 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHARAMI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHARAMI(open, high, low, close)
 
     Harami Pattern"""
@@ -1774,7 +1818,8 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHARAMICROSS(open, high, low, close)
 
     Harami Cross Pattern"""
@@ -1808,7 +1853,8 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIGHWAVE(open, high, low, close)
 
     High-Wave Candle"""
@@ -1842,7 +1888,8 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIKKAKE(open, high, low, close)
 
     Hikkake Pattern"""
@@ -1876,7 +1923,8 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1]
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHIKKAKEMOD(open, high, low, close)
 
     Modified Hikkake Pattern"""
@@ -1910,7 +1958,8 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLHOMINGPIGEON(open, high, low, close)
 
     Homing Pigeon"""
@@ -1944,7 +1993,8 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLIDENTICAL3CROWS(open, high, low, close)
 
     Identical Three Crows"""
@@ -1978,7 +2028,8 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLINNECK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLINNECK(open, high, low, close)
 
     In-Neck Pattern"""
@@ -2012,7 +2063,8 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLINVERTEDHAMMER(open, high, low, close)
 
     Inverted Hammer"""
@@ -2046,7 +2098,8 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLKICKING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLKICKING(open, high, low, close)
 
     Kicking"""
@@ -2080,7 +2133,8 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1]
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLKICKINGBYLENGTH(open, high, low, close)
 
     Kicking - bull/bear determined by the longer marubozu"""
@@ -2114,7 +2168,8 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLADDERBOTTOM(open, high, low, close)
 
     Ladder Bottom"""
@@ -2148,7 +2203,8 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLONGLEGGEDDOJI(open, high, low, close)
 
     Long Legged Doji"""
@@ -2182,7 +2238,8 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLLONGLINE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLLONGLINE(open, high, low, close)
 
     Long Line Candle"""
@@ -2216,7 +2273,8 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLMARUBOZU(open, high, low, close)
 
     Marubozu"""
@@ -2250,7 +2308,8 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLMATCHINGLOW(open, high, low, close)
 
     Matching Low"""
@@ -2284,7 +2343,8 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLMATHOLD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMATHOLD(open, high, low, close[, penetration=?])
 
     Mat Hold"""
@@ -2318,7 +2378,8 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1]
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Morning Doji Star"""
@@ -2352,7 +2413,8 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , double penetration=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
     """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
 
     Morning Star"""
@@ -2386,7 +2448,8 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLONNECK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLONNECK(open, high, low, close)
 
     On-Neck Pattern"""
@@ -2420,7 +2483,8 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLPIERCING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLPIERCING(open, high, low, close)
 
     Piercing Pattern"""
@@ -2454,7 +2518,8 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLRICKSHAWMAN(open, high, low, close)
 
     Rickshaw Man"""
@@ -2488,7 +2553,8 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLRISEFALL3METHODS(open, high, low, close)
 
     Rising/Falling Three Methods"""
@@ -2522,7 +2588,8 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSEPARATINGLINES(open, high, low, close)
 
     Separating Lines"""
@@ -2556,7 +2623,8 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSHOOTINGSTAR(open, high, low, close)
 
     Shooting Star"""
@@ -2590,7 +2658,8 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSHORTLINE(open, high, low, close)
 
     Short Line Candle"""
@@ -2624,7 +2693,8 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSPINNINGTOP(open, high, low, close)
 
     Spinning Top"""
@@ -2658,7 +2728,8 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndi
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSTALLEDPATTERN(open, high, low, close)
 
     Stalled Pattern"""
@@ -2692,7 +2763,8 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLSTICKSANDWICH(open, high, low, close)
 
     Stick Sandwich"""
@@ -2726,7 +2798,8 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLTAKURI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTAKURI(open, high, low, close)
 
     Takuri (Dragonfly Doji with very long lower shadow)"""
@@ -2760,7 +2833,8 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTASUKIGAP(open, high, low, close)
 
     Tasuki Gap"""
@@ -2794,7 +2868,8 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTHRUSTING(open, high, low, close)
 
     Thrusting Pattern"""
@@ -2828,7 +2903,8 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLTRISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLTRISTAR(open, high, low, close)
 
     Tristar Pattern"""
@@ -2862,7 +2938,8 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1]
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLUNIQUE3RIVER(open, high, low, close)
 
     Unique 3 River"""
@@ -2896,7 +2973,8 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, nd
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLUPSIDEGAP2CROWS(open, high, low, close)
 
     Upside Gap Two Crows"""
@@ -2930,7 +3008,8 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """CDLXSIDEGAP3METHODS(open, high, low, close)
 
     Upside/Downside Gap Three Methods"""
@@ -2964,7 +3043,8 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open , np.ndarray[double_t
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def CEIL( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CEIL( np.ndarray[double_t, ndim=1] real not None ):
     """CEIL(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -2990,7 +3070,8 @@ def CEIL( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def CMO( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """CMO(real[, timeperiod=?])
 
     Chande Momentum Oscillator"""
@@ -3018,7 +3099,8 @@ def CMO( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def CORREL( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
     """CORREL(real0, real1[, timeperiod=?])
 
     Pearson's Correlation Coefficient (r)"""
@@ -3048,7 +3130,8 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] re
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def COS( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def COS( np.ndarray[double_t, ndim=1] real not None ):
     """COS(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3074,7 +3157,8 @@ def COS( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def COSH( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def COSH( np.ndarray[double_t, ndim=1] real not None ):
     """COSH(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3100,7 +3184,8 @@ def COSH( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def DEMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """DEMA(real[, timeperiod=?])
 
     Double Exponential Moving Average"""
@@ -3128,7 +3213,8 @@ def DEMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def DIV( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """DIV(real0, real1)"""
     if not real0.flags["C_CONTIGUOUS"]:
         real0 = ascontiguousarray(real0, dtype=double)
@@ -3156,7 +3242,8 @@ def DIV( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def DX( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """DX(high, low, close[, timeperiod=?])
 
     Directional Movement Index"""
@@ -3188,7 +3275,8 @@ def DX( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def EMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """EMA(real[, timeperiod=?])
 
     Exponential Moving Average"""
@@ -3216,7 +3304,8 @@ def EMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def EXP( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def EXP( np.ndarray[double_t, ndim=1] real not None ):
     """EXP(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3242,7 +3331,8 @@ def EXP( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def FLOOR( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
     """FLOOR(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3268,7 +3358,8 @@ def FLOOR( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
     """HT_DCPERIOD(real)
 
     Hilbert Transform - Dominant Cycle Period"""
@@ -3296,7 +3387,8 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def HT_DCPHASE( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_DCPHASE(real)
 
     Hilbert Transform - Dominant Cycle Phase"""
@@ -3324,7 +3416,8 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def HT_PHASOR( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
     """HT_PHASOR(real)
 
     Hilbert Transform - Phasor Components"""
@@ -3355,7 +3448,8 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinphase , outquadrature
 
-def HT_SINE( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_SINE(real)
 
     Hilbert Transform - SineWave"""
@@ -3386,7 +3480,8 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outsine , outleadsine
 
-def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_TRENDLINE(real)
 
     Hilbert Transform - Instantaneous Trendline"""
@@ -3414,7 +3509,8 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
     """HT_TRENDMODE(real)
 
     Hilbert Transform - Trend vs Cycle Mode"""
@@ -3442,7 +3538,8 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def KAMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """KAMA(real[, timeperiod=?])
 
     Kaufman Adaptive Moving Average"""
@@ -3470,7 +3567,8 @@ def KAMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LINEARREG( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG(real[, timeperiod=?])
 
     Linear Regression"""
@@ -3498,7 +3596,8 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_ANGLE(real[, timeperiod=?])
 
     Linear Regression Angle"""
@@ -3526,7 +3625,8 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 )
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_INTERCEPT(real[, timeperiod=?])
 
     Linear Regression Intercept"""
@@ -3554,7 +3654,8 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """LINEARREG_SLOPE(real[, timeperiod=?])
 
     Linear Regression Slope"""
@@ -3582,7 +3683,8 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 )
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LN( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LN( np.ndarray[double_t, ndim=1] real not None ):
     """LN(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3608,7 +3710,8 @@ def LN( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def LOG10( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def LOG10( np.ndarray[double_t, ndim=1] real not None ):
     """LOG10(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3634,7 +3737,8 @@ def LOG10( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , int matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int matype=0 ):
     """MA(real[, timeperiod=?, matype=?])
 
     All Moving Average"""
@@ -3662,7 +3766,8 @@ def MA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , int matype=0
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MACD( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
     """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
     Moving Average Convergence/Divergence"""
@@ -3696,7 +3801,8 @@ def MACD( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowpe
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
-def MACDEXT( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
     """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
 
     MACD with controllable MA type"""
@@ -3730,7 +3836,8 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int fas
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
-def MACDFIX( np.ndarray[double_t, ndim=1] real , int signalperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**31 ):
     """MACDFIX(real[, signalperiod=?])
 
     Moving Average Convergence/Divergence Fix 12/26"""
@@ -3764,7 +3871,8 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real , int signalperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmacd , outmacdsignal , outmacdhist
 
-def MAMA( np.ndarray[double_t, ndim=1] real , double fastlimit=-4e37 , double slowlimit=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
     """MAMA(real[, fastlimit=?, slowlimit=?])
 
     MESA Adaptive Moving Average"""
@@ -3795,7 +3903,8 @@ def MAMA( np.ndarray[double_t, ndim=1] real , double fastlimit=-4e37 , double sl
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmama , outfama
 
-def MAVP( np.ndarray[double_t, ndim=1] real , np.ndarray[double_t, ndim=1] periods , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
     """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -3823,7 +3932,8 @@ def MAVP( np.ndarray[double_t, ndim=1] real , np.ndarray[double_t, ndim=1] perio
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MAX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MAX(real[, timeperiod=?])
 
     Highest value over a specified period"""
@@ -3851,7 +3961,8 @@ def MAX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MAXINDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MAXINDEX(real[, timeperiod=?])
 
     Index of highest value over a specified period"""
@@ -3879,7 +3990,8 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def MEDPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None ):
     """MEDPRICE(high, low)
 
     Median Price"""
@@ -3909,7 +4021,8 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MFI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , np.ndarray[double_t, ndim=1] volume , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int timeperiod=-2**31 ):
     """MFI(high, low, close, volume[, timeperiod=?])
 
     Money Flow Index"""
@@ -3943,7 +4056,8 @@ def MFI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MIDPOINT( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MIDPOINT(real[, timeperiod=?])
 
     MidPoint over period"""
@@ -3971,7 +4085,8 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MIDPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """MIDPRICE(high, low[, timeperiod=?])
 
     Midpoint Price over period"""
@@ -4001,7 +4116,8 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MIN( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MIN(real[, timeperiod=?])
 
     Lowest value over a specified period"""
@@ -4029,7 +4145,8 @@ def MIN( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MININDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MININDEX(real[, timeperiod=?])
 
     Index of lowest value over a specified period"""
@@ -4057,7 +4174,8 @@ def MININDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outinteger
 
-def MINMAX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MINMAX(real[, timeperiod=?])
 
     Lowest and highest values over a specified period"""
@@ -4088,7 +4206,8 @@ def MINMAX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outmin , outmax
 
-def MINMAXINDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MINMAXINDEX(real[, timeperiod=?])
 
     Indexes of lowest and highest values over a specified period"""
@@ -4119,7 +4238,8 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outminidx , outmaxidx
 
-def MINUS_DI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """MINUS_DI(high, low, close[, timeperiod=?])
 
     Minus Directional Indicator"""
@@ -4151,7 +4271,8 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MINUS_DM( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """MINUS_DM(high, low[, timeperiod=?])
 
     Minus Directional Movement"""
@@ -4181,7 +4302,8 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MOM( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """MOM(real[, timeperiod=?])
 
     Momentum"""
@@ -4209,7 +4331,8 @@ def MOM( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def MULT( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """MULT(real0, real1)"""
     if not real0.flags["C_CONTIGUOUS"]:
         real0 = ascontiguousarray(real0, dtype=double)
@@ -4237,7 +4360,8 @@ def MULT( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def NATR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """NATR(high, low, close[, timeperiod=?])
 
     Normalized Average True Range"""
@@ -4269,7 +4393,8 @@ def NATR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low ,
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def OBV( np.ndarray[double_t, ndim=1] real , np.ndarray[double_t, ndim=1] volume ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] volume not None ):
     """OBV(real, volume)
 
     On Balance Volume"""
@@ -4299,7 +4424,8 @@ def OBV( np.ndarray[double_t, ndim=1] real , np.ndarray[double_t, ndim=1] volume
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def PLUS_DI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """PLUS_DI(high, low, close[, timeperiod=?])
 
     Plus Directional Indicator"""
@@ -4331,7 +4457,8 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] lo
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def PLUS_DM( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
     """PLUS_DM(high, low[, timeperiod=?])
 
     Plus Directional Movement"""
@@ -4361,7 +4488,8 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] lo
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def PPO( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Percentage Price Oscillator"""
@@ -4389,7 +4517,8 @@ def PPO( np.ndarray[double_t, ndim=1] real , int fastperiod=-2**31 , int slowper
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ROC( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROC(real[, timeperiod=?])
 
     Rate of change : ((price/prevPrice)-1)*100"""
@@ -4417,7 +4546,8 @@ def ROC( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ROCP( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCP(real[, timeperiod=?])
 
     Rate of change Percentage: (price-prevPrice)/prevPrice"""
@@ -4445,7 +4575,8 @@ def ROCP( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ROCR( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCR(real[, timeperiod=?])
 
     Rate of change ratio: (price/prevPrice)"""
@@ -4473,7 +4604,8 @@ def ROCR( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ROCR100( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """ROCR100(real[, timeperiod=?])
 
     Rate of change ratio 100 scale: (price/prevPrice)*100"""
@@ -4501,7 +4633,8 @@ def ROCR100( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def RSI( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """RSI(real[, timeperiod=?])
 
     Relative Strength Index"""
@@ -4529,7 +4662,8 @@ def RSI( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SAR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , double acceleration=-4e37 , double maximum=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double acceleration=-4e37 , double maximum=-4e37 ):
     """SAR(high, low[, acceleration=?, maximum=?])
 
     Parabolic SAR"""
@@ -4559,7 +4693,8 @@ def SAR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SAREXT( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
     """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
 
     Parabolic SAR - Extended"""
@@ -4589,7 +4724,8 @@ def SAREXT( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SIN( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SIN( np.ndarray[double_t, ndim=1] real not None ):
     """SIN(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -4615,7 +4751,8 @@ def SIN( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SINH( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SINH( np.ndarray[double_t, ndim=1] real not None ):
     """SINH(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -4641,7 +4778,8 @@ def SINH( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """SMA(real[, timeperiod=?])
 
     Simple Moving Average"""
@@ -4669,7 +4807,8 @@ def SMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SQRT( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SQRT( np.ndarray[double_t, ndim=1] real not None ):
     """SQRT(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -4695,7 +4834,8 @@ def SQRT( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def STDDEV( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double nbdev=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """STDDEV(real[, timeperiod=?, nbdev=?])
 
     Standard Deviation"""
@@ -4723,7 +4863,8 @@ def STDDEV( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double n
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def STOCH( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
     """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
 
     Stochastic"""
@@ -4758,7 +4899,8 @@ def STOCH( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outslowk , outslowd
 
-def STOCHF( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Fast"""
@@ -4793,7 +4935,8 @@ def STOCHF( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outfastk , outfastd
 
-def STOCHRSI( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Relative Strength Index"""
@@ -4824,7 +4967,8 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , int fa
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outfastk , outfastd
 
-def SUB( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
     """SUB(real0, real1)"""
     if not real0.flags["C_CONTIGUOUS"]:
         real0 = ascontiguousarray(real0, dtype=double)
@@ -4852,7 +4996,8 @@ def SUB( np.ndarray[double_t, ndim=1] real0 , np.ndarray[double_t, ndim=1] real1
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def SUM( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """SUM(real[, timeperiod=?])
 
     Summation"""
@@ -4880,7 +5025,8 @@ def SUM( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def T3( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double vfactor=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
     """T3(real[, timeperiod=?, vfactor=?])
 
     Triple Exponential Moving Average (T3)"""
@@ -4908,7 +5054,8 @@ def T3( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double vfact
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TAN( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TAN( np.ndarray[double_t, ndim=1] real not None ):
     """TAN(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -4934,7 +5081,8 @@ def TAN( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TANH( np.ndarray[double_t, ndim=1] real ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TANH( np.ndarray[double_t, ndim=1] real not None ):
     """TANH(real)"""
     if not real.flags["C_CONTIGUOUS"]:
         real = ascontiguousarray(real, dtype=double)
@@ -4960,7 +5108,8 @@ def TANH( np.ndarray[double_t, ndim=1] real ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TEMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TEMA(real[, timeperiod=?])
 
     Triple Exponential Moving Average"""
@@ -4988,7 +5137,8 @@ def TEMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TRANGE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """TRANGE(high, low, close)
 
     True Range"""
@@ -5020,7 +5170,8 @@ def TRANGE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TRIMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TRIMA(real[, timeperiod=?])
 
     Triangular Moving Average"""
@@ -5048,7 +5199,8 @@ def TRIMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TRIX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TRIX(real[, timeperiod=?])
 
     1-day Rate-Of-Change (ROC) of a Triple Smooth EMA"""
@@ -5076,7 +5228,8 @@ def TRIX( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TSF( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """TSF(real[, timeperiod=?])
 
     Time Series Forecast"""
@@ -5104,7 +5257,8 @@ def TSF( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def TYPPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """TYPPRICE(high, low, close)
 
     Typical Price"""
@@ -5136,7 +5290,8 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def ULTOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
     """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
 
     Ultimate Oscillator"""
@@ -5168,7 +5323,8 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def VAR( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double nbdev=-4e37 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """VAR(real[, timeperiod=?, nbdev=?])
 
     Variance"""
@@ -5196,7 +5352,8 @@ def VAR( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 , double nbde
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def WCLPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
     """WCLPRICE(high, low, close)
 
     Weighted Close Price"""
@@ -5228,7 +5385,8 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] l
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def WILLR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low , np.ndarray[double_t, ndim=1] close , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
     """WILLR(high, low, close[, timeperiod=?])
 
     Williams' %R"""
@@ -5260,7 +5418,8 @@ def WILLR( np.ndarray[double_t, ndim=1] high , np.ndarray[double_t, ndim=1] low 
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
     return outreal
 
-def WMA( np.ndarray[double_t, ndim=1] real , int timeperiod=-2**31 ):
+@boundscheck(False) # turn of bounds-checking for entire function
+def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     """WMA(real[, timeperiod=?])
 
     Weighted Moving Average"""

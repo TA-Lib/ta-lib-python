@@ -33,6 +33,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 # print headers
 print """
 from numpy import empty, nan, int32, double, ascontiguousarray
+from cython import boundscheck
 cimport numpy as np
 
 ctypedef np.double_t double_t
@@ -257,6 +258,7 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
+    print "@boundscheck(False) # turn off bounds-checking for entire function"
     print "def %s(" % shortname,
     docs = ["%s(" % shortname]
     i = 0
@@ -276,18 +278,18 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray[double_t, ndim=1] %s' % var,
+            print 'np.ndarray[double_t, ndim=1] %s not None' % var,
             docs.append(var)
             docs.append(', ')
 
         elif var.startswith('opt'):
             var = cleanup(var)
             if arg.startswith('double'):
-                print 'double %s=-4e37' % var,  # TA_REAL_DEFAULT
+                print 'double %s=-4e37' % var, # TA_REAL_DEFAULT
             elif arg.startswith('int'):
-                print 'int %s=-2**31' % var,    # TA_INTEGER_DEFAULT
+                print 'int %s=-2**31' % var,   # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
-                print 'int %s=0' % var,         # TA_MAType_SMA
+                print 'int %s=0' % var,        # TA_MAType_SMA
             else:
                 assert False, arg
             if '[, ' not in docs:
