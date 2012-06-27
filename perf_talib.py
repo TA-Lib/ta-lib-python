@@ -3,6 +3,7 @@ import talib
 import sys
 
 TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
+LOOPS = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
 
 data = numpy.random.random(TEST_LEN)
 
@@ -11,7 +12,7 @@ if False: # fill array with nans
 
 import time
 t0 = time.time()
-for _ in range(1000):
+for _ in range(LOOPS):
     talib.MA(data)
     talib.BBANDS(data)
     talib.KAMA(data)

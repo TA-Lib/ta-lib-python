@@ -32,8 +32,11 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import where, zeros, empty, nan, int32, double, ascontiguousarray
+from numpy import empty, nan, int32, double, ascontiguousarray
 cimport numpy as np
+
+ctypedef np.double_t double_t
+ctypedef np.int32_t int32_t
 
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
@@ -66,6 +69,8 @@ RetCodes = {
 
 cdef extern from "math.h":
     bint isnan(double x)
+
+cdef double NaN = nan
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta_libc.h":
@@ -271,18 +276,18 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray[np.double_t, ndim=1] %s' % var,
+            print 'np.ndarray[double_t, ndim=1] %s' % var,
             docs.append(var)
             docs.append(', ')
 
         elif var.startswith('opt'):
             var = cleanup(var)
             if arg.startswith('double'):
-                print '%s=-4e37' % var,  # TA_REAL_DEFAULT
+                print 'double %s=-4e37' % var,  # TA_REAL_DEFAULT
             elif arg.startswith('int'):
-                print '%s=-2**31' % var, # TA_INTEGER_DEFAULT
+                print 'int %s=-2**31' % var,    # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
-                print '%s=0' % var,      # TA_MAType_SMA
+                print 'int %s=0' % var,         # TA_MAType_SMA
             else:
                 assert False, arg
             if '[, ' not in docs:
@@ -304,7 +309,8 @@ for f in functions:
             break
         if var.endswith('[]'):
             var = cleanup(var[:-2])
-            print '    %s = ascontiguousarray(%s, dtype=double)' % (var, var)
+            print '    if not %s.flags["C_CONTIGUOUS"]:' % var
+            print '        %s = ascontiguousarray(%s, dtype=double)' % (var, var)
 
     for arg in args:
         var = arg.split()[-1]
@@ -339,12 +345,15 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print '    cdef np.ndarray[np.double_t, ndim=1] %s = empty(length, dtype=double)' % var
-                print '    %s[:lookback] = nan' % var
+                print '    cdef np.ndarray[double_t, ndim=1] %s = empty(length, dtype=double)' % var
+                print '    for i from 0 <= i < min(lookback, length):'
+                print '        %s[i] = NaN' % var
             elif 'int' in arg:
-                vartype = 'np.int32_t'
+                vartype = 'int32_t'
                 dtype = 'int32'
-                print '    cdef np.ndarray[np.int32_t, ndim=1] %s = zeros(length, dtype=int32)' % var
+                print '    cdef np.ndarray[int32_t, ndim=1] %s = empty(length, dtype=int32)' % var
+                print '    for i from 0 <= i < min(lookback, length):'
+                print '        %s[i] = 0' % var
             else:
                 assert False, args
 
