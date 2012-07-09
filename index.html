@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
+
+          <h1 id="project_title">TA-Lib</h1>
+          <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>TA-Lib</h1>
+
+<p>From <a href="http://ta-lib.org">TA-LIB's</a> homepage:</p>
+
+<blockquote>
+<p>TA-Lib is widely used by trading software developers requiring to perform
+technical analysis of financial market data.</p>
+
+<ul>
+<li>Includes 200 indicators such as ADX, MACD, RSI, Stochastic, Bollinger
+Bands, etc.</li>
+<li>Candlestick pattern recognition</li>
+<li>Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET</li>
+</ul>
+</blockquote>
+
+<p>Unfortunately, the included Python bindings use SWIG, are a little difficult
+to install (particularly on Mac OS X), and aren't as efficient as they could
+be.  This project uses Cython and Numpy to efficiently and cleanly bind to
+TA-Lib -- producing results 2-4 times faster than the SWIG interface.</p>
+
+<h2>Installation</h2>
+
+<p>You can install from PyPI:</p>
+
+<pre><code>$ easy_install TA-Lib
+</code></pre>
+
+<p>Or checkout the sources and run <code>setup.py</code> yourself:</p>
+
+<pre><code>$ python setup.py install
+</code></pre>
+
+<p>Note: this requires that you have already installed the <code>ta-lib</code> library
+on your computer (you can <a href="http://ta-lib.org/hdr_dw.html">download it</a> or
+use your computers package manager to install it, e.g.,
+<code>brew install ta-lib</code> on Mac OS X).</p>
+
+<h2>Examples</h2>
+
+<p>Similar to TA-Lib, the functions return an index into the input where the
+output data begins and have default values for their parameters, unless
+specifed as keyword arguments.</p>
+
+<p>All of the following examples will use these definitions:</p>
+
+<div class="highlight">
+<pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">talib</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Calculate a simple moving average:</p>
+
+<div class="highlight">
+<pre><span class="n">output</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">SMA</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Calculating bollinger bands, with triple exponential moving average:</p>
+
+<div class="highlight">
+<pre><span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">BBANDS</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">matype</span><span class="o">=</span><span class="n">talib</span><span class="o">.</span><span class="n">MA_T3</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Calculating momentum, with a time period of 5:</p>
+
+<div class="highlight">
+<pre><span class="n">output</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MOM</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<h2>Indicators</h2>
+
+<p>Some of the included indicators:</p>
+
+<pre><code>AD                  Chaikin A/D Line
+ADOSC               Chaikin A/D Oscillator
+ADX                 Average Directional Movement Index
+ADXR                Average Directional Movement Index Rating
+APO                 Absolute Price Oscillator
+AROON               Aroon
+AROONOSC            Aroon Oscillator
+ATR                 Average True Range
+AVGPRICE            Average Price
+BBANDS              Bollinger Bands
+BETA                Beta
+BOP                 Balance Of Power
+CCI                 Commodity Channel Index
+CDL2CROWS           Two Crows
+CDL3BLACKCROWS      Three Black Crows
+CDL3INSIDE          Three Inside Up/Down
+CDL3LINESTRIKE      Three-Line Strike 
+CDL3OUTSIDE         Three Outside Up/Down
+CDL3STARSINSOUTH    Three Stars In The South
+CDL3WHITESOLDIERS   Three Advancing White Soldiers
+CDLABANDONEDBABY    Abandoned Baby
+CDLADVANCEBLOCK     Advance Block
+CDLBELTHOLD         Belt-hold
+CDLBREAKAWAY        Breakaway
+CDLCLOSINGMARUBOZU  Closing Marubozu
+CDLCONCEALBABYSWALL Concealing Baby Swallow
+CDLCOUNTERATTACK    Counterattack
+CDLDARKCLOUDCOVER   Dark Cloud Cover
+CDLDOJI             Doji
+CDLDOJISTAR         Doji Star
+CDLDRAGONFLYDOJI    Dragonfly Doji
+CDLENGULFING        Engulfing Pattern
+CDLEVENINGDOJISTAR  Evening Doji Star
+CDLEVENINGSTAR      Evening Star
+CDLGAPSIDESIDEWHITE Up/Down-gap side-by-side white lines
+CDLGRAVESTONEDOJI   Gravestone Doji
+CDLHAMMER           Hammer
+CDLHANGINGMAN       Hanging Man
+CDLHARAMI           Harami Pattern
+CDLHARAMICROSS      Harami Cross Pattern
+CDLHIGHWAVE         High-Wave Candle
+CDLHIKKAKE          Hikkake Pattern
+CDLHIKKAKEMOD       Modified Hikkake Pattern
+CDLHOMINGPIGEON     Homing Pigeon
+CDLIDENTICAL3CROWS  Identical Three Crows
+CDLINNECK           In-Neck Pattern
+CDLINVERTEDHAMMER   Inverted Hammer
+CDLKICKING          Kicking
+CDLKICKINGBYLENGTH  Kicking - bull/bear determined by the longer marubozu
+CDLLADDERBOTTOM     Ladder Bottom
+CDLLONGLEGGEDDOJI   Long Legged Doji
+CDLLONGLINE         Long Line Candle
+CDLMARUBOZU         Marubozu
+CDLMATCHINGLOW      Matching Low
+CDLMATHOLD          Mat Hold
+CDLMORNINGDOJISTAR  Morning Doji Star
+CDLMORNINGSTAR      Morning Star
+CDLONNECK           On-Neck Pattern
+CDLPIERCING         Piercing Pattern
+CDLRICKSHAWMAN      Rickshaw Man
+CDLRISEFALL3METHODS Rising/Falling Three Methods
+CDLSEPARATINGLINES  Separating Lines
+CDLSHOOTINGSTAR     Shooting Star
+CDLSHORTLINE        Short Line Candle
+CDLSPINNINGTOP      Spinning Top
+CDLSTALLEDPATTERN   Stalled Pattern
+CDLSTICKSANDWICH    Stick Sandwich
+CDLTAKURI           Takuri (Dragonfly Doji with very long lower shadow)
+CDLTASUKIGAP        Tasuki Gap
+CDLTHRUSTING        Thrusting Pattern
+CDLTRISTAR          Tristar Pattern
+CDLUNIQUE3RIVER     Unique 3 River
+CDLUPSIDEGAP2CROWS  Upside Gap Two Crows
+CDLXSIDEGAP3METHODS Upside/Downside Gap Three Methods
+CMO                 Chande Momentum Oscillator
+CORREL              Pearson's Correlation Coefficient (r)
+DEMA                Double Exponential Moving Average
+DX                  Directional Movement Index
+EMA                 Exponential Moving Average
+HT_DCPERIOD         Hilbert Transform - Dominant Cycle Period
+HT_DCPHASE          Hilbert Transform - Dominant Cycle Phase
+HT_PHASOR           Hilbert Transform - Phasor Components
+HT_SINE             Hilbert Transform - SineWave
+HT_TRENDLINE        Hilbert Transform - Instantaneous Trendline
+HT_TRENDMODE        Hilbert Transform - Trend vs Cycle Mode
+KAMA                Kaufman Adaptive Moving Average
+LINEARREG           Linear Regression
+LINEARREG_ANGLE     Linear Regression Angle
+LINEARREG_INTERCEPT Linear Regression Intercept
+LINEARREG_SLOPE     Linear Regression Slope
+MA                  All Moving Average
+MACD                Moving Average Convergence/Divergence
+MACDEXT             MACD with controllable MA type
+MACDFIX             Moving Average Convergence/Divergence Fix 12/26
+MAMA                MESA Adaptive Moving Average
+MAX                 Highest value over a specified period
+MAXINDEX            Index of highest value over a specified period
+MEDPRICE            Median Price
+MFI                 Money Flow Index
+MIDPOINT            MidPoint over period
+MIDPRICE            Midpoint Price over period
+MIN                 Lowest value over a specified period
+MININDEX            Index of lowest value over a specified period
+MINMAX              Lowest and highest values over a specified period
+MINMAXINDEX         Indexes of lowest and highest values over a specified period
+MINUS_DI            Minus Directional Indicator
+MINUS_DM            Minus Directional Movement
+MOM                 Momentum
+NATR                Normalized Average True Range
+OBV                 On Balance Volume
+PLUS_DI             Plus Directional Indicator
+PLUS_DM             Plus Directional Movement
+PPO                 Percentage Price Oscillator
+ROC                 Rate of change : ((price/prevPrice)-1)*100
+ROCP                Rate of change Percentage: (price-prevPrice)/prevPrice
+ROCR                Rate of change ratio: (price/prevPrice)
+ROCR100             Rate of change ratio 100 scale: (price/prevPrice)*100
+RSI                 Relative Strength Index
+SAR                 Parabolic SAR
+SAREXT              Parabolic SAR - Extended
+SMA                 Simple Moving Average
+STDDEV              Standard Deviation
+STOCH               Stochastic
+STOCHF              Stochastic Fast
+STOCHRSI            Stochastic Relative Strength Index
+SUM                 Summation
+T3                  Triple Exponential Moving Average (T3)
+TEMA                Triple Exponential Moving Average
+TRANGE              True Range
+TRIMA               Triangular Moving Average
+TRIX                1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+TSF                 Time Series Forecast
+TYPPRICE            Typical Price
+ULTOSC              Ultimate Oscillator
+VAR                 Variance
+WCLPRICE            Weighted Close Price
+WILLR               Williams' %R
+WMA                 Weighted Moving Average
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib maintained by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
