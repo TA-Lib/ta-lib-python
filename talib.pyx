@@ -41,6 +41,9 @@ cdef extern from "math.h":
     bint isnan(double x)
 
 cdef extern from "numpy/arrayobject.h":
+    int PyArray_NDIM(np.ndarray)
+    np.npy_intp* PyArray_DIMS(np.ndarray)
+    int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
     int PyArray_FLAGS(np.ndarray)
     void* PyArray_DATA(np.ndarray)
@@ -376,7 +379,7 @@ __version__ = TA_GetVersionString()
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ACOS( np.ndarray[double_t, ndim=1] real not None ):
+def ACOS( np.ndarray real not None ):
     """ACOS(real)"""
     cdef:
         np.npy_intp length
@@ -384,12 +387,17 @@ def ACOS( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -412,7 +420,7 @@ def ACOS( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None ):
+def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None ):
     """AD(high, low, close, volume)
 
     Chaikin A/D Line"""
@@ -425,24 +433,41 @@ def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
         double* volume_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
+    dtype = PyArray_TYPE(volume)
+    assert dtype == np.NPY_DOUBLE, "volume is not double"
+    ndim = PyArray_NDIM(volume)
+    assert ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
         volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
     else:
         volume_data = <double*>volume.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -465,7 +490,7 @@ def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
+def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     """ADD(real0, real1)"""
     cdef:
         np.npy_intp length
@@ -474,16 +499,25 @@ def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -506,7 +540,7 @@ def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
+def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
     """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
 
     Chaikin A/D Oscillator"""
@@ -519,24 +553,41 @@ def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         double* volume_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
+    dtype = PyArray_TYPE(volume)
+    assert dtype == np.NPY_DOUBLE, "volume is not double"
+    ndim = PyArray_NDIM(volume)
+    assert ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
         volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
     else:
         volume_data = <double*>volume.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -559,7 +610,7 @@ def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """ADX(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index"""
@@ -571,20 +622,33 @@ def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -607,7 +671,7 @@ def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """ADXR(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index Rating"""
@@ -619,20 +683,33 @@ def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -655,7 +732,7 @@ def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """APO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Absolute Price Oscillator"""
@@ -665,12 +742,17 @@ def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -693,7 +775,7 @@ def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
+def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
     """AROON(high, low[, timeperiod=?])
 
     Aroon"""
@@ -704,17 +786,27 @@ def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outaroondown
         double* outaroondown_data
+        np.ndarray outaroonup
         double* outaroonup_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -741,7 +833,7 @@ def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
+def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
     """AROONOSC(high, low[, timeperiod=?])
 
     Aroon Oscillator"""
@@ -752,16 +844,25 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -784,7 +885,7 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ASIN( np.ndarray[double_t, ndim=1] real not None ):
+def ASIN( np.ndarray real not None ):
     """ASIN(real)"""
     cdef:
         np.npy_intp length
@@ -792,12 +893,17 @@ def ASIN( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -820,7 +926,7 @@ def ASIN( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ATAN( np.ndarray[double_t, ndim=1] real not None ):
+def ATAN( np.ndarray real not None ):
     """ATAN(real)"""
     cdef:
         np.npy_intp length
@@ -828,12 +934,17 @@ def ATAN( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -856,7 +967,7 @@ def ATAN( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """ATR(high, low, close[, timeperiod=?])
 
     Average True Range"""
@@ -868,20 +979,33 @@ def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -904,7 +1028,7 @@ def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """AVGPRICE(open, high, low, close)
 
     Average Price"""
@@ -917,24 +1041,41 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, 
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -957,7 +1098,7 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
     """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
     Bollinger Bands"""
@@ -967,14 +1108,21 @@ def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outrealupperband
         double* outrealupperband_data
+        np.ndarray outrealmiddleband
         double* outrealmiddleband_data
+        np.ndarray outreallowerband
         double* outreallowerband_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -1005,7 +1153,7 @@ def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
+def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
     """BETA(real0, real1[, timeperiod=?])
 
     Beta"""
@@ -1016,16 +1164,25 @@ def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -1048,7 +1205,7 @@ def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """BOP(open, high, low, close)
 
     Balance Of Power"""
@@ -1061,24 +1218,41 @@ def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1101,7 +1275,7 @@ def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """CCI(high, low, close[, timeperiod=?])
 
     Commodity Channel Index"""
@@ -1113,20 +1287,33 @@ def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1149,7 +1336,7 @@ def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL2CROWS(open, high, low, close)
 
     Two Crows"""
@@ -1162,24 +1349,41 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1202,7 +1406,7 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3BLACKCROWS(open, high, low, close)
 
     Three Black Crows"""
@@ -1215,24 +1419,41 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1255,7 +1476,7 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3INSIDE(open, high, low, close)
 
     Three Inside Up/Down"""
@@ -1268,24 +1489,41 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1308,7 +1546,7 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3LINESTRIKE(open, high, low, close)
 
     Three-Line Strike """
@@ -1321,24 +1559,41 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1361,7 +1616,7 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3OUTSIDE(open, high, low, close)
 
     Three Outside Up/Down"""
@@ -1374,24 +1629,41 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1414,7 +1686,7 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3STARSINSOUTH(open, high, low, close)
 
     Three Stars In The South"""
@@ -1427,24 +1699,41 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1467,7 +1756,7 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDL3WHITESOLDIERS(open, high, low, close)
 
     Three Advancing White Soldiers"""
@@ -1480,24 +1769,41 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1520,7 +1826,7 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
 
     Abandoned Baby"""
@@ -1533,24 +1839,41 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1573,7 +1896,7 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLADVANCEBLOCK(open, high, low, close)
 
     Advance Block"""
@@ -1586,24 +1909,41 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1626,7 +1966,7 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLBELTHOLD(open, high, low, close)
 
     Belt-hold"""
@@ -1639,24 +1979,41 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1679,7 +2036,7 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLBREAKAWAY(open, high, low, close)
 
     Breakaway"""
@@ -1692,24 +2049,41 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1732,7 +2106,7 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLCLOSINGMARUBOZU(open, high, low, close)
 
     Closing Marubozu"""
@@ -1745,24 +2119,41 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1785,7 +2176,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLCONCEALBABYSWALL(open, high, low, close)
 
     Concealing Baby Swallow"""
@@ -1798,24 +2189,41 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1838,7 +2246,7 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLCOUNTERATTACK(open, high, low, close)
 
     Counterattack"""
@@ -1851,24 +2259,41 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1891,7 +2316,7 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
 
     Dark Cloud Cover"""
@@ -1904,24 +2329,41 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1944,7 +2386,7 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLDOJI(open, high, low, close)
 
     Doji"""
@@ -1957,24 +2399,41 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, n
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1997,7 +2456,7 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLDOJISTAR(open, high, low, close)
 
     Doji Star"""
@@ -2010,24 +2469,41 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2050,7 +2526,7 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLDRAGONFLYDOJI(open, high, low, close)
 
     Dragonfly Doji"""
@@ -2063,24 +2539,41 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2103,7 +2596,7 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLENGULFING(open, high, low, close)
 
     Engulfing Pattern"""
@@ -2116,24 +2609,41 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2156,7 +2666,7 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Evening Doji Star"""
@@ -2169,24 +2679,41 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2209,7 +2736,7 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
 
     Evening Star"""
@@ -2222,24 +2749,41 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2262,7 +2806,7 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLGAPSIDESIDEWHITE(open, high, low, close)
 
     Up/Down-gap side-by-side white lines"""
@@ -2275,24 +2819,41 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2315,7 +2876,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLGRAVESTONEDOJI(open, high, low, close)
 
     Gravestone Doji"""
@@ -2328,24 +2889,41 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2368,7 +2946,7 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHAMMER(open, high, low, close)
 
     Hammer"""
@@ -2381,24 +2959,41 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2421,7 +3016,7 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHANGINGMAN(open, high, low, close)
 
     Hanging Man"""
@@ -2434,24 +3029,41 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2474,7 +3086,7 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHARAMI(open, high, low, close)
 
     Harami Pattern"""
@@ -2487,24 +3099,41 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2527,7 +3156,7 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHARAMICROSS(open, high, low, close)
 
     Harami Cross Pattern"""
@@ -2540,24 +3169,41 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2580,7 +3226,7 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHIGHWAVE(open, high, low, close)
 
     High-Wave Candle"""
@@ -2593,24 +3239,41 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2633,7 +3296,7 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHIKKAKE(open, high, low, close)
 
     Hikkake Pattern"""
@@ -2646,24 +3309,41 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2686,7 +3366,7 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHIKKAKEMOD(open, high, low, close)
 
     Modified Hikkake Pattern"""
@@ -2699,24 +3379,41 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2739,7 +3436,7 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLHOMINGPIGEON(open, high, low, close)
 
     Homing Pigeon"""
@@ -2752,24 +3449,41 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2792,7 +3506,7 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLIDENTICAL3CROWS(open, high, low, close)
 
     Identical Three Crows"""
@@ -2805,24 +3519,41 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2845,7 +3576,7 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLINNECK(open, high, low, close)
 
     In-Neck Pattern"""
@@ -2858,24 +3589,41 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2898,7 +3646,7 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLINVERTEDHAMMER(open, high, low, close)
 
     Inverted Hammer"""
@@ -2911,24 +3659,41 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2951,7 +3716,7 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLKICKING(open, high, low, close)
 
     Kicking"""
@@ -2964,24 +3729,41 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3004,7 +3786,7 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLKICKINGBYLENGTH(open, high, low, close)
 
     Kicking - bull/bear determined by the longer marubozu"""
@@ -3017,24 +3799,41 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3057,7 +3856,7 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLLADDERBOTTOM(open, high, low, close)
 
     Ladder Bottom"""
@@ -3070,24 +3869,41 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3110,7 +3926,7 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLLONGLEGGEDDOJI(open, high, low, close)
 
     Long Legged Doji"""
@@ -3123,24 +3939,41 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3163,7 +3996,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLLONGLINE(open, high, low, close)
 
     Long Line Candle"""
@@ -3176,24 +4009,41 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3216,7 +4066,7 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLMARUBOZU(open, high, low, close)
 
     Marubozu"""
@@ -3229,24 +4079,41 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3269,7 +4136,7 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLMATCHINGLOW(open, high, low, close)
 
     Matching Low"""
@@ -3282,24 +4149,41 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3322,7 +4206,7 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLMATHOLD(open, high, low, close[, penetration=?])
 
     Mat Hold"""
@@ -3335,24 +4219,41 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3375,7 +4276,7 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Morning Doji Star"""
@@ -3388,24 +4289,41 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3428,7 +4346,7 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , double penetration=-4e37 ):
+def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=-4e37 ):
     """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
 
     Morning Star"""
@@ -3441,24 +4359,41 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3481,7 +4416,7 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLONNECK(open, high, low, close)
 
     On-Neck Pattern"""
@@ -3494,24 +4429,41 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3534,7 +4486,7 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLPIERCING(open, high, low, close)
 
     Piercing Pattern"""
@@ -3547,24 +4499,41 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3587,7 +4556,7 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLRICKSHAWMAN(open, high, low, close)
 
     Rickshaw Man"""
@@ -3600,24 +4569,41 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3640,7 +4626,7 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLRISEFALL3METHODS(open, high, low, close)
 
     Rising/Falling Three Methods"""
@@ -3653,24 +4639,41 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3693,7 +4696,7 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSEPARATINGLINES(open, high, low, close)
 
     Separating Lines"""
@@ -3706,24 +4709,41 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3746,7 +4766,7 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSHOOTINGSTAR(open, high, low, close)
 
     Shooting Star"""
@@ -3759,24 +4779,41 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3799,7 +4836,7 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSHORTLINE(open, high, low, close)
 
     Short Line Candle"""
@@ -3812,24 +4849,41 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3852,7 +4906,7 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSPINNINGTOP(open, high, low, close)
 
     Spinning Top"""
@@ -3865,24 +4919,41 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3905,7 +4976,7 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSTALLEDPATTERN(open, high, low, close)
 
     Stalled Pattern"""
@@ -3918,24 +4989,41 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3958,7 +5046,7 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLSTICKSANDWICH(open, high, low, close)
 
     Stick Sandwich"""
@@ -3971,24 +5059,41 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4011,7 +5116,7 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLTAKURI(open, high, low, close)
 
     Takuri (Dragonfly Doji with very long lower shadow)"""
@@ -4024,24 +5129,41 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4064,7 +5186,7 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLTASUKIGAP(open, high, low, close)
 
     Tasuki Gap"""
@@ -4077,24 +5199,41 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4117,7 +5256,7 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLTHRUSTING(open, high, low, close)
 
     Thrusting Pattern"""
@@ -4130,24 +5269,41 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4170,7 +5326,7 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLTRISTAR(open, high, low, close)
 
     Tristar Pattern"""
@@ -4183,24 +5339,41 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4223,7 +5396,7 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLUNIQUE3RIVER(open, high, low, close)
 
     Unique 3 River"""
@@ -4236,24 +5409,41 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4276,7 +5466,7 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLUPSIDEGAP2CROWS(open, high, low, close)
 
     Upside Gap Two Crows"""
@@ -4289,24 +5479,41 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4329,7 +5536,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """CDLXSIDEGAP3METHODS(open, high, low, close)
 
     Upside/Downside Gap Three Methods"""
@@ -4342,24 +5549,41 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(open)
+    assert dtype == np.NPY_DOUBLE, "open is not double"
+    ndim = PyArray_NDIM(open)
+    assert ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
         open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
     else:
         open_data = <double*>open.data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4382,7 +5606,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CEIL( np.ndarray[double_t, ndim=1] real not None ):
+def CEIL( np.ndarray real not None ):
     """CEIL(real)"""
     cdef:
         np.npy_intp length
@@ -4390,12 +5614,17 @@ def CEIL( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4418,7 +5647,7 @@ def CEIL( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     """CMO(real[, timeperiod=?])
 
     Chande Momentum Oscillator"""
@@ -4428,12 +5657,17 @@ def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4456,7 +5690,7 @@ def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None , int timeperiod=-2**31 ):
+def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
     """CORREL(real0, real1[, timeperiod=?])
 
     Pearson's Correlation Coefficient (r)"""
@@ -4467,16 +5701,25 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, n
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -4499,7 +5742,7 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def COS( np.ndarray[double_t, ndim=1] real not None ):
+def COS( np.ndarray real not None ):
     """COS(real)"""
     cdef:
         np.npy_intp length
@@ -4507,12 +5750,17 @@ def COS( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4535,7 +5783,7 @@ def COS( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def COSH( np.ndarray[double_t, ndim=1] real not None ):
+def COSH( np.ndarray real not None ):
     """COSH(real)"""
     cdef:
         np.npy_intp length
@@ -4543,12 +5791,17 @@ def COSH( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4571,7 +5824,7 @@ def COSH( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """DEMA(real[, timeperiod=?])
 
     Double Exponential Moving Average"""
@@ -4581,12 +5834,17 @@ def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4609,7 +5867,7 @@ def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
+def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     """DIV(real0, real1)"""
     cdef:
         np.npy_intp length
@@ -4618,16 +5876,25 @@ def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -4650,7 +5917,7 @@ def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """DX(high, low, close[, timeperiod=?])
 
     Directional Movement Index"""
@@ -4662,20 +5929,33 @@ def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4698,7 +5978,7 @@ def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """EMA(real[, timeperiod=?])
 
     Exponential Moving Average"""
@@ -4708,12 +5988,17 @@ def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4736,7 +6021,7 @@ def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def EXP( np.ndarray[double_t, ndim=1] real not None ):
+def EXP( np.ndarray real not None ):
     """EXP(real)"""
     cdef:
         np.npy_intp length
@@ -4744,12 +6029,17 @@ def EXP( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4772,7 +6062,7 @@ def EXP( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
+def FLOOR( np.ndarray real not None ):
     """FLOOR(real)"""
     cdef:
         np.npy_intp length
@@ -4780,12 +6070,17 @@ def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4808,7 +6103,7 @@ def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
+def HT_DCPERIOD( np.ndarray real not None ):
     """HT_DCPERIOD(real)
 
     Hilbert Transform - Dominant Cycle Period"""
@@ -4818,12 +6113,17 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4846,7 +6146,7 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
+def HT_DCPHASE( np.ndarray real not None ):
     """HT_DCPHASE(real)
 
     Hilbert Transform - Dominant Cycle Phase"""
@@ -4856,12 +6156,17 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4884,7 +6189,7 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
+def HT_PHASOR( np.ndarray real not None ):
     """HT_PHASOR(real)
 
     Hilbert Transform - Phasor Components"""
@@ -4894,13 +6199,19 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outinphase
         double* outinphase_data
+        np.ndarray outquadrature
         double* outquadrature_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4927,7 +6238,7 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
+def HT_SINE( np.ndarray real not None ):
     """HT_SINE(real)
 
     Hilbert Transform - SineWave"""
@@ -4937,13 +6248,19 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outsine
         double* outsine_data
+        np.ndarray outleadsine
         double* outleadsine_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -4970,7 +6287,7 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
+def HT_TRENDLINE( np.ndarray real not None ):
     """HT_TRENDLINE(real)
 
     Hilbert Transform - Instantaneous Trendline"""
@@ -4980,12 +6297,17 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5008,7 +6330,7 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
+def HT_TRENDMODE( np.ndarray real not None ):
     """HT_TRENDMODE(real)
 
     Hilbert Transform - Trend vs Cycle Mode"""
@@ -5018,12 +6340,17 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5046,7 +6373,7 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """KAMA(real[, timeperiod=?])
 
     Kaufman Adaptive Moving Average"""
@@ -5056,12 +6383,17 @@ def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5084,7 +6416,7 @@ def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     """LINEARREG(real[, timeperiod=?])
 
     Linear Regression"""
@@ -5094,12 +6426,17 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**3
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5122,7 +6459,7 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**3
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     """LINEARREG_ANGLE(real[, timeperiod=?])
 
     Linear Regression Angle"""
@@ -5132,12 +6469,17 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5160,7 +6502,7 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     """LINEARREG_INTERCEPT(real[, timeperiod=?])
 
     Linear Regression Intercept"""
@@ -5170,12 +6512,17 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timepe
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5198,7 +6545,7 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timepe
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     """LINEARREG_SLOPE(real[, timeperiod=?])
 
     Linear Regression Slope"""
@@ -5208,12 +6555,17 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5236,7 +6588,7 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LN( np.ndarray[double_t, ndim=1] real not None ):
+def LN( np.ndarray real not None ):
     """LN(real)"""
     cdef:
         np.npy_intp length
@@ -5244,12 +6596,17 @@ def LN( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5272,7 +6629,7 @@ def LN( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LOG10( np.ndarray[double_t, ndim=1] real not None ):
+def LOG10( np.ndarray real not None ):
     """LOG10(real)"""
     cdef:
         np.npy_intp length
@@ -5280,12 +6637,17 @@ def LOG10( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5308,7 +6670,7 @@ def LOG10( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int matype=0 ):
+def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     """MA(real[, timeperiod=?, matype=?])
 
     All Moving Average"""
@@ -5318,12 +6680,17 @@ def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5346,7 +6713,7 @@ def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
+def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
     """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
     Moving Average Convergence/Divergence"""
@@ -5356,14 +6723,21 @@ def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , i
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outmacd
         double* outmacd_data
+        np.ndarray outmacdsignal
         double* outmacdsignal_data
+        np.ndarray outmacdhist
         double* outmacdhist_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5394,7 +6768,7 @@ def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , i
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
+def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
     """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
 
     MACD with controllable MA type"""
@@ -5404,14 +6778,21 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outmacd
         double* outmacd_data
+        np.ndarray outmacdsignal
         double* outmacdsignal_data
+        np.ndarray outmacdhist
         double* outmacdhist_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5442,7 +6823,7 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**31 ):
+def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     """MACDFIX(real[, signalperiod=?])
 
     Moving Average Convergence/Divergence Fix 12/26"""
@@ -5452,14 +6833,21 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**3
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outmacd
         double* outmacd_data
+        np.ndarray outmacdsignal
         double* outmacdsignal_data
+        np.ndarray outmacdhist
         double* outmacdhist_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5490,7 +6878,7 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**3
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
+def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
     """MAMA(real[, fastlimit=?, slowlimit=?])
 
     MESA Adaptive Moving Average"""
@@ -5500,13 +6888,19 @@ def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , 
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outmama
         double* outmama_data
+        np.ndarray outfama
         double* outfama_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5533,7 +6927,7 @@ def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
+def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
     """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])"""
     cdef:
         np.npy_intp length
@@ -5542,16 +6936,25 @@ def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim
         double* periods_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
+    dtype = PyArray_TYPE(periods)
+    assert dtype == np.NPY_DOUBLE, "periods is not double"
+    ndim = PyArray_NDIM(periods)
+    assert ndim == 1, "periods has wrong dimensions"
     if not (PyArray_FLAGS(periods) & np.NPY_C_CONTIGUOUS):
         periods_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(periods))
     else:
         periods_data = <double*>periods.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5574,7 +6977,7 @@ def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     """MAX(real[, timeperiod=?])
 
     Highest value over a specified period"""
@@ -5584,12 +6987,17 @@ def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5612,7 +7020,7 @@ def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     """MAXINDEX(real[, timeperiod=?])
 
     Index of highest value over a specified period"""
@@ -5622,12 +7030,17 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5650,7 +7063,7 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None ):
+def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     """MEDPRICE(high, low)
 
     Median Price"""
@@ -5661,16 +7074,25 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5693,7 +7115,7 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , np.ndarray[double_t, ndim=1] volume not None , int timeperiod=-2**31 ):
+def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=-2**31 ):
     """MFI(high, low, close, volume[, timeperiod=?])
 
     Money Flow Index"""
@@ -5706,24 +7128,41 @@ def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         double* volume_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
+    dtype = PyArray_TYPE(volume)
+    assert dtype == np.NPY_DOUBLE, "volume is not double"
+    ndim = PyArray_NDIM(volume)
+    assert ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
         volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
     else:
         volume_data = <double*>volume.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5746,7 +7185,7 @@ def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     """MIDPOINT(real[, timeperiod=?])
 
     MidPoint over period"""
@@ -5756,12 +7195,17 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5784,7 +7228,7 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
+def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
     """MIDPRICE(high, low[, timeperiod=?])
 
     Midpoint Price over period"""
@@ -5795,16 +7239,25 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5827,7 +7280,7 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     """MIN(real[, timeperiod=?])
 
     Lowest value over a specified period"""
@@ -5837,12 +7290,17 @@ def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5865,7 +7323,7 @@ def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     """MININDEX(real[, timeperiod=?])
 
     Index of lowest value over a specified period"""
@@ -5875,12 +7333,17 @@ def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outinteger
         int* outinteger_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5903,7 +7366,7 @@ def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     """MINMAX(real[, timeperiod=?])
 
     Lowest and highest values over a specified period"""
@@ -5913,13 +7376,19 @@ def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 )
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outmin
         double* outmin_data
+        np.ndarray outmax
         double* outmax_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5946,7 +7415,7 @@ def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 )
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     """MINMAXINDEX(real[, timeperiod=?])
 
     Indexes of lowest and highest values over a specified period"""
@@ -5956,13 +7425,19 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2*
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outminidx
         int* outminidx_data
+        np.ndarray outmaxidx
         int* outmaxidx_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5989,7 +7464,7 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2*
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """MINUS_DI(high, low, close[, timeperiod=?])
 
     Minus Directional Indicator"""
@@ -6001,20 +7476,33 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6037,7 +7525,7 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
+def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
     """MINUS_DM(high, low[, timeperiod=?])
 
     Minus Directional Movement"""
@@ -6048,16 +7536,25 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6080,7 +7577,7 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     """MOM(real[, timeperiod=?])
 
     Momentum"""
@@ -6090,12 +7587,17 @@ def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6118,7 +7620,7 @@ def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
+def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     """MULT(real0, real1)"""
     cdef:
         np.npy_intp length
@@ -6127,16 +7629,25 @@ def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -6159,7 +7670,7 @@ def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """NATR(high, low, close[, timeperiod=?])
 
     Normalized Average True Range"""
@@ -6171,20 +7682,33 @@ def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6207,7 +7731,7 @@ def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=1] volume not None ):
+def OBV( np.ndarray real not None , np.ndarray volume not None ):
     """OBV(real, volume)
 
     On Balance Volume"""
@@ -6218,16 +7742,25 @@ def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=
         double* volume_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
+    dtype = PyArray_TYPE(volume)
+    assert dtype == np.NPY_DOUBLE, "volume is not double"
+    ndim = PyArray_NDIM(volume)
+    assert ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
         volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
     else:
         volume_data = <double*>volume.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6250,7 +7783,7 @@ def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """PLUS_DI(high, low, close[, timeperiod=?])
 
     Plus Directional Indicator"""
@@ -6262,20 +7795,33 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6298,7 +7844,7 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , int timeperiod=-2**31 ):
+def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
     """PLUS_DM(high, low[, timeperiod=?])
 
     Plus Directional Movement"""
@@ -6309,16 +7855,25 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6341,7 +7896,7 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
     """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Percentage Price Oscillator"""
@@ -6351,12 +7906,17 @@ def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6379,7 +7939,7 @@ def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     """ROC(real[, timeperiod=?])
 
     Rate of change : ((price/prevPrice)-1)*100"""
@@ -6389,12 +7949,17 @@ def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6417,7 +7982,7 @@ def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     """ROCP(real[, timeperiod=?])
 
     Rate of change Percentage: (price-prevPrice)/prevPrice"""
@@ -6427,12 +7992,17 @@ def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6455,7 +8025,7 @@ def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     """ROCR(real[, timeperiod=?])
 
     Rate of change ratio: (price/prevPrice)"""
@@ -6465,12 +8035,17 @@ def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6493,7 +8068,7 @@ def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     """ROCR100(real[, timeperiod=?])
 
     Rate of change ratio 100 scale: (price/prevPrice)*100"""
@@ -6503,12 +8078,17 @@ def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6531,7 +8111,7 @@ def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     """RSI(real[, timeperiod=?])
 
     Relative Strength Index"""
@@ -6541,12 +8121,17 @@ def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6569,7 +8154,7 @@ def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double acceleration=-4e37 , double maximum=-4e37 ):
+def SAR( np.ndarray high not None , np.ndarray low not None , double acceleration=-4e37 , double maximum=-4e37 ):
     """SAR(high, low[, acceleration=?, maximum=?])
 
     Parabolic SAR"""
@@ -6580,16 +8165,25 @@ def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6612,7 +8206,7 @@ def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
+def SAREXT( np.ndarray high not None , np.ndarray low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
     """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
 
     Parabolic SAR - Extended"""
@@ -6623,16 +8217,25 @@ def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         double* low_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6655,7 +8258,7 @@ def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SIN( np.ndarray[double_t, ndim=1] real not None ):
+def SIN( np.ndarray real not None ):
     """SIN(real)"""
     cdef:
         np.npy_intp length
@@ -6663,12 +8266,17 @@ def SIN( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6691,7 +8299,7 @@ def SIN( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SINH( np.ndarray[double_t, ndim=1] real not None ):
+def SINH( np.ndarray real not None ):
     """SINH(real)"""
     cdef:
         np.npy_intp length
@@ -6699,12 +8307,17 @@ def SINH( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6727,7 +8340,7 @@ def SINH( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """SMA(real[, timeperiod=?])
 
     Simple Moving Average"""
@@ -6737,12 +8350,17 @@ def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6765,7 +8383,7 @@ def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SQRT( np.ndarray[double_t, ndim=1] real not None ):
+def SQRT( np.ndarray real not None ):
     """SQRT(real)"""
     cdef:
         np.npy_intp length
@@ -6773,12 +8391,17 @@ def SQRT( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6801,7 +8424,7 @@ def SQRT( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """STDDEV(real[, timeperiod=?, nbdev=?])
 
     Standard Deviation"""
@@ -6811,12 +8434,17 @@ def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6839,7 +8467,7 @@ def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
+def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
     """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
 
     Stochastic"""
@@ -6851,21 +8479,35 @@ def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outslowk
         double* outslowk_data
+        np.ndarray outslowd
         double* outslowd_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6892,7 +8534,7 @@ def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Fast"""
@@ -6904,21 +8546,35 @@ def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outfastk
         double* outfastk_data
+        np.ndarray outfastd
         double* outfastd_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -6945,7 +8601,7 @@ def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
     """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Relative Strength Index"""
@@ -6955,13 +8611,19 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outfastk
         double* outfastk_data
+        np.ndarray outfastd
         double* outfastd_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6988,7 +8650,7 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim=1] real1 not None ):
+def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     """SUB(real0, real1)"""
     cdef:
         np.npy_intp length
@@ -6997,16 +8659,25 @@ def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
         double* real1_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real0)
+    assert dtype == np.NPY_DOUBLE, "real0 is not double"
+    ndim = PyArray_NDIM(real0)
+    assert ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
         real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
     else:
         real0_data = <double*>real0.data
+    dtype = PyArray_TYPE(real1)
+    assert dtype == np.NPY_DOUBLE, "real1 is not double"
+    ndim = PyArray_NDIM(real1)
+    assert ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
         real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
     else:
         real1_data = <double*>real1.data
-    length = real0.shape[0]
+    length = PyArray_DIMS(real0)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -7029,7 +8700,7 @@ def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     """SUM(real[, timeperiod=?])
 
     Summation"""
@@ -7039,12 +8710,17 @@ def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7067,7 +8743,7 @@ def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
+def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
     """T3(real[, timeperiod=?, vfactor=?])
 
     Triple Exponential Moving Average (T3)"""
@@ -7077,12 +8753,17 @@ def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , dou
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7105,7 +8786,7 @@ def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TAN( np.ndarray[double_t, ndim=1] real not None ):
+def TAN( np.ndarray real not None ):
     """TAN(real)"""
     cdef:
         np.npy_intp length
@@ -7113,12 +8794,17 @@ def TAN( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7141,7 +8827,7 @@ def TAN( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TANH( np.ndarray[double_t, ndim=1] real not None ):
+def TANH( np.ndarray real not None ):
     """TANH(real)"""
     cdef:
         np.npy_intp length
@@ -7149,12 +8835,17 @@ def TANH( np.ndarray[double_t, ndim=1] real not None ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7177,7 +8868,7 @@ def TANH( np.ndarray[double_t, ndim=1] real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """TEMA(real[, timeperiod=?])
 
     Triple Exponential Moving Average"""
@@ -7187,12 +8878,17 @@ def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7215,7 +8911,7 @@ def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """TRANGE(high, low, close)
 
     True Range"""
@@ -7227,20 +8923,33 @@ def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7263,7 +8972,7 @@ def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """TRIMA(real[, timeperiod=?])
 
     Triangular Moving Average"""
@@ -7273,12 +8982,17 @@ def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7301,7 +9015,7 @@ def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     """TRIX(real[, timeperiod=?])
 
     1-day Rate-Of-Change (ROC) of a Triple Smooth EMA"""
@@ -7311,12 +9025,17 @@ def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7339,7 +9058,7 @@ def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     """TSF(real[, timeperiod=?])
 
     Time Series Forecast"""
@@ -7349,12 +9068,17 @@ def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7377,7 +9101,7 @@ def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """TYPPRICE(high, low, close)
 
     Typical Price"""
@@ -7389,20 +9113,33 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7425,7 +9162,7 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
+def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
     """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
 
     Ultimate Oscillator"""
@@ -7437,20 +9174,33 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7473,7 +9223,7 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
     """VAR(real[, timeperiod=?, nbdev=?])
 
     Variance"""
@@ -7483,12 +9233,17 @@ def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , do
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7511,7 +9266,7 @@ def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , do
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None ):
+def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """WCLPRICE(high, low, close)
 
     Weighted Close Price"""
@@ -7523,20 +9278,33 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7559,7 +9327,7 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1] low not None , np.ndarray[double_t, ndim=1] close not None , int timeperiod=-2**31 ):
+def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """WILLR(high, low, close[, timeperiod=?])
 
     Williams' %R"""
@@ -7571,20 +9339,33 @@ def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
         double* close_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(high)
+    assert dtype == np.NPY_DOUBLE, "high is not double"
+    ndim = PyArray_NDIM(high)
+    assert ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
         high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
     else:
         high_data = <double*>high.data
+    dtype = PyArray_TYPE(low)
+    assert dtype == np.NPY_DOUBLE, "low is not double"
+    ndim = PyArray_NDIM(low)
+    assert ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
         low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
     else:
         low_data = <double*>low.data
+    dtype = PyArray_TYPE(close)
+    assert dtype == np.NPY_DOUBLE, "close is not double"
+    ndim = PyArray_NDIM(close)
+    assert ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
         close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
     else:
         close_data = <double*>close.data
-    length = high.shape[0]
+    length = PyArray_DIMS(high)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7607,7 +9388,7 @@ def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
+def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """WMA(real[, timeperiod=?])
 
     Weighted Moving Average"""
@@ -7617,12 +9398,17 @@ def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
         double* real_data
         int outbegidx
         int outnbelement
+        np.ndarray outreal
         double* outreal_data
+    dtype = PyArray_TYPE(real)
+    assert dtype == np.NPY_DOUBLE, "real is not double"
+    ndim = PyArray_NDIM(real)
+    assert ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
         real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
     else:
         real_data = <double*>real.data
-    length = real.shape[0]
+    length = PyArray_DIMS(real)[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):

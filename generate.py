@@ -74,6 +74,9 @@ cdef extern from "math.h":
     bint isnan(double x)
 
 cdef extern from "numpy/arrayobject.h":
+    int PyArray_NDIM(np.ndarray)
+    np.npy_intp* PyArray_DIMS(np.ndarray)
+    int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
     int PyArray_FLAGS(np.ndarray)
     void* PyArray_DATA(np.ndarray)
@@ -287,7 +290,7 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray[double_t, ndim=1] %s not None' % var,
+            print 'np.ndarray %s not None' % var,
             docs.append(var)
             docs.append(', ')
 
@@ -339,6 +342,7 @@ for f in functions:
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
+            print '        np.ndarray %s' % var
             if 'double' in arg:
                 print '        double* %s_data' % var
             elif 'int' in arg:
@@ -365,6 +369,10 @@ for f in functions:
                 cast = '<int*>'
             else:
                 assert False, arg
+            print '    dtype = PyArray_TYPE(%s)' % var
+            print '    assert dtype == np.NPY_DOUBLE, "%s is not double"' % var
+            print '    ndim = PyArray_NDIM(%s)' % var
+            print '    assert ndim == 1, "%s has wrong dimensions"' % var
             print '    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var
             print '        %s_data = %sPyArray_DATA(PyArray_GETCONTIGUOUS(%s))' % (var, cast, var)
             print '    else:'
@@ -374,7 +382,7 @@ for f in functions:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
-            print '    length = %s.shape[0]' % var
+            print '    length = PyArray_DIMS(%s)[0]' % var
             print '    begidx = 0'
             print '    for i from 0 <= i < length:'
             print '        if not isnan(%s_data[i]):' % var
