@@ -32,7 +32,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from numpy import nan, int32, double, ascontiguousarray
+from numpy import nan
 from cython import boundscheck, wraparound
 cimport numpy as np
 
@@ -68,13 +68,16 @@ RetCodes = {
 65535: 'Unknown Error',
 }
 
+cdef double NaN = nan
+
 cdef extern from "math.h":
     bint isnan(double x)
 
-cdef double NaN = nan
-
 cdef extern from "numpy/arrayobject.h":
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
+    int PyArray_FLAGS(np.ndarray)
+    void* PyArray_DATA(np.ndarray)
+    object PyArray_GETCONTIGUOUS(np.ndarray)
 
 np.import_array() # Initialize the NumPy C API
 
@@ -316,15 +319,30 @@ for f in functions:
     for arg in args:
         var = arg.split()[-1]
 
+        if 'out' in var:
+            break
+
+        if var.endswith('[]'):
+            var = cleanup(var[:-2])
+            if 'double' in arg:
+                print '        double* %s_data' % var
+            elif 'int' in arg:
+                print '        int* %s_data' % var
+            else:
+                assert False, args
+
+    for arg in args:
+        var = arg.split()[-1]
+
         if 'out' not in var:
             continue
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print '        np.ndarray[double_t, ndim=1] %s' % var
+                print '        double* %s_data' % var
             elif 'int' in arg:
-                print '        np.ndarray[int32_t, ndim=1] %s' % var
+                print '        int* %s_data' % var
             else:
                 assert False, args
 
@@ -341,8 +359,16 @@ for f in functions:
             break
         if var.endswith('[]'):
             var = cleanup(var[:-2])
-            print '    if not %s.flags["C_CONTIGUOUS"]:' % var
-            print '        %s = ascontiguousarray(%s, dtype=double)' % (var, var)
+            if 'double' in arg:
+                cast = '<double*>'
+            elif 'int' in arg:
+                cast = '<int*>'
+            else:
+                assert False, arg
+            print '    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var
+            print '        %s_data = %sPyArray_DATA(PyArray_GETCONTIGUOUS(%s))' % (var, cast, var)
+            print '    else:'
+            print '        %s_data = %s%s.data' % (var, cast, var)
 
     for arg in args:
         var = arg.split()[-1]
@@ -351,7 +377,7 @@ for f in functions:
             print '    length = %s.shape[0]' % var
             print '    begidx = 0'
             print '    for i from 0 <= i < length:'
-            print '        if not isnan(%s[i]):' % var
+            print '        if not isnan(%s_data[i]):' % var
             print '            begidx = i'
             print '            break'
             print '    else:'
@@ -378,12 +404,14 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var
+                print '    %s_data = <double*>PyArray_DATA(%s)' % (var, var)
                 print '    for i from 0 <= i < min(lookback, length):'
-                print '        %s[i] = NaN' % var
+                print '        %s_data[i] = NaN' % var
             elif 'int' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var
+                print '    %s_data = <int*>PyArray_DATA(%s)' % (var, var)
                 print '    for i from 0 <= i < min(lookback, length):'
-                print '        %s[i] = 0' % var
+                print '        %s_data[i] = 0' % var
             else:
                 assert False, args
 
@@ -397,9 +425,9 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'out' in var:
-                data = '%s.data+lookback' % var
+                data = '(%s_data+lookback)' % var
             else:
-                data = '%s.data+begidx' % var
+                data = '(%s_data+begidx)' % var
             if 'double' in arg:
                 print '<double *>%s' % data,
             elif 'int' in arg:

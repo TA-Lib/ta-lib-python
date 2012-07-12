@@ -1,5 +1,5 @@
 
-from numpy import nan, int32, double, ascontiguousarray
+from numpy import nan
 from cython import boundscheck, wraparound
 cimport numpy as np
 
@@ -35,13 +35,16 @@ RetCodes = {
 65535: 'Unknown Error',
 }
 
+cdef double NaN = nan
+
 cdef extern from "math.h":
     bint isnan(double x)
 
-cdef double NaN = nan
-
 cdef extern from "numpy/arrayobject.h":
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
+    int PyArray_FLAGS(np.ndarray)
+    void* PyArray_DATA(np.ndarray)
+    object PyArray_GETCONTIGUOUS(np.ndarray)
 
 np.import_array() # Initialize the NumPy C API
 
@@ -378,15 +381,18 @@ def ACOS( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -395,9 +401,10 @@ def ACOS( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_ACOS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ACOS( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -412,21 +419,33 @@ def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
+        double* volume_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
-    if not volume.flags["C_CONTIGUOUS"]:
-        volume = ascontiguousarray(volume, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
+    if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
+        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
+    else:
+        volume_data = <double*>volume.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -435,9 +454,10 @@ def AD( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
     TA_Initialize()
     lookback = begidx + TA_AD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_AD( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -450,17 +470,23 @@ def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -469,9 +495,10 @@ def ADD( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_ADD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ADD( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -486,21 +513,33 @@ def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
+        double* volume_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
-    if not volume.flags["C_CONTIGUOUS"]:
-        volume = ascontiguousarray(volume, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
+    if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
+        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
+    else:
+        volume_data = <double*>volume.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -509,9 +548,10 @@ def ADOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_ADOSC_Lookback( fastperiod , slowperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ADOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -526,19 +566,28 @@ def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -547,9 +596,10 @@ def ADX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_ADX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ADX( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -564,19 +614,28 @@ def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -585,9 +644,10 @@ def ADXR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_ADXR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ADXR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -602,15 +662,18 @@ def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -619,9 +682,10 @@ def APO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
     TA_Initialize()
     lookback = begidx + TA_APO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_APO( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -636,18 +700,24 @@ def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outaroondown
-        np.ndarray[double_t, ndim=1] outaroonup
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outaroondown_data
+        double* outaroonup_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -656,12 +726,14 @@ def AROON( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_AROON_Lookback( timeperiod )
     outaroondown = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outaroondown_data = <double*>PyArray_DATA(outaroondown)
     for i from 0 <= i < min(lookback, length):
-        outaroondown[i] = NaN
+        outaroondown_data[i] = NaN
     outaroonup = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outaroonup_data = <double*>PyArray_DATA(outaroonup)
     for i from 0 <= i < min(lookback, length):
-        outaroonup[i] = NaN
-    retCode = TA_AROON( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outaroondown.data+lookback , <double *>outaroonup.data+lookback )
+        outaroonup_data[i] = NaN
+    retCode = TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -676,17 +748,23 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -695,9 +773,10 @@ def AROONOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_AROONOSC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_AROONOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -710,15 +789,18 @@ def ASIN( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -727,9 +809,10 @@ def ASIN( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_ASIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ASIN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -742,15 +825,18 @@ def ATAN( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -759,9 +845,10 @@ def ATAN( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_ATAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ATAN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -776,19 +863,28 @@ def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -797,9 +893,10 @@ def ATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_ATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ATR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -814,21 +911,33 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -837,9 +946,10 @@ def AVGPRICE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_AVGPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_AVGPRICE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -854,17 +964,20 @@ def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outrealupperband
-        np.ndarray[double_t, ndim=1] outrealmiddleband
-        np.ndarray[double_t, ndim=1] outreallowerband
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outrealupperband_data
+        double* outrealmiddleband_data
+        double* outreallowerband_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -873,15 +986,18 @@ def BBANDS( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
     TA_Initialize()
     lookback = begidx + TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
     outrealupperband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outrealupperband_data = <double*>PyArray_DATA(outrealupperband)
     for i from 0 <= i < min(lookback, length):
-        outrealupperband[i] = NaN
+        outrealupperband_data[i] = NaN
     outrealmiddleband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outrealmiddleband_data = <double*>PyArray_DATA(outrealmiddleband)
     for i from 0 <= i < min(lookback, length):
-        outrealmiddleband[i] = NaN
+        outrealmiddleband_data[i] = NaN
     outreallowerband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreallowerband_data = <double*>PyArray_DATA(outreallowerband)
     for i from 0 <= i < min(lookback, length):
-        outreallowerband[i] = NaN
-    retCode = TA_BBANDS( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>outrealupperband.data+lookback , <double *>outrealmiddleband.data+lookback , <double *>outreallowerband.data+lookback )
+        outreallowerband_data[i] = NaN
+    retCode = TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -896,17 +1012,23 @@ def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -915,9 +1037,10 @@ def BETA( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_BETA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_BETA( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -932,21 +1055,33 @@ def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -955,9 +1090,10 @@ def BOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_BOP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_BOP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -972,19 +1108,28 @@ def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -993,9 +1138,10 @@ def CCI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_CCI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_CCI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1010,21 +1156,33 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1033,9 +1191,10 @@ def CDL2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDL2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL2CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1050,21 +1209,33 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1073,9 +1244,10 @@ def CDL3BLACKCROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDL3BLACKCROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1090,21 +1262,33 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1113,9 +1297,10 @@ def CDL3INSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     TA_Initialize()
     lookback = begidx + TA_CDL3INSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3INSIDE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1130,21 +1315,33 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1153,9 +1350,10 @@ def CDL3LINESTRIKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDL3LINESTRIKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1170,21 +1368,33 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1193,9 +1403,10 @@ def CDL3OUTSIDE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDL3OUTSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1210,21 +1421,33 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1233,9 +1456,10 @@ def CDL3STARSINSOUTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     TA_Initialize()
     lookback = begidx + TA_CDL3STARSINSOUTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1250,21 +1474,33 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1273,9 +1509,10 @@ def CDL3WHITESOLDIERS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDL3WHITESOLDIERS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1290,21 +1527,33 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1313,9 +1562,10 @@ def CDLABANDONEDBABY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     TA_Initialize()
     lookback = begidx + TA_CDLABANDONEDBABY_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1330,21 +1580,33 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1353,9 +1615,10 @@ def CDLADVANCEBLOCK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     TA_Initialize()
     lookback = begidx + TA_CDLADVANCEBLOCK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1370,21 +1633,33 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1393,9 +1668,10 @@ def CDLBELTHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLBELTHOLD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1410,21 +1686,33 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1433,9 +1721,10 @@ def CDLBREAKAWAY( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     TA_Initialize()
     lookback = begidx + TA_CDLBREAKAWAY_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1450,21 +1739,33 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1473,9 +1774,10 @@ def CDLCLOSINGMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLCLOSINGMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1490,21 +1792,33 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1513,9 +1827,10 @@ def CDLCONCEALBABYSWALL( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLCONCEALBABYSWALL_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1530,21 +1845,33 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1553,9 +1880,10 @@ def CDLCOUNTERATTACK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     TA_Initialize()
     lookback = begidx + TA_CDLCOUNTERATTACK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1570,21 +1898,33 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1593,9 +1933,10 @@ def CDLDARKCLOUDCOVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1610,21 +1951,33 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1633,9 +1986,10 @@ def CDLDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t, n
     TA_Initialize()
     lookback = begidx + TA_CDLDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1650,21 +2004,33 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1673,9 +2039,10 @@ def CDLDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLDOJISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1690,21 +2057,33 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1713,9 +2092,10 @@ def CDLDRAGONFLYDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     TA_Initialize()
     lookback = begidx + TA_CDLDRAGONFLYDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1730,21 +2110,33 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1753,9 +2145,10 @@ def CDLENGULFING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     TA_Initialize()
     lookback = begidx + TA_CDLENGULFING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLENGULFING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1770,21 +2163,33 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1793,9 +2198,10 @@ def CDLEVENINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1810,21 +2216,33 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1833,9 +2251,10 @@ def CDLEVENINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLEVENINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1850,21 +2269,33 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1873,9 +2304,10 @@ def CDLGAPSIDESIDEWHITE( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLGAPSIDESIDEWHITE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1890,21 +2322,33 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1913,9 +2357,10 @@ def CDLGRAVESTONEDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDLGRAVESTONEDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1930,21 +2375,33 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1953,9 +2410,10 @@ def CDLHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDLHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHAMMER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -1970,21 +2428,33 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -1993,9 +2463,10 @@ def CDLHANGINGMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
     TA_Initialize()
     lookback = begidx + TA_CDLHANGINGMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2010,21 +2481,33 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2033,9 +2516,10 @@ def CDLHARAMI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDLHARAMI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHARAMI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2050,21 +2534,33 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2073,9 +2569,10 @@ def CDLHARAMICROSS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLHARAMICROSS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2090,21 +2587,33 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2113,9 +2622,10 @@ def CDLHIGHWAVE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLHIGHWAVE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2130,21 +2640,33 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2153,9 +2675,10 @@ def CDLHIKKAKE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     TA_Initialize()
     lookback = begidx + TA_CDLHIKKAKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2170,21 +2693,33 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2193,9 +2728,10 @@ def CDLHIKKAKEMOD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doubl
     TA_Initialize()
     lookback = begidx + TA_CDLHIKKAKEMOD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2210,21 +2746,33 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2233,9 +2781,10 @@ def CDLHOMINGPIGEON( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     TA_Initialize()
     lookback = begidx + TA_CDLHOMINGPIGEON_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2250,21 +2799,33 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2273,9 +2834,10 @@ def CDLIDENTICAL3CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLIDENTICAL3CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2290,21 +2852,33 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2313,9 +2887,10 @@ def CDLINNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDLINNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLINNECK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2330,21 +2905,33 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2353,9 +2940,10 @@ def CDLINVERTEDHAMMER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDLINVERTEDHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2370,21 +2958,33 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2393,9 +2993,10 @@ def CDLKICKING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     TA_Initialize()
     lookback = begidx + TA_CDLKICKING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLKICKING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2410,21 +3011,33 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2433,9 +3046,10 @@ def CDLKICKINGBYLENGTH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLKICKINGBYLENGTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2450,21 +3064,33 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2473,9 +3099,10 @@ def CDLLADDERBOTTOM( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     TA_Initialize()
     lookback = begidx + TA_CDLLADDERBOTTOM_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2490,21 +3117,33 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2513,9 +3152,10 @@ def CDLLONGLEGGEDDOJI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDLLONGLEGGEDDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2530,21 +3170,33 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2553,9 +3205,10 @@ def CDLLONGLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLLONGLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLLONGLINE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2570,21 +3223,33 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2593,9 +3258,10 @@ def CDLMARUBOZU( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2610,21 +3276,33 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2633,9 +3311,10 @@ def CDLMATCHINGLOW( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLMATCHINGLOW_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2650,21 +3329,33 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2673,9 +3364,10 @@ def CDLMATHOLD( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     TA_Initialize()
     lookback = begidx + TA_CDLMATHOLD_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLMATHOLD( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2690,21 +3382,33 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2713,9 +3417,10 @@ def CDLMORNINGDOJISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2730,21 +3435,33 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2753,9 +3470,10 @@ def CDLMORNINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLMORNINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , penetration , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2770,21 +3488,33 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2793,9 +3523,10 @@ def CDLONNECK( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDLONNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLONNECK( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2810,21 +3541,33 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2833,9 +3576,10 @@ def CDLPIERCING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_
     TA_Initialize()
     lookback = begidx + TA_CDLPIERCING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLPIERCING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2850,21 +3594,33 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2873,9 +3629,10 @@ def CDLRICKSHAWMAN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLRICKSHAWMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2890,21 +3647,33 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2913,9 +3682,10 @@ def CDLRISEFALL3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLRISEFALL3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2930,21 +3700,33 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2953,9 +3735,10 @@ def CDLSEPARATINGLINES( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLSEPARATINGLINES_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -2970,21 +3753,33 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -2993,9 +3788,10 @@ def CDLSHOOTINGSTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     TA_Initialize()
     lookback = begidx + TA_CDLSHOOTINGSTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3010,21 +3806,33 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3033,9 +3841,10 @@ def CDLSHORTLINE( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     TA_Initialize()
     lookback = begidx + TA_CDLSHORTLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3050,21 +3859,33 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3073,9 +3894,10 @@ def CDLSPINNINGTOP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[doub
     TA_Initialize()
     lookback = begidx + TA_CDLSPINNINGTOP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3090,21 +3912,33 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3113,9 +3947,10 @@ def CDLSTALLEDPATTERN( np.ndarray[double_t, ndim=1] open not None , np.ndarray[d
     TA_Initialize()
     lookback = begidx + TA_CDLSTALLEDPATTERN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3130,21 +3965,33 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3153,9 +4000,10 @@ def CDLSTICKSANDWICH( np.ndarray[double_t, ndim=1] open not None , np.ndarray[do
     TA_Initialize()
     lookback = begidx + TA_CDLSTICKSANDWICH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3170,21 +4018,33 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3193,9 +4053,10 @@ def CDLTAKURI( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t,
     TA_Initialize()
     lookback = begidx + TA_CDLTAKURI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLTAKURI( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3210,21 +4071,33 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3233,9 +4106,10 @@ def CDLTASUKIGAP( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     TA_Initialize()
     lookback = begidx + TA_CDLTASUKIGAP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3250,21 +4124,33 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3273,9 +4159,10 @@ def CDLTHRUSTING( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double
     TA_Initialize()
     lookback = begidx + TA_CDLTHRUSTING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3290,21 +4177,33 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3313,9 +4212,10 @@ def CDLTRISTAR( np.ndarray[double_t, ndim=1] open not None , np.ndarray[double_t
     TA_Initialize()
     lookback = begidx + TA_CDLTRISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLTRISTAR( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3330,21 +4230,33 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3353,9 +4265,10 @@ def CDLUNIQUE3RIVER( np.ndarray[double_t, ndim=1] open not None , np.ndarray[dou
     TA_Initialize()
     lookback = begidx + TA_CDLUNIQUE3RIVER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3370,21 +4283,33 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3393,9 +4318,10 @@ def CDLUPSIDEGAP2CROWS( np.ndarray[double_t, ndim=1] open not None , np.ndarray[
     TA_Initialize()
     lookback = begidx + TA_CDLUPSIDEGAP2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3410,21 +4336,33 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* open_data
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not open.flags["C_CONTIGUOUS"]:
-        open = ascontiguousarray(open, dtype=double)
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
+        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
+    else:
+        open_data = <double*>open.data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3433,9 +4371,10 @@ def CDLXSIDEGAP3METHODS( np.ndarray[double_t, ndim=1] open not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLXSIDEGAP3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>open.data+begidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3448,15 +4387,18 @@ def CEIL( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3465,9 +4407,10 @@ def CEIL( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_CEIL_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_CEIL( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3482,15 +4425,18 @@ def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3499,9 +4445,10 @@ def CMO( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_CMO_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_CMO( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3516,17 +4463,23 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -3535,9 +4488,10 @@ def CORREL( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, n
     TA_Initialize()
     lookback = begidx + TA_CORREL_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_CORREL( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3550,15 +4504,18 @@ def COS( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3567,9 +4524,10 @@ def COS( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_COS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_COS( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3582,15 +4540,18 @@ def COSH( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3599,9 +4560,10 @@ def COSH( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_COSH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_COSH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3616,15 +4578,18 @@ def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3633,9 +4598,10 @@ def DEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_DEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_DEMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3648,17 +4614,23 @@ def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -3667,9 +4639,10 @@ def DIV( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_DIV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_DIV( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3684,19 +4657,28 @@ def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -3705,9 +4687,10 @@ def DX( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=1
     TA_Initialize()
     lookback = begidx + TA_DX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_DX( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3722,15 +4705,18 @@ def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3739,9 +4725,10 @@ def EMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_EMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_EMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3754,15 +4741,18 @@ def EXP( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3771,9 +4761,10 @@ def EXP( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_EXP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_EXP( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3786,15 +4777,18 @@ def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3803,9 +4797,10 @@ def FLOOR( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_FLOOR_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_FLOOR( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3820,15 +4815,18 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3837,9 +4835,10 @@ def HT_DCPERIOD( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_DCPERIOD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3854,15 +4853,18 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3871,9 +4873,10 @@ def HT_DCPHASE( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_DCPHASE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_HT_DCPHASE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3888,16 +4891,19 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outinphase
-        np.ndarray[double_t, ndim=1] outquadrature
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outinphase_data
+        double* outquadrature_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3906,12 +4912,14 @@ def HT_PHASOR( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_PHASOR_Lookback( )
     outinphase = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outinphase_data = <double*>PyArray_DATA(outinphase)
     for i from 0 <= i < min(lookback, length):
-        outinphase[i] = NaN
+        outinphase_data[i] = NaN
     outquadrature = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outquadrature_data = <double*>PyArray_DATA(outquadrature)
     for i from 0 <= i < min(lookback, length):
-        outquadrature[i] = NaN
-    retCode = TA_HT_PHASOR( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outinphase.data+lookback , <double *>outquadrature.data+lookback )
+        outquadrature_data[i] = NaN
+    retCode = TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3926,16 +4934,19 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outsine
-        np.ndarray[double_t, ndim=1] outleadsine
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outsine_data
+        double* outleadsine_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3944,12 +4955,14 @@ def HT_SINE( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_SINE_Lookback( )
     outsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outsine_data = <double*>PyArray_DATA(outsine)
     for i from 0 <= i < min(lookback, length):
-        outsine[i] = NaN
+        outsine_data[i] = NaN
     outleadsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outleadsine_data = <double*>PyArray_DATA(outleadsine)
     for i from 0 <= i < min(lookback, length):
-        outleadsine[i] = NaN
-    retCode = TA_HT_SINE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outsine.data+lookback , <double *>outleadsine.data+lookback )
+        outleadsine_data[i] = NaN
+    retCode = TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3964,15 +4977,18 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -3981,9 +4997,10 @@ def HT_TRENDLINE( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_TRENDLINE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -3998,15 +5015,18 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4015,9 +5035,10 @@ def HT_TRENDMODE( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_TRENDMODE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4032,15 +5053,18 @@ def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4049,9 +5073,10 @@ def KAMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_KAMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_KAMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4066,15 +5091,18 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**3
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4083,9 +5111,10 @@ def LINEARREG( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**3
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LINEARREG( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4100,15 +5129,18 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4117,9 +5149,10 @@ def LINEARREG_ANGLE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_ANGLE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4134,15 +5167,18 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timepe
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4151,9 +5187,10 @@ def LINEARREG_INTERCEPT( np.ndarray[double_t, ndim=1] real not None , int timepe
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4168,15 +5205,18 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4185,9 +5225,10 @@ def LINEARREG_SLOPE( np.ndarray[double_t, ndim=1] real not None , int timeperiod
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_SLOPE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4200,15 +5241,18 @@ def LN( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4217,9 +5261,10 @@ def LN( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_LN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4232,15 +5277,18 @@ def LOG10( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4249,9 +5297,10 @@ def LOG10( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_LOG10_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_LOG10( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4266,15 +5315,18 @@ def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4283,9 +5335,10 @@ def MA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , int
     TA_Initialize()
     lookback = begidx + TA_MA_Lookback( timeperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MA( 0 , endidx , <double *>real.data+begidx , timeperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4300,17 +5353,20 @@ def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , i
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outmacd
-        np.ndarray[double_t, ndim=1] outmacdsignal
-        np.ndarray[double_t, ndim=1] outmacdhist
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outmacd_data
+        double* outmacdsignal_data
+        double* outmacdhist_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4319,15 +5375,18 @@ def MACD( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , i
     TA_Initialize()
     lookback = begidx + TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacd_data = <double*>PyArray_DATA(outmacd)
     for i from 0 <= i < min(lookback, length):
-        outmacd[i] = NaN
+        outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
     for i from 0 <= i < min(lookback, length):
-        outmacdsignal[i] = NaN
+        outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
     for i from 0 <= i < min(lookback, length):
-        outmacdhist[i] = NaN
-    retCode = TA_MACD( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+        outmacdhist_data[i] = NaN
+    retCode = TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4342,17 +5401,20 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outmacd
-        np.ndarray[double_t, ndim=1] outmacdsignal
-        np.ndarray[double_t, ndim=1] outmacdhist
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outmacd_data
+        double* outmacdsignal_data
+        double* outmacdhist_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4361,15 +5423,18 @@ def MACDEXT( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 
     TA_Initialize()
     lookback = begidx + TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacd_data = <double*>PyArray_DATA(outmacd)
     for i from 0 <= i < min(lookback, length):
-        outmacd[i] = NaN
+        outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
     for i from 0 <= i < min(lookback, length):
-        outmacdsignal[i] = NaN
+        outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
     for i from 0 <= i < min(lookback, length):
-        outmacdhist[i] = NaN
-    retCode = TA_MACDEXT( 0 , endidx , <double *>real.data+begidx , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+        outmacdhist_data[i] = NaN
+    retCode = TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4384,17 +5449,20 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**3
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outmacd
-        np.ndarray[double_t, ndim=1] outmacdsignal
-        np.ndarray[double_t, ndim=1] outmacdhist
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outmacd_data
+        double* outmacdsignal_data
+        double* outmacdhist_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4403,15 +5471,18 @@ def MACDFIX( np.ndarray[double_t, ndim=1] real not None , int signalperiod=-2**3
     TA_Initialize()
     lookback = begidx + TA_MACDFIX_Lookback( signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacd_data = <double*>PyArray_DATA(outmacd)
     for i from 0 <= i < min(lookback, length):
-        outmacd[i] = NaN
+        outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
     for i from 0 <= i < min(lookback, length):
-        outmacdsignal[i] = NaN
+        outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
     for i from 0 <= i < min(lookback, length):
-        outmacdhist[i] = NaN
-    retCode = TA_MACDFIX( 0 , endidx , <double *>real.data+begidx , signalperiod , &outbegidx , &outnbelement , <double *>outmacd.data+lookback , <double *>outmacdsignal.data+lookback , <double *>outmacdhist.data+lookback )
+        outmacdhist_data[i] = NaN
+    retCode = TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4426,16 +5497,19 @@ def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outmama
-        np.ndarray[double_t, ndim=1] outfama
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outmama_data
+        double* outfama_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4444,12 +5518,14 @@ def MAMA( np.ndarray[double_t, ndim=1] real not None , double fastlimit=-4e37 , 
     TA_Initialize()
     lookback = begidx + TA_MAMA_Lookback( fastlimit , slowlimit )
     outmama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmama_data = <double*>PyArray_DATA(outmama)
     for i from 0 <= i < min(lookback, length):
-        outmama[i] = NaN
+        outmama_data[i] = NaN
     outfama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outfama_data = <double*>PyArray_DATA(outfama)
     for i from 0 <= i < min(lookback, length):
-        outfama[i] = NaN
-    retCode = TA_MAMA( 0 , endidx , <double *>real.data+begidx , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>outmama.data+lookback , <double *>outfama.data+lookback )
+        outfama_data[i] = NaN
+    retCode = TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4462,17 +5538,23 @@ def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
+        double* periods_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
-    if not periods.flags["C_CONTIGUOUS"]:
-        periods = ascontiguousarray(periods, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
+    if not (PyArray_FLAGS(periods) & np.NPY_C_CONTIGUOUS):
+        periods_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(periods))
+    else:
+        periods_data = <double*>periods.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4481,9 +5563,10 @@ def MAVP( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_MAVP_Lookback( minperiod , maxperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MAVP( 0 , endidx , <double *>real.data+begidx , <double *>periods.data+begidx , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4498,15 +5581,18 @@ def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4515,9 +5601,10 @@ def MAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MAX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MAX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4532,15 +5619,18 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4549,9 +5639,10 @@ def MAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     TA_Initialize()
     lookback = begidx + TA_MAXINDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_MAXINDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4566,17 +5657,23 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -4585,9 +5682,10 @@ def MEDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_MEDPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MEDPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4602,21 +5700,33 @@ def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
+        double* volume_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
-    if not volume.flags["C_CONTIGUOUS"]:
-        volume = ascontiguousarray(volume, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
+    if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
+        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
+    else:
+        volume_data = <double*>volume.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -4625,9 +5735,10 @@ def MFI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_MFI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MFI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , <double *>volume.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4642,15 +5753,18 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4659,9 +5773,10 @@ def MIDPOINT( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     TA_Initialize()
     lookback = begidx + TA_MIDPOINT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MIDPOINT( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4676,17 +5791,23 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -4695,9 +5816,10 @@ def MIDPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_MIDPRICE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MIDPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4712,15 +5834,18 @@ def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4729,9 +5854,10 @@ def MIN( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MIN_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MIN( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4746,15 +5872,18 @@ def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outinteger
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        int* outinteger_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4763,9 +5892,10 @@ def MININDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     TA_Initialize()
     lookback = begidx + TA_MININDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>PyArray_DATA(outinteger)
     for i from 0 <= i < min(lookback, length):
-        outinteger[i] = 0
-    retCode = TA_MININDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outinteger.data+lookback )
+        outinteger_data[i] = 0
+    retCode = TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4780,16 +5910,19 @@ def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 )
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outmin
-        np.ndarray[double_t, ndim=1] outmax
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outmin_data
+        double* outmax_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4798,12 +5931,14 @@ def MINMAX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 )
     TA_Initialize()
     lookback = begidx + TA_MINMAX_Lookback( timeperiod )
     outmin = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmin_data = <double*>PyArray_DATA(outmin)
     for i from 0 <= i < min(lookback, length):
-        outmin[i] = NaN
+        outmin_data[i] = NaN
     outmax = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outmax_data = <double*>PyArray_DATA(outmax)
     for i from 0 <= i < min(lookback, length):
-        outmax[i] = NaN
-    retCode = TA_MINMAX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outmin.data+lookback , <double *>outmax.data+lookback )
+        outmax_data[i] = NaN
+    retCode = TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4818,16 +5953,19 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2*
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[int32_t, ndim=1] outminidx
-        np.ndarray[int32_t, ndim=1] outmaxidx
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        int* outminidx_data
+        int* outmaxidx_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4836,12 +5974,14 @@ def MINMAXINDEX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2*
     TA_Initialize()
     lookback = begidx + TA_MINMAXINDEX_Lookback( timeperiod )
     outminidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outminidx_data = <int*>PyArray_DATA(outminidx)
     for i from 0 <= i < min(lookback, length):
-        outminidx[i] = 0
+        outminidx_data[i] = 0
     outmaxidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outmaxidx_data = <int*>PyArray_DATA(outmaxidx)
     for i from 0 <= i < min(lookback, length):
-        outmaxidx[i] = 0
-    retCode = TA_MINMAXINDEX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <int *>outminidx.data+lookback , <int *>outmaxidx.data+lookback )
+        outmaxidx_data[i] = 0
+    retCode = TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4856,19 +5996,28 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -4877,9 +6026,10 @@ def MINUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_MINUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MINUS_DI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4894,17 +6044,23 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -4913,9 +6069,10 @@ def MINUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_MINUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MINUS_DM( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4930,15 +6087,18 @@ def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -4947,9 +6107,10 @@ def MOM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MOM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MOM( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4962,17 +6123,23 @@ def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -4981,9 +6148,10 @@ def MULT( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_MULT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_MULT( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -4998,19 +6166,28 @@ def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5019,9 +6196,10 @@ def NATR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_NATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_NATR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5036,17 +6214,23 @@ def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
+        double* volume_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
-    if not volume.flags["C_CONTIGUOUS"]:
-        volume = ascontiguousarray(volume, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
+    if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
+        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
+    else:
+        volume_data = <double*>volume.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5055,9 +6239,10 @@ def OBV( np.ndarray[double_t, ndim=1] real not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_OBV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_OBV( 0 , endidx , <double *>real.data+begidx , <double *>volume.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5072,19 +6257,28 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5093,9 +6287,10 @@ def PLUS_DI( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
     TA_Initialize()
     lookback = begidx + TA_PLUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_PLUS_DI( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5110,17 +6305,23 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5129,9 +6330,10 @@ def PLUS_DM( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, n
     TA_Initialize()
     lookback = begidx + TA_PLUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_PLUS_DM( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5146,15 +6348,18 @@ def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5163,9 +6368,10 @@ def PPO( np.ndarray[double_t, ndim=1] real not None , int fastperiod=-2**31 , in
     TA_Initialize()
     lookback = begidx + TA_PPO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_PPO( 0 , endidx , <double *>real.data+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5180,15 +6386,18 @@ def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5197,9 +6406,10 @@ def ROC( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ROC( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5214,15 +6424,18 @@ def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5231,9 +6444,10 @@ def ROCP( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROCP_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ROCP( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5248,15 +6462,18 @@ def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5265,9 +6482,10 @@ def ROCR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROCR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ROCR( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5282,15 +6500,18 @@ def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5299,9 +6520,10 @@ def ROCR100( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 
     TA_Initialize()
     lookback = begidx + TA_ROCR100_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ROCR100( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5316,15 +6538,18 @@ def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5333,9 +6558,10 @@ def RSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_RSI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_RSI( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5350,17 +6576,23 @@ def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5369,9 +6601,10 @@ def SAR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndim=
     TA_Initialize()
     lookback = begidx + TA_SAR_Lookback( acceleration , maximum )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SAR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , acceleration , maximum , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5386,17 +6619,23 @@ def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5405,9 +6644,10 @@ def SAREXT( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     TA_Initialize()
     lookback = begidx + TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SAREXT( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5420,15 +6660,18 @@ def SIN( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5437,9 +6680,10 @@ def SIN( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_SIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SIN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5452,15 +6696,18 @@ def SINH( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5469,9 +6716,10 @@ def SINH( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_SINH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SINH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5486,15 +6734,18 @@ def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5503,9 +6754,10 @@ def SMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_SMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5518,15 +6770,18 @@ def SQRT( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5535,9 +6790,10 @@ def SQRT( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_SQRT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SQRT( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5552,15 +6808,18 @@ def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5569,9 +6828,10 @@ def STDDEV( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ,
     TA_Initialize()
     lookback = begidx + TA_STDDEV_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_STDDEV( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5586,20 +6846,29 @@ def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outslowk
-        np.ndarray[double_t, ndim=1] outslowd
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outslowk_data
+        double* outslowd_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5608,12 +6877,14 @@ def STOCH( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     outslowk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outslowk_data = <double*>PyArray_DATA(outslowk)
     for i from 0 <= i < min(lookback, length):
-        outslowk[i] = NaN
+        outslowk_data[i] = NaN
     outslowd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outslowd_data = <double*>PyArray_DATA(outslowd)
     for i from 0 <= i < min(lookback, length):
-        outslowd[i] = NaN
-    retCode = TA_STOCH( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>outslowk.data+lookback , <double *>outslowd.data+lookback )
+        outslowd_data[i] = NaN
+    retCode = TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5628,20 +6899,29 @@ def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outfastk
-        np.ndarray[double_t, ndim=1] outfastd
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outfastk_data
+        double* outfastd_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5650,12 +6930,14 @@ def STOCHF( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     TA_Initialize()
     lookback = begidx + TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outfastk_data = <double*>PyArray_DATA(outfastk)
     for i from 0 <= i < min(lookback, length):
-        outfastk[i] = NaN
+        outfastk_data[i] = NaN
     outfastd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outfastd_data = <double*>PyArray_DATA(outfastd)
     for i from 0 <= i < min(lookback, length):
-        outfastd[i] = NaN
-    retCode = TA_STOCHF( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
+        outfastd_data[i] = NaN
+    retCode = TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5670,16 +6952,19 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outfastk
-        np.ndarray[double_t, ndim=1] outfastd
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outfastk_data
+        double* outfastd_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5688,12 +6973,14 @@ def STOCHRSI( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31
     TA_Initialize()
     lookback = begidx + TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outfastk_data = <double*>PyArray_DATA(outfastk)
     for i from 0 <= i < min(lookback, length):
-        outfastk[i] = NaN
+        outfastk_data[i] = NaN
     outfastd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outfastd_data = <double*>PyArray_DATA(outfastd)
     for i from 0 <= i < min(lookback, length):
-        outfastd[i] = NaN
-    retCode = TA_STOCHRSI( 0 , endidx , <double *>real.data+begidx , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>outfastk.data+lookback , <double *>outfastd.data+lookback )
+        outfastd_data[i] = NaN
+    retCode = TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5706,17 +6993,23 @@ def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real0_data
+        double* real1_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real0.flags["C_CONTIGUOUS"]:
-        real0 = ascontiguousarray(real0, dtype=double)
-    if not real1.flags["C_CONTIGUOUS"]:
-        real1 = ascontiguousarray(real1, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
+        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
+    else:
+        real0_data = <double*>real0.data
+    if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
+        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
+    else:
+        real1_data = <double*>real1.data
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0[i]):
+        if not isnan(real0_data[i]):
             begidx = i
             break
     else:
@@ -5725,9 +7018,10 @@ def SUB( np.ndarray[double_t, ndim=1] real0 not None , np.ndarray[double_t, ndim
     TA_Initialize()
     lookback = begidx + TA_SUB_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SUB( 0 , endidx , <double *>real0.data+begidx , <double *>real1.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5742,15 +7036,18 @@ def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5759,9 +7056,10 @@ def SUM( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_SUM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_SUM( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5776,15 +7074,18 @@ def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , dou
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5793,9 +7094,10 @@ def T3( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , dou
     TA_Initialize()
     lookback = begidx + TA_T3_Lookback( timeperiod , vfactor )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_T3( 0 , endidx , <double *>real.data+begidx , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5808,15 +7110,18 @@ def TAN( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5825,9 +7130,10 @@ def TAN( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_TAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TAN( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5840,15 +7146,18 @@ def TANH( np.ndarray[double_t, ndim=1] real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5857,9 +7166,10 @@ def TANH( np.ndarray[double_t, ndim=1] real not None ):
     TA_Initialize()
     lookback = begidx + TA_TANH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TANH( 0 , endidx , <double *>real.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5874,15 +7184,18 @@ def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5891,9 +7204,10 @@ def TEMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TEMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5908,19 +7222,28 @@ def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -5929,9 +7252,10 @@ def TRANGE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     TA_Initialize()
     lookback = begidx + TA_TRANGE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TRANGE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5946,15 +7270,18 @@ def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5963,9 +7290,10 @@ def TRIMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TRIMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TRIMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -5980,15 +7308,18 @@ def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -5997,9 +7328,10 @@ def TRIX( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TRIX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TRIX( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6014,15 +7346,18 @@ def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -6031,9 +7366,10 @@ def TSF( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TSF_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TSF( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6048,19 +7384,28 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -6069,9 +7414,10 @@ def TYPPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_TYPPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_TYPPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6086,19 +7432,28 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -6107,9 +7462,10 @@ def ULTOSC( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, nd
     TA_Initialize()
     lookback = begidx + TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_ULTOSC( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6124,15 +7480,18 @@ def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , do
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -6141,9 +7500,10 @@ def VAR( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 , do
     TA_Initialize()
     lookback = begidx + TA_VAR_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_VAR( 0 , endidx , <double *>real.data+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6158,19 +7518,28 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -6179,9 +7548,10 @@ def WCLPRICE( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, 
     TA_Initialize()
     lookback = begidx + TA_WCLPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_WCLPRICE( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6196,19 +7566,28 @@ def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* high_data
+        double* low_data
+        double* close_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not high.flags["C_CONTIGUOUS"]:
-        high = ascontiguousarray(high, dtype=double)
-    if not low.flags["C_CONTIGUOUS"]:
-        low = ascontiguousarray(low, dtype=double)
-    if not close.flags["C_CONTIGUOUS"]:
-        close = ascontiguousarray(close, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
+        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
+    else:
+        high_data = <double*>high.data
+    if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
+        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
+    else:
+        low_data = <double*>low.data
+    if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
+        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
+    else:
+        close_data = <double*>close.data
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high[i]):
+        if not isnan(high_data[i]):
             begidx = i
             break
     else:
@@ -6217,9 +7596,10 @@ def WILLR( np.ndarray[double_t, ndim=1] high not None , np.ndarray[double_t, ndi
     TA_Initialize()
     lookback = begidx + TA_WILLR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_WILLR( 0 , endidx , <double *>high.data+begidx , <double *>low.data+begidx , <double *>close.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
@@ -6234,15 +7614,18 @@ def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        double* real_data
         int outbegidx
         int outnbelement
-        np.ndarray[double_t, ndim=1] outreal
-    if not real.flags["C_CONTIGUOUS"]:
-        real = ascontiguousarray(real, dtype=double)
+        double* outreal_data
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
+    else:
+        real_data = <double*>real.data
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real[i]):
+        if not isnan(real_data[i]):
             begidx = i
             break
     else:
@@ -6251,9 +7634,10 @@ def WMA( np.ndarray[double_t, ndim=1] real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_WMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>PyArray_DATA(outreal)
     for i from 0 <= i < min(lookback, length):
-        outreal[i] = NaN
-    retCode = TA_WMA( 0 , endidx , <double *>real.data+begidx , timeperiod , &outbegidx , &outnbelement , <double *>outreal.data+lookback )
+        outreal_data[i] = NaN
+    retCode = TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     TA_Shutdown()
     if retCode != TA_SUCCESS:
         raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))
