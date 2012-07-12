@@ -74,12 +74,9 @@ cdef extern from "math.h":
     bint isnan(double x)
 
 cdef extern from "numpy/arrayobject.h":
-    int PyArray_NDIM(np.ndarray)
-    np.npy_intp* PyArray_DIMS(np.ndarray)
     int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
     int PyArray_FLAGS(np.ndarray)
-    void* PyArray_DATA(np.ndarray)
     object PyArray_GETCONTIGUOUS(np.ndarray)
 
 np.import_array() # Initialize the NumPy C API
@@ -369,20 +366,17 @@ for f in functions:
                 cast = '<int*>'
             else:
                 assert False, arg
-            print '    dtype = PyArray_TYPE(%s)' % var
-            print '    assert dtype == np.NPY_DOUBLE, "%s is not double"' % var
-            print '    ndim = PyArray_NDIM(%s)' % var
-            print '    assert ndim == 1, "%s has wrong dimensions"' % var
+            print '    assert PyArray_TYPE(%s) == np.NPY_DOUBLE, "%s is not double"' % (var, var)
+            print '    assert %s.ndim == 1, "%s has wrong dimensions"' % (var, var)
             print '    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var
-            print '        %s_data = %sPyArray_DATA(PyArray_GETCONTIGUOUS(%s))' % (var, cast, var)
-            print '    else:'
-            print '        %s_data = %s%s.data' % (var, cast, var)
+            print '        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var)
+            print '    %s_data = %s%s.data' % (var, cast, var)
 
     for arg in args:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
-            print '    length = PyArray_DIMS(%s)[0]' % var
+            print '    length = %s.shape[0]' % var
             print '    begidx = 0'
             print '    for i from 0 <= i < length:'
             print '        if not isnan(%s_data[i]):' % var
@@ -412,12 +406,12 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var
-                print '    %s_data = <double*>PyArray_DATA(%s)' % (var, var)
+                print '    %s_data = <double*>%s.data' % (var, var)
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s_data[i] = NaN' % var
             elif 'int' in arg:
                 print '    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var
-                print '    %s_data = <int*>PyArray_DATA(%s)' % (var, var)
+                print '    %s_data = <int*>%s.data' % (var, var)
                 print '    for i from 0 <= i < min(lookback, length):'
                 print '        %s_data[i] = 0' % var
             else:

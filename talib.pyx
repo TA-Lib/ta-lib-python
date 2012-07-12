@@ -41,12 +41,9 @@ cdef extern from "math.h":
     bint isnan(double x)
 
 cdef extern from "numpy/arrayobject.h":
-    int PyArray_NDIM(np.ndarray)
-    np.npy_intp* PyArray_DIMS(np.ndarray)
     int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
     int PyArray_FLAGS(np.ndarray)
-    void* PyArray_DATA(np.ndarray)
     object PyArray_GETCONTIGUOUS(np.ndarray)
 
 np.import_array() # Initialize the NumPy C API
@@ -389,15 +386,12 @@ def ACOS( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -409,7 +403,7 @@ def ACOS( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_ACOS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -435,39 +429,27 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    dtype = PyArray_TYPE(volume)
-    assert dtype == np.NPY_DOUBLE, "volume is not double"
-    ndim = PyArray_NDIM(volume)
-    assert ndim == 1, "volume has wrong dimensions"
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    assert PyArray_TYPE(volume) == np.NPY_DOUBLE, "volume is not double"
+    assert volume.ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
-        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
-    else:
-        volume_data = <double*>volume.data
-    length = PyArray_DIMS(high)[0]
+        volume = PyArray_GETCONTIGUOUS(volume)
+    volume_data = <double*>volume.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -479,7 +461,7 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     TA_Initialize()
     lookback = begidx + TA_AD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -501,23 +483,17 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -529,7 +505,7 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     TA_Initialize()
     lookback = begidx + TA_ADD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -555,39 +531,27 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    dtype = PyArray_TYPE(volume)
-    assert dtype == np.NPY_DOUBLE, "volume is not double"
-    ndim = PyArray_NDIM(volume)
-    assert ndim == 1, "volume has wrong dimensions"
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    assert PyArray_TYPE(volume) == np.NPY_DOUBLE, "volume is not double"
+    assert volume.ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
-        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
-    else:
-        volume_data = <double*>volume.data
-    length = PyArray_DIMS(high)[0]
+        volume = PyArray_GETCONTIGUOUS(volume)
+    volume_data = <double*>volume.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -599,7 +563,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     TA_Initialize()
     lookback = begidx + TA_ADOSC_Lookback( fastperiod , slowperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -624,31 +588,22 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -660,7 +615,7 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     TA_Initialize()
     lookback = begidx + TA_ADX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -685,31 +640,22 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -721,7 +667,7 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     TA_Initialize()
     lookback = begidx + TA_ADXR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -744,15 +690,12 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -764,7 +707,7 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     TA_Initialize()
     lookback = begidx + TA_APO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -790,23 +733,17 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
         double* outaroondown_data
         np.ndarray outaroonup
         double* outaroonup_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -818,11 +755,11 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     TA_Initialize()
     lookback = begidx + TA_AROON_Lookback( timeperiod )
     outaroondown = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outaroondown_data = <double*>PyArray_DATA(outaroondown)
+    outaroondown_data = <double*>outaroondown.data
     for i from 0 <= i < min(lookback, length):
         outaroondown_data[i] = NaN
     outaroonup = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outaroonup_data = <double*>PyArray_DATA(outaroonup)
+    outaroonup_data = <double*>outaroonup.data
     for i from 0 <= i < min(lookback, length):
         outaroonup_data[i] = NaN
     retCode = TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
@@ -846,23 +783,17 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -874,7 +805,7 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     TA_Initialize()
     lookback = begidx + TA_AROONOSC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -895,15 +826,12 @@ def ASIN( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -915,7 +843,7 @@ def ASIN( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_ASIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -936,15 +864,12 @@ def ATAN( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -956,7 +881,7 @@ def ATAN( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_ATAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -981,31 +906,22 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1017,7 +933,7 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     TA_Initialize()
     lookback = begidx + TA_ATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -1043,39 +959,27 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1087,7 +991,7 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     TA_Initialize()
     lookback = begidx + TA_AVGPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -1114,15 +1018,12 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
         double* outrealmiddleband_data
         np.ndarray outreallowerband
         double* outreallowerband_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -1134,15 +1035,15 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     TA_Initialize()
     lookback = begidx + TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
     outrealupperband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outrealupperband_data = <double*>PyArray_DATA(outrealupperband)
+    outrealupperband_data = <double*>outrealupperband.data
     for i from 0 <= i < min(lookback, length):
         outrealupperband_data[i] = NaN
     outrealmiddleband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outrealmiddleband_data = <double*>PyArray_DATA(outrealmiddleband)
+    outrealmiddleband_data = <double*>outrealmiddleband.data
     for i from 0 <= i < min(lookback, length):
         outrealmiddleband_data[i] = NaN
     outreallowerband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreallowerband_data = <double*>PyArray_DATA(outreallowerband)
+    outreallowerband_data = <double*>outreallowerband.data
     for i from 0 <= i < min(lookback, length):
         outreallowerband_data[i] = NaN
     retCode = TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
@@ -1166,23 +1067,17 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -1194,7 +1089,7 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     TA_Initialize()
     lookback = begidx + TA_BETA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -1220,39 +1115,27 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1264,7 +1147,7 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     TA_Initialize()
     lookback = begidx + TA_BOP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -1289,31 +1172,22 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1325,7 +1199,7 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     TA_Initialize()
     lookback = begidx + TA_CCI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -1351,39 +1225,27 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1395,7 +1257,7 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDL2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1421,39 +1283,27 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1465,7 +1315,7 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDL3BLACKCROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1491,39 +1341,27 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1535,7 +1373,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDL3INSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1561,39 +1399,27 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1605,7 +1431,7 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDL3LINESTRIKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1631,39 +1457,27 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1675,7 +1489,7 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDL3OUTSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1701,39 +1515,27 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1745,7 +1547,7 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     TA_Initialize()
     lookback = begidx + TA_CDL3STARSINSOUTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1771,39 +1573,27 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1815,7 +1605,7 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDL3WHITESOLDIERS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1841,39 +1631,27 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1885,7 +1663,7 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     TA_Initialize()
     lookback = begidx + TA_CDLABANDONEDBABY_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1911,39 +1689,27 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -1955,7 +1721,7 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     TA_Initialize()
     lookback = begidx + TA_CDLADVANCEBLOCK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -1981,39 +1747,27 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2025,7 +1779,7 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLBELTHOLD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2051,39 +1805,27 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2095,7 +1837,7 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     TA_Initialize()
     lookback = begidx + TA_CDLBREAKAWAY_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2121,39 +1863,27 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2165,7 +1895,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLCLOSINGMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2191,39 +1921,27 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2235,7 +1953,7 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     TA_Initialize()
     lookback = begidx + TA_CDLCONCEALBABYSWALL_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2261,39 +1979,27 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2305,7 +2011,7 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     TA_Initialize()
     lookback = begidx + TA_CDLCOUNTERATTACK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2331,39 +2037,27 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2375,7 +2069,7 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2401,39 +2095,27 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2445,7 +2127,7 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     TA_Initialize()
     lookback = begidx + TA_CDLDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2471,39 +2153,27 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2515,7 +2185,7 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLDOJISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2541,39 +2211,27 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2585,7 +2243,7 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     TA_Initialize()
     lookback = begidx + TA_CDLDRAGONFLYDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2611,39 +2269,27 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2655,7 +2301,7 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     TA_Initialize()
     lookback = begidx + TA_CDLENGULFING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2681,39 +2327,27 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2725,7 +2359,7 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2751,39 +2385,27 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2795,7 +2417,7 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLEVENINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2821,39 +2443,27 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2865,7 +2475,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     TA_Initialize()
     lookback = begidx + TA_CDLGAPSIDESIDEWHITE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2891,39 +2501,27 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -2935,7 +2533,7 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDLGRAVESTONEDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -2961,39 +2559,27 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3005,7 +2591,7 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDLHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3031,39 +2617,27 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3075,7 +2649,7 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     TA_Initialize()
     lookback = begidx + TA_CDLHANGINGMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3101,39 +2675,27 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3145,7 +2707,7 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDLHARAMI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3171,39 +2733,27 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3215,7 +2765,7 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLHARAMICROSS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3241,39 +2791,27 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3285,7 +2823,7 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLHIGHWAVE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3311,39 +2849,27 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3355,7 +2881,7 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLHIKKAKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3381,39 +2907,27 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3425,7 +2939,7 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     TA_Initialize()
     lookback = begidx + TA_CDLHIKKAKEMOD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3451,39 +2965,27 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3495,7 +2997,7 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     TA_Initialize()
     lookback = begidx + TA_CDLHOMINGPIGEON_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3521,39 +3023,27 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3565,7 +3055,7 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLIDENTICAL3CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3591,39 +3081,27 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3635,7 +3113,7 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDLINNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3661,39 +3139,27 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3705,7 +3171,7 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDLINVERTEDHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3731,39 +3197,27 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3775,7 +3229,7 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLKICKING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3801,39 +3255,27 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3845,7 +3287,7 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLKICKINGBYLENGTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3871,39 +3313,27 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3915,7 +3345,7 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     TA_Initialize()
     lookback = begidx + TA_CDLLADDERBOTTOM_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -3941,39 +3371,27 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -3985,7 +3403,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDLLONGLEGGEDDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4011,39 +3429,27 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4055,7 +3461,7 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLLONGLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4081,39 +3487,27 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4125,7 +3519,7 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4151,39 +3545,27 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4195,7 +3577,7 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLMATCHINGLOW_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4221,39 +3603,27 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4265,7 +3635,7 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLMATHOLD_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4291,39 +3661,27 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4335,7 +3693,7 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4361,39 +3719,27 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4405,7 +3751,7 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLMORNINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4431,39 +3777,27 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4475,7 +3809,7 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDLONNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4501,39 +3835,27 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4545,7 +3867,7 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     TA_Initialize()
     lookback = begidx + TA_CDLPIERCING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4571,39 +3893,27 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4615,7 +3925,7 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLRICKSHAWMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4641,39 +3951,27 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4685,7 +3983,7 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     TA_Initialize()
     lookback = begidx + TA_CDLRISEFALL3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4711,39 +4009,27 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4755,7 +4041,7 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLSEPARATINGLINES_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4781,39 +4067,27 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4825,7 +4099,7 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     TA_Initialize()
     lookback = begidx + TA_CDLSHOOTINGSTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4851,39 +4125,27 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4895,7 +4157,7 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     TA_Initialize()
     lookback = begidx + TA_CDLSHORTLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4921,39 +4183,27 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -4965,7 +4215,7 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     TA_Initialize()
     lookback = begidx + TA_CDLSPINNINGTOP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -4991,39 +4241,27 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5035,7 +4273,7 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     TA_Initialize()
     lookback = begidx + TA_CDLSTALLEDPATTERN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5061,39 +4299,27 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5105,7 +4331,7 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     TA_Initialize()
     lookback = begidx + TA_CDLSTICKSANDWICH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5131,39 +4357,27 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5175,7 +4389,7 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     TA_Initialize()
     lookback = begidx + TA_CDLTAKURI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5201,39 +4415,27 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5245,7 +4447,7 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     TA_Initialize()
     lookback = begidx + TA_CDLTASUKIGAP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5271,39 +4473,27 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5315,7 +4505,7 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     TA_Initialize()
     lookback = begidx + TA_CDLTHRUSTING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5341,39 +4531,27 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5385,7 +4563,7 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     TA_Initialize()
     lookback = begidx + TA_CDLTRISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5411,39 +4589,27 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5455,7 +4621,7 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     TA_Initialize()
     lookback = begidx + TA_CDLUNIQUE3RIVER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5481,39 +4647,27 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5525,7 +4679,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     TA_Initialize()
     lookback = begidx + TA_CDLUPSIDEGAP2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5551,39 +4705,27 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(open)
-    assert dtype == np.NPY_DOUBLE, "open is not double"
-    ndim = PyArray_NDIM(open)
-    assert ndim == 1, "open has wrong dimensions"
+    assert PyArray_TYPE(open) == np.NPY_DOUBLE, "open is not double"
+    assert open.ndim == 1, "open has wrong dimensions"
     if not (PyArray_FLAGS(open) & np.NPY_C_CONTIGUOUS):
-        open_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(open))
-    else:
-        open_data = <double*>open.data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+        open = PyArray_GETCONTIGUOUS(open)
+    open_data = <double*>open.data
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5595,7 +4737,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     TA_Initialize()
     lookback = begidx + TA_CDLXSIDEGAP3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -5616,15 +4758,12 @@ def CEIL( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5636,7 +4775,7 @@ def CEIL( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_CEIL_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5659,15 +4798,12 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5679,7 +4815,7 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_CMO_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5703,23 +4839,17 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -5731,7 +4861,7 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     TA_Initialize()
     lookback = begidx + TA_CORREL_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5752,15 +4882,12 @@ def COS( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5772,7 +4899,7 @@ def COS( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_COS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5793,15 +4920,12 @@ def COSH( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5813,7 +4937,7 @@ def COSH( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_COSH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5836,15 +4960,12 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -5856,7 +4977,7 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_DEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5878,23 +4999,17 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -5906,7 +5021,7 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     TA_Initialize()
     lookback = begidx + TA_DIV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5931,31 +5046,22 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -5967,7 +5073,7 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     TA_Initialize()
     lookback = begidx + TA_DX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -5990,15 +5096,12 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6010,7 +5113,7 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_EMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6031,15 +5134,12 @@ def EXP( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6051,7 +5151,7 @@ def EXP( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_EXP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6072,15 +5172,12 @@ def FLOOR( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6092,7 +5189,7 @@ def FLOOR( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_FLOOR_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6115,15 +5212,12 @@ def HT_DCPERIOD( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6135,7 +5229,7 @@ def HT_DCPERIOD( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_DCPERIOD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6158,15 +5252,12 @@ def HT_DCPHASE( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6178,7 +5269,7 @@ def HT_DCPHASE( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_DCPHASE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6203,15 +5294,12 @@ def HT_PHASOR( np.ndarray real not None ):
         double* outinphase_data
         np.ndarray outquadrature
         double* outquadrature_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6223,11 +5311,11 @@ def HT_PHASOR( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_PHASOR_Lookback( )
     outinphase = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outinphase_data = <double*>PyArray_DATA(outinphase)
+    outinphase_data = <double*>outinphase.data
     for i from 0 <= i < min(lookback, length):
         outinphase_data[i] = NaN
     outquadrature = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outquadrature_data = <double*>PyArray_DATA(outquadrature)
+    outquadrature_data = <double*>outquadrature.data
     for i from 0 <= i < min(lookback, length):
         outquadrature_data[i] = NaN
     retCode = TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
@@ -6252,15 +5340,12 @@ def HT_SINE( np.ndarray real not None ):
         double* outsine_data
         np.ndarray outleadsine
         double* outleadsine_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6272,11 +5357,11 @@ def HT_SINE( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_SINE_Lookback( )
     outsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outsine_data = <double*>PyArray_DATA(outsine)
+    outsine_data = <double*>outsine.data
     for i from 0 <= i < min(lookback, length):
         outsine_data[i] = NaN
     outleadsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outleadsine_data = <double*>PyArray_DATA(outleadsine)
+    outleadsine_data = <double*>outleadsine.data
     for i from 0 <= i < min(lookback, length):
         outleadsine_data[i] = NaN
     retCode = TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
@@ -6299,15 +5384,12 @@ def HT_TRENDLINE( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6319,7 +5401,7 @@ def HT_TRENDLINE( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_TRENDLINE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6342,15 +5424,12 @@ def HT_TRENDMODE( np.ndarray real not None ):
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6362,7 +5441,7 @@ def HT_TRENDMODE( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_HT_TRENDMODE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -6385,15 +5464,12 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6405,7 +5481,7 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_KAMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6428,15 +5504,12 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6448,7 +5521,7 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6471,15 +5544,12 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6491,7 +5561,7 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_ANGLE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6514,15 +5584,12 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6534,7 +5601,7 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6557,15 +5624,12 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6577,7 +5641,7 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_LINEARREG_SLOPE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6598,15 +5662,12 @@ def LN( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6618,7 +5679,7 @@ def LN( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_LN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6639,15 +5700,12 @@ def LOG10( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6659,7 +5717,7 @@ def LOG10( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_LOG10_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6682,15 +5740,12 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6702,7 +5757,7 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     TA_Initialize()
     lookback = begidx + TA_MA_Lookback( timeperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6729,15 +5784,12 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
         double* outmacdsignal_data
         np.ndarray outmacdhist
         double* outmacdhist_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6749,15 +5801,15 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     TA_Initialize()
     lookback = begidx + TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacd_data = <double*>PyArray_DATA(outmacd)
+    outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
         outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
+    outmacdsignal_data = <double*>outmacdsignal.data
     for i from 0 <= i < min(lookback, length):
         outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
+    outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
@@ -6784,15 +5836,12 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
         double* outmacdsignal_data
         np.ndarray outmacdhist
         double* outmacdhist_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6804,15 +5853,15 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     TA_Initialize()
     lookback = begidx + TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacd_data = <double*>PyArray_DATA(outmacd)
+    outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
         outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
+    outmacdsignal_data = <double*>outmacdsignal.data
     for i from 0 <= i < min(lookback, length):
         outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
+    outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
@@ -6839,15 +5888,12 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
         double* outmacdsignal_data
         np.ndarray outmacdhist
         double* outmacdhist_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6859,15 +5905,15 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MACDFIX_Lookback( signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacd_data = <double*>PyArray_DATA(outmacd)
+    outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
         outmacd_data[i] = NaN
     outmacdsignal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdsignal_data = <double*>PyArray_DATA(outmacdsignal)
+    outmacdsignal_data = <double*>outmacdsignal.data
     for i from 0 <= i < min(lookback, length):
         outmacdsignal_data[i] = NaN
     outmacdhist = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmacdhist_data = <double*>PyArray_DATA(outmacdhist)
+    outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
@@ -6892,15 +5938,12 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
         double* outmama_data
         np.ndarray outfama
         double* outfama_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6912,11 +5955,11 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     TA_Initialize()
     lookback = begidx + TA_MAMA_Lookback( fastlimit , slowlimit )
     outmama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmama_data = <double*>PyArray_DATA(outmama)
+    outmama_data = <double*>outmama.data
     for i from 0 <= i < min(lookback, length):
         outmama_data[i] = NaN
     outfama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outfama_data = <double*>PyArray_DATA(outfama)
+    outfama_data = <double*>outfama.data
     for i from 0 <= i < min(lookback, length):
         outfama_data[i] = NaN
     retCode = TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
@@ -6938,23 +5981,17 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    dtype = PyArray_TYPE(periods)
-    assert dtype == np.NPY_DOUBLE, "periods is not double"
-    ndim = PyArray_NDIM(periods)
-    assert ndim == 1, "periods has wrong dimensions"
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    assert PyArray_TYPE(periods) == np.NPY_DOUBLE, "periods is not double"
+    assert periods.ndim == 1, "periods has wrong dimensions"
     if not (PyArray_FLAGS(periods) & np.NPY_C_CONTIGUOUS):
-        periods_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(periods))
-    else:
-        periods_data = <double*>periods.data
-    length = PyArray_DIMS(real)[0]
+        periods = PyArray_GETCONTIGUOUS(periods)
+    periods_data = <double*>periods.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -6966,7 +6003,7 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     TA_Initialize()
     lookback = begidx + TA_MAVP_Lookback( minperiod , maxperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -6989,15 +6026,12 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7009,7 +6043,7 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MAX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7032,15 +6066,12 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7052,7 +6083,7 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MAXINDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -7076,23 +6107,17 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7104,7 +6129,7 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     TA_Initialize()
     lookback = begidx + TA_MEDPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7130,39 +6155,27 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    dtype = PyArray_TYPE(volume)
-    assert dtype == np.NPY_DOUBLE, "volume is not double"
-    ndim = PyArray_NDIM(volume)
-    assert ndim == 1, "volume has wrong dimensions"
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    assert PyArray_TYPE(volume) == np.NPY_DOUBLE, "volume is not double"
+    assert volume.ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
-        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
-    else:
-        volume_data = <double*>volume.data
-    length = PyArray_DIMS(high)[0]
+        volume = PyArray_GETCONTIGUOUS(volume)
+    volume_data = <double*>volume.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7174,7 +6187,7 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     TA_Initialize()
     lookback = begidx + TA_MFI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7197,15 +6210,12 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7217,7 +6227,7 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MIDPOINT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7241,23 +6251,17 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7269,7 +6273,7 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     TA_Initialize()
     lookback = begidx + TA_MIDPRICE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7292,15 +6296,12 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7312,7 +6313,7 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MIN_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7335,15 +6336,12 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outinteger
         int* outinteger_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7355,7 +6353,7 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MININDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outinteger_data = <int*>PyArray_DATA(outinteger)
+    outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
@@ -7380,15 +6378,12 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
         double* outmin_data
         np.ndarray outmax
         double* outmax_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7400,11 +6395,11 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MINMAX_Lookback( timeperiod )
     outmin = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmin_data = <double*>PyArray_DATA(outmin)
+    outmin_data = <double*>outmin.data
     for i from 0 <= i < min(lookback, length):
         outmin_data[i] = NaN
     outmax = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outmax_data = <double*>PyArray_DATA(outmax)
+    outmax_data = <double*>outmax.data
     for i from 0 <= i < min(lookback, length):
         outmax_data[i] = NaN
     retCode = TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
@@ -7429,15 +6424,12 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         int* outminidx_data
         np.ndarray outmaxidx
         int* outmaxidx_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7449,11 +6441,11 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MINMAXINDEX_Lookback( timeperiod )
     outminidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outminidx_data = <int*>PyArray_DATA(outminidx)
+    outminidx_data = <int*>outminidx.data
     for i from 0 <= i < min(lookback, length):
         outminidx_data[i] = 0
     outmaxidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
-    outmaxidx_data = <int*>PyArray_DATA(outmaxidx)
+    outmaxidx_data = <int*>outmaxidx.data
     for i from 0 <= i < min(lookback, length):
         outmaxidx_data[i] = 0
     retCode = TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
@@ -7478,31 +6470,22 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7514,7 +6497,7 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     TA_Initialize()
     lookback = begidx + TA_MINUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7538,23 +6521,17 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7566,7 +6543,7 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     TA_Initialize()
     lookback = begidx + TA_MINUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7589,15 +6566,12 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7609,7 +6583,7 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_MOM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7631,23 +6605,17 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -7659,7 +6627,7 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     TA_Initialize()
     lookback = begidx + TA_MULT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7684,31 +6652,22 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7720,7 +6679,7 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     TA_Initialize()
     lookback = begidx + TA_NATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7744,23 +6703,17 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    dtype = PyArray_TYPE(volume)
-    assert dtype == np.NPY_DOUBLE, "volume is not double"
-    ndim = PyArray_NDIM(volume)
-    assert ndim == 1, "volume has wrong dimensions"
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    assert PyArray_TYPE(volume) == np.NPY_DOUBLE, "volume is not double"
+    assert volume.ndim == 1, "volume has wrong dimensions"
     if not (PyArray_FLAGS(volume) & np.NPY_C_CONTIGUOUS):
-        volume_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(volume))
-    else:
-        volume_data = <double*>volume.data
-    length = PyArray_DIMS(real)[0]
+        volume = PyArray_GETCONTIGUOUS(volume)
+    volume_data = <double*>volume.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7772,7 +6725,7 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     TA_Initialize()
     lookback = begidx + TA_OBV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7797,31 +6750,22 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7833,7 +6777,7 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     TA_Initialize()
     lookback = begidx + TA_PLUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7857,23 +6801,17 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -7885,7 +6823,7 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     TA_Initialize()
     lookback = begidx + TA_PLUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7908,15 +6846,12 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7928,7 +6863,7 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     TA_Initialize()
     lookback = begidx + TA_PPO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7951,15 +6886,12 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -7971,7 +6903,7 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -7994,15 +6926,12 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8014,7 +6943,7 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROCP_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8037,15 +6966,12 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8057,7 +6983,7 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROCR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8080,15 +7006,12 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8100,7 +7023,7 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_ROCR100_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8123,15 +7046,12 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8143,7 +7063,7 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_RSI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8167,23 +7087,17 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -8195,7 +7109,7 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     TA_Initialize()
     lookback = begidx + TA_SAR_Lookback( acceleration , maximum )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8219,23 +7133,17 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    length = PyArray_DIMS(high)[0]
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -8247,7 +7155,7 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     TA_Initialize()
     lookback = begidx + TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8268,15 +7176,12 @@ def SIN( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8288,7 +7193,7 @@ def SIN( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_SIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8309,15 +7214,12 @@ def SINH( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8329,7 +7231,7 @@ def SINH( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_SINH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8352,15 +7254,12 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8372,7 +7271,7 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_SMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8393,15 +7292,12 @@ def SQRT( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8413,7 +7309,7 @@ def SQRT( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_SQRT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8436,15 +7332,12 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8456,7 +7349,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     TA_Initialize()
     lookback = begidx + TA_STDDEV_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8483,31 +7376,22 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         double* outslowk_data
         np.ndarray outslowd
         double* outslowd_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -8519,11 +7403,11 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     TA_Initialize()
     lookback = begidx + TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     outslowk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outslowk_data = <double*>PyArray_DATA(outslowk)
+    outslowk_data = <double*>outslowk.data
     for i from 0 <= i < min(lookback, length):
         outslowk_data[i] = NaN
     outslowd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outslowd_data = <double*>PyArray_DATA(outslowd)
+    outslowd_data = <double*>outslowd.data
     for i from 0 <= i < min(lookback, length):
         outslowd_data[i] = NaN
     retCode = TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
@@ -8550,31 +7434,22 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         double* outfastk_data
         np.ndarray outfastd
         double* outfastd_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -8586,11 +7461,11 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     TA_Initialize()
     lookback = begidx + TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outfastk_data = <double*>PyArray_DATA(outfastk)
+    outfastk_data = <double*>outfastk.data
     for i from 0 <= i < min(lookback, length):
         outfastk_data[i] = NaN
     outfastd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outfastd_data = <double*>PyArray_DATA(outfastd)
+    outfastd_data = <double*>outfastd.data
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
     retCode = TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
@@ -8615,15 +7490,12 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
         double* outfastk_data
         np.ndarray outfastd
         double* outfastd_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8635,11 +7507,11 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     TA_Initialize()
     lookback = begidx + TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outfastk_data = <double*>PyArray_DATA(outfastk)
+    outfastk_data = <double*>outfastk.data
     for i from 0 <= i < min(lookback, length):
         outfastk_data[i] = NaN
     outfastd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outfastd_data = <double*>PyArray_DATA(outfastd)
+    outfastd_data = <double*>outfastd.data
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
     retCode = TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
@@ -8661,23 +7533,17 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real0)
-    assert dtype == np.NPY_DOUBLE, "real0 is not double"
-    ndim = PyArray_NDIM(real0)
-    assert ndim == 1, "real0 has wrong dimensions"
+    assert PyArray_TYPE(real0) == np.NPY_DOUBLE, "real0 is not double"
+    assert real0.ndim == 1, "real0 has wrong dimensions"
     if not (PyArray_FLAGS(real0) & np.NPY_C_CONTIGUOUS):
-        real0_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real0))
-    else:
-        real0_data = <double*>real0.data
-    dtype = PyArray_TYPE(real1)
-    assert dtype == np.NPY_DOUBLE, "real1 is not double"
-    ndim = PyArray_NDIM(real1)
-    assert ndim == 1, "real1 has wrong dimensions"
+        real0 = PyArray_GETCONTIGUOUS(real0)
+    real0_data = <double*>real0.data
+    assert PyArray_TYPE(real1) == np.NPY_DOUBLE, "real1 is not double"
+    assert real1.ndim == 1, "real1 has wrong dimensions"
     if not (PyArray_FLAGS(real1) & np.NPY_C_CONTIGUOUS):
-        real1_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real1))
-    else:
-        real1_data = <double*>real1.data
-    length = PyArray_DIMS(real0)[0]
+        real1 = PyArray_GETCONTIGUOUS(real1)
+    real1_data = <double*>real1.data
+    length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real0_data[i]):
@@ -8689,7 +7555,7 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     TA_Initialize()
     lookback = begidx + TA_SUB_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8712,15 +7578,12 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8732,7 +7595,7 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_SUM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8755,15 +7618,12 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8775,7 +7635,7 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     TA_Initialize()
     lookback = begidx + TA_T3_Lookback( timeperiod , vfactor )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8796,15 +7656,12 @@ def TAN( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8816,7 +7673,7 @@ def TAN( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_TAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8837,15 +7694,12 @@ def TANH( np.ndarray real not None ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8857,7 +7711,7 @@ def TANH( np.ndarray real not None ):
     TA_Initialize()
     lookback = begidx + TA_TANH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8880,15 +7734,12 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -8900,7 +7751,7 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8925,31 +7776,22 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -8961,7 +7803,7 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     TA_Initialize()
     lookback = begidx + TA_TRANGE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -8984,15 +7826,12 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -9004,7 +7843,7 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TRIMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9027,15 +7866,12 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -9047,7 +7883,7 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TRIX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9070,15 +7906,12 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -9090,7 +7923,7 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_TSF_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9115,31 +7948,22 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -9151,7 +7975,7 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     TA_Initialize()
     lookback = begidx + TA_TYPPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9176,31 +8000,22 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -9212,7 +8027,7 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     TA_Initialize()
     lookback = begidx + TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9235,15 +8050,12 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -9255,7 +8067,7 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     TA_Initialize()
     lookback = begidx + TA_VAR_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9280,31 +8092,22 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -9316,7 +8119,7 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     TA_Initialize()
     lookback = begidx + TA_WCLPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9341,31 +8144,22 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(high)
-    assert dtype == np.NPY_DOUBLE, "high is not double"
-    ndim = PyArray_NDIM(high)
-    assert ndim == 1, "high has wrong dimensions"
+    assert PyArray_TYPE(high) == np.NPY_DOUBLE, "high is not double"
+    assert high.ndim == 1, "high has wrong dimensions"
     if not (PyArray_FLAGS(high) & np.NPY_C_CONTIGUOUS):
-        high_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(high))
-    else:
-        high_data = <double*>high.data
-    dtype = PyArray_TYPE(low)
-    assert dtype == np.NPY_DOUBLE, "low is not double"
-    ndim = PyArray_NDIM(low)
-    assert ndim == 1, "low has wrong dimensions"
+        high = PyArray_GETCONTIGUOUS(high)
+    high_data = <double*>high.data
+    assert PyArray_TYPE(low) == np.NPY_DOUBLE, "low is not double"
+    assert low.ndim == 1, "low has wrong dimensions"
     if not (PyArray_FLAGS(low) & np.NPY_C_CONTIGUOUS):
-        low_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(low))
-    else:
-        low_data = <double*>low.data
-    dtype = PyArray_TYPE(close)
-    assert dtype == np.NPY_DOUBLE, "close is not double"
-    ndim = PyArray_NDIM(close)
-    assert ndim == 1, "close has wrong dimensions"
+        low = PyArray_GETCONTIGUOUS(low)
+    low_data = <double*>low.data
+    assert PyArray_TYPE(close) == np.NPY_DOUBLE, "close is not double"
+    assert close.ndim == 1, "close has wrong dimensions"
     if not (PyArray_FLAGS(close) & np.NPY_C_CONTIGUOUS):
-        close_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(close))
-    else:
-        close_data = <double*>close.data
-    length = PyArray_DIMS(high)[0]
+        close = PyArray_GETCONTIGUOUS(close)
+    close_data = <double*>close.data
+    length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(high_data[i]):
@@ -9377,7 +8171,7 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     TA_Initialize()
     lookback = begidx + TA_WILLR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
@@ -9400,15 +8194,12 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
         int outnbelement
         np.ndarray outreal
         double* outreal_data
-    dtype = PyArray_TYPE(real)
-    assert dtype == np.NPY_DOUBLE, "real is not double"
-    ndim = PyArray_NDIM(real)
-    assert ndim == 1, "real has wrong dimensions"
+    assert PyArray_TYPE(real) == np.NPY_DOUBLE, "real is not double"
+    assert real.ndim == 1, "real has wrong dimensions"
     if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
-        real_data = <double*>PyArray_DATA(PyArray_GETCONTIGUOUS(real))
-    else:
-        real_data = <double*>real.data
-    length = PyArray_DIMS(real)[0]
+        real = PyArray_GETCONTIGUOUS(real)
+    real_data = <double*>real.data
+    length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
         if not isnan(real_data[i]):
@@ -9420,7 +8211,7 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     TA_Initialize()
     lookback = begidx + TA_WMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
-    outreal_data = <double*>PyArray_DATA(outreal)
+    outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
