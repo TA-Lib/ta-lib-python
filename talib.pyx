@@ -49,7 +49,7 @@ cdef extern from "numpy/arrayobject.h":
 np.import_array() # Initialize the NumPy C API
 
 # extract the needed part of ta_libc.h that I will use in the interface
-cdef extern from "ta_libc.h":
+cdef extern from "ta-lib/ta_libc.h":
     enum: TA_SUCCESS
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()

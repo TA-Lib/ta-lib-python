@@ -7,11 +7,11 @@ import numpy
 import sys
 
 if sys.platform in ("linux2", "darwin"):
-    include_talib_dir = "/usr/local/include/ta-lib/"
+    include_talib_dir = "/usr/local/include/"
     lib_talib_dir = "/usr/local/lib/"
 
 elif sys.platform == "win32":
-    include_talib_dir = r"c:\msys\1.0\local\include\ta-lib"
+    include_talib_dir = r"c:\msys\1.0\local\include"
     lib_talib_dir = r"c:\msys\1.0\local\lib"
 
 else:
