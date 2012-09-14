@@ -1,5 +1,7 @@
 
+import os
 import re
+import sys
 
 # FIXME: initialize once, then shutdown at the end, rather than each call?
 # FIXME: should we check retCode from initialize and shutdown?
@@ -8,7 +10,16 @@ import re
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
-with open('/usr/local/include/ta-lib/ta_func.h') as f:
+include_paths = ['/usr/include', '/usr/local/include']
+ta_func_header = None
+for path in include_paths:
+    if os.path.exists(path + '/ta-lib/ta_func.h'):
+        ta_func_header = path + '/ta-lib/ta_func.h'
+        break
+if not ta_func_header:
+    print >> sys.stderr, 'Error: ta-lib/ta_func.h not found'
+    sys.exit(1)
+with open(ta_func_header) as f:
     tmp = []
     for line in f:
         line = line.strip()
@@ -82,7 +93,7 @@ cdef extern from "numpy/arrayobject.h":
 np.import_array() # Initialize the NumPy C API
 
 # extract the needed part of ta_libc.h that I will use in the interface
-cdef extern from "ta_libc.h":
+cdef extern from "ta-lib/ta_libc.h":
     enum: TA_SUCCESS
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()
