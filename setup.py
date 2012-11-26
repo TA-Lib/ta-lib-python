@@ -1,4 +1,3 @@
-
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
@@ -6,7 +5,7 @@ from Cython.Distutils import build_ext
 import numpy
 import sys
 
-if sys.platform in ("linux2", "darwin"):
+if sys.platform in ("linux2", "darwin") or "freebsd" in sys.platform:
     include_talib_dir = "/usr/local/include/"
     lib_talib_dir = "/usr/local/lib/"
 
