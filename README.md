@@ -34,6 +34,16 @@ on your computer (you can [download it](http://ta-lib.org/hdr_dw.html) or
 use your computers package manager to install it, e.g.,
 ``brew install ta-lib`` on Mac OS X).
 
+## Troubleshooting
+
+If you get build errors like this, it typically means that it can't find the
+underlying ``ta-lib`` library and needs to be installed:
+
+```
+func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
+compilation terminated.
+```
+
 ## Examples
 
 Similar to TA-Lib, the functions return an index into the input where the
