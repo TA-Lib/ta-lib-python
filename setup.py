@@ -25,7 +25,7 @@ elif sys.platform == "win32":
 else:
     raise NotImplementedError(sys.platform)
 
-ext = Extension("talib", ["talib.pyx"],
+func_ext = Extension("talib.func", ["talib/func.pyx"],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
     libraries=["ta_lib"]
@@ -33,17 +33,18 @@ ext = Extension("talib", ["talib.pyx"],
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.1',
+    version = '0.4.2',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.1.zip',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.2.zip',
     classifiers = [
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering :: Mathematics",
         "License :: OSI Approved :: BSD License",
     ],
-    ext_modules=[ext],
+    packages=['talib'],
+    ext_modules=[func_ext],
     cmdclass = {'build_ext': build_ext}
 )
