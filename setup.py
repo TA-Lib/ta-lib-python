@@ -38,7 +38,7 @@ setup(
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'http://github.com/mrjbq7/ta-lib/zipball/master#egg=TA-Lib-0.4.1',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/0.4.1.zip',
     classifiers = [
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering :: Mathematics",
