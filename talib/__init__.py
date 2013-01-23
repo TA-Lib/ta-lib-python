@@ -1,7 +1,10 @@
+import atexit
+
 from talib.func import *
 from talib.abstract import _ta_getFuncTable
 from talib.abstract import _ta_getGroupTable
 from talib import common_c
+
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
@@ -51,3 +54,6 @@ def get_function_groups():
     for group in _ta_getGroupTable():
         d[group] = _ta_getFuncTable(group)
     return d
+
+initialize()
+atexit.register(shutdown)
