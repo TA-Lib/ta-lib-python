@@ -11,6 +11,42 @@ from common_c import _ta_check_success
 from cython.operator cimport dereference as deref
 
 
+def _get_defaults_and_docs(func_info):
+    defaults = {}
+    INDENT = '    ' # 4 spaces
+    docs = []
+    docs.append('%s%s' % (INDENT, func_info['display_name']))
+    docs.append('Group: %(group)s' % func_info)
+
+    inputs = func_info['inputs']
+    docs.append('Inputs:')
+    for input_ in inputs:
+        value = inputs[input_]
+        if not isinstance(value, list):
+            value = '(any ndarray)'
+        docs.append('%s%s: %s' % (INDENT, input_, value))
+
+    params = func_info['parameters']
+    if params:
+        docs.append('Parameters:')
+    for param in params:
+        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
+        defaults[param] = params[param]
+        if param.lower() == 'matype':
+            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
+
+    outputs = func_info['outputs']
+    docs.append('Outputs:')
+    for output in outputs:
+        if output == 'integer':
+            output = 'integer (values are -100, 0 or 100)'
+        docs.append('%s%s' % (INDENT, output))
+    docs.append('')
+
+    documentation = '\n    '.join(docs) # 4 spaces
+    return defaults, documentation
+
+
 class Function(object):
     ''' This is a pythonic wrapper around TALIB's abstract interface. It is
     intended to simplify using individual TALIB functions by providing a unified
@@ -95,29 +131,9 @@ class Function(object):
     def print_help(self):
         ''' Prints the function parameter options and their values
         '''
-        # get and format the function parameter names/defaults
-        args = None
-        func_params = []
-        for input_name in self.__opt_inputs:
-            value = self.__get_opt_input_value(input_name)
-            func_params.append('%s=%i' % (input_name, value))
-        if func_params:
-            args = ', '.join(func_params)
-
-        # get and format the function data series input names
-        kwargs = None
-        inputs = OrderedDict()
-        for input_name in self.__inputs:
-            if self.__inputs[input_name]['price_series'] == None:
-                inputs[input_name] = self.__input_price_series_defaults[input_name]
-        if inputs:
-            kwargs = ', '.join(['%s="%s"' % (k, v) for k, v in inputs.items()])
-
-        # print the docstring results
-        if args or kwargs:
-            print '%s.set_function_parameters(*args, **kwargs)' % self.__name
-            if args: print 'args: %s' % args
-            if kwargs: print 'kwargs: %s' % kwargs
+        print
+        defaults, docs = _get_defaults_and_docs(self.get_info())
+        print docs
 
     def get_info(self):
         ''' Returns a copy of the function's info dict.

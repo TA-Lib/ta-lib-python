@@ -238,44 +238,6 @@ descriptions = {
 }
 
 
-def get_defaults_and_docs(function):
-    handle = abstract.Function(function)
-    func_info = handle.get_info()
-    defaults = {}
-    INDENT = '    ' # 4 spaces
-    docs = []
-    docs.append('%s%s' % (INDENT, func_info['display_name']))
-    docs.append('Group: %(group)s' % func_info)
-
-    inputs = func_info['inputs']
-    docs.append('Inputs:')
-    for input_ in inputs:
-        value = inputs[input_]
-        if not isinstance(value, list):
-            value = '(any ndarray)'
-        docs.append('%s%s: %s' % (INDENT, input_, value))
-
-    params = func_info['parameters']
-    if params:
-        docs.append('Parameters:')
-    for param in params:
-        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
-        defaults[param] = params[param]
-        if param.lower() == 'matype':
-            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
-
-    outputs = func_info['outputs']
-    docs.append('Outputs:')
-    for output in outputs:
-        if output == 'integer':
-            output = 'integer (values are -100, 0 or 100)'
-        docs.append('%s%s' % (INDENT, output))
-    docs.append('')
-
-    documentation = '\n    '.join(docs) # 4 spaces
-    return defaults, documentation
-
-
 # print functions
 names = []
 for f in functions:
@@ -289,7 +251,8 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
-    defaults, documentation = get_defaults_and_docs(shortname)
+    func_info = abstract.Function(shortname).get_info()
+    defaults, documentation = abstract._get_defaults_and_docs(func_info)
 
     print '@wraparound(False)  # turn off relative indexing from end of lists'
     print '@boundscheck(False) # turn off bounds-checking for entire function'
