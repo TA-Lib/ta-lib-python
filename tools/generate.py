@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-import talib
+#import talib
 from talib import abstract
 
 # FIXME: initialize once, then shutdown at the end, rather than each call?
@@ -43,7 +43,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-import talib
+import talib # unused but we import anyway to make sure initialize and shutdown are handled correctly
 cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
@@ -251,7 +251,7 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
-    func_info = abstract.Function(shortname).get_info()
+    func_info = abstract.Function(shortname).info
     defaults, documentation = abstract._get_defaults_and_docs(func_info)
 
     print '@wraparound(False)  # turn off relative indexing from end of lists'
@@ -383,7 +383,6 @@ for f in functions:
             print '    endidx = length - begidx - 1'
             break
 
-    print '    talib.initialize()'
     print '    lookback = begidx + %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
@@ -443,7 +442,6 @@ for f in functions:
 
     print ')'
     print '    _ta_check_success("%s", retCode)' % name
-    print '    talib.shutdown()'
     print '    return',
     i = 0
     for arg in args:
