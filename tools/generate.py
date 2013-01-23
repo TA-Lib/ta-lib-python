@@ -1,4 +1,3 @@
-
 import os
 import re
 import sys
@@ -44,10 +43,12 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-from talib import utils
+import talib
+cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
-cimport numpy as np
+
+from common_c import _ta_check_success
 
 ctypedef np.double_t double_t
 ctypedef np.int32_t int32_t
@@ -70,9 +71,6 @@ np.import_array() # Initialize the NumPy C API
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta-lib/ta_libc.h":
-    enum: TA_SUCCESS
-    TA_RetCode TA_Initialize()
-    TA_RetCode TA_Shutdown()
     char *TA_GetVersionString()"""
 
 # ! can't use const in function declaration (cython 0.12 restriction)
@@ -87,22 +85,6 @@ print
 
 print """
 __version__ = TA_GetVersionString()
-"""
-
-print """
-def initialize():
-    ''' Initializes the TALIB library
-    '''
-    ret_code = TA_Initialize()
-    utils._check_success('TA_Initialize', ret_code)
-    return ret_code
-
-def shutdown():
-    ''' Shuts down the TALIB library
-    '''
-    ret_code = TA_Shutdown()
-    utils._check_success('TA_Shutdown', ret_code)
-    return ret_code
 """
 
 # cleanup variable names to make them more pythonic
@@ -438,7 +420,7 @@ for f in functions:
             print '    endidx = length - begidx - 1'
             break
 
-    print '    initialize()'
+    print '    talib.initialize()'
     print '    lookback = begidx + %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
@@ -496,7 +478,8 @@ for f in functions:
             print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
-    print '    shutdown()'
+    print '    _ta_check_success("%s", retCode)' % name
+    print '    talib.shutdown()'
     print '    return',
     i = 0
     for arg in args:

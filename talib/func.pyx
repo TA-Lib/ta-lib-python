@@ -1,8 +1,10 @@
 
-from talib import utils
+import talib
+cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
-cimport numpy as np
+
+from common_c import _ta_check_success
 
 ctypedef np.double_t double_t
 ctypedef np.int32_t int32_t
@@ -25,9 +27,6 @@ np.import_array() # Initialize the NumPy C API
 
 # extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta-lib/ta_libc.h":
-    enum: TA_SUCCESS
-    TA_RetCode TA_Initialize()
-    TA_RetCode TA_Shutdown()
     char *TA_GetVersionString()
     TA_RetCode TA_ACOS( int startIdx, int endIdx,  double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_ACOS_Lookback(  )
@@ -349,21 +348,6 @@ cdef extern from "ta-lib/ta_libc.h":
 
 __version__ = TA_GetVersionString()
 
-
-def initialize():
-    ''' Initializes the TALIB library
-    '''
-    ret_code = TA_Initialize()
-    utils._check_success('TA_Initialize', ret_code)
-    return ret_code
-
-def shutdown():
-    ''' Shuts down the TALIB library
-    '''
-    ret_code = TA_Shutdown()
-    utils._check_success('TA_Shutdown', ret_code)
-    return ret_code
-
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACOS( np.ndarray real not None ):
@@ -372,7 +356,7 @@ def ACOS( np.ndarray real not None ):
     Vector Trigonometric ACos
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -398,14 +382,15 @@ def ACOS( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ACOS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ACOS", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -416,7 +401,7 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     Chaikin A/D Line
     Group: Volume Indicators
     Inputs:
-        priceHLCV: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volumne']
     Outputs:
         real
     """
@@ -460,14 +445,15 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_AD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_AD", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -478,8 +464,8 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     Vector Arithmetic Add
     Group: Math Operators
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Outputs:
         real
     """
@@ -511,14 +497,15 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ADD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ADD", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -529,7 +516,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Chaikin A/D Oscillator
     Group: Volume Indicators
     Inputs:
-        priceHLCV: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volumne']
     Parameters:
         fastperiod: 3
         slowperiod: 10
@@ -576,14 +563,15 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ADOSC_Lookback( fastperiod , slowperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ADOSC", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -594,7 +582,7 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Average Directional Movement Index
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -634,14 +622,15 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ADX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ADX", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -652,7 +641,7 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     Average Directional Movement Index Rating
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -692,14 +681,15 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ADXR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ADXR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -710,7 +700,7 @@ def APO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
     Absolute Price Oscillator
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -740,14 +730,15 @@ def APO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_APO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_APO", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -758,7 +749,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=1
     Aroon
     Group: Momentum Indicators
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -795,7 +786,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=1
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_AROON_Lookback( timeperiod )
     outaroondown = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outaroondown_data = <double*>outaroondown.data
@@ -806,7 +797,8 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=1
     for i from 0 <= i < min(lookback, length):
         outaroonup_data[i] = NaN
     retCode = TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_AROON", retCode)
+    talib.shutdown()
     return outaroondown , outaroonup
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -817,7 +809,7 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     Aroon Oscillator
     Group: Momentum Indicators
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -851,14 +843,15 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_AROONOSC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_AROONOSC", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -869,7 +862,7 @@ def ASIN( np.ndarray real not None ):
     Vector Trigonometric ASin
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -895,14 +888,15 @@ def ASIN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ASIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ASIN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -913,7 +907,7 @@ def ATAN( np.ndarray real not None ):
     Vector Trigonometric ATan
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -939,14 +933,15 @@ def ATAN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ATAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ATAN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -957,7 +952,7 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Average True Range
     Group: Volatility Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -997,14 +992,15 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ATR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1015,7 +1011,7 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     Average Price
     Group: Price Transform
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         real
     """
@@ -1059,14 +1055,15 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_AVGPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_AVGPRICE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1077,7 +1074,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=5 , double nbdevup=2 , dou
     Bollinger Bands
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdevup: 2
@@ -1114,7 +1111,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=5 , double nbdevup=2 , dou
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
     outrealupperband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outrealupperband_data = <double*>outrealupperband.data
@@ -1129,7 +1126,8 @@ def BBANDS( np.ndarray real not None , int timeperiod=5 , double nbdevup=2 , dou
     for i from 0 <= i < min(lookback, length):
         outreallowerband_data[i] = NaN
     retCode = TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_BBANDS", retCode)
+    talib.shutdown()
     return outrealupperband , outrealmiddleband , outreallowerband
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1140,8 +1138,8 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     Beta
     Group: Statistic Functions
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Parameters:
         timeperiod: 5
     Outputs:
@@ -1175,14 +1173,15 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_BETA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_BETA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1193,7 +1192,7 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     Balance Of Power
     Group: Momentum Indicators
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         real
     """
@@ -1237,14 +1236,15 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_BOP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_BOP", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1255,7 +1255,7 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Commodity Channel Index
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -1295,14 +1295,15 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CCI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CCI", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1313,7 +1314,7 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Two Crows
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1357,14 +1358,15 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL2CROWS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1375,7 +1377,7 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     Three Black Crows
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1419,14 +1421,15 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3BLACKCROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3BLACKCROWS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1437,7 +1440,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Three Inside Up/Down
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1481,14 +1484,15 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3INSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3INSIDE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1499,7 +1503,7 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     Three-Line Strike 
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1543,14 +1547,15 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3LINESTRIKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3LINESTRIKE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1561,7 +1566,7 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Three Outside Up/Down
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1605,14 +1610,15 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3OUTSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3OUTSIDE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1623,7 +1629,7 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     Three Stars In The South
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1667,14 +1673,15 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3STARSINSOUTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1685,7 +1692,7 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     Three Advancing White Soldiers
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1729,14 +1736,15 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDL3WHITESOLDIERS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1747,7 +1755,7 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     Abandoned Baby
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.3
     Outputs:
@@ -1793,14 +1801,15 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLABANDONEDBABY_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLABANDONEDBABY", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1811,7 +1820,7 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     Advance Block
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1855,14 +1864,15 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLADVANCEBLOCK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1873,7 +1883,7 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Belt-hold
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1917,14 +1927,15 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLBELTHOLD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLBELTHOLD", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1935,7 +1946,7 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Breakaway
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -1979,14 +1990,15 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLBREAKAWAY_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLBREAKAWAY", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1997,7 +2009,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     Closing Marubozu
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2041,14 +2053,15 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLCLOSINGMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2059,7 +2072,7 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     Concealing Baby Swallow
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2103,14 +2116,15 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLCONCEALBABYSWALL_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2121,7 +2135,7 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     Counterattack
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2165,14 +2179,15 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLCOUNTERATTACK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2183,7 +2198,7 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     Dark Cloud Cover
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.5
     Outputs:
@@ -2229,14 +2244,15 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2247,7 +2263,7 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     Doji
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2291,14 +2307,15 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLDOJI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2309,7 +2326,7 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Doji Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2353,14 +2370,15 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLDOJISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLDOJISTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2371,7 +2389,7 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     Dragonfly Doji
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2415,14 +2433,15 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLDRAGONFLYDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2433,7 +2452,7 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Engulfing Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2477,14 +2496,15 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLENGULFING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLENGULFING", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2495,7 +2515,7 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     Evening Doji Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.3
     Outputs:
@@ -2541,14 +2561,15 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2559,7 +2580,7 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     Evening Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.3
     Outputs:
@@ -2605,14 +2626,15 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLEVENINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLEVENINGSTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2623,7 +2645,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     Up/Down-gap side-by-side white lines
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2667,14 +2689,15 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLGAPSIDESIDEWHITE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2685,7 +2708,7 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     Gravestone Doji
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2729,14 +2752,15 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLGRAVESTONEDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2747,7 +2771,7 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Hammer
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2791,14 +2815,15 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHAMMER", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2809,7 +2834,7 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     Hanging Man
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2853,14 +2878,15 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHANGINGMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHANGINGMAN", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2871,7 +2897,7 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Harami Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2915,14 +2941,15 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHARAMI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHARAMI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2933,7 +2960,7 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     Harami Cross Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -2977,14 +3004,15 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHARAMICROSS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHARAMICROSS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2995,7 +3023,7 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     High-Wave Candle
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3039,14 +3067,15 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHIGHWAVE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHIGHWAVE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3057,7 +3086,7 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Hikkake Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3101,14 +3130,15 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHIKKAKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHIKKAKE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3119,7 +3149,7 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     Modified Hikkake Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3163,14 +3193,15 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHIKKAKEMOD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3181,7 +3212,7 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     Homing Pigeon
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3225,14 +3256,15 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLHOMINGPIGEON_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3243,7 +3275,7 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     Identical Three Crows
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3287,14 +3319,15 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLIDENTICAL3CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3305,7 +3338,7 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     In-Neck Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3349,14 +3382,15 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLINNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLINNECK", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3367,7 +3401,7 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     Inverted Hammer
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3411,14 +3445,15 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLINVERTEDHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3429,7 +3464,7 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Kicking
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3473,14 +3508,15 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLKICKING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLKICKING", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3491,7 +3527,7 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     Kicking - bull/bear determined by the longer marubozu
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3535,14 +3571,15 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLKICKINGBYLENGTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3553,7 +3590,7 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     Ladder Bottom
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3597,14 +3634,15 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLLADDERBOTTOM_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3615,7 +3653,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     Long Legged Doji
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3659,14 +3697,15 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLLONGLEGGEDDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3677,7 +3716,7 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Long Line Candle
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3721,14 +3760,15 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLLONGLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLLONGLINE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3739,7 +3779,7 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Marubozu
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3783,14 +3823,15 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLMARUBOZU", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3801,7 +3842,7 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     Matching Low
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -3845,14 +3886,15 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLMATCHINGLOW_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLMATCHINGLOW", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3863,7 +3905,7 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Mat Hold
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.5
     Outputs:
@@ -3909,14 +3951,15 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLMATHOLD_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLMATHOLD", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3927,7 +3970,7 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     Morning Doji Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.3
     Outputs:
@@ -3973,14 +4016,15 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3991,7 +4035,7 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     Morning Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Parameters:
         penetration: 0.3
     Outputs:
@@ -4037,14 +4081,15 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLMORNINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLMORNINGSTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4055,7 +4100,7 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     On-Neck Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4099,14 +4144,15 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLONNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLONNECK", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4117,7 +4163,7 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Piercing Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4161,14 +4207,15 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLPIERCING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLPIERCING", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4179,7 +4226,7 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     Rickshaw Man
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4223,14 +4270,15 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLRICKSHAWMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4241,7 +4289,7 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     Rising/Falling Three Methods
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4285,14 +4333,15 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLRISEFALL3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4303,7 +4352,7 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     Separating Lines
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4347,14 +4396,15 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSEPARATINGLINES_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4365,7 +4415,7 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     Shooting Star
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4409,14 +4459,15 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSHOOTINGSTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4427,7 +4478,7 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Short Line Candle
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4471,14 +4522,15 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSHORTLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSHORTLINE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4489,7 +4541,7 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     Spinning Top
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4533,14 +4585,15 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSPINNINGTOP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSPINNINGTOP", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4551,7 +4604,7 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     Stalled Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4595,14 +4648,15 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSTALLEDPATTERN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4613,7 +4667,7 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     Stick Sandwich
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4657,14 +4711,15 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLSTICKSANDWICH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4675,7 +4730,7 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Takuri (Dragonfly Doji with very long lower shadow)
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4719,14 +4774,15 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLTAKURI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLTAKURI", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4737,7 +4793,7 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Tasuki Gap
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4781,14 +4837,15 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLTASUKIGAP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLTASUKIGAP", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4799,7 +4856,7 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Thrusting Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4843,14 +4900,15 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLTHRUSTING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLTHRUSTING", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4861,7 +4919,7 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Tristar Pattern
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4905,14 +4963,15 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLTRISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLTRISTAR", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4923,7 +4982,7 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     Unique 3 River
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -4967,14 +5026,15 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLUNIQUE3RIVER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4985,7 +5045,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     Upside Gap Two Crows
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -5029,14 +5089,15 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLUPSIDEGAP2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5047,7 +5108,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     Upside/Downside Gap Three Methods
     Group: Pattern Recognition
     Inputs:
-        priceOHLC: ['open', 'high', 'low', 'close']
+        prices: ['open', 'high', 'low', 'close']
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -5091,14 +5152,15 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CDLXSIDEGAP3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5109,7 +5171,7 @@ def CEIL( np.ndarray real not None ):
     Vector Ceil
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5135,14 +5197,15 @@ def CEIL( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CEIL_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CEIL", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5153,7 +5216,7 @@ def CMO( np.ndarray real not None , int timeperiod=14 ):
     Chande Momentum Oscillator
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5181,14 +5244,15 @@ def CMO( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CMO_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CMO", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5199,8 +5263,8 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     Pearson's Correlation Coefficient (r)
     Group: Statistic Functions
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5234,14 +5298,15 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_CORREL_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_CORREL", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5252,7 +5317,7 @@ def COS( np.ndarray real not None ):
     Vector Trigonometric Cos
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5278,14 +5343,15 @@ def COS( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_COS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_COS", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5296,7 +5362,7 @@ def COSH( np.ndarray real not None ):
     Vector Trigonometric Cosh
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5322,14 +5388,15 @@ def COSH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_COSH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_COSH", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5340,7 +5407,7 @@ def DEMA( np.ndarray real not None , int timeperiod=30 ):
     Double Exponential Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5368,14 +5435,15 @@ def DEMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_DEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_DEMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5386,8 +5454,8 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     Vector Arithmetic Div
     Group: Math Operators
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Outputs:
         real
     """
@@ -5419,14 +5487,15 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_DIV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_DIV", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5437,7 +5506,7 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     Directional Movement Index
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5477,14 +5546,15 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_DX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_DX", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5495,7 +5565,7 @@ def EMA( np.ndarray real not None , int timeperiod=30 ):
     Exponential Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5523,14 +5593,15 @@ def EMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_EMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_EMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5541,7 +5612,7 @@ def EXP( np.ndarray real not None ):
     Vector Arithmetic Exp
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5567,14 +5638,15 @@ def EXP( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_EXP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_EXP", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5585,7 +5657,7 @@ def FLOOR( np.ndarray real not None ):
     Vector Floor
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5611,14 +5683,15 @@ def FLOOR( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_FLOOR_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_FLOOR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5629,7 +5702,7 @@ def HT_DCPERIOD( np.ndarray real not None ):
     Hilbert Transform - Dominant Cycle Period
     Group: Cycle Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5655,14 +5728,15 @@ def HT_DCPERIOD( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_DCPERIOD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_DCPERIOD", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5673,7 +5747,7 @@ def HT_DCPHASE( np.ndarray real not None ):
     Hilbert Transform - Dominant Cycle Phase
     Group: Cycle Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5699,14 +5773,15 @@ def HT_DCPHASE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_DCPHASE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_DCPHASE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5717,7 +5792,7 @@ def HT_PHASOR( np.ndarray real not None ):
     Hilbert Transform - Phasor Components
     Group: Cycle Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         inPhase
         quadrature
@@ -5746,7 +5821,7 @@ def HT_PHASOR( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_PHASOR_Lookback( )
     outinphase = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outinphase_data = <double*>outinphase.data
@@ -5757,7 +5832,8 @@ def HT_PHASOR( np.ndarray real not None ):
     for i from 0 <= i < min(lookback, length):
         outquadrature_data[i] = NaN
     retCode = TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_PHASOR", retCode)
+    talib.shutdown()
     return outinphase , outquadrature
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5768,7 +5844,7 @@ def HT_SINE( np.ndarray real not None ):
     Hilbert Transform - SineWave
     Group: Cycle Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         sine
         leadSine
@@ -5797,7 +5873,7 @@ def HT_SINE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_SINE_Lookback( )
     outsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outsine_data = <double*>outsine.data
@@ -5808,7 +5884,8 @@ def HT_SINE( np.ndarray real not None ):
     for i from 0 <= i < min(lookback, length):
         outleadsine_data[i] = NaN
     retCode = TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_SINE", retCode)
+    talib.shutdown()
     return outsine , outleadsine
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5819,7 +5896,7 @@ def HT_TRENDLINE( np.ndarray real not None ):
     Hilbert Transform - Instantaneous Trendline
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -5845,14 +5922,15 @@ def HT_TRENDLINE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_TRENDLINE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_TRENDLINE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5863,7 +5941,7 @@ def HT_TRENDMODE( np.ndarray real not None ):
     Hilbert Transform - Trend vs Cycle Mode
     Group: Cycle Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -5889,14 +5967,15 @@ def HT_TRENDMODE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_HT_TRENDMODE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_HT_TRENDMODE", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5907,7 +5986,7 @@ def KAMA( np.ndarray real not None , int timeperiod=30 ):
     Kaufman Adaptive Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5935,14 +6014,15 @@ def KAMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_KAMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_KAMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5953,7 +6033,7 @@ def LINEARREG( np.ndarray real not None , int timeperiod=14 ):
     Linear Regression
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5981,14 +6061,15 @@ def LINEARREG( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LINEARREG_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LINEARREG", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5999,7 +6080,7 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=14 ):
     Linear Regression Angle
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6027,14 +6108,15 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LINEARREG_ANGLE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LINEARREG_ANGLE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6045,7 +6127,7 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=14 ):
     Linear Regression Intercept
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6073,14 +6155,15 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6091,7 +6174,7 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=14 ):
     Linear Regression Slope
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6119,14 +6202,15 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LINEARREG_SLOPE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LINEARREG_SLOPE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6137,7 +6221,7 @@ def LN( np.ndarray real not None ):
     Vector Log Natural
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -6163,14 +6247,15 @@ def LN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6181,7 +6266,7 @@ def LOG10( np.ndarray real not None ):
     Vector Log10
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -6207,14 +6292,15 @@ def LOG10( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_LOG10_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_LOG10", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6225,7 +6311,7 @@ def MA( np.ndarray real not None , int timeperiod=30 , int matype=0 ):
     Moving average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
         matype: 0 (Simple Moving Average)
@@ -6254,14 +6340,15 @@ def MA( np.ndarray real not None , int timeperiod=30 , int matype=0 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MA_Lookback( timeperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6272,7 +6359,7 @@ def MACD( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int
     Moving Average Convergence/Divergence
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -6308,7 +6395,7 @@ def MACD( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
@@ -6323,7 +6410,8 @@ def MACD( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MACD", retCode)
+    talib.shutdown()
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6334,7 +6422,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , i
     MACD with controllable MA type
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         fastperiod: 12
         fastmatype: 0
@@ -6373,7 +6461,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , i
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
@@ -6388,7 +6476,8 @@ def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , i
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MACDEXT", retCode)
+    talib.shutdown()
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6399,7 +6488,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=9 ):
     Moving Average Convergence/Divergence Fix 12/26
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         signalperiod: 9
     Outputs:
@@ -6433,7 +6522,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=9 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MACDFIX_Lookback( signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
@@ -6448,7 +6537,8 @@ def MACDFIX( np.ndarray real not None , int signalperiod=9 ):
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
     retCode = TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MACDFIX", retCode)
+    talib.shutdown()
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6459,7 +6549,7 @@ def MAMA( np.ndarray real not None , double fastlimit=0.5 , double slowlimit=0.0
     MESA Adaptive Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         fastlimit: 0.5
         slowlimit: 0.05
@@ -6491,7 +6581,7 @@ def MAMA( np.ndarray real not None , double fastlimit=0.5 , double slowlimit=0.0
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MAMA_Lookback( fastlimit , slowlimit )
     outmama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmama_data = <double*>outmama.data
@@ -6502,7 +6592,8 @@ def MAMA( np.ndarray real not None , double fastlimit=0.5 , double slowlimit=0.0
     for i from 0 <= i < min(lookback, length):
         outfama_data[i] = NaN
     retCode = TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MAMA", retCode)
+    talib.shutdown()
     return outmama , outfama
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6513,7 +6604,7 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     Moving average with variable period
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
         periods: (any ndarray)
     Parameters:
         minperiod: 2
@@ -6550,14 +6641,15 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MAVP_Lookback( minperiod , maxperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MAVP", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6568,7 +6660,7 @@ def MAX( np.ndarray real not None , int timeperiod=30 ):
     Highest value over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6596,14 +6688,15 @@ def MAX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MAX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MAX", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6614,7 +6707,7 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=30 ):
     Index of highest value over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6642,14 +6735,15 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MAXINDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MAXINDEX", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6660,7 +6754,7 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     Median Price
     Group: Price Transform
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Outputs:
         real
     """
@@ -6692,14 +6786,15 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MEDPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MEDPRICE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6710,7 +6805,7 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Money Flow Index
     Group: Momentum Indicators
     Inputs:
-        priceHLCV: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volumne']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6756,14 +6851,15 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MFI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MFI", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6774,7 +6870,7 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=14 ):
     MidPoint over period
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6802,14 +6898,15 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MIDPOINT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MIDPOINT", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6820,7 +6917,7 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     Midpoint Price over period
     Group: Overlap Studies
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6854,14 +6951,15 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MIDPRICE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MIDPRICE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6872,7 +6970,7 @@ def MIN( np.ndarray real not None , int timeperiod=30 ):
     Lowest value over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6900,14 +6998,15 @@ def MIN( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MIN_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MIN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6918,7 +7017,7 @@ def MININDEX( np.ndarray real not None , int timeperiod=30 ):
     Index of lowest value over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6946,14 +7045,15 @@ def MININDEX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MININDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
     retCode = TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MININDEX", retCode)
+    talib.shutdown()
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6964,7 +7064,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=30 ):
     Lowest and highest values over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6995,7 +7095,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MINMAX_Lookback( timeperiod )
     outmin = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmin_data = <double*>outmin.data
@@ -7006,7 +7106,8 @@ def MINMAX( np.ndarray real not None , int timeperiod=30 ):
     for i from 0 <= i < min(lookback, length):
         outmax_data[i] = NaN
     retCode = TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MINMAX", retCode)
+    talib.shutdown()
     return outmin , outmax
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7017,7 +7118,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=30 ):
     Indexes of lowest and highest values over a specified period
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -7048,7 +7149,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MINMAXINDEX_Lookback( timeperiod )
     outminidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outminidx_data = <int*>outminidx.data
@@ -7059,7 +7160,8 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=30 ):
     for i from 0 <= i < min(lookback, length):
         outmaxidx_data[i] = 0
     retCode = TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MINMAXINDEX", retCode)
+    talib.shutdown()
     return outminidx , outmaxidx
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7070,7 +7172,7 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Minus Directional Indicator
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7110,14 +7212,15 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MINUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MINUS_DI", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7128,7 +7231,7 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     Minus Directional Movement
     Group: Momentum Indicators
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7162,14 +7265,15 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MINUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MINUS_DM", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7180,7 +7284,7 @@ def MOM( np.ndarray real not None , int timeperiod=10 ):
     Momentum
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7208,14 +7312,15 @@ def MOM( np.ndarray real not None , int timeperiod=10 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MOM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MOM", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7226,8 +7331,8 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     Vector Arithmetic Mult
     Group: Math Operators
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Outputs:
         real
     """
@@ -7259,14 +7364,15 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_MULT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_MULT", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7277,7 +7383,7 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     Normalized Average True Range
     Group: Volatility Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7317,14 +7423,15 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_NATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_NATR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7335,8 +7442,8 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     On Balance Volume
     Group: Volume Indicators
     Inputs:
-        real: (any ndarray)
-        priceV: ['volumne']
+        price: (any ndarray)
+        prices: ['volumne']
     Outputs:
         real
     """
@@ -7368,14 +7475,15 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_OBV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_OBV", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7386,7 +7494,7 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     Plus Directional Indicator
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7426,14 +7534,15 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_PLUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_PLUS_DI", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7444,7 +7553,7 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     Plus Directional Movement
     Group: Momentum Indicators
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7478,14 +7587,15 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_PLUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_PLUS_DM", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7496,7 +7606,7 @@ def PPO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
     Percentage Price Oscillator
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -7526,14 +7636,15 @@ def PPO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_PPO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_PPO", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7544,7 +7655,7 @@ def ROC( np.ndarray real not None , int timeperiod=10 ):
     Rate of change : ((price/prevPrice)-1)*100
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7572,14 +7683,15 @@ def ROC( np.ndarray real not None , int timeperiod=10 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ROC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ROC", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7590,7 +7702,7 @@ def ROCP( np.ndarray real not None , int timeperiod=10 ):
     Rate of change Percentage: (price-prevPrice)/prevPrice
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7618,14 +7730,15 @@ def ROCP( np.ndarray real not None , int timeperiod=10 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ROCP_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ROCP", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7636,7 +7749,7 @@ def ROCR( np.ndarray real not None , int timeperiod=10 ):
     Rate of change ratio: (price/prevPrice)
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7664,14 +7777,15 @@ def ROCR( np.ndarray real not None , int timeperiod=10 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ROCR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ROCR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7682,7 +7796,7 @@ def ROCR100( np.ndarray real not None , int timeperiod=10 ):
     Rate of change ratio 100 scale: (price/prevPrice)*100
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7710,14 +7824,15 @@ def ROCR100( np.ndarray real not None , int timeperiod=10 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ROCR100_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ROCR100", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7728,7 +7843,7 @@ def RSI( np.ndarray real not None , int timeperiod=14 ):
     Relative Strength Index
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7756,14 +7871,15 @@ def RSI( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_RSI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_RSI", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7774,7 +7890,7 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     Parabolic SAR
     Group: Overlap Studies
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         acceleration: 0.02
         maximum: 0.2
@@ -7809,14 +7925,15 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SAR_Lookback( acceleration , maximum )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SAR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7827,7 +7944,7 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     Parabolic SAR - Extended
     Group: Overlap Studies
     Inputs:
-        priceHL: ['high', 'low']
+        prices: ['high', 'low']
     Parameters:
         startvalue: 0
         offsetonreverse: 0
@@ -7868,14 +7985,15 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SAREXT", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7886,7 +8004,7 @@ def SIN( np.ndarray real not None ):
     Vector Trigonometric Sin
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -7912,14 +8030,15 @@ def SIN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SIN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7930,7 +8049,7 @@ def SINH( np.ndarray real not None ):
     Vector Trigonometric Sinh
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -7956,14 +8075,15 @@ def SINH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SINH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SINH", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7974,7 +8094,7 @@ def SMA( np.ndarray real not None , int timeperiod=30 ):
     Simple Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8002,14 +8122,15 @@ def SMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8020,7 +8141,7 @@ def SQRT( np.ndarray real not None ):
     Vector Square Root
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -8046,14 +8167,15 @@ def SQRT( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SQRT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SQRT", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8064,7 +8186,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
     Standard Deviation
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdev: 1
@@ -8093,14 +8215,15 @@ def STDDEV( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_STDDEV_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_STDDEV", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8111,7 +8234,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Stochastic
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         fastk_period: 5
         slowk_period: 3
@@ -8158,7 +8281,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     outslowk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outslowk_data = <double*>outslowk.data
@@ -8169,7 +8292,8 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     for i from 0 <= i < min(lookback, length):
         outslowd_data[i] = NaN
     retCode = TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_STOCH", retCode)
+    talib.shutdown()
     return outslowk , outslowd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8180,7 +8304,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     Stochastic Fast
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         fastk_period: 5
         fastd_period: 3
@@ -8225,7 +8349,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outfastk_data = <double*>outfastk.data
@@ -8236,7 +8360,8 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
     retCode = TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_STOCHF", retCode)
+    talib.shutdown()
     return outfastk , outfastd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8247,7 +8372,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=14 , int fastk_period=5 
     Stochastic Relative Strength Index
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
         fastk_period: 5
@@ -8281,7 +8406,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=14 , int fastk_period=5 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outfastk_data = <double*>outfastk.data
@@ -8292,7 +8417,8 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=14 , int fastk_period=5 
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
     retCode = TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_STOCHRSI", retCode)
+    talib.shutdown()
     return outfastk , outfastd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8303,8 +8429,8 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     Vector Arithmetic Substraction
     Group: Math Operators
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        price0: (any ndarray)
+        price1: (any ndarray)
     Outputs:
         real
     """
@@ -8336,14 +8462,15 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SUB_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SUB", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8354,7 +8481,7 @@ def SUM( np.ndarray real not None , int timeperiod=30 ):
     Summation
     Group: Math Operators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8382,14 +8509,15 @@ def SUM( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_SUM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_SUM", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8400,7 +8528,7 @@ def T3( np.ndarray real not None , int timeperiod=5 , double vfactor=0.7 ):
     Triple Exponential Moving Average (T3)
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 5
         vfactor: 0.7
@@ -8429,14 +8557,15 @@ def T3( np.ndarray real not None , int timeperiod=5 , double vfactor=0.7 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_T3_Lookback( timeperiod , vfactor )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_T3", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8447,7 +8576,7 @@ def TAN( np.ndarray real not None ):
     Vector Trigonometric Tan
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -8473,14 +8602,15 @@ def TAN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TAN", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8491,7 +8621,7 @@ def TANH( np.ndarray real not None ):
     Vector Trigonometric Tanh
     Group: Math Transform
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Outputs:
         real
     """
@@ -8517,14 +8647,15 @@ def TANH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TANH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TANH", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8535,7 +8666,7 @@ def TEMA( np.ndarray real not None , int timeperiod=30 ):
     Triple Exponential Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8563,14 +8694,15 @@ def TEMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TEMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8581,7 +8713,7 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     True Range
     Group: Volatility Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Outputs:
         real
     """
@@ -8619,14 +8751,15 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TRANGE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TRANGE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8637,7 +8770,7 @@ def TRIMA( np.ndarray real not None , int timeperiod=30 ):
     Triangular Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8665,14 +8798,15 @@ def TRIMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TRIMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TRIMA", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8683,7 +8817,7 @@ def TRIX( np.ndarray real not None , int timeperiod=30 ):
     1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
     Group: Momentum Indicators
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8711,14 +8845,15 @@ def TRIX( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TRIX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TRIX", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8729,7 +8864,7 @@ def TSF( np.ndarray real not None , int timeperiod=14 ):
     Time Series Forecast
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -8757,14 +8892,15 @@ def TSF( np.ndarray real not None , int timeperiod=14 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TSF_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TSF", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8775,7 +8911,7 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Typical Price
     Group: Price Transform
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Outputs:
         real
     """
@@ -8813,14 +8949,15 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_TYPPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_TYPPRICE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8831,7 +8968,7 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     Ultimate Oscillator
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod1: 7
         timeperiod2: 14
@@ -8873,14 +9010,15 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_ULTOSC", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8891,7 +9029,7 @@ def VAR( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
     Variance
     Group: Statistic Functions
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdev: 1
@@ -8920,14 +9058,15 @@ def VAR( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_VAR_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_VAR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8938,7 +9077,7 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Weighted Close Price
     Group: Price Transform
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Outputs:
         real
     """
@@ -8976,14 +9115,15 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_WCLPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_WCLPRICE", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8994,7 +9134,7 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Williams' %R
     Group: Momentum Indicators
     Inputs:
-        priceHLC: ['high', 'low', 'close']
+        prices: ['high', 'low', 'close']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -9034,14 +9174,15 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_WILLR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_WILLR", retCode)
+    talib.shutdown()
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -9052,7 +9193,7 @@ def WMA( np.ndarray real not None , int timeperiod=30 ):
     Weighted Moving Average
     Group: Overlap Studies
     Inputs:
-        real: (any ndarray)
+        price: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -9080,14 +9221,15 @@ def WMA( np.ndarray real not None , int timeperiod=30 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    initialize()
+    talib.initialize()
     lookback = begidx + TA_WMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
     retCode = TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    shutdown()
+    _ta_check_success("TA_WMA", retCode)
+    talib.shutdown()
     return outreal
 
 __all__ = ["ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMO","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","OBV","PLUS_DI","PLUS_DM","PPO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","WCLPRICE","WILLR","WMA"]

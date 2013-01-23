@@ -1,7 +1,7 @@
 from talib.func import *
 from talib.abstract import _ta_getFuncTable
 from talib.abstract import _ta_getGroupTable
-
+from talib import common_c
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
@@ -24,6 +24,16 @@ class MA_Type(object):
 
 MA_Type = MA_Type()
 
+
+def initialize():
+    ''' Initializes the TALIB library
+    '''
+    common_c._ta_initialize()
+
+def shutdown():
+    ''' Shuts down the TALIB library
+    '''
+    common_c._ta_shutdown()
 
 def get_functions():
     ''' Returns a list of all the functions supported by TALIB
