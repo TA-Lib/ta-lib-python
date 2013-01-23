@@ -30,8 +30,6 @@ def _ta_check_success(function_name, ret_code):
         5000: 'Internal Error (TA_INTERNAL_ERROR)',
         65535: 'Unknown Error (TA_UNKNOWN_ERR)',
         }
-    if not isinstance(ret_code, int):
-        ret_code = int(ret_code, 16)
     raise Exception('%s function failed with error code %s: %s' % (
         function_name, ret_code, ta_errors[ret_code]))
 
