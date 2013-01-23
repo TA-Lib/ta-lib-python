@@ -230,11 +230,15 @@ class Function(object):
         return self.__outputs.keys()
 
     def get_outputs(self):
-        ''' Returns an OrderedDict of the calculated function values.
+        ''' Returns the calculated function values as an ndarray if there is only
+        one output, otherwise it returns a tuple of ndarrays.
         '''
         if not self.__outputs_valid:
             self.__call_function()
-        return self.__outputs.copy()
+        ret = self.__outputs.values()
+        if len(ret) == 1:
+            return ret[0]
+        return ret
 
     def run(self, input_arrays=None):
         ''' A shortcut to get_outputs() that also allows setting the input_arrays
