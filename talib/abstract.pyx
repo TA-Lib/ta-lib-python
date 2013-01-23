@@ -21,7 +21,7 @@ def get_functions():
         ret.extend(_ta_getFuncTable(group))
     return ret
 
-def get_groups_of_functions():
+def get_function_groups():
     ''' Returns a dict with kyes of function-group names and values of lists
     of function names ie {'group_names': ['function_names']}
     '''
@@ -31,7 +31,7 @@ def get_groups_of_functions():
     return d
 
 
-class FuncHandle(object):
+class Function(object):
     ''' This is a pythonic wrapper around TALIB's abstract interface. It is
     intended to simplify using individual TALIB functions by providing a unified
     interface for setting/controlling input data, setting function parameters
@@ -54,7 +54,7 @@ class FuncHandle(object):
     ----- result-returning functions -----
     - get_outputs()
     - run([input_arrays])
-    - FuncHandleInstance([input_arrays,] [param_args_andor_kwargs])
+    - FunctionInstance([input_arrays,] [param_args_andor_kwargs])
     '''
     def __init__(self, function_name, input_arrays=None):
         # make sure the function_name is valid and define all of our variables
@@ -172,17 +172,17 @@ class FuncHandle(object):
         returning False otherwise. This is meant so you can optionally wrap this
         function in an if-statement if you implement your own data type eg:
 
-        class CustomFuncHandle(talib_abstract.FuncHandle):
+        class CustomFunction(abstract.Function):
             def __init__(self, function_name):
-                talib_abstract.FuncHandle.__init__(self, function_name)
+                abstract.Function.__init__(self, function_name)
 
             def set_input_arrays(self, input_data):
-                if talib_abstract.FuncHandle.set_input_arrays(self, input_data):
+                if abstract.Function.set_input_arrays(self, input_data):
                     return
                 elif isinstance(input_data, some_module.CustomDataType):
-                    input_arrays = talib_abstract.FuncHandle.get_input_arrays(self)
+                    input_arrays = abstract.Function.get_input_arrays(self)
                     # convert input_data to input_arrays and then call the super
-                    talib_abstract.FuncHandle.set_input_arrays(self, input_arrays)
+                    abstract.Function.set_input_arrays(self, input_arrays)
         '''
         if isinstance(input_arrays, dict) \
           and sorted(input_arrays.keys()) == ['close', 'high', 'low', 'open', 'volume']:
@@ -312,7 +312,7 @@ These map 1-1 with native C TALIB abstract interface calls. Their names are the
 same except for having the leading 4 characters lowercased (and the Alloc/Free
 function pairs which have been combined into single get functions)
 
-These are TA function information-discovery calls. The FuncHandle class encapsulates
+These are TA function information-discovery calls. The Function class encapsulates
 these functions into an easy-to-use, pythonic interface. It's therefore recommended
 over using these functions directly.
 '''
