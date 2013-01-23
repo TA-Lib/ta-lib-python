@@ -1,7 +1,7 @@
 import numpy
 import talib
 from talib import abstract
-from talib.abstract import FuncHandle
+from talib.abstract import Function
 import pylab
 import sys
 
@@ -16,18 +16,18 @@ def talib_example():
     plot(odata, upper, middle, lower, kama)
 
 def abstract_example():
-    sma = FuncHandle('ma')
+    sma = Function('ma')
     input_arrays = sma.get_input_arrays()
     for key in input_arrays.keys():
         input_arrays[key] = idata
     sma.set_input_arrays(input_arrays)
     odata = sma(30)['real'] # timePeriod=30, specified as an arg. output selected by name
 
-    bbands = FuncHandle('bbands', input_arrays)
+    bbands = Function('bbands', input_arrays)
     bbands.set_function_parameters(timePeriod=20, nbDevUp=2, nbDevDown=2)
     upper, middle, lower = bbands().values() # multiple output values unpacked (these will always have the correct order)
 
-    kama = FuncHandle('kama').run(input_arrays).values()[0] # generic-name output selected. alternative run() calling method.
+    kama = Function('kama').run(input_arrays).values()[0] # generic-name output selected. alternative run() calling method.
     plot(odata, upper, middle, lower, kama)
 
 def plot(odata, upper, middle, lower, kama):

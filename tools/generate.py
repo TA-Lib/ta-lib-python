@@ -257,7 +257,7 @@ descriptions = {
 
 
 def get_defaults_and_docs(function):
-    handle = abstract.FuncHandle(function)
+    handle = abstract.Function(function)
     func_info = handle.get_info()
     defaults = {}
     INDENT = '    ' # 4 spaces
