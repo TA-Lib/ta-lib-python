@@ -106,10 +106,10 @@ output = Function('sma', input_arrays).get_outputs()
 # TL;DR teaser:
 output = Function('sma')(input_arrays, timePeriod=20, price='open')
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2)
-print Function('STOCH').get_info()
+print Function('STOCH').info
 ```
 
-You'll notice a few things are different now. The function is now a class,
+You'll notice a few things are different. The function is now a class,
 initialized with any supported function name and optionally input_arrays. To run
 the TA function with our input data, we call get_outputs(). But the SMA function
 only takes one input, and we gave it five! Certain TA functions define which
@@ -129,21 +129,24 @@ the keyword is 'price'; for two they are 'price0' and 'price1'. That's a lot of
 typing; let's introduce some shortcuts:
 
 ```python
+output = Function('sma')(input_arrays).outputs
 output = Function('sma').run(input_arrays)
 output = Function('sma')(input_arrays, price='open')
 ```
 
-The run() method is a shortcut to get_outputs() that also optionally accepts an
-input_arrays dict to use for calculating the function values. You can also call
-the Function instance directly; this shortcut to get_outputs allows setting
-both input_arrays and/or any function parameter(s). With get_outputs(), these
-make up all the ways you can call the TA function and get its values.
+The outputs attribute is a property that wraps get_outputs(). They are
+interchangeable, however, calling either before setting input_arrays will cause
+errors! The run() method is a shortcut to get_outputs() that also optionally
+accepts an input_arrays dict to use for calculating the function values. You can
+also call the Function instance directly; this shortcut to get_outputs allows
+setting both input_arrays and/or any function parameter(s). With get_outputs(),
+these make up all the ways you can call the TA function and get its values.
 
 Function returns either a single ndarray or a tuple of ndarrays, depending on
 how many outputs the TA function has. This information can be found through
-Function.get_info()['outputs'] and Function.get_output_names().
+Function.info['outputs'] and Function.output_names.
 
-Function.get_info() is a very useful function. It returns a dict of pretty much
+Function.info is a very useful property. It returns a dict of pretty much
 everything useful about the current state of the Function instance:
 ```python
 print Function('stoch').get_info()
@@ -174,10 +177,9 @@ means TA-Lib defined the expected price series names. You can override these
 just the same as undefined inputs, just make sure to use a list with the correct
 number of price series names! (it varies across functions)
 
-You can also use get_inputs() to return get_info()['inputs'] and get_parameters()
-for get_info['parameters']. There are corresponding set methods that accept modified
-dicts from the corresponding get method. Let's expand on the other ways to set TA
-function parameters:
+You can also use Function.inputs to get/set Function.info()['inputs'], and
+Function.parameters to get/set Function.info['parameters']. Let's expand on the
+other ways to set TA function parameters:
 
 ```python
 from talib import MA_Type
