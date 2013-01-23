@@ -193,13 +193,12 @@ In fact, the __call__ method of Function simply calls set_function_parameters.
 
 ## Indicators
 
-The abstract interface provides methods for displaying all of the functions
-supported by TA-Lib. It can also group the functions by their type:
-
+We can show all the TA functions supported by TA-Lib, either as a list or as a
+dict sorted by group (eg Overlap Studies, Volume, etc).
 ```python
-from talib import abstract
-print abstract.get_functions()
-print abstract.get_function_groups()
+import talib
+print talib.get_functions()
+print talib.get_function_groups()
 ```
 
 Here are some of the included indicators:

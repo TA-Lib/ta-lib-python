@@ -1,7 +1,7 @@
 '''
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
-
+import talib
 from talib import utils
 from talib import func as ta_func
 from collections import OrderedDict
@@ -9,26 +9,6 @@ from collections import OrderedDict
 cimport numpy as np
 cimport abstract_h as abstract
 from cython.operator cimport dereference as deref
-
-
-#################    Public API for external python apps    ####################
-
-def get_functions():
-    ''' Returns a list of all the functions supported by TALIB
-    '''
-    ret = []
-    for group in _ta_getGroupTable():
-        ret.extend(_ta_getFuncTable(group))
-    return ret
-
-def get_function_groups():
-    ''' Returns a dict with kyes of function-group names and values of lists
-    of function names ie {'group_names': ['function_names']}
-    '''
-    d = {}
-    for group in _ta_getGroupTable():
-        d[group] = _ta_getFuncTable(group)
-    return d
 
 
 class Function(object):
@@ -59,7 +39,7 @@ class Function(object):
     def __init__(self, function_name, input_arrays=None):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
-        if self.__name not in get_functions():
+        if self.__name not in talib.get_functions():
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__info = None
         self.__input_arrays = { 'open': None,
