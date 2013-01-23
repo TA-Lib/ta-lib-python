@@ -3,10 +3,10 @@ import os
 import re
 import sys
 
+from talib import abstract
+
 # FIXME: initialize once, then shutdown at the end, rather than each call?
-# FIXME: should we check retCode from initialize and shutdown?
 # FIXME: should we pass startIdx and endIdx into function?
-# FIXME: should we parse the function docstrings from the c header?
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
@@ -43,6 +43,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
+import talib
 from numpy import nan
 from cython import boundscheck, wraparound
 cimport numpy as np
@@ -52,32 +53,6 @@ ctypedef np.int32_t int32_t
 
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
-
-# TA_MAType enums
-MA_SMA, MA_EMA, MA_WMA, MA_DEMA, MA_TEMA, MA_TRIMA, MA_KAMA, MA_MAMA, MA_T3 = range(9)
-
-# TA_RetCode enums
-RetCodes = {
-    0: 'Success',
-    1: 'Library Not Initialized',
-    2: 'Bad Parameter',
-    3: 'Allocation Error',
-    4: 'Group Not Found',
-    5: 'Function Not Found',
-    6: 'Invalid Handle',
-    7: 'Invalid Parameter Holder',
-    8: 'Invalid Parameter Holder Type',
-    9: 'Invalid Parameter Function',
-   10: 'Input Not All Initialized',
-   11: 'Output Not All Initialized',
-   12: 'Out-of-Range Start Index',
-   13: 'Out-of-Range End Index',
-   14: 'Invalid List Type',
-   15: 'Bad Object',
-   16: 'Not Supported',
- 5000: 'Internal Error',
-65535: 'Unknown Error',
-}
 
 cdef double NaN = nan
 
@@ -111,6 +86,22 @@ print
 
 print """
 __version__ = TA_GetVersionString()
+"""
+
+print """
+def initialize():
+    ''' Initializes the TALIB library
+    '''
+    ret_code = TA_Initialize()
+    talib._check_success('TA_Initialize', ret_code)
+    return ret_code
+
+def shutdown():
+    ''' Shuts down the TALIB library
+    '''
+    ret_code = abstract.TA_Shutdown()
+    talib._check_success('TA_Shutdown', ret_code)
+    return ret_code
 """
 
 # cleanup variable names to make them more pythonic
@@ -263,10 +254,48 @@ descriptions = {
     "WMA"                : "Weighted Moving Average",
 }
 
+
+def get_defaults_and_docs(function):
+    handle = abstract.FuncHandle(function)
+    func_info = handle.get_info()
+    defaults = {}
+    INDENT = '    ' # 4 spaces
+    docs = []
+    docs.append('%s%s' % (INDENT, func_info['display_name']))
+    docs.append('Group: %(group)s' % func_info)
+
+    inputs = func_info['inputs']
+    docs.append('Inputs:')
+    for input_ in inputs:
+        value = inputs[input_]
+        if not isinstance(value, list):
+            value = '(any ndarray)'
+        docs.append('%s%s: %s' % (INDENT, input_, value))
+
+    params = func_info['parameters']
+    if params:
+        docs.append('Parameters:')
+    for param in params:
+        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
+        defaults[param] = params[param]
+        if param.lower() == 'matype':
+            docs[-1] = ' '.join([docs[-1], '(%s)' % abstract.MA[params[param]]])
+
+    outputs = func_info['outputs']
+    docs.append('Outputs:')
+    for output in outputs:
+        if output == 'integer':
+            output = 'integer (values are -100, 0 or 100)'
+        docs.append('%s%s' % (INDENT, output))
+    docs.append('')
+
+    documentation = '\n    '.join(docs) # 4 spaces
+    return defaults, documentation
+
+
 # print functions
 names = []
 for f in functions:
-
     if 'Lookback' in f: # skip lookback functions
         continue
 
@@ -277,6 +306,8 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
+    defaults, documentation = get_defaults_and_docs(shortname)
+
     print '@wraparound(False)  # turn off relative indexing from end of lists'
     print '@boundscheck(False) # turn off bounds-checking for entire function'
     print 'def %s(' % shortname,
@@ -304,10 +335,19 @@ for f in functions:
 
         elif var.startswith('opt'):
             var = cleanup(var)
+            default_arg = arg.split()[-1][len('optIn'):] # chop off typedef and 'optIn'
+            default_arg = default_arg[0].lower() + default_arg[1:] # lowercase first letter
+
             if arg.startswith('double'):
-                print 'double %s=-4e37' % var, # TA_REAL_DEFAULT
+                if default_arg in defaults:
+                    print 'double %s=%s' % (var, defaults[default_arg]),
+                else:
+                    print 'double %s=-4e37' % var, # TA_REAL_DEFAULT
             elif arg.startswith('int'):
-                print 'int %s=-2**31' % var,   # TA_INTEGER_DEFAULT
+                if default_arg in defaults:
+                    print 'int %s=%s' % (var, defaults[default_arg]),
+                else:
+                    print 'int %s=-2**31' % var,   # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
                 print 'int %s=0' % var,        # TA_MAType_SMA
             else:
@@ -318,10 +358,9 @@ for f in functions:
             docs.append(', ')
 
     docs[-1] = '])' if '[, ' in docs else ')'
-    desc = descriptions.get(shortname)
-    if desc is not None:
-        docs.append('\n\n    ');
-        docs.append(desc)
+    if documentation:
+        docs.append('\n\n')
+        docs.append(documentation)
     print '):'
     print '    """%s"""' % ''.join(docs)
     print '    cdef:'
@@ -398,7 +437,7 @@ for f in functions:
             print '    endidx = length - begidx - 1'
             break
 
-    print '    TA_Initialize()'
+    print '    initialize()'
     print '    lookback = begidx + %s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
@@ -456,10 +495,7 @@ for f in functions:
             print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
-    print '    TA_Shutdown()'
-    print '    if retCode != TA_SUCCESS:'
-    print '        raise Exception("%d: %s" % (retCode, RetCodes.get(retCode, "Unknown")))'
-
+    print '    shutdown()'
     print '    return',
     i = 0
     for arg in args:

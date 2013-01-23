@@ -31,6 +31,12 @@ func_ext = Extension("talib.func", ["talib/func.pyx"],
     libraries=["ta_lib"]
 )
 
+abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
+    include_dirs=[numpy.get_include(), include_talib_dir],
+    library_dirs=[lib_talib_dir],
+    libraries=['ta_lib']
+)
+
 setup(
     name = 'TA-Lib',
     version = '0.4.2',
@@ -45,6 +51,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     packages=['talib'],
-    ext_modules=[func_ext],
+    ext_modules=[func_ext, abstract_ext],
     cmdclass = {'build_ext': build_ext}
 )
