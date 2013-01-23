@@ -44,11 +44,14 @@ func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-## Examples
+If you get build errors compiling the underlying ``ta-lib`` library, simply
+rerunning ``make`` and then ``sudo make install`` usually does the trick.
+
+## Function API Examples
 
 Similar to TA-Lib, the functions return an index into the input where the
 output data begins and have default values for their parameters, unless
-specifed as keyword arguments.
+specified as keyword arguments.
 
 All of the following examples will use these definitions:
 
@@ -76,6 +79,118 @@ Calculating momentum, with a time period of 5:
 ```python
 output = talib.MOM(data, timeperiod=5)
 ```
+
+## Abstract API Examples
+
+TA-Lib also provides an abstract interface for calling functions. Our wrapper
+for the abstract interface is somewhat different from the upstream implentation.
+If you're already familiar with using the function API, you should feel right at
+home using the abstract interface. To start, every function takes the same input:
+
+```python
+import numpy as np
+input_arrays = { 'open': np.random.random(100),
+                 'high': np.random.random(100),
+                 'low': np.random.random(100),
+                 'close': np.random.random(100),
+                 'volume': np.random.random(100) }
+```
+
+From this input data, let's again calculate a SMA, this time with the abstract
+interface:
+
+'''python
+from talib.abstract import Function
+output = Function('sma', input_arrays).get_outputs().values()[0]
+
+# TL;DR teaser
+output = Function('sma')(input_arrays, timePeriod=20, real='open').values()[0]
+upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
+print Function('STOCH').get_info()
+'''
+
+You'll notice a few things are different now. The function is now a class,
+initialized with any supported function name and optionally input_arrays. To run
+the TA function with our input data, we call get_outputs(). But the SMA function
+only takes one input, and we gave it five! Certain TA functions define which
+price series they expect for input. Others, like SMA, don't (I'll explain how to
+figure out which functions don't define expected inputs in a bit). Function will
+use the closing prices by default on TA functions that take one undefined input,
+or the high and the low prices for functions taking two. We can override the
+default like so:
+
+'''python
+sma = Function('sma', input_arrays)
+sma.set_function_parameters(real='open')
+output = sma.get_outputs().values()[0]
+'''
+
+This works by using keyword arguments. For functions with one undefined input,
+the keyword is 'real'; for two they are 'real0' and 'real1'. That's a lot of
+typing; let's introduce some shortcuts before I explain the .values()[0] clutter.
+
+'''python
+output = Function('sma').run(input_arrays).values()[0]
+output = Function('sma')(input_arrays, real='open').values()[0]
+'''
+
+The run() method is a shortcut to get_outputs() that also optionally accepts an
+input_arrays dict to use for calculating the function values. You can also call
+the Function instance directly; this shortcut to get_outputs allows setting
+both input_arrays and/or any function parameter(s). With get_outputs(), these
+make up all the ways you can call the TA function and get its values.
+
+Onto this .values() business. When called, Function returns an OrderedDict of
+the TA function results. For SMA the returned dict has only one key: 'real'. For
+BBANDS, it has three: 'upperBand', 'middleBand', 'lowerBand'. These names can be
+learned through Function.get_info()['outputs'] or Function.get_output_names(). 
+
+Function.get_info() is a very useful function. It returns a dict of pretty much
+everything useful about the current state of the Function instance:
+'''python
+print Function('stoch').get_info()
+{'display_name': 'Stochastic',
+ 'flags': None,
+ 'group': 'Momentum Indicators',
+ 'inputs': OrderedDict([('priceHLC', ['high', 'low', 'close'])]),
+ 'name': 'STOCH',
+ 'outputs': ['slowK', 'slowD'],
+ 'parameters': OrderedDict([
+    ('fastK_Period', 5),
+    ('slowK_Period', 3),
+    ('slowK_MAType', 0),
+    ('slowD_Period', 3),
+    ('slowD_MAType', 0)
+    ]),
+}
+'''
+
+Take a look at the value of the 'inputs' key. There's only one input price
+variable, 'priceHLC', and its value is a list of price series names. This is one
+of those TA functions where TA-Lib defines which price series it expects for
+input. Any time 'inputs' is an OrderedDict with one value that is a list, it
+means TA-Lib defined the expected price series names. You can override these
+just the same as undefined inputs, just make sure to use a list with the correct
+number of price series names! (it varies across functions)
+
+You can also use get_inputs() to return get_info()['inputs'] and get_parameters()
+for get_info['parameters']. There are corresponding set methods that accept modified
+dicts from the corresponding get method. Let's expand on the other ways to set TA
+function parameters:
+
+'''python
+output = Function('sma')(input_arrays, timePeriod=10, real='high')
+from talib import MA_Type
+upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA).values()
+stoch = Function('stoch', input_arrays)
+stoch.set_function_parameters(slowD_Period=5)
+slowK, slowD = stoch(15, fastD_Period=5).values() # 15 == faskK_Period specified positionally
+'''
+
+input_arrays must be passed as a positional argument (or left out entirely).
+TA function parameters can be passed as positional or keyword arguments. Input
+price series names must be passed as keyword arguments (or left out entirely).
+In fact, the __call__ method of Function simply calls set_function_parameters.
 
 ## Indicators
 
@@ -221,3 +336,12 @@ WCLPRICE            Weighted Close Price
 WILLR               Williams' %R
 WMA                 Weighted Moving Average
 ```
+
+The abstract interface provides methods for displaying all of the functions
+supported by TA-Lib. It can also group the functions by their type:
+
+'''python
+from talib import abstract
+print abstract.get_functions()
+print abstract.get_function_groups()
+'''
