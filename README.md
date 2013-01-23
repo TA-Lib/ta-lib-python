@@ -99,7 +99,7 @@ input_arrays = { 'open': np.random.random(100),
 From this input data, let's again calculate a SMA, this time with the abstract
 interface:
 
-'''python
+```python
 from talib.abstract import Function
 output = Function('sma', input_arrays).get_outputs().values()[0]
 
@@ -107,7 +107,7 @@ TL;DR teaser:
 output = Function('sma')(input_arrays, timePeriod=20, real='open').values()[0]
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
 print Function('STOCH').get_info()
-'''
+```
 
 You'll notice a few things are different now. The function is now a class,
 initialized with any supported function name and optionally input_arrays. To run
@@ -119,20 +119,20 @@ use the closing prices by default on TA functions that take one undefined input,
 or the high and the low prices for functions taking two. We can override the
 default like so:
 
-'''python
+```python
 sma = Function('sma', input_arrays)
 sma.set_function_parameters(real='open')
 output = sma.get_outputs().values()[0]
-'''
+```
 
 This works by using keyword arguments. For functions with one undefined input,
 the keyword is 'real'; for two they are 'real0' and 'real1'. That's a lot of
 typing; let's introduce some shortcuts before I explain the .values()[0] clutter.
 
-'''python
+```python
 output = Function('sma').run(input_arrays).values()[0]
 output = Function('sma')(input_arrays, real='open').values()[0]
-'''
+```
 
 The run() method is a shortcut to get_outputs() that also optionally accepts an
 input_arrays dict to use for calculating the function values. You can also call
@@ -147,7 +147,7 @@ learned through Function.get_info()['outputs'] or Function.get_output_names().
 
 Function.get_info() is a very useful function. It returns a dict of pretty much
 everything useful about the current state of the Function instance:
-'''python
+```python
 print Function('stoch').get_info()
 {'display_name': 'Stochastic',
  'flags': None,
@@ -163,7 +163,7 @@ print Function('stoch').get_info()
     ('slowD_MAType', 0)
     ]),
 }
-'''
+```
 
 Take a look at the value of the 'inputs' key. There's only one input price
 variable, 'priceHLC', and its value is a list of price series names. This is one
@@ -178,14 +178,14 @@ for get_info['parameters']. There are corresponding set methods that accept modi
 dicts from the corresponding get method. Let's expand on the other ways to set TA
 function parameters:
 
-'''python
+```python
 output = Function('sma')(input_arrays, timePeriod=10, real='high')
 from talib import MA_Type
 upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA).values()
 stoch = Function('stoch', input_arrays)
 stoch.set_function_parameters(slowD_Period=5)
 slowK, slowD = stoch(15, fastD_Period=5).values() # 15 == faskK_Period specified positionally
-'''
+```
 
 input_arrays must be passed as a positional argument (or left out entirely).
 TA function parameters can be passed as positional or keyword arguments. Input
@@ -340,8 +340,8 @@ WMA                 Weighted Moving Average
 The abstract interface provides methods for displaying all of the functions
 supported by TA-Lib. It can also group the functions by their type:
 
-'''python
+```python
 from talib import abstract
 print abstract.get_functions()
 print abstract.get_function_groups()
-'''
+```
