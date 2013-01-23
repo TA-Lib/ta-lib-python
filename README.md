@@ -103,7 +103,7 @@ interface:
 from talib.abstract import Function
 output = Function('sma', input_arrays).get_outputs().values()[0]
 
-# TL;DR teaser
+TL;DR teaser:
 output = Function('sma')(input_arrays, timePeriod=20, real='open').values()[0]
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
 print Function('STOCH').get_info()
