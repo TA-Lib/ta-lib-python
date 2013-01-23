@@ -139,7 +139,8 @@ class Function(object):
         defaults, docs = _get_defaults_and_docs(self.get_info())
         print docs
 
-    def get_info(self):
+    @property
+    def info(self):
         ''' Returns a copy of the function's info dict.
         '''
         return self.__info.copy()
@@ -158,6 +159,8 @@ class Function(object):
         '''
         for input_, price_series in inputs.items():
             self.__inputs[input_]['price_series'] = price_series
+
+    inputs = property(get_inputs, set_inputs)
 
     def get_input_arrays(self):
         ''' Returns a copy of the dict of input arrays in use.
@@ -191,6 +194,8 @@ class Function(object):
             return True
         return False
 
+    input_arrays = property(get_input_arrays, set_input_arrays)
+
     def __get_opt_input_value(self, input_name):
         ''' Returns the user-set value if there is one, otherwise the default.
         '''
@@ -215,6 +220,8 @@ class Function(object):
         self.__outputs_valid = False
         self.__info['parameters'] = self.get_parameters()
 
+    parameters = property(get_parameters, set_parameters)
+
     def set_function_parameters(self, *args, **kwargs):
         ''' optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         '''
@@ -238,16 +245,22 @@ class Function(object):
             self.__outputs_valid = False
             self.__info['parameters'] = self.get_parameters()
 
-    def get_lookback(self):
+    @property
+    def lookback(self):
         ''' Returns the lookback window size for the function with the parameter
         values that are currently set.
         '''
         return _ta_getLookback(self.__name, self.__opt_inputs)
 
-    def get_output_names(self):
+    @property
+    def output_names(self):
         ''' Returns a list of the output names returned by this function.
         '''
         return self.__outputs.keys()
+
+    @property
+    def outputs(self):
+        return self.get_outputs()
 
     def get_outputs(self):
         ''' Returns the calculated function values as an ndarray if there is only
