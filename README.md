@@ -101,11 +101,11 @@ interface:
 
 ```python
 from talib.abstract import Function
-output = Function('sma', input_arrays).get_outputs().values()[0]
+output = Function('sma', input_arrays).get_outputs()
 
 # TL;DR teaser:
-output = Function('sma')(input_arrays, timePeriod=20, price='open').values()[0]
-upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
+output = Function('sma')(input_arrays, timePeriod=20, price='open')
+upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2)
 print Function('STOCH').get_info()
 ```
 
@@ -122,16 +122,16 @@ default like so:
 ```python
 sma = Function('sma', input_arrays)
 sma.set_function_parameters(price='open')
-output = sma.get_outputs().values()[0]
+output = sma.get_outputs()
 ```
 
 This works by using keyword arguments. For functions with one undefined input,
 the keyword is 'price'; for two they are 'price0' and 'price1'. That's a lot of
-typing; let's introduce some shortcuts before I explain the .values()[0] clutter.
+typing; let's introduce some shortcuts:
 
 ```python
-output = Function('sma').run(input_arrays).values()[0]
-output = Function('sma')(input_arrays, price='open').values()[0]
+output = Function('sma').run(input_arrays)
+output = Function('sma')(input_arrays, price='open')
 ```
 
 The run() method is a shortcut to get_outputs() that also optionally accepts an
@@ -140,10 +140,9 @@ the Function instance directly; this shortcut to get_outputs allows setting
 both input_arrays and/or any function parameter(s). With get_outputs(), these
 make up all the ways you can call the TA function and get its values.
 
-Onto this .values() business. When called, Function returns an OrderedDict of
-the TA function results. For SMA the returned dict has only one key: 'price'. For
-BBANDS, it has three: 'upperBand', 'middleBand', 'lowerBand'. These names can be
-learned through Function.get_info()['outputs'] or Function.get_output_names(). 
+Function returns either a single ndarray or a tuple of ndarrays, depending on
+how many outputs the TA function has. This information can be found through
+Function.get_info()['outputs'] and Function.get_output_names().
 
 Function.get_info() is a very useful function. It returns a dict of pretty much
 everything useful about the current state of the Function instance:
@@ -184,10 +183,10 @@ function parameters:
 ```python
 from talib import MA_Type
 output = Function('sma')(input_arrays, timePeriod=10, price='high')
-upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA).values()
+upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA)
 stoch = Function('stoch', input_arrays)
 stoch.set_function_parameters(slowD_Period=5)
-slowK, slowD = stoch(15, fastD_Period=5).values() # 15 == faskK_Period specified positionally
+slowK, slowD = stoch(15, fastD_Period=5) # 15 == faskK_Period specified positionally
 ```
 
 input_arrays must be passed as a positional argument (or left out entirely).
