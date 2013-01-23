@@ -1,13 +1,13 @@
-import numpy
-import talib
-from talib import abstract
-from talib.abstract import Function
-import pylab
 import sys
+import numpy as np
+import pylab
+
+import talib
+from talib.abstract import Function
 
 TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-r = numpy.arange(TEST_LEN)
-idata = numpy.random.random(TEST_LEN)
+r = np.arange(TEST_LEN)
+idata = np.random.random(TEST_LEN)
 
 def talib_example():
     odata = talib.MA(idata)
@@ -21,13 +21,13 @@ def abstract_example():
     for key in input_arrays.keys():
         input_arrays[key] = idata
     sma.set_input_arrays(input_arrays)
-    odata = sma(30)['real'] # timePeriod=30, specified as an arg. output selected by name
+    odata = sma(30) # timePeriod=30, specified as an arg
 
     bbands = Function('bbands', input_arrays)
     bbands.set_function_parameters(timePeriod=20, nbDevUp=2, nbDevDown=2)
-    upper, middle, lower = bbands().values() # multiple output values unpacked (these will always have the correct order)
+    upper, middle, lower = bbands() # multiple output values unpacked (these will always have the correct order)
 
-    kama = Function('kama').run(input_arrays).values()[0] # generic-name output selected. alternative run() calling method.
+    kama = Function('kama').run(input_arrays) # alternative run() calling method.
     plot(odata, upper, middle, lower, kama)
 
 def plot(odata, upper, middle, lower, kama):
@@ -42,9 +42,9 @@ def plot(odata, upper, middle, lower, kama):
 
 if __name__ == '__main__':
     print 'All functions (sorted by group):'
-    groups = abstract.get_groups_of_functions()
+    groups = talib.get_function_groups()
     for group, functions in sorted(groups.items()):
         print '%s functions: ' % group, functions
 
-    talib_example()
-    #abstract_example()
+    #talib_example()
+    abstract_example()
