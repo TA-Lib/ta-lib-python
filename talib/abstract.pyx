@@ -97,9 +97,13 @@ class Function(object):
                                                'periods': None }
 
         # finally query the TALIB abstract interface for the details of our function
+        talib.initialize()
         self.__initialize_private_variables()
         if input_arrays:
             self.set_input_arrays(input_arrays)
+
+    def __del__(self):
+        talib.shutdown()
 
     def __initialize_private_variables(self):
         # function info
