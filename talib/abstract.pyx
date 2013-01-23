@@ -187,16 +187,9 @@ class FuncHandle(object):
         if isinstance(input_arrays, dict) \
           and sorted(input_arrays.keys()) == ['close', 'high', 'low', 'open', 'volume']:
             self.__input_arrays = input_arrays
+            self.__outputs_valid = False
             return True
         return False
-
-    def get_parameters(self):
-        ''' Returns the function's optional parameters and their default values.
-        '''
-        ret = OrderedDict()
-        for input_ in self.__opt_inputs:
-            ret[input_] = self.__get_opt_input_value(input_)
-        return ret
 
     def __get_opt_input_value(self, input_name):
         ''' Returns the user-set value if there is one, otherwise the default.
@@ -206,19 +199,26 @@ class FuncHandle(object):
             value = self.__opt_inputs[input_name]['default_value']
         return value
 
+    def get_parameters(self):
+        ''' Returns the function's optional parameters and their default values.
+        '''
+        ret = OrderedDict()
+        for input_ in self.__opt_inputs:
+            ret[input_] = self.__get_opt_input_value(input_)
+        return ret
+
     def set_parameters(self, params):
         ''' Sets the function parameter values.
         '''
         for param, value in params.items():
             self.__opt_inputs[param]['value'] = value
         self.__outputs_valid = False
+        self.__info['parameters'] = self.get_parameters()
 
     def set_function_parameters(self, *args, **kwargs):
         ''' optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         '''
         args = [arg for arg in args]
-        if args or kwargs:
-            self.__outputs_valid = False
         if args:
             first = args.pop(0)
             if not self.set_input_arrays(first):
@@ -227,11 +227,16 @@ class FuncHandle(object):
             if i < len(args):
                 value = args[i]
                 self.__opt_inputs[param_name]['value'] = value
+
         for key in kwargs:
             if key in self.__opt_inputs:
                 self.__opt_inputs[key]['value'] = kwargs[key]
             elif key in self.__inputs:
                 self.__inputs[key]['price_series'] = kwargs[key]
+
+        if args or kwargs:
+            self.__outputs_valid = False
+            self.__info['parameters'] = self.get_parameters()
 
     def get_lookback(self):
         ''' Returns the lookback window size for the function with the parameter
