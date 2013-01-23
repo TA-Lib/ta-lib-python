@@ -114,10 +114,9 @@ initialized with any supported function name and optionally input_arrays. To run
 the TA function with our input data, we call get_outputs(). But the SMA function
 only takes one input, and we gave it five! Certain TA functions define which
 price series they expect for input. Others, like SMA, don't (I'll explain how to
-figure out which functions don't define expected inputs in a bit). Function will
-use the closing prices by default on TA functions that take one undefined input,
-or the high and the low prices for functions taking two. We can override the
-default like so:
+figure out which in a moment). Function will use the closing prices by default
+on TA functions that take one undefined input, or the high and the low prices
+for functions taking two. We can override the default like so:
 
 ```python
 sma = Function('sma', input_arrays)
