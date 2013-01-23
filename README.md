@@ -104,7 +104,7 @@ from talib.abstract import Function
 output = Function('sma', input_arrays).get_outputs().values()[0]
 
 # TL;DR teaser:
-output = Function('sma')(input_arrays, timePeriod=20, real='open').values()[0]
+output = Function('sma')(input_arrays, timePeriod=20, price='open').values()[0]
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
 print Function('STOCH').get_info()
 ```
@@ -121,17 +121,17 @@ default like so:
 
 ```python
 sma = Function('sma', input_arrays)
-sma.set_function_parameters(real='open')
+sma.set_function_parameters(price='open')
 output = sma.get_outputs().values()[0]
 ```
 
 This works by using keyword arguments. For functions with one undefined input,
-the keyword is 'real'; for two they are 'real0' and 'real1'. That's a lot of
+the keyword is 'price'; for two they are 'price0' and 'price1'. That's a lot of
 typing; let's introduce some shortcuts before I explain the .values()[0] clutter.
 
 ```python
 output = Function('sma').run(input_arrays).values()[0]
-output = Function('sma')(input_arrays, real='open').values()[0]
+output = Function('sma')(input_arrays, price='open').values()[0]
 ```
 
 The run() method is a shortcut to get_outputs() that also optionally accepts an
@@ -141,7 +141,7 @@ both input_arrays and/or any function parameter(s). With get_outputs(), these
 make up all the ways you can call the TA function and get its values.
 
 Onto this .values() business. When called, Function returns an OrderedDict of
-the TA function results. For SMA the returned dict has only one key: 'real'. For
+the TA function results. For SMA the returned dict has only one key: 'price'. For
 BBANDS, it has three: 'upperBand', 'middleBand', 'lowerBand'. These names can be
 learned through Function.get_info()['outputs'] or Function.get_output_names(). 
 
@@ -149,23 +149,27 @@ Function.get_info() is a very useful function. It returns a dict of pretty much
 everything useful about the current state of the Function instance:
 ```python
 print Function('stoch').get_info()
-{'display_name': 'Stochastic',
- 'flags': None,
- 'group': 'Momentum Indicators',
- 'inputs': OrderedDict([('priceHLC', ['high', 'low', 'close'])]),
- 'name': 'STOCH',
- 'outputs': ['slowK', 'slowD'],
- 'parameters': OrderedDict([
+{
+  'name': 'STOCH',
+  'display_name': 'Stochastic',
+  'group': 'Momentum Indicators',
+  'inputs': OrderedDict([
+    ('prices', ['high', 'low', 'close']),
+  ]),
+  'parameters': OrderedDict([
     ('fastK_Period', 5),
     ('slowK_Period', 3),
     ('slowK_MAType', 0),
     ('slowD_Period', 3),
     ('slowD_MAType', 0),
-])}
+  ]),
+  'outputs': ['slowK', 'slowD'],
+  'flags': None,
+}
 ```
 
 Take a look at the value of the 'inputs' key. There's only one input price
-variable, 'priceHLC', and its value is a list of price series names. This is one
+variable, 'prices', and its value is a list of price series names. This is one
 of those TA functions where TA-Lib defines which price series it expects for
 input. Any time 'inputs' is an OrderedDict with one value that is a list, it
 means TA-Lib defined the expected price series names. You can override these
@@ -179,7 +183,7 @@ function parameters:
 
 ```python
 from talib import MA_Type
-output = Function('sma')(input_arrays, timePeriod=10, real='high')
+output = Function('sma')(input_arrays, timePeriod=10, price='high')
 upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA).values()
 stoch = Function('stoch', input_arrays)
 stoch.set_function_parameters(slowD_Period=5)
@@ -194,7 +198,7 @@ In fact, the __call__ method of Function simply calls set_function_parameters.
 ## Indicators
 
 We can show all the TA functions supported by TA-Lib, either as a list or as a
-dict sorted by group (eg Overlap Studies, Volume, etc).
+dict sorted by group (eg Overlap Studies, Volume, etc):
 ```python
 import talib
 print talib.get_functions()

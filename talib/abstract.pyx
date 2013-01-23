@@ -55,9 +55,9 @@ class Function(object):
         self.__outputs_valid = False
 
         # lookup for TALIB input parameters which don't define expected price series inputs
-        self.__input_price_series_defaults = { 'real': 'close',
-                                               'real0': 'high',
-                                               'real1': 'low',
+        self.__input_price_series_defaults = { 'price': 'close',
+                                               'price0': 'high',
+                                               'price1': 'low',
                                                'periods': None }
 
         # finally query the TALIB abstract interface for the details of our function
@@ -378,6 +378,10 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     name = info.paramName
     name = name[len('in'):] # chop off leading 'in'
     name = ''.join([name[0].lower(), name[1:]]) # lowercase the first letter
+    if 'real' in name:
+        name = name.replace('real', 'price')
+    elif 'price' in name:
+        name = 'prices'
 
     ret = { 'name': name,
             #'type': info.type,
