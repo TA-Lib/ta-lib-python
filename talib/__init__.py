@@ -1,4 +1,7 @@
 from talib.func import *
+from talib.abstract import _ta_getFuncTable
+from talib.abstract import _ta_getGroupTable
+
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
@@ -20,3 +23,21 @@ class MA_Type(object):
         return self._lookup[type_]
 
 MA_Type = MA_Type()
+
+
+def get_functions():
+    ''' Returns a list of all the functions supported by TALIB
+    '''
+    ret = []
+    for group in _ta_getGroupTable():
+        ret.extend(_ta_getFuncTable(group))
+    return ret
+
+def get_function_groups():
+    ''' Returns a dict with kyes of function-group names and values of lists
+    of function names ie {'group_names': ['function_names']}
+    '''
+    d = {}
+    for group in _ta_getGroupTable():
+        d[group] = _ta_getFuncTable(group)
+    return d
