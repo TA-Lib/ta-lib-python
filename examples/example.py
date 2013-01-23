@@ -46,5 +46,7 @@ if __name__ == '__main__':
     for group, functions in sorted(groups.items()):
         print '%s functions: ' % group, functions
 
-    #talib_example()
-    abstract_example()
+    if len(sys.argv) == 1 or sys.argv[1] == 'func':
+        talib_example()
+    else:
+        abstract_example()
