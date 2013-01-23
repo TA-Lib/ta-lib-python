@@ -1,6 +1,13 @@
 
-def _check_success(function_name, ret_code):
-    if ret_code == 0: # TA_SUCCESS
+ctypedef int TA_RetCode
+
+cdef extern from "ta-lib/ta_libc.h":
+    enum: TA_SUCCESS
+    TA_RetCode TA_Initialize()
+    TA_RetCode TA_Shutdown()
+
+def _ta_check_success(function_name, ret_code):
+    if ret_code == TA_SUCCESS:
         return True
     ta_errors = {
         0: 'Success',
@@ -26,4 +33,14 @@ def _check_success(function_name, ret_code):
     if not isinstance(ret_code, int):
         ret_code = int(ret_code, 16)
     raise Exception('%s function failed with error code %s: %s' % (
-        ta_function_name, ret_code, ta_errors[ret_code]))
+        function_name, ret_code, ta_errors[ret_code]))
+
+def _ta_initialize():
+    ret_code = TA_Initialize()
+    _ta_check_success('TA_Initialize', ret_code)
+    return ret_code
+
+def _ta_shutdown():
+    ret_code = TA_Shutdown()
+    _ta_check_success('TA_Shutdown', ret_code)
+    return ret_code

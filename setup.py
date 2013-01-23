@@ -25,6 +25,12 @@ elif sys.platform == "win32":
 else:
     raise NotImplementedError(sys.platform)
 
+common_ext = Extension('talib.common_c', ['talib/common_c.pyx'],
+    include_dirs=[numpy.get_include(), include_talib_dir],
+    library_dirs=[lib_talib_dir],
+    libraries=["ta_lib"]
+)
+
 func_ext = Extension("talib.func", ["talib/func.pyx"],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
@@ -51,6 +57,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     packages=['talib'],
-    ext_modules=[func_ext, abstract_ext],
+    ext_modules=[common_ext, func_ext, abstract_ext],
     cmdclass = {'build_ext': build_ext}
 )
