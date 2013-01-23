@@ -103,7 +103,7 @@ interface:
 from talib.abstract import Function
 output = Function('sma', input_arrays).get_outputs().values()[0]
 
-TL;DR teaser:
+# TL;DR teaser:
 output = Function('sma')(input_arrays, timePeriod=20, real='open').values()[0]
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2).values()
 print Function('STOCH').get_info()
@@ -160,9 +160,8 @@ print Function('stoch').get_info()
     ('slowK_Period', 3),
     ('slowK_MAType', 0),
     ('slowD_Period', 3),
-    ('slowD_MAType', 0)
-    ]),
-}
+    ('slowD_MAType', 0),
+])}
 ```
 
 Take a look at the value of the 'inputs' key. There's only one input price
@@ -179,8 +178,8 @@ dicts from the corresponding get method. Let's expand on the other ways to set T
 function parameters:
 
 ```python
-output = Function('sma')(input_arrays, timePeriod=10, real='high')
 from talib import MA_Type
+output = Function('sma')(input_arrays, timePeriod=10, real='high')
 upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA).values()
 stoch = Function('stoch', input_arrays)
 stoch.set_function_parameters(slowD_Period=5)
@@ -194,7 +193,16 @@ In fact, the __call__ method of Function simply calls set_function_parameters.
 
 ## Indicators
 
-Some of the included indicators:
+The abstract interface provides methods for displaying all of the functions
+supported by TA-Lib. It can also group the functions by their type:
+
+```python
+from talib import abstract
+print abstract.get_functions()
+print abstract.get_function_groups()
+```
+
+Here are some of the included indicators:
 
 ```
 AD                  Chaikin A/D Line
@@ -335,13 +343,4 @@ VAR                 Variance
 WCLPRICE            Weighted Close Price
 WILLR               Williams' %R
 WMA                 Weighted Moving Average
-```
-
-The abstract interface provides methods for displaying all of the functions
-supported by TA-Lib. It can also group the functions by their type:
-
-```python
-from talib import abstract
-print abstract.get_functions()
-print abstract.get_function_groups()
 ```
