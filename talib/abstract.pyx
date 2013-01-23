@@ -2,7 +2,7 @@
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
 
-import talib
+from talib import utils
 from talib import func as ta_func
 from collections import OrderedDict
 
@@ -316,22 +316,22 @@ def _ta_getGroupTable():
     ''' Returns the list of available TALIB function group names.
     '''
     cdef abstract.TA_StringTable *table
-    talib._check_success('TA_GroupTableAlloc', abstract.TA_GroupTableAlloc(&table))
+    utils._check_success('TA_GroupTableAlloc', abstract.TA_GroupTableAlloc(&table))
     groups = []
     for i in xrange(table.size):
         groups.append(deref(&table.string[i]))
-    talib._check_success('TA_GroupTableFree', abstract.TA_GroupTableFree(table))
+    utils._check_success('TA_GroupTableFree', abstract.TA_GroupTableFree(table))
     return groups
 
 def _ta_getFuncTable(char *group):
     ''' Returns a list of the functions for the specified group name.
     '''
     cdef abstract.TA_StringTable *table
-    talib._check_success('TA_FuncTableAlloc', abstract.TA_FuncTableAlloc(group, &table))
+    utils._check_success('TA_FuncTableAlloc', abstract.TA_FuncTableAlloc(group, &table))
     functions = []
     for i in xrange(table.size):
         functions.append(deref(&table.string[i]))
-    talib._check_success('TA_FuncTableFree', abstract.TA_FuncTableFree(table))
+    utils._check_success('TA_FuncTableFree', abstract.TA_FuncTableFree(table))
     return functions
 
 def __get_flags(flag, flags_lookup_dict):
@@ -357,7 +357,7 @@ def _ta_getFuncInfo(char *function_name):
     '''
     cdef abstract.TA_FuncInfo *info
     retCode = abstract.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
-    talib._check_success('TA_GetFuncInfo', retCode)
+    utils._check_success('TA_GetFuncInfo', retCode)
 
     ta_func_flags = { 16777216: 'Output scale same as input',
                       67108864: 'Output is over volume',
@@ -379,7 +379,7 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     '''
     cdef abstract.TA_InputParameterInfo *info
     retCode = abstract.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
-    talib._check_success('TA_GetInputParameterInfo', retCode)
+    utils._check_success('TA_GetInputParameterInfo', retCode)
 
     # when flag is 0, the function (should) work on any reasonable input ndarray
     ta_input_flags = { 1: 'open',
@@ -405,7 +405,7 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     '''
     cdef abstract.TA_OptInputParameterInfo *info
     retCode = abstract.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
-    talib._check_success('TA_GetOptInputParameterInfo', retCode)
+    utils._check_success('TA_GetOptInputParameterInfo', retCode)
 
     name = info.paramName
     name = name[len('optIn'):] # chop off leading 'optIn'
@@ -429,7 +429,7 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     '''
     cdef abstract.TA_OutputParameterInfo *info
     retCode = abstract.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
-    talib._check_success('TA_GetOutputParameterInfo', retCode)
+    utils._check_success('TA_GetOutputParameterInfo', retCode)
 
     name = info.paramName
     name = name[len('out'):] # chop off leading 'out'
@@ -495,7 +495,7 @@ cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     ''' Returns a pointer to a function handle for the given function name
     '''
     cdef abstract.TA_FuncHandle *handle
-    talib._check_success('TA_GetFuncHandle', abstract.TA_GetFuncHandle(function_name, &handle))
+    utils._check_success('TA_GetFuncHandle', abstract.TA_GetFuncHandle(function_name, &handle))
     return handle
 
 # --------- get param holder (alloc/free) -------------
@@ -504,24 +504,24 @@ cdef abstract.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
     '''
     cdef abstract.TA_ParamHolder *holder
     retCode = abstract.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
-    talib._check_success('TA_ParamHolderAlloc', retCode)
+    utils._check_success('TA_ParamHolderAlloc', retCode)
     return holder
 
 cdef int __ta_paramHolderFree(abstract.TA_ParamHolder *params):
     ''' Frees the memory allocated by __ta_paramHolderAlloc (call when done with the parameter holder)
     WARNING: Not properly calling this function will cause memory leaks!
     '''
-    talib._check_success('TA_ParamHolderFree', abstract.TA_ParamHolderFree(params))
+    utils._check_success('TA_ParamHolderFree', abstract.TA_ParamHolderFree(params))
 
 # --------- set input data pointers ----------------
 cdef int __ta_setInputParamIntegerPtr(abstract.TA_ParamHolder *holder, int idx, int *in_ptr):
     retCode = abstract.TA_SetInputParamIntegerPtr(holder, idx, in_ptr)
-    talib._check_success('TA_SetInputParamIntegerPtr', retCode)
+    utils._check_success('TA_SetInputParamIntegerPtr', retCode)
     return retCode
 
 cdef int __ta_setInputParamRealPtr(abstract.TA_ParamHolder *holder, int idx, abstract.TA_Real *in_ptr):
     retCode = abstract.TA_SetInputParamRealPtr(holder, idx, in_ptr)
-    talib._check_success('TA_SetInputParamRealPtr', retCode)
+    utils._check_success('TA_SetInputParamRealPtr', retCode)
     return retCode
 
 cdef int __ta_setInputParamPricePtr(abstract.TA_ParamHolder *holder, int idx,
@@ -534,34 +534,34 @@ cdef int __ta_setInputParamPricePtr(abstract.TA_ParamHolder *holder, int idx,
 ):
     retCode = abstract.TA_SetInputParamPricePtr(holder, idx,
         open_, high, low, close, volume, openInterest)
-    talib._check_success('TA_SetInputParamPricePtr', retCode)
+    utils._check_success('TA_SetInputParamPricePtr', retCode)
     return retCode
 
 # ---------- set opt input parameter values ----------------
 cdef int __ta_setOptInputParamInteger(abstract.TA_ParamHolder *holder, int idx, int value):
     retCode = abstract.TA_SetOptInputParamInteger(holder, idx, value)
-    talib._check_success('TA_SetOptInputParamInteger', retCode)
+    utils._check_success('TA_SetOptInputParamInteger', retCode)
 
 cdef int __ta_setOptInputParamReal(abstract.TA_ParamHolder *holder, int idx, int value):
     retCode = abstract.TA_SetOptInputParamReal(holder, idx, value)
-    talib._check_success('TA_SetOptInputParamReal', retCode)
+    utils._check_success('TA_SetOptInputParamReal', retCode)
 
 # --------- set output data pointers ----------------
 cdef int __ta_setOutputParamIntegerPtr(abstract.TA_ParamHolder *holder, int idx, int *out_ptr):
     retCode = abstract.TA_SetOutputParamIntegerPtr(holder, idx, out_ptr)
-    talib._check_success('TA_SetOutputParamIntegerPtr', retCode)
+    utils._check_success('TA_SetOutputParamIntegerPtr', retCode)
     return retCode
 
 cdef int __ta_setOutputParamRealPtr(abstract.TA_ParamHolder *holder, int idx, abstract.TA_Real *out_ptr):
     retCode = abstract.TA_SetOutputParamRealPtr(holder, idx, out_ptr)
-    talib._check_success('TA_SetOutputParamRealPtr', retCode)
+    utils._check_success('TA_SetOutputParamRealPtr', retCode)
     return retCode
 
 # ----------- get lookback ---------------
 cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
     cdef int lookback
     retCode = abstract.TA_GetLookback(holder, &lookback)
-    talib._check_success('TA_GetLookback', retCode)
+    utils._check_success('TA_GetLookback', retCode)
     return lookback
 
 # ----------- call TALIB function -------------
@@ -573,5 +573,5 @@ cdef __ta_callFunc(abstract.TA_ParamHolder *holder, int startIdx=0, int endIdx=0
                            endIdx,
                            &outBegIdx,
                            &outNbElement )
-    talib._check_success('TA_CallFunc', retCode)
+    utils._check_success('TA_CallFunc', retCode)
     return (retCode, outBegIdx, outNbElement)
