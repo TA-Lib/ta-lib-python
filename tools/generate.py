@@ -3,6 +3,7 @@ import os
 import re
 import sys
 
+import talib
 from talib import abstract
 
 # FIXME: initialize once, then shutdown at the end, rather than each call?
@@ -43,7 +44,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """
-import talib
+from talib import utils
 from numpy import nan
 from cython import boundscheck, wraparound
 cimport numpy as np
@@ -93,14 +94,14 @@ def initialize():
     ''' Initializes the TALIB library
     '''
     ret_code = TA_Initialize()
-    talib._check_success('TA_Initialize', ret_code)
+    utils._check_success('TA_Initialize', ret_code)
     return ret_code
 
 def shutdown():
     ''' Shuts down the TALIB library
     '''
-    ret_code = abstract.TA_Shutdown()
-    talib._check_success('TA_Shutdown', ret_code)
+    ret_code = TA_Shutdown()
+    utils._check_success('TA_Shutdown', ret_code)
     return ret_code
 """
 
@@ -279,7 +280,7 @@ def get_defaults_and_docs(function):
         docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
         defaults[param] = params[param]
         if param.lower() == 'matype':
-            docs[-1] = ' '.join([docs[-1], '(%s)' % abstract.MA[params[param]]])
+            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
 
     outputs = func_info['outputs']
     docs.append('Outputs:')
