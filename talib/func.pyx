@@ -1,4 +1,3 @@
-
 import talib # unused but we import anyway to make sure initialize and shutdown are handled correctly
 cimport numpy as np
 from numpy import nan
