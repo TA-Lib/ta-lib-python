@@ -114,7 +114,7 @@ for f in functions:
     print '@wraparound(False)  # turn off relative indexing from end of lists'
     print '@boundscheck(False) # turn off bounds-checking for entire function'
     print 'def %s(' % shortname,
-    docs = ['%s(' % shortname]
+    docs = [' %s(' % shortname]
     i = 0
     for arg in args:
         var = arg.split()[-1]
@@ -162,8 +162,19 @@ for f in functions:
 
     docs[-1] = '])' if '[, ' in docs else ')'
     if documentation:
+        tmp_docs = []
+        lower_case = False
+        documentation = documentation.split('\n')[2:] # discard abstract calling definition
+        for line in documentation:
+            if 'prices' not in line and 'price' in line:
+                line = line.replace('price', 'real')
+            if not line or line.isspace():
+                tmp_docs.append('')
+            else:
+                tmp_docs.append('    %s' % line) # add an indent of 4 spaces
         docs.append('\n\n')
-        docs.append(documentation)
+        docs.append('\n'.join(tmp_docs))
+        docs.append('\n    ')
     print '):'
     print '    """%s"""' % ''.join(docs)
     print '    cdef:'

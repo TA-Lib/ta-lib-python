@@ -97,7 +97,7 @@ class Function(object):
         ''' Prints the function info documentation.
         '''
         defaults, docs = _get_defaults_and_docs(self.__info)
-        print '\n', docs
+        print docs
 
     @property
     def info(self):
@@ -383,8 +383,7 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
                        64: 'timeStamp' }
 
     name = info.paramName
-    name = name[len('in'):] # chop off leading 'in'
-    name = name[0].lower() + name[1:] # lowercase the first letter
+    name = name[len('in'):].lower()
     if 'real' in name:
         name = name.replace('real', 'price')
     elif 'price' in name:
@@ -404,9 +403,7 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
     name = info.paramName
-    name = name[len('optIn'):] # chop off leading 'optIn'
-    if not name.startswith('MA'):
-        name = name[0].lower() + name[1:] # lowercase the first letter
+    name = name[len('optIn'):].lower()
     default_value = info.defaultValue
     if default_value % 1 == 0:
         default_value = int(default_value)
@@ -428,10 +425,10 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
     name = info.paramName
-    name = name[len('out'):] # chop off leading 'out'
-    if 'Real' in name and name not in ['Real', 'Real0', 'Real1', 'Real2']:
-        name = name[len('Real'):] # chop off leading 'Real' if a descriptive name follows
-    name = name[0].lower() + name[1:] # lowercase the first letter
+    name = name[len('out'):].lower()
+    # chop off leading 'real' if a descriptive name follows
+    if 'real' in name and name not in ['real', 'real0', 'real1']:
+        name = name[len('real'):]
 
     ta_output_flags = { 1: 'Line',
                         2: 'Dotted Line',
@@ -455,12 +452,13 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
 def _get_defaults_and_docs(func_info):
     ''' Returns a tuple with two outputs: defaults, a dict of parameter defaults,
     and documentation, a formatted docstring for the function.
+    .. Note: func_info should come from Function.info, *not* _ta_getFuncInfo.
     '''
     defaults = {}
-    INDENT = '    ' # 4 spaces
+    func_line = [func_info['name'], '(']
+    func_args = ['[input_arrays]']
     docs = []
-    docs.append('%s%s' % (INDENT, func_info['display_name']))
-    docs.append('Group: %(group)s' % func_info)
+    docs.append('%(display_name)s (%(group)s)\n' % func_info)
 
     input_names = func_info['input_names']
     docs.append('Inputs:')
@@ -468,15 +466,16 @@ def _get_defaults_and_docs(func_info):
         value = input_names[input_name]
         if not isinstance(value, list):
             value = '(any ndarray)'
-        docs.append('%s%s: %s' % (INDENT, input_name, value))
+        docs.append('    %s: %s' % (input_name, value))
 
     params = func_info['parameters']
     if params:
         docs.append('Parameters:')
     for param in params:
-        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
+        docs.append('    %s: %s' % (param, params[param]))
+        func_args.append('[%s=%s]' % (param, params[param]))
         defaults[param] = params[param]
-        if param.lower() == 'matype':
+        if param == 'matype':
             docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
 
     outputs = func_info['output_names']
@@ -484,10 +483,12 @@ def _get_defaults_and_docs(func_info):
     for output in outputs:
         if output == 'integer':
             output = 'integer (values are -100, 0 or 100)'
-        docs.append('%s%s' % (INDENT, output))
-    docs.append('')
+        docs.append('    %s' % output)
 
-    documentation = '\n    '.join(docs) # 4 spaces
+    func_line.append(', '.join(func_args))
+    func_line.append(')\n')
+    docs.insert(0, ''.join(func_line))
+    documentation = '\n'.join(docs)
     return defaults, documentation
 
 
@@ -507,7 +508,7 @@ cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     return handle
 
 cdef abstract.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
-    ''' Returns a pointer to a parameter holder for the given function handle
+    ''' Returns a pointer to a parameter holder for the given function name
     '''
     cdef abstract.TA_ParamHolder *holder
     retCode = abstract.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
