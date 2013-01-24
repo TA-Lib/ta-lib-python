@@ -109,17 +109,7 @@ cdef extern from "ta-lib/ta_abstract.h":
     TA_RetCode TA_GetOptInputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OptInputParameterInfo **info)
     TA_RetCode TA_GetOutputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OutputParameterInfo **info)
 
-    # TALIB set functions for TA_GetLookback/TA_CallFunc
-    TA_RetCode TA_SetInputParamIntegerPtr(TA_ParamHolder *params, unsigned int paramIndex, TA_Integer *value)
-    TA_RetCode TA_SetInputParamRealPtr(TA_ParamHolder *params, unsigned int paramIndex, TA_Real *value)
-    TA_RetCode TA_SetInputParamPricePtr(TA_ParamHolder *params, unsigned int paramIndex, TA_Real *open, TA_Real *high, TA_Real *low, TA_Real *close, TA_Real *volume, TA_Real *openInterest)
+    # TALIB set functions for TA_GetLookback
     TA_RetCode TA_SetOptInputParamInteger(TA_ParamHolder *params, unsigned int paramIndex, TA_Integer optInValue)
     TA_RetCode TA_SetOptInputParamReal(TA_ParamHolder *params, unsigned int paramIndex, TA_Real optInValue)
-    TA_RetCode TA_SetOutputParamIntegerPtr(TA_ParamHolder *params, unsigned int paramIndex, TA_Integer *out)
-    TA_RetCode TA_SetOutputParamRealPtr(TA_ParamHolder *params, unsigned int paramIndex, TA_Real *out)
-
-    # TA_GetLookback only requires TA_SetOptInputParam(s) to have been set
     TA_RetCode TA_GetLookback(TA_ParamHolder *params, TA_Integer *lookback)
-
-    # TA_CallFunc requires all input, optionl input and output pointers to have beeen set
-    TA_RetCode TA_CallFunc(TA_ParamHolder *params, TA_Integer startIdx, TA_Integer endIdx, TA_Integer *outBegIdx, TA_Integer *outNbElement)

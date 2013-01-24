@@ -2,7 +2,7 @@
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
 import talib
-from talib import func as ta_func
+from talib import func as func_c
 from collections import OrderedDict
 
 cimport numpy as np
@@ -11,50 +11,14 @@ from common_c import _ta_check_success
 from cython.operator cimport dereference as deref
 
 
-def _get_defaults_and_docs(func_info):
-    defaults = {}
-    INDENT = '    ' # 4 spaces
-    docs = []
-    docs.append('%s%s' % (INDENT, func_info['display_name']))
-    docs.append('Group: %(group)s' % func_info)
-
-    inputs = func_info['inputs']
-    docs.append('Inputs:')
-    for input_ in inputs:
-        value = inputs[input_]
-        if not isinstance(value, list):
-            value = '(any ndarray)'
-        docs.append('%s%s: %s' % (INDENT, input_, value))
-
-    params = func_info['parameters']
-    if params:
-        docs.append('Parameters:')
-    for param in params:
-        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
-        defaults[param] = params[param]
-        if param.lower() == 'matype':
-            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
-
-    outputs = func_info['outputs']
-    docs.append('Outputs:')
-    for output in outputs:
-        if output == 'integer':
-            output = 'integer (values are -100, 0 or 100)'
-        docs.append('%s%s' % (INDENT, output))
-    docs.append('')
-
-    documentation = '\n    '.join(docs) # 4 spaces
-    return defaults, documentation
-
-
 class Function(object):
     ''' This is a pythonic wrapper around TALIB's abstract interface. It is
     intended to simplify using individual TALIB functions by providing a unified
     interface for setting/controlling input data, setting function parameters
     and retrieving results. Input data consists of a dict of numpy arrays, one
     array for each of open, high, low, close and volume. This can be set with
-    set_input_arrays(input_dict). Which keyed array(s) are used as inputs when
-    calling the function is controlled with get/set_inputs().
+    the set_input_arrays() method. Which keyed array(s) are used as inputs when
+    calling the function is controlled using the input_names property.
 
     This class gets initialized with a TALIB function name and optionally an
     input_arrays dict. It provides the following primary functions for setting
@@ -62,16 +26,17 @@ class Function(object):
 
     ---- input_array/TA-function-parameter set-only functions -----
     - set_input_arrays(input_arrays)
-    - set_function_parameters([input_arrays,] [param_args_andor_kwargs])
+    - set_function_args([input_arrays,] [param_args_andor_kwargs])
 
     Documentation for param_args_andor_kwargs can be printed with print_help()
-    or programatically via get_info() / get_inputs() / get_parameters().
+    or programatically via the info, input_names and parameters properties.
 
     ----- result-returning functions -----
-    - get_outputs()
-    - run([input_arrays])
-    - FunctionInstance([input_arrays,] [param_args_andor_kwargs])
+    - the outputs property wraps a method which ensures results are always valid
+    - run([input_arrays]) # calls set_input_arrays and returns self.outputs
+    - FunctionInstance([input_arrays,] [param_args_andor_kwargs]) # calls set_function_args and returns self.outputs
     '''
+
     def __init__(self, function_name, input_arrays=None):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
@@ -85,7 +50,7 @@ class Function(object):
                                'volume': None }
 
         # dictionaries of function args. keys are input/opt_input/output parameter names
-        self.__inputs = OrderedDict()
+        self.__input_names = OrderedDict()
         self.__opt_inputs = OrderedDict()
         self.__outputs = OrderedDict()
         self.__outputs_valid = False
@@ -94,7 +59,7 @@ class Function(object):
         self.__input_price_series_defaults = { 'price': 'close',
                                                'price0': 'high',
                                                'price1': 'low',
-                                               'periods': None }
+                                               'periods': None } # only used by MAVP; not a price series!
 
         # finally query the TALIB abstract interface for the details of our function
         self.__initialize_private_variables()
@@ -111,29 +76,28 @@ class Function(object):
             input_name = info['name']
             if info['price_series'] == None:
                 info['price_series'] = self.__input_price_series_defaults[input_name]
-            self.__inputs[input_name] = info
-        self.__info['inputs'] = self.get_inputs()
+            self.__input_names[input_name] = info
+        self.__info['input_names'] = self.input_names
 
         # optional inputs (function parameters)
         for i in xrange(self.__info.pop('num_opt_inputs')):
             info = _ta_getOptInputParameterInfo(self.__name, i)
             param_name = info['name']
             self.__opt_inputs[param_name] = info
-        self.__info['parameters'] = self.get_parameters()
+        self.__info['parameters'] = self.parameters
 
         # outputs
         for i in xrange(self.__info.pop('num_outputs')):
             info = _ta_getOutputParameterInfo(self.__name, i)
             output_name = info['name']
             self.__outputs[output_name] = None
-        self.__info['outputs'] = self.__outputs.keys()
+        self.__info['output_names'] = self.output_names
 
     def print_help(self):
-        ''' Prints the function parameter options and their values
+        ''' Prints the function info documentation.
         '''
-        print
-        defaults, docs = _get_defaults_and_docs(self.get_info())
-        print docs
+        defaults, docs = _get_defaults_and_docs(self.__info)
+        print '\n', docs
 
     @property
     def info(self):
@@ -141,22 +105,23 @@ class Function(object):
         '''
         return self.__info.copy()
 
-    def get_inputs(self):
+    @property
+    def input_names(self):
         ''' Returns the dict of input price series names that specifies which
         of the ndarrays in input_arrays will be used to calculate the function.
         '''
         ret = OrderedDict()
-        for input_ in self.__inputs:
-            ret[input_] = self.__inputs[input_]['price_series']
+        for input_name in self.__input_names:
+            ret[input_name] = self.__input_names[input_name]['price_series']
         return ret
 
-    def set_inputs(self, inputs):
+    @input_names.setter
+    def set_input_names(self, input_names):
         ''' Sets the input price series names to use.
         '''
-        for input_, price_series in inputs.items():
-            self.__inputs[input_]['price_series'] = price_series
-
-    inputs = property(get_inputs, set_inputs)
+        for input_name, price_series in input_names.items():
+            self.__input_names[input_name]['price_series'] = price_series
+        self.__outputs_valid = False
 
     def get_input_arrays(self):
         ''' Returns a copy of the dict of input arrays in use.
@@ -167,9 +132,9 @@ class Function(object):
         ''' Sets the dict of input_arrays to use. Returns True/False for subclasses:
 
         If input_arrays is a dict with the keys open, high, low, close and volume,
-        it is assigned as the input_array to use. This function then returns True,
-        returning False otherwise. This is meant so you can optionally wrap this
-        function in an if-statement if you implement your own data type eg:
+        it is assigned as the input_array to use and this function returns True,
+        returning False otherwise. If you implement your own data type and wish
+        to subclass Function, you should wrap this function with an if-statement:
 
         class CustomFunction(abstract.Function):
             def __init__(self, function_name):
@@ -177,11 +142,13 @@ class Function(object):
 
             def set_input_arrays(self, input_data):
                 if abstract.Function.set_input_arrays(self, input_data):
-                    return
+                    return True
                 elif isinstance(input_data, some_module.CustomDataType):
                     input_arrays = abstract.Function.get_input_arrays(self)
                     # convert input_data to input_arrays and then call the super
                     abstract.Function.set_input_arrays(self, input_arrays)
+                    return True
+                return False
         '''
         if isinstance(input_arrays, dict) \
           and sorted(input_arrays.keys()) == ['close', 'high', 'low', 'open', 'volume']:
@@ -190,63 +157,67 @@ class Function(object):
             return True
         return False
 
-    input_arrays = property(get_input_arrays, set_input_arrays)
-
-    def __get_opt_input_value(self, input_name):
-        ''' Returns the user-set value if there is one, otherwise the default.
-        '''
-        value = self.__opt_inputs[input_name]['value']
-        if not value:
-            value = self.__opt_inputs[input_name]['default_value']
-        return value
-
-    def get_parameters(self):
+    @property
+    def parameters(self):
         ''' Returns the function's optional parameters and their default values.
         '''
         ret = OrderedDict()
-        for input_ in self.__opt_inputs:
-            ret[input_] = self.__get_opt_input_value(input_)
+        for opt_input in self.__opt_inputs:
+            ret[opt_input] = self.__get_opt_input_value(opt_input)
         return ret
 
-    def set_parameters(self, params):
+    @parameters.setter
+    def set_parameters(self, parameters):
         ''' Sets the function parameter values.
         '''
-        for param, value in params.items():
+        for param, value in parameters.items():
             self.__opt_inputs[param]['value'] = value
         self.__outputs_valid = False
-        self.__info['parameters'] = self.get_parameters()
+        self.__info['parameters'] = self.parameters
 
-    parameters = property(get_parameters, set_parameters)
-
-    def set_function_parameters(self, *args, **kwargs):
+    def set_function_args(self, *args, **kwargs):
         ''' optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         '''
-        args = [arg for arg in args]
         if args:
-            first = args.pop(0)
-            if not self.set_input_arrays(first):
-                args.insert(0, first)
-        for i, param_name in enumerate(self.__opt_inputs):
-            if i < len(args):
-                value = args[i]
-                self.__opt_inputs[param_name]['value'] = value
+            skip_first = 0
+            if self.set_input_arrays(args[0]):
+                skip_first = 1
+            for i, param_name in enumerate(self.__opt_inputs):
+                i += skip_first
+                if i < len(args):
+                    value = args[i]
+                    self.__opt_inputs[param_name]['value'] = value
+                    update_info = True
 
         for key in kwargs:
             if key in self.__opt_inputs:
                 self.__opt_inputs[key]['value'] = kwargs[key]
-            elif key in self.__inputs:
-                self.__inputs[key]['price_series'] = kwargs[key]
+                update_info = True
+            elif key in self.__input_names:
+                self.__input_names[key]['price_series'] = kwargs[key]
 
         if args or kwargs:
+            if update_info:
+                self.__info['parameters'] = self.parameters
             self.__outputs_valid = False
-            self.__info['parameters'] = self.get_parameters()
 
     @property
     def lookback(self):
         ''' Returns the lookback window size for the function with the parameter
         values that are currently set.
         '''
-        return _ta_getLookback(self.__name, self.__opt_inputs)
+        cdef abstract.TA_ParamHolder *holder = __ta_paramHolderAlloc(self.__name)
+        for i, opt_input in enumerate(self.__opt_inputs):
+            value = self.__get_opt_input_value(opt_input)
+            type_ = self.__opt_inputs[opt_input]['type']
+            if type_ == abstract.TA_OptInput_RealRange or type_ == abstract.TA_OptInput_RealList:
+                __ta_setOptInputParamReal(holder, i, value)
+            elif type_ == abstract.TA_OptInput_IntegerRange or type_ == abstract.TA_OptInput_IntegerList:
+                __ta_setOptInputParamInteger(holder, i, value)
+
+        lookback = __ta_getLookback(holder)
+        __ta_paramHolderFree(holder)
+        return lookback
 
     @property
     def output_names(self):
@@ -256,11 +227,9 @@ class Function(object):
 
     @property
     def outputs(self):
-        return self.get_outputs()
-
-    def get_outputs(self):
-        ''' Returns the calculated function values as an ndarray if there is only
-        one output, otherwise it returns a tuple of ndarrays.
+        ''' Returns the TA function values for the currently set input_arrays
+        and parameters. Returned values are a ndarray if there is only one
+        output or a list of ndarrays for more than one output.
         '''
         if not self.__outputs_valid:
             self.__call_function()
@@ -270,27 +239,27 @@ class Function(object):
         return ret
 
     def run(self, input_arrays=None):
-        ''' A shortcut to get_outputs() that also allows setting the input_arrays
-        dict.
+        ''' A shortcut to the outputs property that also allows setting the
+        input_arrays dict.
         '''
         if input_arrays:
-            self.set_function_parameters(input_arrays)
+            self.set_input_arrays(input_arrays)
         self.__call_function()
-        return self.get_outputs()
+        return self.outputs
 
     def __call__(self, *args, **kwargs):
-        ''' A shortcut to get_outputs() that also allows setting the input_arrays
-        dict and function parameters.
+        ''' A shortcut to the outputs property that also allows setting the
+        input_arrays dict and function parameters.
         '''
-        self.set_function_parameters(*args, **kwargs)
+        self.set_function_args(*args, **kwargs)
         self.__call_function()
-        return self.get_outputs()
+        return self.outputs
 
     def __call_function(self):
         # figure out which price series names we're using for inputs
         input_price_series_names = []
-        for input_name in self.__inputs:
-            price_series = self.__inputs[input_name]['price_series']
+        for input_name in self.__input_names:
+            price_series = self.__input_names[input_name]['price_series']
             if isinstance(price_series, list): # TALIB-supplied input names
                 for name in price_series:
                     input_price_series_names.append(name)
@@ -305,18 +274,22 @@ class Function(object):
             value = self.__get_opt_input_value(opt_input)
             args.append(value)
 
-        # I use the talib module to actually call the function. It should be
-        # possible to use the abstract interface as well, but I'm not sure what
-        # practical benefit this might provide. See the  _ta_getLookback() for
-        # the general idea of how to do it. The rest of the boiler-plate code is
-        # already written (see all the __ta_set* functions).
-        results = ta_func.__getattribute__(self.__name)(*args)
+        # Use the func module to actually call the function.
+        results = func_c.__getattribute__(self.__name)(*args)
         if isinstance(results, np.ndarray):
             self.__outputs[self.__outputs.keys()[0]] = results
         else:
             for i, output in enumerate(self.__outputs):
                 self.__outputs[output] = results[i]
         self.__outputs_valid = True
+
+    def __get_opt_input_value(self, input_name):
+        ''' Returns the user-set value if there is one, otherwise the default.
+        '''
+        value = self.__opt_inputs[input_name]['value']
+        if not value:
+            value = self.__opt_inputs[input_name]['default_value']
+        return value
 
 
 ######################  INTERNAL python-level functions  #######################
@@ -410,7 +383,7 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
 
     name = info.paramName
     name = name[len('in'):] # chop off leading 'in'
-    name = ''.join([name[0].lower(), name[1:]]) # lowercase the first letter
+    name = name[0].lower() + name[1:] # lowercase the first letter
     if 'real' in name:
         name = name.replace('real', 'price')
     elif 'price' in name:
@@ -432,7 +405,7 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     name = info.paramName
     name = name[len('optIn'):] # chop off leading 'optIn'
     if not name.startswith('MA'):
-        name = ''.join([name[0].lower(), name[1:]]) # lowercase the first letter
+        name = name[0].lower() + name[1:] # lowercase the first letter
     default_value = info.defaultValue
     if default_value % 1 == 0:
         default_value = int(default_value)
@@ -457,22 +430,16 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     name = name[len('out'):] # chop off leading 'out'
     if 'Real' in name and name not in ['Real', 'Real0', 'Real1', 'Real2']:
         name = name[len('Real'):] # chop off leading 'Real' if a descriptive name follows
-    name = ''.join([name[0].lower(), name[1:]]) # lowercase the first letter
+    name = name[0].lower() + name[1:] # lowercase the first letter
 
-    output_flag_64 = ', '.join([ 'Bearish < 0', 'Neutral = 0', 'Bullish > 0' ])
-    output_flag_128 = ', '.join([ '[-200..-100] = Bearish',
-                                    '[-100..0] = Getting Bearish',
-                                    '0 = Neutral',
-                                    '[0..100] = Getting Bullish',
-                                    '[100-200] = Bullish' ])
     ta_output_flags = { 1: 'Line',
                         2: 'Dotted Line',
                         4: 'Dashed Line',
                         8: 'Dot',
                         16: 'Histogram',
                         32: 'Pattern (Bool)',
-                        64: 'Bull/Bear Pattern (%s)' % output_flag_64,
-                        128: 'Strength Pattern (%s)' % output_flag_128,
+                        64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
+                        128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
                         256: 'Output can be positive',
                         512: 'Output can be negative',
                         1024: 'Output can be zero',
@@ -484,22 +451,43 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
             'description': __get_flags(info.flags, ta_output_flags) }
     return ret
 
-def _ta_getLookback(function, opt_inputs):
-    cdef abstract.TA_ParamHolder *holder = __ta_paramHolderAlloc(function)
-    for i, opt_input in enumerate(opt_inputs):
-        value = opt_inputs[opt_input]['value']
-        if not value:
-            value = opt_inputs[opt_input]['default_value']
+def _get_defaults_and_docs(func_info):
+    ''' Returns a tuple with two outputs: defaults, a dict of parameter defaults,
+    and documentation, a formatted docstring for the function.
+    '''
+    defaults = {}
+    INDENT = '    ' # 4 spaces
+    docs = []
+    docs.append('%s%s' % (INDENT, func_info['display_name']))
+    docs.append('Group: %(group)s' % func_info)
 
-        type_ = opt_inputs[opt_input]['type']
-        if type_ == abstract.TA_OptInput_RealRange or type_ == abstract.TA_OptInput_RealList:
-            __ta_setOptInputParamReal(holder, i, value)
-        elif type_ == abstract.TA_OptInput_IntegerRange or type_ == abstract.TA_OptInput_IntegerList:
-            __ta_setOptInputParamInteger(holder, i, value)
+    input_names = func_info['input_names']
+    docs.append('Inputs:')
+    for input_name in input_names:
+        value = input_names[input_name]
+        if not isinstance(value, list):
+            value = '(any ndarray)'
+        docs.append('%s%s: %s' % (INDENT, input_name, value))
 
-    lookback = __ta_getLookback(holder)
-    __ta_paramHolderFree(holder)
-    return lookback
+    params = func_info['parameters']
+    if params:
+        docs.append('Parameters:')
+    for param in params:
+        docs.append('%s%s: %s' % (INDENT, param.lower(), params[param]))
+        defaults[param] = params[param]
+        if param.lower() == 'matype':
+            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
+
+    outputs = func_info['output_names']
+    docs.append('Outputs:')
+    for output in outputs:
+        if output == 'integer':
+            output = 'integer (values are -100, 0 or 100)'
+        docs.append('%s%s' % (INDENT, output))
+    docs.append('')
+
+    documentation = '\n    '.join(docs) # 4 spaces
+    return defaults, documentation
 
 
 ###############    PRIVATE C-level-only functions    ###########################
@@ -508,11 +496,8 @@ def _ta_getLookback(function, opt_inputs):
 
 # These functions are for:
 # - Gettinig TALIB handle and paramholder pointers
-# - Setting TALIB paramholder input/output pointers and optInput values
-# - Finally for calling the actual TALIB function (or its lookback) with all of
-#   the function's data pointers and optInputs defined in the paramholder
+# - Setting TALIB paramholder optInput values and calling the lookback function
 
-# ---------- get TALIB func handle -------------------
 cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     ''' Returns a pointer to a function handle for the given function name
     '''
@@ -520,7 +505,6 @@ cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     _ta_check_success('TA_GetFuncHandle', abstract.TA_GetFuncHandle(function_name, &handle))
     return handle
 
-# --------- get param holder (alloc/free) -------------
 cdef abstract.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
     ''' Returns a pointer to a parameter holder for the given function handle
     '''
@@ -535,31 +519,6 @@ cdef int __ta_paramHolderFree(abstract.TA_ParamHolder *params):
     '''
     _ta_check_success('TA_ParamHolderFree', abstract.TA_ParamHolderFree(params))
 
-# --------- set input data pointers ----------------
-cdef int __ta_setInputParamIntegerPtr(abstract.TA_ParamHolder *holder, int idx, int *in_ptr):
-    retCode = abstract.TA_SetInputParamIntegerPtr(holder, idx, in_ptr)
-    _ta_check_success('TA_SetInputParamIntegerPtr', retCode)
-    return retCode
-
-cdef int __ta_setInputParamRealPtr(abstract.TA_ParamHolder *holder, int idx, abstract.TA_Real *in_ptr):
-    retCode = abstract.TA_SetInputParamRealPtr(holder, idx, in_ptr)
-    _ta_check_success('TA_SetInputParamRealPtr', retCode)
-    return retCode
-
-cdef int __ta_setInputParamPricePtr(abstract.TA_ParamHolder *holder, int idx,
-    abstract.TA_Real *open_,
-    abstract.TA_Real *high,
-    abstract.TA_Real *low,
-    abstract.TA_Real *close,
-    abstract.TA_Real *volume,
-    abstract.TA_Real *openInterest
-):
-    retCode = abstract.TA_SetInputParamPricePtr(holder, idx,
-        open_, high, low, close, volume, openInterest)
-    _ta_check_success('TA_SetInputParamPricePtr', retCode)
-    return retCode
-
-# ---------- set opt input parameter values ----------------
 cdef int __ta_setOptInputParamInteger(abstract.TA_ParamHolder *holder, int idx, int value):
     retCode = abstract.TA_SetOptInputParamInteger(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamInteger', retCode)
@@ -568,32 +527,8 @@ cdef int __ta_setOptInputParamReal(abstract.TA_ParamHolder *holder, int idx, int
     retCode = abstract.TA_SetOptInputParamReal(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamReal', retCode)
 
-# --------- set output data pointers ----------------
-cdef int __ta_setOutputParamIntegerPtr(abstract.TA_ParamHolder *holder, int idx, int *out_ptr):
-    retCode = abstract.TA_SetOutputParamIntegerPtr(holder, idx, out_ptr)
-    _ta_check_success('TA_SetOutputParamIntegerPtr', retCode)
-    return retCode
-
-cdef int __ta_setOutputParamRealPtr(abstract.TA_ParamHolder *holder, int idx, abstract.TA_Real *out_ptr):
-    retCode = abstract.TA_SetOutputParamRealPtr(holder, idx, out_ptr)
-    _ta_check_success('TA_SetOutputParamRealPtr', retCode)
-    return retCode
-
-# ----------- get lookback ---------------
 cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
     cdef int lookback
     retCode = abstract.TA_GetLookback(holder, &lookback)
     _ta_check_success('TA_GetLookback', retCode)
     return lookback
-
-# ----------- call TALIB function -------------
-cdef __ta_callFunc(abstract.TA_ParamHolder *holder, int startIdx=0, int endIdx=0):
-    cdef int outBegIdx
-    cdef int outNbElement
-    retCode = abstract.TA_CallFunc( holder,
-                           startIdx,
-                           endIdx,
-                           &outBegIdx,
-                           &outNbElement )
-    _ta_check_success('TA_CallFunc', retCode)
-    return (retCode, outBegIdx, outNbElement)
