@@ -350,12 +350,12 @@ __version__ = TA_GetVersionString()
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACOS( np.ndarray real not None ):
-    """ACOS(real)
+    """ ACOS(real)
 
-    Vector Trigonometric ACos
-    Group: Math Transform
+    Vector Trigonometric ACos (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -393,10 +393,10 @@ def ACOS( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None ):
-    """AD(high, low, close, volume)
+    """ AD(high, low, close, volume)
 
-    Chaikin A/D Line
-    Group: Volume Indicators
+    Chaikin A/D Line (Volume Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close', 'volumne']
     Outputs:
@@ -454,13 +454,13 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
-    """ADD(real0, real1)
+    """ ADD(real0, real1)
 
-    Vector Arithmetic Add
-    Group: Math Operators
+    Vector Arithmetic Add (Math Operators)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Outputs:
         real
     """
@@ -503,11 +503,11 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int fastperiod=3 , int slowperiod=10 ):
-    """ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
+def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
+    """ ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
 
-    Chaikin A/D Oscillator
-    Group: Volume Indicators
+    Chaikin A/D Oscillator (Volume Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close', 'volumne']
     Parameters:
@@ -567,11 +567,11 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """ADX(high, low, close[, timeperiod=?])
+def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ ADX(high, low, close[, timeperiod=?])
 
-    Average Directional Movement Index
-    Group: Momentum Indicators
+    Average Directional Movement Index (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -624,11 +624,11 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """ADXR(high, low, close[, timeperiod=?])
+def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ ADXR(high, low, close[, timeperiod=?])
 
-    Average Directional Movement Index Rating
-    Group: Momentum Indicators
+    Average Directional Movement Index Rating (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -681,13 +681,13 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def APO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int matype=0 ):
-    """APO(real[, fastperiod=?, slowperiod=?, matype=?])
+def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+    """ APO(real[, fastperiod=?, slowperiod=?, matype=?])
 
-    Absolute Price Oscillator
-    Group: Momentum Indicators
+    Absolute Price Oscillator (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -728,18 +728,18 @@ def APO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=14 ):
-    """AROON(high, low[, timeperiod=?])
+def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ AROON(high, low[, timeperiod=?])
 
-    Aroon
-    Group: Momentum Indicators
+    Aroon (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
         timeperiod: 14
     Outputs:
-        aroonDown
-        aroonUp
+        aroondown
+        aroonup
     """
     cdef:
         np.npy_intp length
@@ -786,11 +786,11 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=1
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperiod=14 ):
-    """AROONOSC(high, low[, timeperiod=?])
+def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ AROONOSC(high, low[, timeperiod=?])
 
-    Aroon Oscillator
-    Group: Momentum Indicators
+    Aroon Oscillator (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -838,12 +838,12 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ASIN( np.ndarray real not None ):
-    """ASIN(real)
+    """ ASIN(real)
 
-    Vector Trigonometric ASin
-    Group: Math Transform
+    Vector Trigonometric ASin (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -881,12 +881,12 @@ def ASIN( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ATAN( np.ndarray real not None ):
-    """ATAN(real)
+    """ ATAN(real)
 
-    Vector Trigonometric ATan
-    Group: Math Transform
+    Vector Trigonometric ATan (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -923,11 +923,11 @@ def ATAN( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """ATR(high, low, close[, timeperiod=?])
+def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ ATR(high, low, close[, timeperiod=?])
 
-    Average True Range
-    Group: Volatility Indicators
+    Average True Range (Volatility Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -981,10 +981,10 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """AVGPRICE(open, high, low, close)
+    """ AVGPRICE(open, high, low, close)
 
-    Average Price
-    Group: Price Transform
+    Average Price (Price Transform)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1041,22 +1041,22 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def BBANDS( np.ndarray real not None , int timeperiod=5 , double nbdevup=2 , double nbdevdn=2 , int matype=0 ):
-    """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+    """ BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
-    Bollinger Bands
-    Group: Overlap Studies
+    Bollinger Bands (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdevup: 2
         nbdevdn: 2
         matype: 0 (Simple Moving Average)
     Outputs:
-        upperBand
-        middleBand
-        lowerBand
+        upperband
+        middleband
+        lowerband
     """
     cdef:
         np.npy_intp length
@@ -1103,14 +1103,14 @@ def BBANDS( np.ndarray real not None , int timeperiod=5 , double nbdevup=2 , dou
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=5 ):
-    """BETA(real0, real1[, timeperiod=?])
+def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
+    """ BETA(real0, real1[, timeperiod=?])
 
-    Beta
-    Group: Statistic Functions
+    Beta (Statistic Functions)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Parameters:
         timeperiod: 5
     Outputs:
@@ -1156,10 +1156,10 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """BOP(open, high, low, close)
+    """ BOP(open, high, low, close)
 
-    Balance Of Power
-    Group: Momentum Indicators
+    Balance Of Power (Momentum Indicators)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1216,11 +1216,11 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """CCI(high, low, close[, timeperiod=?])
+def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ CCI(high, low, close[, timeperiod=?])
 
-    Commodity Channel Index
-    Group: Momentum Indicators
+    Commodity Channel Index (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -1274,10 +1274,10 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL2CROWS(open, high, low, close)
+    """ CDL2CROWS(open, high, low, close)
 
-    Two Crows
-    Group: Pattern Recognition
+    Two Crows (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1335,10 +1335,10 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3BLACKCROWS(open, high, low, close)
+    """ CDL3BLACKCROWS(open, high, low, close)
 
-    Three Black Crows
-    Group: Pattern Recognition
+    Three Black Crows (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1396,10 +1396,10 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3INSIDE(open, high, low, close)
+    """ CDL3INSIDE(open, high, low, close)
 
-    Three Inside Up/Down
-    Group: Pattern Recognition
+    Three Inside Up/Down (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1457,10 +1457,10 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3LINESTRIKE(open, high, low, close)
+    """ CDL3LINESTRIKE(open, high, low, close)
 
-    Three-Line Strike 
-    Group: Pattern Recognition
+    Three-Line Strike  (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1518,10 +1518,10 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3OUTSIDE(open, high, low, close)
+    """ CDL3OUTSIDE(open, high, low, close)
 
-    Three Outside Up/Down
-    Group: Pattern Recognition
+    Three Outside Up/Down (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1579,10 +1579,10 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3STARSINSOUTH(open, high, low, close)
+    """ CDL3STARSINSOUTH(open, high, low, close)
 
-    Three Stars In The South
-    Group: Pattern Recognition
+    Three Stars In The South (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1640,10 +1640,10 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDL3WHITESOLDIERS(open, high, low, close)
+    """ CDL3WHITESOLDIERS(open, high, low, close)
 
-    Three Advancing White Soldiers
-    Group: Pattern Recognition
+    Three Advancing White Soldiers (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1701,10 +1701,10 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
-    """CDLABANDONEDBABY(open, high, low, close[, penetration=?])
+    """ CDLABANDONEDBABY(open, high, low, close[, penetration=?])
 
-    Abandoned Baby
-    Group: Pattern Recognition
+    Abandoned Baby (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -1764,10 +1764,10 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLADVANCEBLOCK(open, high, low, close)
+    """ CDLADVANCEBLOCK(open, high, low, close)
 
-    Advance Block
-    Group: Pattern Recognition
+    Advance Block (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1825,10 +1825,10 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLBELTHOLD(open, high, low, close)
+    """ CDLBELTHOLD(open, high, low, close)
 
-    Belt-hold
-    Group: Pattern Recognition
+    Belt-hold (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1886,10 +1886,10 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLBREAKAWAY(open, high, low, close)
+    """ CDLBREAKAWAY(open, high, low, close)
 
-    Breakaway
-    Group: Pattern Recognition
+    Breakaway (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -1947,10 +1947,10 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLCLOSINGMARUBOZU(open, high, low, close)
+    """ CDLCLOSINGMARUBOZU(open, high, low, close)
 
-    Closing Marubozu
-    Group: Pattern Recognition
+    Closing Marubozu (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2008,10 +2008,10 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLCONCEALBABYSWALL(open, high, low, close)
+    """ CDLCONCEALBABYSWALL(open, high, low, close)
 
-    Concealing Baby Swallow
-    Group: Pattern Recognition
+    Concealing Baby Swallow (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2069,10 +2069,10 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLCOUNTERATTACK(open, high, low, close)
+    """ CDLCOUNTERATTACK(open, high, low, close)
 
-    Counterattack
-    Group: Pattern Recognition
+    Counterattack (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2130,10 +2130,10 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.5 ):
-    """CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
+    """ CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
 
-    Dark Cloud Cover
-    Group: Pattern Recognition
+    Dark Cloud Cover (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -2193,10 +2193,10 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLDOJI(open, high, low, close)
+    """ CDLDOJI(open, high, low, close)
 
-    Doji
-    Group: Pattern Recognition
+    Doji (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2254,10 +2254,10 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLDOJISTAR(open, high, low, close)
+    """ CDLDOJISTAR(open, high, low, close)
 
-    Doji Star
-    Group: Pattern Recognition
+    Doji Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2315,10 +2315,10 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLDRAGONFLYDOJI(open, high, low, close)
+    """ CDLDRAGONFLYDOJI(open, high, low, close)
 
-    Dragonfly Doji
-    Group: Pattern Recognition
+    Dragonfly Doji (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2376,10 +2376,10 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLENGULFING(open, high, low, close)
+    """ CDLENGULFING(open, high, low, close)
 
-    Engulfing Pattern
-    Group: Pattern Recognition
+    Engulfing Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2437,10 +2437,10 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
-    """CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
+    """ CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
 
-    Evening Doji Star
-    Group: Pattern Recognition
+    Evening Doji Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -2500,10 +2500,10 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
-    """CDLEVENINGSTAR(open, high, low, close[, penetration=?])
+    """ CDLEVENINGSTAR(open, high, low, close[, penetration=?])
 
-    Evening Star
-    Group: Pattern Recognition
+    Evening Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -2563,10 +2563,10 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLGAPSIDESIDEWHITE(open, high, low, close)
+    """ CDLGAPSIDESIDEWHITE(open, high, low, close)
 
-    Up/Down-gap side-by-side white lines
-    Group: Pattern Recognition
+    Up/Down-gap side-by-side white lines (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2624,10 +2624,10 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLGRAVESTONEDOJI(open, high, low, close)
+    """ CDLGRAVESTONEDOJI(open, high, low, close)
 
-    Gravestone Doji
-    Group: Pattern Recognition
+    Gravestone Doji (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2685,10 +2685,10 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHAMMER(open, high, low, close)
+    """ CDLHAMMER(open, high, low, close)
 
-    Hammer
-    Group: Pattern Recognition
+    Hammer (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2746,10 +2746,10 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHANGINGMAN(open, high, low, close)
+    """ CDLHANGINGMAN(open, high, low, close)
 
-    Hanging Man
-    Group: Pattern Recognition
+    Hanging Man (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2807,10 +2807,10 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHARAMI(open, high, low, close)
+    """ CDLHARAMI(open, high, low, close)
 
-    Harami Pattern
-    Group: Pattern Recognition
+    Harami Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2868,10 +2868,10 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHARAMICROSS(open, high, low, close)
+    """ CDLHARAMICROSS(open, high, low, close)
 
-    Harami Cross Pattern
-    Group: Pattern Recognition
+    Harami Cross Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2929,10 +2929,10 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHIGHWAVE(open, high, low, close)
+    """ CDLHIGHWAVE(open, high, low, close)
 
-    High-Wave Candle
-    Group: Pattern Recognition
+    High-Wave Candle (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -2990,10 +2990,10 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHIKKAKE(open, high, low, close)
+    """ CDLHIKKAKE(open, high, low, close)
 
-    Hikkake Pattern
-    Group: Pattern Recognition
+    Hikkake Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3051,10 +3051,10 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHIKKAKEMOD(open, high, low, close)
+    """ CDLHIKKAKEMOD(open, high, low, close)
 
-    Modified Hikkake Pattern
-    Group: Pattern Recognition
+    Modified Hikkake Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3112,10 +3112,10 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLHOMINGPIGEON(open, high, low, close)
+    """ CDLHOMINGPIGEON(open, high, low, close)
 
-    Homing Pigeon
-    Group: Pattern Recognition
+    Homing Pigeon (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3173,10 +3173,10 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLIDENTICAL3CROWS(open, high, low, close)
+    """ CDLIDENTICAL3CROWS(open, high, low, close)
 
-    Identical Three Crows
-    Group: Pattern Recognition
+    Identical Three Crows (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3234,10 +3234,10 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLINNECK(open, high, low, close)
+    """ CDLINNECK(open, high, low, close)
 
-    In-Neck Pattern
-    Group: Pattern Recognition
+    In-Neck Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3295,10 +3295,10 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLINVERTEDHAMMER(open, high, low, close)
+    """ CDLINVERTEDHAMMER(open, high, low, close)
 
-    Inverted Hammer
-    Group: Pattern Recognition
+    Inverted Hammer (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3356,10 +3356,10 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLKICKING(open, high, low, close)
+    """ CDLKICKING(open, high, low, close)
 
-    Kicking
-    Group: Pattern Recognition
+    Kicking (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3417,10 +3417,10 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLKICKINGBYLENGTH(open, high, low, close)
+    """ CDLKICKINGBYLENGTH(open, high, low, close)
 
-    Kicking - bull/bear determined by the longer marubozu
-    Group: Pattern Recognition
+    Kicking - bull/bear determined by the longer marubozu (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3478,10 +3478,10 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLLADDERBOTTOM(open, high, low, close)
+    """ CDLLADDERBOTTOM(open, high, low, close)
 
-    Ladder Bottom
-    Group: Pattern Recognition
+    Ladder Bottom (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3539,10 +3539,10 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLLONGLEGGEDDOJI(open, high, low, close)
+    """ CDLLONGLEGGEDDOJI(open, high, low, close)
 
-    Long Legged Doji
-    Group: Pattern Recognition
+    Long Legged Doji (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3600,10 +3600,10 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLLONGLINE(open, high, low, close)
+    """ CDLLONGLINE(open, high, low, close)
 
-    Long Line Candle
-    Group: Pattern Recognition
+    Long Line Candle (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3661,10 +3661,10 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLMARUBOZU(open, high, low, close)
+    """ CDLMARUBOZU(open, high, low, close)
 
-    Marubozu
-    Group: Pattern Recognition
+    Marubozu (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3722,10 +3722,10 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLMATCHINGLOW(open, high, low, close)
+    """ CDLMATCHINGLOW(open, high, low, close)
 
-    Matching Low
-    Group: Pattern Recognition
+    Matching Low (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -3783,10 +3783,10 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.5 ):
-    """CDLMATHOLD(open, high, low, close[, penetration=?])
+    """ CDLMATHOLD(open, high, low, close[, penetration=?])
 
-    Mat Hold
-    Group: Pattern Recognition
+    Mat Hold (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -3846,10 +3846,10 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
-    """CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
+    """ CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
 
-    Morning Doji Star
-    Group: Pattern Recognition
+    Morning Doji Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -3909,10 +3909,10 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
-    """CDLMORNINGSTAR(open, high, low, close[, penetration=?])
+    """ CDLMORNINGSTAR(open, high, low, close[, penetration=?])
 
-    Morning Star
-    Group: Pattern Recognition
+    Morning Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Parameters:
@@ -3972,10 +3972,10 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLONNECK(open, high, low, close)
+    """ CDLONNECK(open, high, low, close)
 
-    On-Neck Pattern
-    Group: Pattern Recognition
+    On-Neck Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4033,10 +4033,10 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLPIERCING(open, high, low, close)
+    """ CDLPIERCING(open, high, low, close)
 
-    Piercing Pattern
-    Group: Pattern Recognition
+    Piercing Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4094,10 +4094,10 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLRICKSHAWMAN(open, high, low, close)
+    """ CDLRICKSHAWMAN(open, high, low, close)
 
-    Rickshaw Man
-    Group: Pattern Recognition
+    Rickshaw Man (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4155,10 +4155,10 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLRISEFALL3METHODS(open, high, low, close)
+    """ CDLRISEFALL3METHODS(open, high, low, close)
 
-    Rising/Falling Three Methods
-    Group: Pattern Recognition
+    Rising/Falling Three Methods (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4216,10 +4216,10 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSEPARATINGLINES(open, high, low, close)
+    """ CDLSEPARATINGLINES(open, high, low, close)
 
-    Separating Lines
-    Group: Pattern Recognition
+    Separating Lines (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4277,10 +4277,10 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSHOOTINGSTAR(open, high, low, close)
+    """ CDLSHOOTINGSTAR(open, high, low, close)
 
-    Shooting Star
-    Group: Pattern Recognition
+    Shooting Star (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4338,10 +4338,10 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSHORTLINE(open, high, low, close)
+    """ CDLSHORTLINE(open, high, low, close)
 
-    Short Line Candle
-    Group: Pattern Recognition
+    Short Line Candle (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4399,10 +4399,10 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSPINNINGTOP(open, high, low, close)
+    """ CDLSPINNINGTOP(open, high, low, close)
 
-    Spinning Top
-    Group: Pattern Recognition
+    Spinning Top (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4460,10 +4460,10 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSTALLEDPATTERN(open, high, low, close)
+    """ CDLSTALLEDPATTERN(open, high, low, close)
 
-    Stalled Pattern
-    Group: Pattern Recognition
+    Stalled Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4521,10 +4521,10 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLSTICKSANDWICH(open, high, low, close)
+    """ CDLSTICKSANDWICH(open, high, low, close)
 
-    Stick Sandwich
-    Group: Pattern Recognition
+    Stick Sandwich (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4582,10 +4582,10 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLTAKURI(open, high, low, close)
+    """ CDLTAKURI(open, high, low, close)
 
-    Takuri (Dragonfly Doji with very long lower shadow)
-    Group: Pattern Recognition
+    Takuri (Dragonfly Doji with very long lower shadow) (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4643,10 +4643,10 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLTASUKIGAP(open, high, low, close)
+    """ CDLTASUKIGAP(open, high, low, close)
 
-    Tasuki Gap
-    Group: Pattern Recognition
+    Tasuki Gap (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4704,10 +4704,10 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLTHRUSTING(open, high, low, close)
+    """ CDLTHRUSTING(open, high, low, close)
 
-    Thrusting Pattern
-    Group: Pattern Recognition
+    Thrusting Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4765,10 +4765,10 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLTRISTAR(open, high, low, close)
+    """ CDLTRISTAR(open, high, low, close)
 
-    Tristar Pattern
-    Group: Pattern Recognition
+    Tristar Pattern (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4826,10 +4826,10 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLUNIQUE3RIVER(open, high, low, close)
+    """ CDLUNIQUE3RIVER(open, high, low, close)
 
-    Unique 3 River
-    Group: Pattern Recognition
+    Unique 3 River (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4887,10 +4887,10 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLUPSIDEGAP2CROWS(open, high, low, close)
+    """ CDLUPSIDEGAP2CROWS(open, high, low, close)
 
-    Upside Gap Two Crows
-    Group: Pattern Recognition
+    Upside Gap Two Crows (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -4948,10 +4948,10 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """CDLXSIDEGAP3METHODS(open, high, low, close)
+    """ CDLXSIDEGAP3METHODS(open, high, low, close)
 
-    Upside/Downside Gap Three Methods
-    Group: Pattern Recognition
+    Upside/Downside Gap Three Methods (Pattern Recognition)
+
     Inputs:
         prices: ['open', 'high', 'low', 'close']
     Outputs:
@@ -5009,12 +5009,12 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def CEIL( np.ndarray real not None ):
-    """CEIL(real)
+    """ CEIL(real)
 
-    Vector Ceil
-    Group: Math Transform
+    Vector Ceil (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5051,13 +5051,13 @@ def CEIL( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CMO( np.ndarray real not None , int timeperiod=14 ):
-    """CMO(real[, timeperiod=?])
+def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ CMO(real[, timeperiod=?])
 
-    Chande Momentum Oscillator
-    Group: Momentum Indicators
+    Chande Momentum Oscillator (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5096,14 +5096,14 @@ def CMO( np.ndarray real not None , int timeperiod=14 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=30 ):
-    """CORREL(real0, real1[, timeperiod=?])
+def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
+    """ CORREL(real0, real1[, timeperiod=?])
 
-    Pearson's Correlation Coefficient (r)
-    Group: Statistic Functions
+    Pearson's Correlation Coefficient (r) (Statistic Functions)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5149,12 +5149,12 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def COS( np.ndarray real not None ):
-    """COS(real)
+    """ COS(real)
 
-    Vector Trigonometric Cos
-    Group: Math Transform
+    Vector Trigonometric Cos (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5192,12 +5192,12 @@ def COS( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def COSH( np.ndarray real not None ):
-    """COSH(real)
+    """ COSH(real)
 
-    Vector Trigonometric Cosh
-    Group: Math Transform
+    Vector Trigonometric Cosh (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5234,13 +5234,13 @@ def COSH( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def DEMA( np.ndarray real not None , int timeperiod=30 ):
-    """DEMA(real[, timeperiod=?])
+def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ DEMA(real[, timeperiod=?])
 
-    Double Exponential Moving Average
-    Group: Overlap Studies
+    Double Exponential Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5280,13 +5280,13 @@ def DEMA( np.ndarray real not None , int timeperiod=30 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
-    """DIV(real0, real1)
+    """ DIV(real0, real1)
 
-    Vector Arithmetic Div
-    Group: Math Operators
+    Vector Arithmetic Div (Math Operators)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Outputs:
         real
     """
@@ -5329,11 +5329,11 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """DX(high, low, close[, timeperiod=?])
+def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ DX(high, low, close[, timeperiod=?])
 
-    Directional Movement Index
-    Group: Momentum Indicators
+    Directional Movement Index (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -5386,13 +5386,13 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def EMA( np.ndarray real not None , int timeperiod=30 ):
-    """EMA(real[, timeperiod=?])
+def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ EMA(real[, timeperiod=?])
 
-    Exponential Moving Average
-    Group: Overlap Studies
+    Exponential Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5432,12 +5432,12 @@ def EMA( np.ndarray real not None , int timeperiod=30 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def EXP( np.ndarray real not None ):
-    """EXP(real)
+    """ EXP(real)
 
-    Vector Arithmetic Exp
-    Group: Math Transform
+    Vector Arithmetic Exp (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5475,12 +5475,12 @@ def EXP( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def FLOOR( np.ndarray real not None ):
-    """FLOOR(real)
+    """ FLOOR(real)
 
-    Vector Floor
-    Group: Math Transform
+    Vector Floor (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5518,12 +5518,12 @@ def FLOOR( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_DCPERIOD( np.ndarray real not None ):
-    """HT_DCPERIOD(real)
+    """ HT_DCPERIOD(real)
 
-    Hilbert Transform - Dominant Cycle Period
-    Group: Cycle Indicators
+    Hilbert Transform - Dominant Cycle Period (Cycle Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5561,12 +5561,12 @@ def HT_DCPERIOD( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_DCPHASE( np.ndarray real not None ):
-    """HT_DCPHASE(real)
+    """ HT_DCPHASE(real)
 
-    Hilbert Transform - Dominant Cycle Phase
-    Group: Cycle Indicators
+    Hilbert Transform - Dominant Cycle Phase (Cycle Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5604,14 +5604,14 @@ def HT_DCPHASE( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_PHASOR( np.ndarray real not None ):
-    """HT_PHASOR(real)
+    """ HT_PHASOR(real)
 
-    Hilbert Transform - Phasor Components
-    Group: Cycle Indicators
+    Hilbert Transform - Phasor Components (Cycle Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
-        inPhase
+        inphase
         quadrature
     """
     cdef:
@@ -5654,15 +5654,15 @@ def HT_PHASOR( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_SINE( np.ndarray real not None ):
-    """HT_SINE(real)
+    """ HT_SINE(real)
 
-    Hilbert Transform - SineWave
-    Group: Cycle Indicators
+    Hilbert Transform - SineWave (Cycle Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         sine
-        leadSine
+        leadsine
     """
     cdef:
         np.npy_intp length
@@ -5704,12 +5704,12 @@ def HT_SINE( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_TRENDLINE( np.ndarray real not None ):
-    """HT_TRENDLINE(real)
+    """ HT_TRENDLINE(real)
 
-    Hilbert Transform - Instantaneous Trendline
-    Group: Overlap Studies
+    Hilbert Transform - Instantaneous Trendline (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -5747,12 +5747,12 @@ def HT_TRENDLINE( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def HT_TRENDMODE( np.ndarray real not None ):
-    """HT_TRENDMODE(real)
+    """ HT_TRENDMODE(real)
 
-    Hilbert Transform - Trend vs Cycle Mode
-    Group: Cycle Indicators
+    Hilbert Transform - Trend vs Cycle Mode (Cycle Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         integer (values are -100, 0 or 100)
     """
@@ -5789,13 +5789,13 @@ def HT_TRENDMODE( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def KAMA( np.ndarray real not None , int timeperiod=30 ):
-    """KAMA(real[, timeperiod=?])
+def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ KAMA(real[, timeperiod=?])
 
-    Kaufman Adaptive Moving Average
-    Group: Overlap Studies
+    Kaufman Adaptive Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -5834,13 +5834,13 @@ def KAMA( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG( np.ndarray real not None , int timeperiod=14 ):
-    """LINEARREG(real[, timeperiod=?])
+def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ LINEARREG(real[, timeperiod=?])
 
-    Linear Regression
-    Group: Statistic Functions
+    Linear Regression (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5879,13 +5879,13 @@ def LINEARREG( np.ndarray real not None , int timeperiod=14 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=14 ):
-    """LINEARREG_ANGLE(real[, timeperiod=?])
+def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ LINEARREG_ANGLE(real[, timeperiod=?])
 
-    Linear Regression Angle
-    Group: Statistic Functions
+    Linear Regression Angle (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5924,13 +5924,13 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=14 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=14 ):
-    """LINEARREG_INTERCEPT(real[, timeperiod=?])
+def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ LINEARREG_INTERCEPT(real[, timeperiod=?])
 
-    Linear Regression Intercept
-    Group: Statistic Functions
+    Linear Regression Intercept (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -5969,13 +5969,13 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=14 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=14 ):
-    """LINEARREG_SLOPE(real[, timeperiod=?])
+def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ LINEARREG_SLOPE(real[, timeperiod=?])
 
-    Linear Regression Slope
-    Group: Statistic Functions
+    Linear Regression Slope (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6015,12 +6015,12 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=14 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LN( np.ndarray real not None ):
-    """LN(real)
+    """ LN(real)
 
-    Vector Log Natural
-    Group: Math Transform
+    Vector Log Natural (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -6058,12 +6058,12 @@ def LN( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def LOG10( np.ndarray real not None ):
-    """LOG10(real)
+    """ LOG10(real)
 
-    Vector Log10
-    Group: Math Transform
+    Vector Log10 (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -6100,13 +6100,13 @@ def LOG10( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MA( np.ndarray real not None , int timeperiod=30 , int matype=0 ):
-    """MA(real[, timeperiod=?, matype=?])
+def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
+    """ MA(real[, timeperiod=?, matype=?])
 
-    Moving average
-    Group: Overlap Studies
+    Moving average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
         matype: 0 (Simple Moving Average)
@@ -6146,21 +6146,21 @@ def MA( np.ndarray real not None , int timeperiod=30 , int matype=0 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACD( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int signalperiod=9 ):
-    """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
+def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
+    """ MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
-    Moving Average Convergence/Divergence
-    Group: Momentum Indicators
+    Moving Average Convergence/Divergence (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
         signalperiod: 9
     Outputs:
-        mACD
-        mACDSignal
-        mACDHist
+        macd
+        macdsignal
+        macdhist
     """
     cdef:
         np.npy_intp length
@@ -6207,13 +6207,13 @@ def MACD( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , int slowperiod=26 , int slowmatype=0 , int signalperiod=9 , int signalmatype=0 ):
-    """MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
+def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
+    """ MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
 
-    MACD with controllable MA type
-    Group: Momentum Indicators
+    MACD with controllable MA type (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         fastperiod: 12
         fastmatype: 0
@@ -6222,9 +6222,9 @@ def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , i
         signalperiod: 9
         signalmatype: 0
     Outputs:
-        mACD
-        mACDSignal
-        mACDHist
+        macd
+        macdsignal
+        macdhist
     """
     cdef:
         np.npy_intp length
@@ -6271,19 +6271,19 @@ def MACDEXT( np.ndarray real not None , int fastperiod=12 , int fastmatype=0 , i
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MACDFIX( np.ndarray real not None , int signalperiod=9 ):
-    """MACDFIX(real[, signalperiod=?])
+def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
+    """ MACDFIX(real[, signalperiod=?])
 
-    Moving Average Convergence/Divergence Fix 12/26
-    Group: Momentum Indicators
+    Moving Average Convergence/Divergence Fix 12/26 (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         signalperiod: 9
     Outputs:
-        mACD
-        mACDSignal
-        mACDHist
+        macd
+        macdsignal
+        macdhist
     """
     cdef:
         np.npy_intp length
@@ -6330,19 +6330,19 @@ def MACDFIX( np.ndarray real not None , int signalperiod=9 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAMA( np.ndarray real not None , double fastlimit=0.5 , double slowlimit=0.05 ):
-    """MAMA(real[, fastlimit=?, slowlimit=?])
+def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
+    """ MAMA(real[, fastlimit=?, slowlimit=?])
 
-    MESA Adaptive Moving Average
-    Group: Overlap Studies
+    MESA Adaptive Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         fastlimit: 0.5
         slowlimit: 0.05
     Outputs:
-        mAMA
-        fAMA
+        mama
+        fama
     """
     cdef:
         np.npy_intp length
@@ -6383,13 +6383,13 @@ def MAMA( np.ndarray real not None , double fastlimit=0.5 , double slowlimit=0.0
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod=2 , int maxperiod=30 , int matype=0 ):
-    """MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])
+def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
+    """ MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])
 
-    Moving average with variable period
-    Group: Overlap Studies
+    Moving average with variable period (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
         periods: (any ndarray)
     Parameters:
         minperiod: 2
@@ -6437,13 +6437,13 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAX( np.ndarray real not None , int timeperiod=30 ):
-    """MAX(real[, timeperiod=?])
+def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MAX(real[, timeperiod=?])
 
-    Highest value over a specified period
-    Group: Math Operators
+    Highest value over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6482,13 +6482,13 @@ def MAX( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MAXINDEX( np.ndarray real not None , int timeperiod=30 ):
-    """MAXINDEX(real[, timeperiod=?])
+def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MAXINDEX(real[, timeperiod=?])
 
-    Index of highest value over a specified period
-    Group: Math Operators
+    Index of highest value over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6528,10 +6528,10 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=30 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
-    """MEDPRICE(high, low)
+    """ MEDPRICE(high, low)
 
-    Median Price
-    Group: Price Transform
+    Median Price (Price Transform)
+
     Inputs:
         prices: ['high', 'low']
     Outputs:
@@ -6576,11 +6576,11 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=14 ):
-    """MFI(high, low, close, volume[, timeperiod=?])
+def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=-2**31 ):
+    """ MFI(high, low, close, volume[, timeperiod=?])
 
-    Money Flow Index
-    Group: Momentum Indicators
+    Money Flow Index (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close', 'volumne']
     Parameters:
@@ -6639,13 +6639,13 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIDPOINT( np.ndarray real not None , int timeperiod=14 ):
-    """MIDPOINT(real[, timeperiod=?])
+def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MIDPOINT(real[, timeperiod=?])
 
-    MidPoint over period
-    Group: Overlap Studies
+    MidPoint over period (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -6684,11 +6684,11 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=14 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperiod=14 ):
-    """MIDPRICE(high, low[, timeperiod=?])
+def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ MIDPRICE(high, low[, timeperiod=?])
 
-    Midpoint Price over period
-    Group: Overlap Studies
+    Midpoint Price over period (Overlap Studies)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -6735,13 +6735,13 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MIN( np.ndarray real not None , int timeperiod=30 ):
-    """MIN(real[, timeperiod=?])
+def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MIN(real[, timeperiod=?])
 
-    Lowest value over a specified period
-    Group: Math Operators
+    Lowest value over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6780,13 +6780,13 @@ def MIN( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MININDEX( np.ndarray real not None , int timeperiod=30 ):
-    """MININDEX(real[, timeperiod=?])
+def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MININDEX(real[, timeperiod=?])
 
-    Index of lowest value over a specified period
-    Group: Math Operators
+    Index of lowest value over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6825,13 +6825,13 @@ def MININDEX( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINMAX( np.ndarray real not None , int timeperiod=30 ):
-    """MINMAX(real[, timeperiod=?])
+def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MINMAX(real[, timeperiod=?])
 
-    Lowest and highest values over a specified period
-    Group: Math Operators
+    Lowest and highest values over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -6877,18 +6877,18 @@ def MINMAX( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINMAXINDEX( np.ndarray real not None , int timeperiod=30 ):
-    """MINMAXINDEX(real[, timeperiod=?])
+def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MINMAXINDEX(real[, timeperiod=?])
 
-    Indexes of lowest and highest values over a specified period
-    Group: Math Operators
+    Indexes of lowest and highest values over a specified period (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
-        minIdx
-        maxIdx
+        minidx
+        maxidx
     """
     cdef:
         np.npy_intp length
@@ -6929,11 +6929,11 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """MINUS_DI(high, low, close[, timeperiod=?])
+def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ MINUS_DI(high, low, close[, timeperiod=?])
 
-    Minus Directional Indicator
-    Group: Momentum Indicators
+    Minus Directional Indicator (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -6986,11 +6986,11 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=14 ):
-    """MINUS_DM(high, low[, timeperiod=?])
+def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ MINUS_DM(high, low[, timeperiod=?])
 
-    Minus Directional Movement
-    Group: Momentum Indicators
+    Minus Directional Movement (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -7037,13 +7037,13 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def MOM( np.ndarray real not None , int timeperiod=10 ):
-    """MOM(real[, timeperiod=?])
+def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MOM(real[, timeperiod=?])
 
-    Momentum
-    Group: Momentum Indicators
+    Momentum (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7083,13 +7083,13 @@ def MOM( np.ndarray real not None , int timeperiod=10 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
-    """MULT(real0, real1)
+    """ MULT(real0, real1)
 
-    Vector Arithmetic Mult
-    Group: Math Operators
+    Vector Arithmetic Mult (Math Operators)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Outputs:
         real
     """
@@ -7132,11 +7132,11 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """NATR(high, low, close[, timeperiod=?])
+def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ NATR(high, low, close[, timeperiod=?])
 
-    Normalized Average True Range
-    Group: Volatility Indicators
+    Normalized Average True Range (Volatility Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -7190,12 +7190,12 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def OBV( np.ndarray real not None , np.ndarray volume not None ):
-    """OBV(real, volume)
+    """ OBV(real, volume)
 
-    On Balance Volume
-    Group: Volume Indicators
+    On Balance Volume (Volume Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
         prices: ['volumne']
     Outputs:
         real
@@ -7239,11 +7239,11 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """PLUS_DI(high, low, close[, timeperiod=?])
+def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ PLUS_DI(high, low, close[, timeperiod=?])
 
-    Plus Directional Indicator
-    Group: Momentum Indicators
+    Plus Directional Indicator (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -7296,11 +7296,11 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=14 ):
-    """PLUS_DM(high, low[, timeperiod=?])
+def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ PLUS_DM(high, low[, timeperiod=?])
 
-    Plus Directional Movement
-    Group: Momentum Indicators
+    Plus Directional Movement (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -7347,13 +7347,13 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PPO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int matype=0 ):
-    """PPO(real[, fastperiod=?, slowperiod=?, matype=?])
+def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+    """ PPO(real[, fastperiod=?, slowperiod=?, matype=?])
 
-    Percentage Price Oscillator
-    Group: Momentum Indicators
+    Percentage Price Oscillator (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -7394,13 +7394,13 @@ def PPO( np.ndarray real not None , int fastperiod=12 , int slowperiod=26 , int 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROC( np.ndarray real not None , int timeperiod=10 ):
-    """ROC(real[, timeperiod=?])
+def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ ROC(real[, timeperiod=?])
 
-    Rate of change : ((price/prevPrice)-1)*100
-    Group: Momentum Indicators
+    Rate of change : ((real/prevPrice)-1)*100 (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7439,13 +7439,13 @@ def ROC( np.ndarray real not None , int timeperiod=10 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCP( np.ndarray real not None , int timeperiod=10 ):
-    """ROCP(real[, timeperiod=?])
+def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ ROCP(real[, timeperiod=?])
 
-    Rate of change Percentage: (price-prevPrice)/prevPrice
-    Group: Momentum Indicators
+    Rate of change Percentage: (real-prevPrice)/prevPrice (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7484,13 +7484,13 @@ def ROCP( np.ndarray real not None , int timeperiod=10 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCR( np.ndarray real not None , int timeperiod=10 ):
-    """ROCR(real[, timeperiod=?])
+def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ ROCR(real[, timeperiod=?])
 
-    Rate of change ratio: (price/prevPrice)
-    Group: Momentum Indicators
+    Rate of change ratio: (real/prevPrice) (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7529,13 +7529,13 @@ def ROCR( np.ndarray real not None , int timeperiod=10 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ROCR100( np.ndarray real not None , int timeperiod=10 ):
-    """ROCR100(real[, timeperiod=?])
+def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ ROCR100(real[, timeperiod=?])
 
-    Rate of change ratio 100 scale: (price/prevPrice)*100
-    Group: Momentum Indicators
+    Rate of change ratio 100 scale: (real/prevPrice)*100 (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 10
     Outputs:
@@ -7574,13 +7574,13 @@ def ROCR100( np.ndarray real not None , int timeperiod=10 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def RSI( np.ndarray real not None , int timeperiod=14 ):
-    """RSI(real[, timeperiod=?])
+def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ RSI(real[, timeperiod=?])
 
-    Relative Strength Index
-    Group: Momentum Indicators
+    Relative Strength Index (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7620,10 +7620,10 @@ def RSI( np.ndarray real not None , int timeperiod=14 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SAR( np.ndarray high not None , np.ndarray low not None , double acceleration=0.02 , double maximum=0.2 ):
-    """SAR(high, low[, acceleration=?, maximum=?])
+    """ SAR(high, low[, acceleration=?, maximum=?])
 
-    Parabolic SAR
-    Group: Overlap Studies
+    Parabolic SAR (Overlap Studies)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -7671,11 +7671,11 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SAREXT( np.ndarray high not None , np.ndarray low not None , double startvalue=0 , double offsetonreverse=0 , double accelerationinitlong=0.02 , double accelerationlong=0.02 , double accelerationmaxlong=0.2 , double accelerationinitshort=0.02 , double accelerationshort=0.02 , double accelerationmaxshort=0.2 ):
-    """SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
+def SAREXT( np.ndarray high not None , np.ndarray low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
+    """ SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
 
-    Parabolic SAR - Extended
-    Group: Overlap Studies
+    Parabolic SAR - Extended (Overlap Studies)
+
     Inputs:
         prices: ['high', 'low']
     Parameters:
@@ -7730,12 +7730,12 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SIN( np.ndarray real not None ):
-    """SIN(real)
+    """ SIN(real)
 
-    Vector Trigonometric Sin
-    Group: Math Transform
+    Vector Trigonometric Sin (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -7773,12 +7773,12 @@ def SIN( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SINH( np.ndarray real not None ):
-    """SINH(real)
+    """ SINH(real)
 
-    Vector Trigonometric Sinh
-    Group: Math Transform
+    Vector Trigonometric Sinh (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -7815,13 +7815,13 @@ def SINH( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SMA( np.ndarray real not None , int timeperiod=30 ):
-    """SMA(real[, timeperiod=?])
+def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SMA(real[, timeperiod=?])
 
-    Simple Moving Average
-    Group: Overlap Studies
+    Simple Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -7861,12 +7861,12 @@ def SMA( np.ndarray real not None , int timeperiod=30 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SQRT( np.ndarray real not None ):
-    """SQRT(real)
+    """ SQRT(real)
 
-    Vector Square Root
-    Group: Math Transform
+    Vector Square Root (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -7903,13 +7903,13 @@ def SQRT( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STDDEV( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
-    """STDDEV(real[, timeperiod=?, nbdev=?])
+def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+    """ STDDEV(real[, timeperiod=?, nbdev=?])
 
-    Standard Deviation
-    Group: Statistic Functions
+    Standard Deviation (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdev: 1
@@ -7949,11 +7949,11 @@ def STDDEV( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=5 , int slowk_period=3 , int slowk_matype=0 , int slowd_period=3 , int slowd_matype=0 ):
-    """STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
+def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
+    """ STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
 
-    Stochastic
-    Group: Momentum Indicators
+    Stochastic (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -7963,8 +7963,8 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         slowd_period: 3
         slowd_matype: 0
     Outputs:
-        slowK
-        slowD
+        slowk
+        slowd
     """
     cdef:
         np.npy_intp length
@@ -8017,11 +8017,11 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=5 , int fastd_period=3 , int fastd_matype=0 ):
-    """STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
+def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+    """ STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
 
-    Stochastic Fast
-    Group: Momentum Indicators
+    Stochastic Fast (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -8029,8 +8029,8 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         fastd_period: 3
         fastd_matype: 0
     Outputs:
-        fastK
-        fastD
+        fastk
+        fastd
     """
     cdef:
         np.npy_intp length
@@ -8083,21 +8083,21 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def STOCHRSI( np.ndarray real not None , int timeperiod=14 , int fastk_period=5 , int fastd_period=3 , int fastd_matype=0 ):
-    """STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
+def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+    """ STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
 
-    Stochastic Relative Strength Index
-    Group: Momentum Indicators
+    Stochastic Relative Strength Index (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
         fastk_period: 5
         fastd_period: 3
         fastd_matype: 0
     Outputs:
-        fastK
-        fastD
+        fastk
+        fastd
     """
     cdef:
         np.npy_intp length
@@ -8139,13 +8139,13 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=14 , int fastk_period=5 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
-    """SUB(real0, real1)
+    """ SUB(real0, real1)
 
-    Vector Arithmetic Substraction
-    Group: Math Operators
+    Vector Arithmetic Substraction (Math Operators)
+
     Inputs:
-        price0: (any ndarray)
-        price1: (any ndarray)
+        real0: (any ndarray)
+        real1: (any ndarray)
     Outputs:
         real
     """
@@ -8188,13 +8188,13 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def SUM( np.ndarray real not None , int timeperiod=30 ):
-    """SUM(real[, timeperiod=?])
+def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SUM(real[, timeperiod=?])
 
-    Summation
-    Group: Math Operators
+    Summation (Math Operators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8233,13 +8233,13 @@ def SUM( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def T3( np.ndarray real not None , int timeperiod=5 , double vfactor=0.7 ):
-    """T3(real[, timeperiod=?, vfactor=?])
+def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
+    """ T3(real[, timeperiod=?, vfactor=?])
 
-    Triple Exponential Moving Average (T3)
-    Group: Overlap Studies
+    Triple Exponential Moving Average (T3) (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 5
         vfactor: 0.7
@@ -8280,12 +8280,12 @@ def T3( np.ndarray real not None , int timeperiod=5 , double vfactor=0.7 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TAN( np.ndarray real not None ):
-    """TAN(real)
+    """ TAN(real)
 
-    Vector Trigonometric Tan
-    Group: Math Transform
+    Vector Trigonometric Tan (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -8323,12 +8323,12 @@ def TAN( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TANH( np.ndarray real not None ):
-    """TANH(real)
+    """ TANH(real)
 
-    Vector Trigonometric Tanh
-    Group: Math Transform
+    Vector Trigonometric Tanh (Math Transform)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Outputs:
         real
     """
@@ -8365,13 +8365,13 @@ def TANH( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TEMA( np.ndarray real not None , int timeperiod=30 ):
-    """TEMA(real[, timeperiod=?])
+def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ TEMA(real[, timeperiod=?])
 
-    Triple Exponential Moving Average
-    Group: Overlap Studies
+    Triple Exponential Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8411,10 +8411,10 @@ def TEMA( np.ndarray real not None , int timeperiod=30 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """TRANGE(high, low, close)
+    """ TRANGE(high, low, close)
 
-    True Range
-    Group: Volatility Indicators
+    True Range (Volatility Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Outputs:
@@ -8465,13 +8465,13 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TRIMA( np.ndarray real not None , int timeperiod=30 ):
-    """TRIMA(real[, timeperiod=?])
+def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ TRIMA(real[, timeperiod=?])
 
-    Triangular Moving Average
-    Group: Overlap Studies
+    Triangular Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8510,13 +8510,13 @@ def TRIMA( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TRIX( np.ndarray real not None , int timeperiod=30 ):
-    """TRIX(real[, timeperiod=?])
+def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ TRIX(real[, timeperiod=?])
 
-    1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
-    Group: Momentum Indicators
+    1-day Rate-Of-Change (ROC) of a Triple Smooth EMA (Momentum Indicators)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
@@ -8555,13 +8555,13 @@ def TRIX( np.ndarray real not None , int timeperiod=30 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def TSF( np.ndarray real not None , int timeperiod=14 ):
-    """TSF(real[, timeperiod=?])
+def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ TSF(real[, timeperiod=?])
 
-    Time Series Forecast
-    Group: Statistic Functions
+    Time Series Forecast (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 14
     Outputs:
@@ -8601,10 +8601,10 @@ def TSF( np.ndarray real not None , int timeperiod=14 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """TYPPRICE(high, low, close)
+    """ TYPPRICE(high, low, close)
 
-    Typical Price
-    Group: Price Transform
+    Typical Price (Price Transform)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Outputs:
@@ -8655,11 +8655,11 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod1=7 , int timeperiod2=14 , int timeperiod3=28 ):
-    """ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
+def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
+    """ ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
 
-    Ultimate Oscillator
-    Group: Momentum Indicators
+    Ultimate Oscillator (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -8714,13 +8714,13 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def VAR( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
-    """VAR(real[, timeperiod=?, nbdev=?])
+def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+    """ VAR(real[, timeperiod=?, nbdev=?])
 
-    Variance
-    Group: Statistic Functions
+    Variance (Statistic Functions)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 5
         nbdev: 1
@@ -8761,10 +8761,10 @@ def VAR( np.ndarray real not None , int timeperiod=5 , double nbdev=1 ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
-    """WCLPRICE(high, low, close)
+    """ WCLPRICE(high, low, close)
 
-    Weighted Close Price
-    Group: Price Transform
+    Weighted Close Price (Price Transform)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Outputs:
@@ -8815,11 +8815,11 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=14 ):
-    """WILLR(high, low, close[, timeperiod=?])
+def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ WILLR(high, low, close[, timeperiod=?])
 
-    Williams' %R
-    Group: Momentum Indicators
+    Williams' %R (Momentum Indicators)
+
     Inputs:
         prices: ['high', 'low', 'close']
     Parameters:
@@ -8872,13 +8872,13 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def WMA( np.ndarray real not None , int timeperiod=30 ):
-    """WMA(real[, timeperiod=?])
+def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ WMA(real[, timeperiod=?])
 
-    Weighted Moving Average
-    Group: Overlap Studies
+    Weighted Moving Average (Overlap Studies)
+
     Inputs:
-        price: (any ndarray)
+        real: (any ndarray)
     Parameters:
         timeperiod: 30
     Outputs:
