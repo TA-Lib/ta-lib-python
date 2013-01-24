@@ -178,6 +178,7 @@ class Function(object):
     def set_function_args(self, *args, **kwargs):
         ''' optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         '''
+        update_info = False
         if args:
             skip_first = 0
             if self.set_input_arrays(args[0]):
