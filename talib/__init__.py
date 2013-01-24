@@ -1,8 +1,7 @@
 import atexit
 
 from talib.func import *
-from talib.abstract import _ta_getFuncTable
-from talib.abstract import _ta_getGroupTable
+from talib import abstract
 from talib import common_c
 
 
@@ -28,22 +27,12 @@ class MA_Type(object):
 MA_Type = MA_Type()
 
 
-def initialize():
-    ''' Initializes the TALIB library
-    '''
-    common_c._ta_initialize()
-
-def shutdown():
-    ''' Shuts down the TALIB library
-    '''
-    common_c._ta_shutdown()
-
 def get_functions():
     ''' Returns a list of all the functions supported by TALIB
     '''
     ret = []
-    for group in _ta_getGroupTable():
-        ret.extend(_ta_getFuncTable(group))
+    for group in abstract._ta_getGroupTable():
+        ret.extend(abstract._ta_getFuncTable(group))
     return ret
 
 def get_function_groups():
@@ -51,9 +40,17 @@ def get_function_groups():
     of function names ie {'group_names': ['function_names']}
     '''
     d = {}
-    for group in _ta_getGroupTable():
-        d[group] = _ta_getFuncTable(group)
+    for group in abstract._ta_getGroupTable():
+        d[group] = abstract._ta_getFuncTable(group)
     return d
 
-initialize()
-atexit.register(shutdown)
+
+'''
+In order to use this python library, talib (ie this __file__) will be imported
+at some point, either explicitly or indirectly via talib.func or talib.abstract.
+Here, we handle initalizing and shutting down the underlying TA-Lib.
+Initialization happens on import, before any other TA-Lib functions are called.
+Finally, when the python process exits, we shutdown the underlying TA-Lib.
+'''
+common_c._ta_initialize()
+atexit.register(common_c._ta_shutdown)
