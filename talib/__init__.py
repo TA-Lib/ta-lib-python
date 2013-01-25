@@ -43,19 +43,13 @@ MA_Type = MA_Type()
 def get_functions():
     ''' Returns a list of all the functions supported by TALIB
     '''
-    ret = []
-    for group in abstract._ta_getGroupTable():
-        ret.extend(abstract._ta_getFuncTable(group))
-    return ret
+    return abstract._ta_get_functions()
 
 def get_function_groups():
     ''' Returns a dict with kyes of function-group names and values of lists
     of function names ie {'group_names': ['function_names']}
     '''
-    d = {}
-    for group in abstract._ta_getGroupTable():
-        d[group] = abstract._ta_getFuncTable(group)
-    return d
+    return abstract._ta_get_function_groups()
 
 
 # --------------  Moving Averages (Overlap Studies) ----------------------------

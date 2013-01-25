@@ -10,6 +10,19 @@ cimport abstract_h as abstract
 from common_c import _ta_check_success
 from cython.operator cimport dereference as deref
 
+__INPUT_ARRAYS_DEFAULTS = { 'open': None,
+                            'high': None,
+                            'low': None,
+                            'close': None,
+                            'volume': None }
+
+__INPUT_ARRAYS_KEYS = ['close', 'high', 'low', 'open', 'volume']
+
+# lookup for TALIB input parameters which don't define expected price series inputs
+__INPUT_PRICE_SERIES_DEFAULTS = { 'price': 'close',
+                                  'price0': 'high',
+                                  'price1': 'low',
+                                  'periods': None } # only used by MAVP; not a price series!
 
 class Function(object):
     ''' This is a pythonic wrapper around TALIB's abstract interface. It is
@@ -43,23 +56,13 @@ class Function(object):
         if self.__name not in talib.get_functions():
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__info = None
-        self.__input_arrays = { 'open': None,
-                               'high': None,
-                               'low': None,
-                               'close': None,
-                               'volume': None }
+        self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
 
         # dictionaries of function args. keys are input/opt_input/output parameter names
         self.__input_names = OrderedDict()
         self.__opt_inputs = OrderedDict()
         self.__outputs = OrderedDict()
         self.__outputs_valid = False
-
-        # lookup for TALIB input parameters which don't define expected price series inputs
-        self.__input_price_series_defaults = { 'price': 'close',
-                                               'price0': 'high',
-                                               'price1': 'low',
-                                               'periods': None } # only used by MAVP; not a price series!
 
         # finish initializing: query the TALIB abstract interface and set arguments
         self.__initialize_function_info()
@@ -74,7 +77,7 @@ class Function(object):
             info = _ta_getInputParameterInfo(self.__name, i)
             input_name = info['name']
             if info['price_series'] == None:
-                info['price_series'] = self.__input_price_series_defaults[input_name]
+                info['price_series'] = __INPUT_PRICE_SERIES_DEFAULTS[input_name]
             self.__input_names[input_name] = info
         self.__info['input_names'] = self.input_names
 
@@ -144,7 +147,7 @@ class Function(object):
                 return False
         '''
         if isinstance(input_arrays, dict) \
-          and sorted(input_arrays.keys()) == ['close', 'high', 'low', 'open', 'volume']:
+          and sorted(input_arrays.keys()) == __INPUT_ARRAYS_KEYS:
             self.__input_arrays = input_arrays
             self.__outputs_valid = False
             return True
@@ -262,7 +265,7 @@ class Function(object):
             if isinstance(price_series, list): # TALIB-supplied input names
                 for name in price_series:
                     input_price_series_names.append(name)
-            else: # name came from self.__input_price_series_defaults
+            else: # name came from __INPUT_PRICE_SERIES_DEFAULTS
                 input_price_series_names.append(price_series)
 
         # populate the ordered args we'll call the function with
@@ -311,8 +314,211 @@ these functions into an easy-to-use, pythonic interface. It's therefore recommen
 over using these functions directly.
 '''
 
+__GROUPS = [
+    'Math Operators',
+    'Math Transform',
+    'Overlap Studies',
+    'Volatility Indicators',
+    'Momentum Indicators',
+    'Cycle Indicators',
+    'Volume Indicators',
+    'Pattern Recognition',
+    'Statistic Functions',
+    'Price Transform',
+    ]
+
+__FUNCTION_GROUPS = {
+    'Cycle Indicators': [
+        'HT_DCPERIOD',
+        'HT_DCPHASE',
+        'HT_PHASOR',
+        'HT_SINE',
+        'HT_TRENDMODE',
+        ],
+    'Math Operators': [
+        'ADD',
+        'DIV',
+        'MAX',
+        'MAXINDEX',
+        'MIN',
+        'MININDEX',
+        'MINMAX',
+        'MINMAXINDEX',
+        'MULT',
+        'SUB',
+        'SUM',
+        ],
+    'Math Transform': [
+        'ACOS',
+        'ASIN',
+        'ATAN',
+        'CEIL',
+        'COS',
+        'COSH',
+        'EXP',
+        'FLOOR',
+        'LN',
+        'LOG10',
+        'SIN',
+        'SINH',
+        'SQRT',
+        'TAN',
+        'TANH',
+        ],
+    'Momentum Indicators': [
+        'ADX',
+        'ADXR',
+        'APO',
+        'AROON',
+        'AROONOSC',
+        'BOP',
+        'CCI',
+        'CMO',
+        'DX',
+        'MACD',
+        'MACDEXT',
+        'MACDFIX',
+        'MFI',
+        'MINUS_DI',
+        'MINUS_DM',
+        'MOM',
+        'PLUS_DI',
+        'PLUS_DM',
+        'PPO',
+        'ROC',
+        'ROCP',
+        'ROCR',
+        'ROCR100',
+        'RSI',
+        'STOCH',
+        'STOCHF',
+        'STOCHRSI',
+        'TRIX',
+        'ULTOSC',
+        'WILLR',
+        ],
+    'Overlap Studies': [
+        'BBANDS',
+        'DEMA',
+        'EMA',
+        'HT_TRENDLINE',
+        'KAMA',
+        'MA',
+        'MAMA',
+        'MAVP',
+        'MIDPOINT',
+        'MIDPRICE',
+        'SAR',
+        'SAREXT',
+        'SMA',
+        'T3',
+        'TEMA',
+        'TRIMA',
+        'WMA',
+        ],
+    'Pattern Recognition': [
+        'CDL2CROWS',
+        'CDL3BLACKCROWS',
+        'CDL3INSIDE',
+        'CDL3LINESTRIKE',
+        'CDL3OUTSIDE',
+        'CDL3STARSINSOUTH',
+        'CDL3WHITESOLDIERS',
+        'CDLABANDONEDBABY',
+        'CDLADVANCEBLOCK',
+        'CDLBELTHOLD',
+        'CDLBREAKAWAY',
+        'CDLCLOSINGMARUBOZU',
+        'CDLCONCEALBABYSWALL',
+        'CDLCOUNTERATTACK',
+        'CDLDARKCLOUDCOVER',
+        'CDLDOJI',
+        'CDLDOJISTAR',
+        'CDLDRAGONFLYDOJI',
+        'CDLENGULFING',
+        'CDLEVENINGDOJISTAR',
+        'CDLEVENINGSTAR',
+        'CDLGAPSIDESIDEWHITE',
+        'CDLGRAVESTONEDOJI',
+        'CDLHAMMER',
+        'CDLHANGINGMAN',
+        'CDLHARAMI',
+        'CDLHARAMICROSS',
+        'CDLHIGHWAVE',
+        'CDLHIKKAKE',
+        'CDLHIKKAKEMOD',
+        'CDLHOMINGPIGEON',
+        'CDLIDENTICAL3CROWS',
+        'CDLINNECK',
+        'CDLINVERTEDHAMMER',
+        'CDLKICKING',
+        'CDLKICKINGBYLENGTH',
+        'CDLLADDERBOTTOM',
+        'CDLLONGLEGGEDDOJI',
+        'CDLLONGLINE',
+        'CDLMARUBOZU',
+        'CDLMATCHINGLOW',
+        'CDLMATHOLD',
+        'CDLMORNINGDOJISTAR',
+        'CDLMORNINGSTAR',
+        'CDLONNECK',
+        'CDLPIERCING',
+        'CDLRICKSHAWMAN',
+        'CDLRISEFALL3METHODS',
+        'CDLSEPARATINGLINES',
+        'CDLSHOOTINGSTAR',
+        'CDLSHORTLINE',
+        'CDLSPINNINGTOP',
+        'CDLSTALLEDPATTERN',
+        'CDLSTICKSANDWICH',
+        'CDLTAKURI',
+        'CDLTASUKIGAP',
+        'CDLTHRUSTING',
+        'CDLTRISTAR',
+        'CDLUNIQUE3RIVER',
+        'CDLUPSIDEGAP2CROWS',
+        'CDLXSIDEGAP3METHODS',
+        ],
+    'Price Transform': [
+        'AVGPRICE',
+        'MEDPRICE',
+        'TYPPRICE',
+        'WCLPRICE',
+        ],
+    'Statistic Functions': [
+        'BETA',
+        'CORREL',
+        'LINEARREG',
+        'LINEARREG_ANGLE',
+        'LINEARREG_INTERCEPT',
+        'LINEARREG_SLOPE',
+        'STDDEV',
+        'TSF',
+        'VAR',
+        ],
+    'Volatility Indicators': [
+        'ATR',
+        'NATR',
+        'TRANGE',
+        ],
+    'Volume Indicators': [
+        'AD',
+        'ADOSC',
+        'OBV'
+        ],
+    }
+
+def _ta_get_functions():
+    ret = []
+    for group in __FUNCTION_GROUPS:
+        ret.extend(__FUNCTION_GROUPS[group])
+    return ret
+
+def _ta_get_function_groups():
+    return __FUNCTION_GROUPS.copy()
+
 def _ta_getGroupTable():
-    ''' Returns the list of available TALIB function group names.
+    ''' Returns the list of available TALIB function group names. *slow*
     '''
     cdef abstract.TA_StringTable *table
     _ta_check_success('TA_GroupTableAlloc', abstract.TA_GroupTableAlloc(&table))
@@ -323,7 +529,7 @@ def _ta_getGroupTable():
     return groups
 
 def _ta_getFuncTable(char *group):
-    ''' Returns a list of the functions for the specified group name.
+    ''' Returns a list of the functions for the specified group name. *slow*
     '''
     cdef abstract.TA_StringTable *table
     _ta_check_success('TA_FuncTableAlloc', abstract.TA_FuncTableAlloc(group, &table))
@@ -350,6 +556,34 @@ def __get_flags(flag, flags_lookup_dict):
             ret.append(flags_lookup_dict[2**i])
     return ret
 
+TA_FUNC_FLAGS = { 16777216: 'Output scale same as input',
+                  67108864: 'Output is over volume',
+                  134217728: 'Function has an unstable period',
+                  268435456: 'Output is a candlestick' }
+
+# when flag is 0, the function (should) work on any reasonable input ndarray
+TA_INPUT_FLAGS = { 1: 'open',
+                   2: 'high',
+                   4: 'low',
+                   8: 'close',
+                   16: 'volumne',
+                   32: 'openInterest',
+                   64: 'timeStamp' }
+
+TA_OUTPUT_FLAGS = { 1: 'Line',
+                    2: 'Dotted Line',
+                    4: 'Dashed Line',
+                    8: 'Dot',
+                    16: 'Histogram',
+                    32: 'Pattern (Bool)',
+                    64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
+                    128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
+                    256: 'Output can be positive',
+                    512: 'Output can be negative',
+                    1024: 'Output can be zero',
+                    2048: 'Values represent an upper limit',
+                    4096: 'Values represent a lower limit' }
+
 def _ta_getFuncInfo(char *function_name):
     ''' Returns the info dict for the function. It has the following keys: name,
     group, help, flags, num_inputs, num_opt_inputs and num_outputs.
@@ -358,15 +592,10 @@ def _ta_getFuncInfo(char *function_name):
     retCode = abstract.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
-    ta_func_flags = { 16777216: 'Output scale same as input',
-                      67108864: 'Output is over volume',
-                      134217728: 'Function has an unstable period',
-                      268435456: 'Output is a candlestick' }
-
     ret = { 'name': info.name,
             'group': info.group,
             'display_name': info.hint,
-            'flags': __get_flags(info.flags, ta_func_flags),
+            'flags': __get_flags(info.flags, TA_FUNC_FLAGS),
             'num_inputs': int(info.nbInput),
             'num_opt_inputs': int(info.nbOptInput),
             'num_outputs': int(info.nbOutput) }
@@ -380,15 +609,6 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     retCode = abstract.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
-    # when flag is 0, the function (should) work on any reasonable input ndarray
-    ta_input_flags = { 1: 'open',
-                       2: 'high',
-                       4: 'low',
-                       8: 'close',
-                       16: 'volumne',
-                       32: 'openInterest',
-                       64: 'timeStamp' }
-
     name = info.paramName
     name = name[len('in'):].lower()
     if 'real' in name:
@@ -398,7 +618,7 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
 
     ret = { 'name': name,
             #'type': info.type,
-            'price_series': __get_flags(info.flags, ta_input_flags) }
+            'price_series': __get_flags(info.flags, TA_INPUT_FLAGS) }
     return ret
 
 def _ta_getOptInputParameterInfo(char *function_name, int idx):
@@ -437,23 +657,9 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     if 'real' in name and name not in ['real', 'real0', 'real1']:
         name = name[len('real'):]
 
-    ta_output_flags = { 1: 'Line',
-                        2: 'Dotted Line',
-                        4: 'Dashed Line',
-                        8: 'Dot',
-                        16: 'Histogram',
-                        32: 'Pattern (Bool)',
-                        64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
-                        128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
-                        256: 'Output can be positive',
-                        512: 'Output can be negative',
-                        1024: 'Output can be zero',
-                        2048: 'Values represent an upper limit',
-                        4096: 'Values represent a lower limit' }
-
     ret = { 'name': name,
             #'type': info.type,
-            'description': __get_flags(info.flags, ta_output_flags) }
+            'description': __get_flags(info.flags, TA_OUTPUT_FLAGS) }
     return ret
 
 def _get_defaults_and_docs(func_info):
