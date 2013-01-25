@@ -44,8 +44,13 @@ func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-If you get build errors compiling the underlying ``ta-lib`` library, simply
-rerunning ``make`` and then ``sudo make install`` usually does the trick.
+If you get build errors compiling the underlying ``ta-lib`` such as these:
+```
+mv -f .deps/gen_code-gen_code.Tpo .deps/gen_code-gen_code.Po
+mv: cannot stat `.deps/gen_code-gen_code.Tpo': No such file or directory
+make[3]: *** [gen_code-gen_code.o] Error 1/bin/bash ../../../libtool --tag=CC --mode=link gcc -g -O2 -L../../ta_common -L../../ta_abstract -L../../ta_func -o gen_code gen_code-gen_code.o -lta_common -lta_abstract_gc -lta_func -lm -lpthread -ldl
+```
+Simply rerunning ``make`` and then ``sudo make install`` seems to always do the trick.
 
 ## Function API Examples
 
@@ -102,20 +107,20 @@ interface:
 
 ```python
 from talib.abstract import Function
-output = Function('sma', input_arrays).get_outputs()
+output = Function('sma', input_arrays).outputs
 
 # teaser:
-output = Function('sma')(input_arrays, timeperiod=20, price='open')
+output = Function('sma')(input_arrays, timeperiod=20, price='close')
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2)
 print Function('STOCH').info
 ```
 
 You'll notice a few things are different. The function is now a class,
-initialized with any supported function name and optionally ``input_arrays``.
-To run the TA function with our input data, we access the ``outputs`` property.
-It wraps a method that ensures the results are always valid so long as the
-``input_arrays`` dict was already set. Speaking of which, the SMA function only
-takes one input, and we gave it five!
+initialized with any supported function name (case insensitive) and optionally
+``input_arrays``. To run the TA function with our input data, we access the
+``outputs`` property. It wraps a method that ensures the results are always
+valid so long as the ``input_arrays`` dict was already set. Speaking of which,
+the SMA function only takes one input, and we gave it five!
 
 Certain TA functions define which price series names they expect for input.
 Others, like SMA, don't (we'll explain how to figure out which in a moment).
@@ -125,7 +130,7 @@ We can override the default like so:
 
 ```python
 sma = Function('sma', input_arrays)
-sma.set_function_parameters(price='open')
+sma.set_function_args(timeperiod=10, price='open')
 output = sma.outputs
 ```
 
@@ -152,7 +157,7 @@ on how many outputs the TA function has. This information can be found through
 detail of the current state of the ``Function`` instance:
 
 ```python
-print Function('stoch').get_info()
+print Function('stoch').info
 {
   'name': 'STOCH',
   'display_name': 'Stochastic',
@@ -189,7 +194,7 @@ from talib import MA_Type
 output = Function('sma')(input_arrays, timeperiod=10, price='high')
 upper, middle, lower = Function('bbands')(input_arrays, timeperiod=20, matype=MA_Type.EMA)
 stoch = Function('stoch', input_arrays)
-stoch.set_function_parameters(slowd_period=5)
+stoch.set_function_args(slowd_period=5)
 slowk, slowd = stoch(15, fastd_period=5) # 15 == fastk_period specified positionally
 ```
 
