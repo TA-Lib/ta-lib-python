@@ -1,0 +1,19 @@
+
+-------------- Version 0.X.X [9/99/9999] ------------------
+[CHANGE]: The talib module got renamed to func and moved into the talib package.
+    Use "from talib import func" now.
+  
+[DEPRECATED]: The old moving average types in func are now deprecated. See the
+    next bullet for the replacement, or you could use "from talib import deprecated"
+    for the deprecated types.
+  
+[NEW]: The new moving average types are at talib.MA_Type. It's a class, with
+    SMA, EMA, DEMA, etc attribute variables you should now use. Human-readable
+    Lookups are also possible by using MA_Type as a dict eg:
+        MA_Type[MA_Type.SMA] # returns "Simple Moving Average"
+  
+[NEW]: In addition to the existing func interface, we now provide an enhanced
+  abstract interface too. Functions in "import talib" use this interface, or you
+  can use "from talib import abstract" for the full abstract interface. See the
+  README, examples/example.py and talib/tests/abstract_test.py for more information.
+  The full (commented) source code is mostly located in talib/abstract.pyx.
