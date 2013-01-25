@@ -291,13 +291,13 @@ class Function(object):
         return value
 
     def __repr__(self):
-        return self.info
+        return '%s' % self.info
 
     def __unicode__(self):
         return unicode(self.__str__())
 
     def __str__(self):
-        return _get_defaults_and_docs(self.__opt_inputs)[1] # docstring includes defaults
+        return _get_defaults_and_docs(self.info)[1] # docstring includes defaults
 
 
 ######################  INTERNAL python-level functions  #######################
