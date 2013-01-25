@@ -56,7 +56,7 @@ setup(
         "Topic :: Scientific/Engineering :: Mathematics",
         "License :: OSI Approved :: BSD License",
     ],
-    packages=['talib'],
+    packages=['talib', 'talib.tests'],
     ext_modules=[common_ext, func_ext, abstract_ext],
     cmdclass = {'build_ext': build_ext}
 )
