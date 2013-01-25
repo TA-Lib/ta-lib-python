@@ -105,7 +105,7 @@ from talib.abstract import Function
 output = Function('sma', input_arrays).get_outputs()
 
 # teaser:
-output = Function('sma')(input_arrays, timePeriod=20, price='open')
+output = Function('sma')(input_arrays, timeperiod=20, price='open')
 upper, middle, lower = Function('bbands')(input_arrays, 20, 2, 2)
 print Function('STOCH').info
 ```
@@ -161,13 +161,13 @@ print Function('stoch').get_info()
     ('prices', ['high', 'low', 'close']),
   ]),
   'parameters': OrderedDict([
-    ('fastK_Period', 5),
-    ('slowK_Period', 3),
-    ('slowK_MAType', 0),
-    ('slowD_Period', 3),
-    ('slowD_MAType', 0),
+    ('fastk_period', 5),
+    ('slowk_period', 3),
+    ('slowk_matype', 0),
+    ('slowd_period', 3),
+    ('slowd_matype', 0),
   ]),
-  'output_names': ['slowK', 'slowD'],
+  'output_names': ['slowk', 'slowd'],
   'flags': None,
 }
 ```
@@ -186,11 +186,11 @@ other ways to set TA function arguments:
 
 ```python
 from talib import MA_Type
-output = Function('sma')(input_arrays, timePeriod=10, price='high')
-upper, middle, lower = Function('bbands')(input_arrays, timePeriod=20, MAType=MA_Type.EMA)
+output = Function('sma')(input_arrays, timeperiod=10, price='high')
+upper, middle, lower = Function('bbands')(input_arrays, timeperiod=20, matype=MA_Type.EMA)
 stoch = Function('stoch', input_arrays)
-stoch.set_function_parameters(slowD_Period=5)
-slowK, slowD = stoch(15, fastD_Period=5) # 15 == faskK_Period specified positionally
+stoch.set_function_parameters(slowd_period=5)
+slowk, slowd = stoch(15, fastd_period=5) # 15 == faskk_period specified positionally
 ```
 
 ``input_arrays`` must be passed as a positional argument (or left out entirely).
