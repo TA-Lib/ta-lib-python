@@ -89,6 +89,12 @@ output = talib.MOM(data, timeperiod=5)
 
 TA-Lib also provides an abstract interface for calling functions. Our wrapper
 for the abstract interface is somewhat different from the upstream implentation.
+The abstract interface is designed to make the TA-Lib easily introspectable and
+dynamically programmable. Of course Python allows for these things too, but this
+helps do some of the heavy lifting for you, making it much easier to for example
+add a TA-Lib indicator control panel to a GUI charting program. It also unifies
+the interface for using and calling functions making life easier on the developer.
+
 If you're already familiar with using the function API, you should feel right at
 home using the abstract interface. To start, every function takes the same input:
 
