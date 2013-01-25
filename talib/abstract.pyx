@@ -28,8 +28,8 @@ class Function(object):
     - set_input_arrays(input_arrays)
     - set_function_args([input_arrays,] [param_args_andor_kwargs])
 
-    Documentation for param_args_andor_kwargs can be printed with print_help()
-    or programatically via the info, input_names and parameters properties.
+    Documentation for param_args_andor_kwargs can be seen by printing the Function
+    instance or programatically via the info, input_names and parameters properties.
 
     ----- result-returning functions -----
     - the outputs property wraps a method which ensures results are always valid
@@ -37,7 +37,7 @@ class Function(object):
     - FunctionInstance([input_arrays,] [param_args_andor_kwargs]) # calls set_function_args and returns self.outputs
     '''
 
-    def __init__(self, function_name, input_arrays=None):
+    def __init__(self, function_name, *args, **kwargs):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
         if self.__name not in talib.get_functions():
@@ -61,12 +61,11 @@ class Function(object):
                                                'price1': 'low',
                                                'periods': None } # only used by MAVP; not a price series!
 
-        # finally query the TALIB abstract interface for the details of our function
-        self.__initialize_private_variables()
-        if input_arrays:
-            self.set_input_arrays(input_arrays)
+        # finish initializing: query the TALIB abstract interface and set arguments
+        self.__initialize_function_info()
+        self.set_function_args(*args, **kwargs)
 
-    def __initialize_private_variables(self):
+    def __initialize_function_info(self):
         # function info
         self.__info = _ta_getFuncInfo(self.__name)
 
@@ -92,12 +91,6 @@ class Function(object):
             output_name = info['name']
             self.__outputs[output_name] = None
         self.__info['output_names'] = self.output_names
-
-    def print_help(self):
-        ''' Prints the function info documentation.
-        '''
-        defaults, docs = _get_defaults_and_docs(self.__info)
-        print docs
 
     @property
     def info(self):
@@ -183,12 +176,13 @@ class Function(object):
             skip_first = 0
             if self.set_input_arrays(args[0]):
                 skip_first = 1
-            for i, param_name in enumerate(self.__opt_inputs):
-                i += skip_first
-                if i < len(args):
-                    value = args[i]
-                    self.__opt_inputs[param_name]['value'] = value
-                    update_info = True
+            if len(args) > skip_first:
+                for i, param_name in enumerate(self.__opt_inputs):
+                    i += skip_first
+                    if i < len(args):
+                        value = args[i]
+                        self.__opt_inputs[param_name]['value'] = value
+                        update_info = True
 
         for key in kwargs:
             if key in self.__opt_inputs:
@@ -240,7 +234,9 @@ class Function(object):
         return ret
 
     def run(self, input_arrays=None):
-        ''' A shortcut to the outputs property that also allows setting the
+        ''' run([input_arrays=None])
+
+        This is a shortcut to the outputs property that also allows setting the
         input_arrays dict.
         '''
         if input_arrays:
@@ -249,7 +245,9 @@ class Function(object):
         return self.outputs
 
     def __call__(self, *args, **kwargs):
-        ''' A shortcut to the outputs property that also allows setting the
+        ''' func_instance([input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs])
+
+        This is a shortcut to the outputs property that also allows setting the
         input_arrays dict and function parameters.
         '''
         self.set_function_args(*args, **kwargs)
@@ -291,6 +289,15 @@ class Function(object):
         if not value:
             value = self.__opt_inputs[input_name]['default_value']
         return value
+
+    def __repr__(self):
+        return self.info
+
+    def __unicode__(self):
+        return unicode(self.__str__())
+
+    def __str__(self):
+        return _get_defaults_and_docs(self.__opt_inputs)[1] # docstring includes defaults
 
 
 ######################  INTERNAL python-level functions  #######################
