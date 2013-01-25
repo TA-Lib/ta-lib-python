@@ -3,13 +3,18 @@
 [CHANGE]: The talib module got renamed to func and moved into the talib package.
     Use "from talib import func" now.
 
-[DEPRECATED]: The old moving average types in func are now deprecated. See the
-    next bullet for the replacement, or you could use "from talib import deprecated"
-    for the deprecated types.
+[FIX]: Improve docstrings for indicators in talib.func.
 
-[NEW]: The new moving average types are in talib.MA_Type. It's a class, with
-    SMA, EMA, DEMA, etc attribute variables you should now use. Human-readable
-    Lookups are also possible by using MA_Type as a dict eg:
+[FIX]: Initialize and shutdown underlying TA-Lib only once each. This should
+    give slight speedups when using many indicators (<5%).
+
+[DEPRECATED]: The old moving average types that were in talib.func are now
+    deprecated. See the next bullet item for the replacement, or you can continue
+    using them with "from talib import deprecated" for the time being.
+
+[NEW]: The new moving average types are in talib.MA_Type. It's a class with SMA,
+    EMA, DEMA, etc attribute variables you should now use. Human-readable lookups
+    are also possible by using MA_Type as a dict eg:
         MA_Type[MA_Type.SMA] # returns "Simple Moving Average"
 
 [NEW]: In addition to the existing func interface, we now provide an enhanced
