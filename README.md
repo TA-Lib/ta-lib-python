@@ -190,7 +190,7 @@ output = Function('sma')(input_arrays, timeperiod=10, price='high')
 upper, middle, lower = Function('bbands')(input_arrays, timeperiod=20, matype=MA_Type.EMA)
 stoch = Function('stoch', input_arrays)
 stoch.set_function_parameters(slowd_period=5)
-slowk, slowd = stoch(15, fastd_period=5) # 15 == faskk_period specified positionally
+slowk, slowd = stoch(15, fastd_period=5) # 15 == fastk_period specified positionally
 ```
 
 ``input_arrays`` must be passed as a positional argument (or left out entirely).
