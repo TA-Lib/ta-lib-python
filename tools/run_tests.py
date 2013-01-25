@@ -10,11 +10,21 @@ def get_test_cases():
     ret += abstract_test.get_test_cases()
     return ret
 
-def run():
+def main():
     suite = unittest.TestSuite()
     suite.addTests(get_test_cases())
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
 
+def profile():
+    import cProfile
+    import pstats
+    profFile = "prof"
+    cProfile.run("main()", profFile)
+    p = pstats.Stats(profFile)
+    # p.dump_stats("runtests.profile")
+    p.strip_dirs().sort_stats("time").print_stats()
+
 if __name__ == '__main__':
-    run()
+    main()
+    #profile()
