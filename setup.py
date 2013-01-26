@@ -25,10 +25,22 @@ elif sys.platform == "win32":
 else:
     raise NotImplementedError(sys.platform)
 
+common_ext = Extension('talib.common_c', ['talib/common_c.pyx'],
+    include_dirs=[numpy.get_include(), include_talib_dir],
+    library_dirs=[lib_talib_dir],
+    libraries=["ta_lib"]
+)
+
 func_ext = Extension("talib.func", ["talib/func.pyx"],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
     libraries=["ta_lib"]
+)
+
+abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
+    include_dirs=[numpy.get_include(), include_talib_dir],
+    library_dirs=[lib_talib_dir],
+    libraries=['ta_lib']
 )
 
 setup(
@@ -40,11 +52,19 @@ setup(
     url = 'http://github.com/mrjbq7/ta-lib',
     download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.2.zip',
     classifiers = [
-        "Development Status :: 4 - Beta",
-        "Topic :: Scientific/Engineering :: Mathematics",
         "License :: OSI Approved :: BSD License",
+        "Development Status :: 4 - Beta",
+        "Operating System :: Unix",
+        "Operating System :: POSIX",
+        "Operating System :: MacOS :: MacOS X",
+        "Programming Language :: Python",
+        "Programming Language :: Cython",
+        "Topic :: Scientific/Engineering :: Mathematics",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Financial and Insurance Industry",
     ],
-    packages=['talib'],
-    ext_modules=[func_ext],
+    packages=['talib', 'talib.tests'],
+    ext_modules=[common_ext, func_ext, abstract_ext],
     cmdclass = {'build_ext': build_ext}
 )
