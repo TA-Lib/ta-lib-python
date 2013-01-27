@@ -4,7 +4,7 @@ import numpy as np
 from talib import func
 from talib import abstract
 
-from talib.tests.data import ford_2012
+from data import ford_2012
 
 
 class AbstractTestCase(unittest.TestCase):

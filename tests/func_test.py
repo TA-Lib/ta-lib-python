@@ -3,7 +3,8 @@ import numpy as np
 
 import talib
 from talib import func
-from talib.tests.data import series
+
+from data import series
 
 class FuncTestCase(unittest.TestCase):
     def test_MIN(self):

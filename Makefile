@@ -8,4 +8,4 @@ clean:
 	rm -rf build talib/func.so talib/abstract.so talib/common_c.so
 
 test:
-	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests
+	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} python -m unittest discover -s tests -p "*_test.py"
