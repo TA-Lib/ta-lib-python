@@ -428,7 +428,8 @@ for f in functions:
             else:
                 assert False, args
 
-    print '    retCode = %s(' % name,
+    print '    if length >= lookback:'
+    print '        retCode = %s(' % name,
 
     for i, arg in enumerate(args):
         if i > 0:
