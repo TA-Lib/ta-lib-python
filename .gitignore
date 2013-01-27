@@ -1,6 +1,8 @@
 *.pyc
 build
 func.so
+abstract.so
+common_c.so
 .*
 *~
 
