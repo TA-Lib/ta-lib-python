@@ -309,7 +309,7 @@ for f in functions:
             print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
-    print '    _ta_check_success("%s", retCode)' % name
+    print '        _ta_check_success("%s", retCode)' % name
     print '    return',
     i = 0
     for arg in args:

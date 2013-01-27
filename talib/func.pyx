@@ -388,7 +388,7 @@ def ACOS( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ACOS", retCode)
+        _ta_check_success("TA_ACOS", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -450,7 +450,7 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_AD", retCode)
+        _ta_check_success("TA_AD", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -501,7 +501,7 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ADD", retCode)
+        _ta_check_success("TA_ADD", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -566,7 +566,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ADOSC", retCode)
+        _ta_check_success("TA_ADOSC", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -624,7 +624,7 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ADX", retCode)
+        _ta_check_success("TA_ADX", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -682,7 +682,7 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ADXR", retCode)
+        _ta_check_success("TA_ADXR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -730,7 +730,7 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_APO", retCode)
+        _ta_check_success("TA_APO", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -789,7 +789,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
         outaroonup_data[i] = NaN
     if length >= lookback:
         retCode = TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
-    _ta_check_success("TA_AROON", retCode)
+        _ta_check_success("TA_AROON", retCode)
     return outaroondown , outaroonup
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -841,7 +841,7 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_AROONOSC", retCode)
+        _ta_check_success("TA_AROONOSC", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -885,7 +885,7 @@ def ASIN( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ASIN", retCode)
+        _ta_check_success("TA_ASIN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -929,7 +929,7 @@ def ATAN( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ATAN", retCode)
+        _ta_check_success("TA_ATAN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -987,7 +987,7 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ATR", retCode)
+        _ta_check_success("TA_ATR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1049,7 +1049,7 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_AVGPRICE", retCode)
+        _ta_check_success("TA_AVGPRICE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1112,7 +1112,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
         outreallowerband_data[i] = NaN
     if length >= lookback:
         retCode = TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
-    _ta_check_success("TA_BBANDS", retCode)
+        _ta_check_success("TA_BBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1165,7 +1165,7 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_BETA", retCode)
+        _ta_check_success("TA_BETA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1227,7 +1227,7 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_BOP", retCode)
+        _ta_check_success("TA_BOP", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1285,7 +1285,7 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_CCI", retCode)
+        _ta_check_success("TA_CCI", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1347,7 +1347,7 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL2CROWS", retCode)
+        _ta_check_success("TA_CDL2CROWS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1409,7 +1409,7 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3BLACKCROWS", retCode)
+        _ta_check_success("TA_CDL3BLACKCROWS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1471,7 +1471,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3INSIDE", retCode)
+        _ta_check_success("TA_CDL3INSIDE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1533,7 +1533,7 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3LINESTRIKE", retCode)
+        _ta_check_success("TA_CDL3LINESTRIKE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1595,7 +1595,7 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3OUTSIDE", retCode)
+        _ta_check_success("TA_CDL3OUTSIDE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1657,7 +1657,7 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
+        _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1719,7 +1719,7 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
+        _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1783,7 +1783,7 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLABANDONEDBABY", retCode)
+        _ta_check_success("TA_CDLABANDONEDBABY", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1845,7 +1845,7 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
+        _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1907,7 +1907,7 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLBELTHOLD", retCode)
+        _ta_check_success("TA_CDLBELTHOLD", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -1969,7 +1969,7 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLBREAKAWAY", retCode)
+        _ta_check_success("TA_CDLBREAKAWAY", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2031,7 +2031,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
+        _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2093,7 +2093,7 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
+        _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2155,7 +2155,7 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
+        _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2219,7 +2219,7 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
+        _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2281,7 +2281,7 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLDOJI", retCode)
+        _ta_check_success("TA_CDLDOJI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2343,7 +2343,7 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLDOJISTAR", retCode)
+        _ta_check_success("TA_CDLDOJISTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2405,7 +2405,7 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
+        _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2467,7 +2467,7 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLENGULFING", retCode)
+        _ta_check_success("TA_CDLENGULFING", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2531,7 +2531,7 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
+        _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2595,7 +2595,7 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLEVENINGSTAR", retCode)
+        _ta_check_success("TA_CDLEVENINGSTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2657,7 +2657,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
+        _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2719,7 +2719,7 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
+        _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2781,7 +2781,7 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHAMMER", retCode)
+        _ta_check_success("TA_CDLHAMMER", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2843,7 +2843,7 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHANGINGMAN", retCode)
+        _ta_check_success("TA_CDLHANGINGMAN", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2905,7 +2905,7 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHARAMI", retCode)
+        _ta_check_success("TA_CDLHARAMI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -2967,7 +2967,7 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHARAMICROSS", retCode)
+        _ta_check_success("TA_CDLHARAMICROSS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3029,7 +3029,7 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHIGHWAVE", retCode)
+        _ta_check_success("TA_CDLHIGHWAVE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3091,7 +3091,7 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHIKKAKE", retCode)
+        _ta_check_success("TA_CDLHIKKAKE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3153,7 +3153,7 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
+        _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3215,7 +3215,7 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
+        _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3277,7 +3277,7 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
+        _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3339,7 +3339,7 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLINNECK", retCode)
+        _ta_check_success("TA_CDLINNECK", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3401,7 +3401,7 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
+        _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3463,7 +3463,7 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLKICKING", retCode)
+        _ta_check_success("TA_CDLKICKING", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3525,7 +3525,7 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
+        _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3587,7 +3587,7 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
+        _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3649,7 +3649,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
+        _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3711,7 +3711,7 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLLONGLINE", retCode)
+        _ta_check_success("TA_CDLLONGLINE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3773,7 +3773,7 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLMARUBOZU", retCode)
+        _ta_check_success("TA_CDLMARUBOZU", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3835,7 +3835,7 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLMATCHINGLOW", retCode)
+        _ta_check_success("TA_CDLMATCHINGLOW", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3899,7 +3899,7 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLMATHOLD", retCode)
+        _ta_check_success("TA_CDLMATHOLD", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3963,7 +3963,7 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
+        _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4027,7 +4027,7 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLMORNINGSTAR", retCode)
+        _ta_check_success("TA_CDLMORNINGSTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4089,7 +4089,7 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLONNECK", retCode)
+        _ta_check_success("TA_CDLONNECK", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4151,7 +4151,7 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLPIERCING", retCode)
+        _ta_check_success("TA_CDLPIERCING", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4213,7 +4213,7 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
+        _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4275,7 +4275,7 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
+        _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4337,7 +4337,7 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
+        _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4399,7 +4399,7 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
+        _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4461,7 +4461,7 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSHORTLINE", retCode)
+        _ta_check_success("TA_CDLSHORTLINE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4523,7 +4523,7 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSPINNINGTOP", retCode)
+        _ta_check_success("TA_CDLSPINNINGTOP", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4585,7 +4585,7 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
+        _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4647,7 +4647,7 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
+        _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4709,7 +4709,7 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLTAKURI", retCode)
+        _ta_check_success("TA_CDLTAKURI", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4771,7 +4771,7 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLTASUKIGAP", retCode)
+        _ta_check_success("TA_CDLTASUKIGAP", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4833,7 +4833,7 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLTHRUSTING", retCode)
+        _ta_check_success("TA_CDLTHRUSTING", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4895,7 +4895,7 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLTRISTAR", retCode)
+        _ta_check_success("TA_CDLTRISTAR", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4957,7 +4957,7 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
+        _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5019,7 +5019,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
+        _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5081,7 +5081,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
+        _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5125,7 +5125,7 @@ def CEIL( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_CEIL", retCode)
+        _ta_check_success("TA_CEIL", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5171,7 +5171,7 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_CMO", retCode)
+        _ta_check_success("TA_CMO", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5224,7 +5224,7 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_CORREL", retCode)
+        _ta_check_success("TA_CORREL", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5268,7 +5268,7 @@ def COS( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_COS", retCode)
+        _ta_check_success("TA_COS", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5312,7 +5312,7 @@ def COSH( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_COSH", retCode)
+        _ta_check_success("TA_COSH", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5358,7 +5358,7 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_DEMA", retCode)
+        _ta_check_success("TA_DEMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5409,7 +5409,7 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_DIV", retCode)
+        _ta_check_success("TA_DIV", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5467,7 +5467,7 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_DX", retCode)
+        _ta_check_success("TA_DX", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5513,7 +5513,7 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_EMA", retCode)
+        _ta_check_success("TA_EMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5557,7 +5557,7 @@ def EXP( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_EXP", retCode)
+        _ta_check_success("TA_EXP", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5601,7 +5601,7 @@ def FLOOR( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_FLOOR", retCode)
+        _ta_check_success("TA_FLOOR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5645,7 +5645,7 @@ def HT_DCPERIOD( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_HT_DCPERIOD", retCode)
+        _ta_check_success("TA_HT_DCPERIOD", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5689,7 +5689,7 @@ def HT_DCPHASE( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_HT_DCPHASE", retCode)
+        _ta_check_success("TA_HT_DCPHASE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5740,7 +5740,7 @@ def HT_PHASOR( np.ndarray real not None ):
         outquadrature_data[i] = NaN
     if length >= lookback:
         retCode = TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
-    _ta_check_success("TA_HT_PHASOR", retCode)
+        _ta_check_success("TA_HT_PHASOR", retCode)
     return outinphase , outquadrature
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5791,7 +5791,7 @@ def HT_SINE( np.ndarray real not None ):
         outleadsine_data[i] = NaN
     if length >= lookback:
         retCode = TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
-    _ta_check_success("TA_HT_SINE", retCode)
+        _ta_check_success("TA_HT_SINE", retCode)
     return outsine , outleadsine
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5835,7 +5835,7 @@ def HT_TRENDLINE( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_HT_TRENDLINE", retCode)
+        _ta_check_success("TA_HT_TRENDLINE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5879,7 +5879,7 @@ def HT_TRENDMODE( np.ndarray real not None ):
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_HT_TRENDMODE", retCode)
+        _ta_check_success("TA_HT_TRENDMODE", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5925,7 +5925,7 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_KAMA", retCode)
+        _ta_check_success("TA_KAMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5971,7 +5971,7 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LINEARREG", retCode)
+        _ta_check_success("TA_LINEARREG", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6017,7 +6017,7 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LINEARREG_ANGLE", retCode)
+        _ta_check_success("TA_LINEARREG_ANGLE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6063,7 +6063,7 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
+        _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6109,7 +6109,7 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LINEARREG_SLOPE", retCode)
+        _ta_check_success("TA_LINEARREG_SLOPE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6153,7 +6153,7 @@ def LN( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LN", retCode)
+        _ta_check_success("TA_LN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6197,7 +6197,7 @@ def LOG10( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_LOG10", retCode)
+        _ta_check_success("TA_LOG10", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6244,7 +6244,7 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MA", retCode)
+        _ta_check_success("TA_MA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6306,7 +6306,7 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
         outmacdhist_data[i] = NaN
     if length >= lookback:
         retCode = TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    _ta_check_success("TA_MACD", retCode)
+        _ta_check_success("TA_MACD", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6371,7 +6371,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
         outmacdhist_data[i] = NaN
     if length >= lookback:
         retCode = TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    _ta_check_success("TA_MACDEXT", retCode)
+        _ta_check_success("TA_MACDEXT", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6431,7 +6431,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
         outmacdhist_data[i] = NaN
     if length >= lookback:
         retCode = TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
-    _ta_check_success("TA_MACDFIX", retCode)
+        _ta_check_success("TA_MACDFIX", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6485,7 +6485,7 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
         outfama_data[i] = NaN
     if length >= lookback:
         retCode = TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
-    _ta_check_success("TA_MAMA", retCode)
+        _ta_check_success("TA_MAMA", retCode)
     return outmama , outfama
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6540,7 +6540,7 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MAVP", retCode)
+        _ta_check_success("TA_MAVP", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6586,7 +6586,7 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MAX", retCode)
+        _ta_check_success("TA_MAX", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6632,7 +6632,7 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_MAXINDEX", retCode)
+        _ta_check_success("TA_MAXINDEX", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6682,7 +6682,7 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MEDPRICE", retCode)
+        _ta_check_success("TA_MEDPRICE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6746,7 +6746,7 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MFI", retCode)
+        _ta_check_success("TA_MFI", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6792,7 +6792,7 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MIDPOINT", retCode)
+        _ta_check_success("TA_MIDPOINT", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6844,7 +6844,7 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MIDPRICE", retCode)
+        _ta_check_success("TA_MIDPRICE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6890,7 +6890,7 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MIN", retCode)
+        _ta_check_success("TA_MIN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6936,7 +6936,7 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         outinteger_data[i] = 0
     if length >= lookback:
         retCode = TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
-    _ta_check_success("TA_MININDEX", retCode)
+        _ta_check_success("TA_MININDEX", retCode)
     return outinteger
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -6989,7 +6989,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
         outmax_data[i] = NaN
     if length >= lookback:
         retCode = TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
-    _ta_check_success("TA_MINMAX", retCode)
+        _ta_check_success("TA_MINMAX", retCode)
     return outmin , outmax
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7042,7 +7042,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         outmaxidx_data[i] = 0
     if length >= lookback:
         retCode = TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
-    _ta_check_success("TA_MINMAXINDEX", retCode)
+        _ta_check_success("TA_MINMAXINDEX", retCode)
     return outminidx , outmaxidx
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7100,7 +7100,7 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MINUS_DI", retCode)
+        _ta_check_success("TA_MINUS_DI", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7152,7 +7152,7 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MINUS_DM", retCode)
+        _ta_check_success("TA_MINUS_DM", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7198,7 +7198,7 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MOM", retCode)
+        _ta_check_success("TA_MOM", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7249,7 +7249,7 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_MULT", retCode)
+        _ta_check_success("TA_MULT", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7307,7 +7307,7 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_NATR", retCode)
+        _ta_check_success("TA_NATR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7358,7 +7358,7 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_OBV", retCode)
+        _ta_check_success("TA_OBV", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7416,7 +7416,7 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_PLUS_DI", retCode)
+        _ta_check_success("TA_PLUS_DI", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7468,7 +7468,7 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_PLUS_DM", retCode)
+        _ta_check_success("TA_PLUS_DM", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7516,7 +7516,7 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_PPO", retCode)
+        _ta_check_success("TA_PPO", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7562,7 +7562,7 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ROC", retCode)
+        _ta_check_success("TA_ROC", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7608,7 +7608,7 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ROCP", retCode)
+        _ta_check_success("TA_ROCP", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7654,7 +7654,7 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ROCR", retCode)
+        _ta_check_success("TA_ROCR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7700,7 +7700,7 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ROCR100", retCode)
+        _ta_check_success("TA_ROCR100", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7746,7 +7746,7 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_RSI", retCode)
+        _ta_check_success("TA_RSI", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7799,7 +7799,7 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SAR", retCode)
+        _ta_check_success("TA_SAR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7858,7 +7858,7 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SAREXT", retCode)
+        _ta_check_success("TA_SAREXT", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7902,7 +7902,7 @@ def SIN( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SIN", retCode)
+        _ta_check_success("TA_SIN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7946,7 +7946,7 @@ def SINH( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SINH", retCode)
+        _ta_check_success("TA_SINH", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7992,7 +7992,7 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SMA", retCode)
+        _ta_check_success("TA_SMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8036,7 +8036,7 @@ def SQRT( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SQRT", retCode)
+        _ta_check_success("TA_SQRT", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8083,7 +8083,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_STDDEV", retCode)
+        _ta_check_success("TA_STDDEV", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8152,7 +8152,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         outslowd_data[i] = NaN
     if length >= lookback:
         retCode = TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
-    _ta_check_success("TA_STOCH", retCode)
+        _ta_check_success("TA_STOCH", retCode)
     return outslowk , outslowd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8219,7 +8219,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         outfastd_data[i] = NaN
     if length >= lookback:
         retCode = TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
-    _ta_check_success("TA_STOCHF", retCode)
+        _ta_check_success("TA_STOCHF", retCode)
     return outfastk , outfastd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8275,7 +8275,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
         outfastd_data[i] = NaN
     if length >= lookback:
         retCode = TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
-    _ta_check_success("TA_STOCHRSI", retCode)
+        _ta_check_success("TA_STOCHRSI", retCode)
     return outfastk , outfastd
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8326,7 +8326,7 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SUB", retCode)
+        _ta_check_success("TA_SUB", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8372,7 +8372,7 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_SUM", retCode)
+        _ta_check_success("TA_SUM", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8419,7 +8419,7 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_T3", retCode)
+        _ta_check_success("TA_T3", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8463,7 +8463,7 @@ def TAN( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TAN", retCode)
+        _ta_check_success("TA_TAN", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8507,7 +8507,7 @@ def TANH( np.ndarray real not None ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TANH", retCode)
+        _ta_check_success("TA_TANH", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8553,7 +8553,7 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TEMA", retCode)
+        _ta_check_success("TA_TEMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8609,7 +8609,7 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TRANGE", retCode)
+        _ta_check_success("TA_TRANGE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8655,7 +8655,7 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TRIMA", retCode)
+        _ta_check_success("TA_TRIMA", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8701,7 +8701,7 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TRIX", retCode)
+        _ta_check_success("TA_TRIX", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8747,7 +8747,7 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TSF", retCode)
+        _ta_check_success("TA_TSF", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8803,7 +8803,7 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_TYPPRICE", retCode)
+        _ta_check_success("TA_TYPPRICE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8863,7 +8863,7 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_ULTOSC", retCode)
+        _ta_check_success("TA_ULTOSC", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8910,7 +8910,7 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_VAR", retCode)
+        _ta_check_success("TA_VAR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -8966,7 +8966,7 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_WCLPRICE", retCode)
+        _ta_check_success("TA_WCLPRICE", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -9024,7 +9024,7 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_WILLR", retCode)
+        _ta_check_success("TA_WILLR", retCode)
     return outreal
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -9070,7 +9070,7 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
         outreal_data[i] = NaN
     if length >= lookback:
         retCode = TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
-    _ta_check_success("TA_WMA", retCode)
+        _ta_check_success("TA_WMA", retCode)
     return outreal
 
 __all__ = ["ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMO","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","OBV","PLUS_DI","PLUS_DM","PPO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","WCLPRICE","WILLR","WMA"]
