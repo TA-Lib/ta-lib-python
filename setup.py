@@ -64,7 +64,7 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Financial and Insurance Industry",
     ],
-    packages=['talib', 'talib.tests'],
+    packages=['talib'],
     ext_modules=[common_ext, func_ext, abstract_ext],
     cmdclass = {'build_ext': build_ext}
 )
