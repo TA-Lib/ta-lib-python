@@ -1,14 +1,13 @@
 '''
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
-import talib
-from talib import func as func_c
+from . import func as func_c
+from .common_c import _ta_check_success, MA_Type
 from collections import OrderedDict
+from cython.operator cimport dereference as deref
 
 cimport numpy as np
 cimport abstract_h as abstract
-from common_c import _ta_check_success
-from cython.operator cimport dereference as deref
 
 __INPUT_ARRAYS_DEFAULTS = { 'open': None,
                             'high': None,
@@ -53,7 +52,7 @@ class Function(object):
     def __init__(self, function_name, *args, **kwargs):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
-        if self.__name not in talib.get_functions():
+        if self.__name not in _ta_get_functions():
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__info = None
         self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
@@ -132,17 +131,17 @@ class Function(object):
         returning False otherwise. If you implement your own data type and wish
         to subclass Function, you should wrap this function with an if-statement:
 
-        class CustomFunction(abstract.Function):
+        class CustomFunction(Function):
             def __init__(self, function_name):
-                abstract.Function.__init__(self, function_name)
+                Function.__init__(self, function_name)
 
             def set_input_arrays(self, input_data):
-                if abstract.Function.set_input_arrays(self, input_data):
+                if Function.set_input_arrays(self, input_data):
                     return True
                 elif isinstance(input_data, some_module.CustomDataType):
-                    input_arrays = abstract.Function.get_input_arrays(self)
+                    input_arrays = Function.get_input_arrays(self)
                     # convert input_data to input_arrays and then call the super
-                    abstract.Function.set_input_arrays(self, input_arrays)
+                    Function.set_input_arrays(self, input_arrays)
                     return True
                 return False
         '''
@@ -566,7 +565,7 @@ TA_INPUT_FLAGS = { 1: 'open',
                    2: 'high',
                    4: 'low',
                    8: 'close',
-                   16: 'volumne',
+                   16: 'volume',
                    32: 'openInterest',
                    64: 'timeStamp' }
 
@@ -689,7 +688,7 @@ def _get_defaults_and_docs(func_info):
         func_args.append('[%s=%s]' % (param, params[param]))
         defaults[param] = params[param]
         if param == 'matype':
-            docs[-1] = ' '.join([docs[-1], '(%s)' % talib.MA_Type[params[param]]])
+            docs[-1] = ' '.join([docs[-1], '(%s)' % MA_Type[params[param]]])
 
     outputs = func_info['output_names']
     docs.append('Outputs:')
@@ -710,7 +709,7 @@ def _get_defaults_and_docs(func_info):
 # same except for having the leading 4 characters lowercased.
 
 # These functions are for:
-# - Gettinig TALIB handle and paramholder pointers
+# - Getting TALIB handle and paramholder pointers
 # - Setting TALIB paramholder optInput values and calling the lookback function
 
 cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
@@ -747,3 +746,187 @@ cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
     retCode = abstract.TA_GetLookback(holder, &lookback)
     _ta_check_success('TA_GetLookback', retCode)
     return lookback
+
+# --------------  Moving Averages (Overlap Studies) ----------------------------
+MA = Function("MA")             # Moving average
+SMA = Function("SMA")           # Simple Moving Average
+EMA = Function("EMA")           # Exponential Moving Average
+WMA = Function("WMA")           # Weighted Moving Average
+DEMA = Function("DEMA")         # Double Exponential Moving Average
+TEMA = Function("TEMA")         # Triple Exponential Moving Average
+TRIMA = Function("TRIMA")       # Triangular Moving Average
+KAMA = Function("KAMA")         # Kaufman Adaptive Moving Average
+MAMA = Function("MAMA")         # MESA Adaptive Moving Average
+T3 = Function("T3")             # Triple Exponential Moving Average (T3)
+MAVP = Function("MAVP")         # Moving average with variable period
+
+# --------------  Overlap Studies cont.  ---------------------------------------
+BBANDS = Function("BBANDS")     # Bollinger Bands
+MIDPOINT = Function("MIDPOINT") # MidPoint over period
+MIDPRICE = Function("MIDPRICE") # Midpoint Price over period
+SAR = Function("SAR")           # Parabolic SAR
+SAREXT = Function("SAREXT")     # Parabolic SAR - Extended
+
+# --------------  Momentum Indicators  -----------------------------------------
+ADX = Function("ADX")           # Average Directional Movement Index
+ADXR = Function("ADXR")         # Average Directional Movement Index Rating
+APO = Function("APO")           # Absolute Price Oscillator
+AROON = Function("AROON")       # Aroon
+AROONOSC = Function("AROONOSC") # Aroon Oscillator
+BOP = Function("BOP")           # Balance Of Power
+CCI = Function("CCI")           # Commodity Channel Index
+CMO = Function("CMO")           # Chande Momentum Oscillator
+DX = Function("DX")             # Directional Movement Index
+MACD = Function("MACD")         # Moving Average Convergence/Divergence
+MACDEXT = Function("MACDEXT")   # MACD with controllable MA type
+MACDFIX = Function("MACDFIX")   # Moving Average Convergence/Divergence Fix 12/26
+MFI = Function("MFI")           # Money Flow Index
+MINUS_DI = Function("MINUS_DI") # Minus Directional Indicator
+MINUS_DM = Function("MINUS_DM") # Minus Directional Movement
+MOM = Function("MOM")           # Momentum
+PLUS_DI = Function("PLUS_DI")   # Plus Directional Indicator
+PLUS_DM = Function("PLUS_DM")   # Plus Directional Movement
+PPO = Function("PPO")           # Percentage Price Oscillator
+ROC = Function("ROC")           # Rate of change : ((price/prevPrice)-1)*100
+ROCP = Function("ROCP")         # Rate of change Percentage: (price-prevPrice)/prevPrice
+ROCR = Function("ROCR")         # Rate of change ratio: (price/prevPrice)
+ROCR100 = Function("ROCR100")   # Rate of change ratio 100 scale: (price/prevPrice)*100
+RSI = Function("RSI")           # Relative Strength Index
+STOCH = Function("STOCH")       # Stochastic
+STOCHF = Function("STOCHF")     # Stochastic Fast
+STOCHRSI = Function("STOCHRSI") # Stochastic Relative Strength Index
+TRIX = Function("TRIX")         # 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+ULTOSC = Function("ULTOSC")     # Ultimate Oscillator
+WILLR = Function("WILLR")       # Williams' %R
+
+# --------------  Volume Indicators  -------------------------------------------
+AD = Function("AD")             # Chaikin A/D Line
+ADOSC = Function("ADOSC")       # Chaikin A/D Oscillator
+OBV = Function("OBV")           # On Balance Volume
+
+# --------------  Volatility Indicators  ---------------------------------------
+ATR = Function("ATR")           # Average True Range
+NATR = Function("NATR")         # Normalized Average True Range
+TRANGE = Function("TRANGE")     # True Range
+
+# --------------  Pattern Recognition  -----------------------------------------
+CDL2CROWS = Function("CDL2CROWS")                     # Two Crows
+CDL3BLACKCROWS = Function("CDL3BLACKCROWS")           # Three Black Crows
+CDL3INSIDE = Function("CDL3INSIDE")                   # Three Inside Up/Down
+CDL3LINESTRIKE = Function("CDL3LINESTRIKE")           # Three-Line Strike
+CDL3OUTSIDE = Function("CDL3OUTSIDE")                 # Three Outside Up/Down
+CDL3STARSINSOUTH = Function("CDL3STARSINSOUTH")       # Three Stars In The South
+CDL3WHITESOLDIERS = Function("CDL3WHITESOLDIERS")     # Three Advancing White Soldiers
+CDLABANDONEDBABY = Function("CDLABANDONEDBABY")       # Abandoned Baby
+CDLADVANCEBLOCK = Function("CDLADVANCEBLOCK")         # Advance Block
+CDLBELTHOLD = Function("CDLBELTHOLD")                 # Belt-hold
+CDLBREAKAWAY = Function("CDLBREAKAWAY")               # Breakaway
+CDLCLOSINGMARUBOZU = Function("CDLCLOSINGMARUBOZU")   # Closing Marubozu
+CDLCONCEALBABYSWALL = Function("CDLCONCEALBABYSWALL") # Concealing Baby Swallow
+CDLCOUNTERATTACK = Function("CDLCOUNTERATTACK")       # Counterattack
+CDLDARKCLOUDCOVER = Function("CDLDARKCLOUDCOVER")     # Dark Cloud Cover
+CDLDOJI = Function("CDLDOJI")                         # Doji
+CDLDOJISTAR = Function("CDLDOJISTAR")                 # Doji Star
+CDLDRAGONFLYDOJI = Function("CDLDRAGONFLYDOJI")       # Dragonfly Doji
+CDLENGULFING = Function("CDLENGULFING")               # Engulfing Pattern
+CDLEVENINGDOJISTAR = Function("CDLEVENINGDOJISTAR")   # Evening Doji Star
+CDLEVENINGSTAR = Function("CDLEVENINGSTAR")           # Evening Star
+CDLGAPSIDESIDEWHITE = Function("CDLGAPSIDESIDEWHITE") # Up/Down-gap side-by-side white lines
+CDLGRAVESTONEDOJI = Function("CDLGRAVESTONEDOJI")     # Gravestone Doji
+CDLHAMMER = Function("CDLHAMMER")                     # Hammer
+CDLHANGINGMAN = Function("CDLHANGINGMAN")             # Hanging Man
+CDLHARAMI = Function("CDLHARAMI")                     # Harami Pattern
+CDLHARAMICROSS = Function("CDLHARAMICROSS")           # Harami Cross Pattern
+CDLHIGHWAVE = Function("CDLHIGHWAVE")                 # High-Wave Candle
+CDLHIKKAKE = Function("CDLHIKKAKE")                   # Hikkake Pattern
+CDLHIKKAKEMOD = Function("CDLHIKKAKEMOD")             # Modified Hikkake Pattern
+CDLHOMINGPIGEON = Function("CDLHOMINGPIGEON")         # Homing Pigeon
+CDLIDENTICAL3CROWS = Function("CDLIDENTICAL3CROWS")   # Identical Three Crows
+CDLINNECK = Function("CDLINNECK")                     # In-Neck Pattern
+CDLINVERTEDHAMMER = Function("CDLINVERTEDHAMMER")     # Inverted Hammer
+CDLKICKING = Function("CDLKICKING")                   # Kicking
+CDLKICKINGBYLENGTH = Function("CDLKICKINGBYLENGTH")   # Kicking - bull/bear determined by the longer marubozu
+CDLLADDERBOTTOM = Function("CDLLADDERBOTTOM")         # Ladder Bottom
+CDLLONGLEGGEDDOJI = Function("CDLLONGLEGGEDDOJI")     # Long Legged Doji
+CDLLONGLINE = Function("CDLLONGLINE")                 # Long Line Candle
+CDLMARUBOZU = Function("CDLMARUBOZU")                 # Marubozu
+CDLMATCHINGLOW = Function("CDLMATCHINGLOW")           # Matching Low
+CDLMATHOLD = Function("CDLMATHOLD")                   # Mat Hold
+CDLMORNINGDOJISTAR = Function("CDLMORNINGDOJISTAR")   # Morning Doji Star
+CDLMORNINGSTAR = Function("CDLMORNINGSTAR")           # Morning Star
+CDLONNECK = Function("CDLONNECK")                     # On-Neck Pattern
+CDLPIERCING = Function("CDLPIERCING")                 # Piercing Pattern
+CDLRICKSHAWMAN = Function("CDLRICKSHAWMAN")           # Rickshaw Man
+CDLRISEFALL3METHODS = Function("CDLRISEFALL3METHODS") # Rising/Falling Three Methods
+CDLSEPARATINGLINES = Function("CDLSEPARATINGLINES")   # Separating Lines
+CDLSHOOTINGSTAR = Function("CDLSHOOTINGSTAR")         # Shooting Star
+CDLSHORTLINE = Function("CDLSHORTLINE")               # Short Line Candle
+CDLSPINNINGTOP = Function("CDLSPINNINGTOP")           # Spinning Top
+CDLSTALLEDPATTERN = Function("CDLSTALLEDPATTERN")     # Stalled Pattern
+CDLSTICKSANDWICH = Function("CDLSTICKSANDWICH")       # Stick Sandwich
+CDLTAKURI = Function("CDLTAKURI")                     # Takuri (Dragonfly Doji with very long lower shadow)
+CDLTASUKIGAP = Function("CDLTASUKIGAP")               # Tasuki Gap
+CDLTHRUSTING = Function("CDLTHRUSTING")               # Thrusting Pattern
+CDLTRISTAR = Function("CDLTRISTAR")                   # Tristar Pattern
+CDLUNIQUE3RIVER = Function("CDLUNIQUE3RIVER")         # Unique 3 River
+CDLUPSIDEGAP2CROWS = Function("CDLUPSIDEGAP2CROWS")   # Upside Gap Two Crows
+CDLXSIDEGAP3METHODS = Function("CDLXSIDEGAP3METHODS") # Upside/Downside Gap Three Methods
+
+# --------------  Statistic Functions  -----------------------------------------
+BETA = Function("BETA")                               # Beta
+CORREL = Function("CORREL")                           # Pearson's Correlation Coefficient (r)
+LINEARREG = Function("LINEARREG")                     # Linear Regression
+LINEARREG_ANGLE = Function("LINEARREG_ANGLE")         # Linear Regression Angle
+LINEARREG_INTERCEPT = Function("LINEARREG_INTERCEPT") # Linear Regression Intercept
+LINEARREG_SLOPE = Function("LINEARREG_SLOPE")         # Linear Regression Slope
+STDDEV = Function("STDDEV")                           # Standard Deviation
+TSF = Function("TSF")                                 # Time Series Forecast
+VAR = Function("VAR")                                 # Variance
+
+# --------------  Cycle Indicators  --------------------------------------------
+HT_DCPERIOD = Function("HT_DCPERIOD")   # Hilbert Transform - Dominant Cycle Period
+HT_DCPHASE = Function("HT_DCPHASE")     # Hilbert Transform - Dominant Cycle Phase
+HT_PHASOR = Function("HT_PHASOR")       # Hilbert Transform - Phasor Components
+HT_SINE = Function("HT_SINE")           # Hilbert Transform - SineWave
+HT_TRENDMODE = Function("HT_TRENDMODE") # Hilbert Transform - Trend vs Cycle Mode
+HT_TRENDLINE = Function("HT_TRENDLINE") # Hilbert Transform - Instantaneous Trendline >> part of "Overlap Studies" group
+
+# --------------  Price Transform  ---------------------------------------------
+AVGPRICE = Function("AVGPRICE")         # Average Price
+MEDPRICE = Function("MEDPRICE")         # Median Price
+TYPPRICE = Function("TYPPRICE")         # Typical Price
+WCLPRICE = Function("WCLPRICE")         # Weighted Close Price
+
+# --------------  Math Transform and Operators  --------------------------------
+ADD = Function("ADD")                   # Vector Arithmetic Add
+SUB = Function("SUB")                   # Vector Arithmetic Substraction
+SUM = Function("SUM")                   # Summation
+MULT = Function("MULT")                 # Vector Arithmetic Mult
+DIV = Function("DIV")                   # Vector Arithmetic Div
+
+CEIL = Function("CEIL")                 # Vector Ceil
+FLOOR = Function("FLOOR")               # Vector Floor
+
+MIN = Function("MIN")                   # Lowest value over a specified period
+MAX = Function("MAX")                   # Highest value over a specified period
+MINMAX = Function("MINMAX")             # Lowest and highest values over a specified period
+MININDEX = Function("MININDEX")         # Index of lowest value over a specified period
+MAXINDEX = Function("MAXINDEX")         # Index of highest value over a specified period
+MINMAXINDEX = Function("MINMAXINDEX")   # Indexes of lowest and highest values over a specified period
+
+SQRT = Function("SQRT")                 # Vector Square Root
+EXP = Function("EXP")                   # Vector Arithmetic Exp
+LOG10 = Function("LOG10")               # Vector Log10
+LN = Function("LN")                     # Vector Log Natural
+
+SIN = Function("SIN")                   # Vector Trigonometric Sin
+COS = Function("COS")                   # Vector Trigonometric Cos
+TAN = Function("TAN")                   # Vector Trigonometric Tan
+
+ASIN = Function("ASIN")                 # Vector Trigonometric ASin
+ACOS = Function("ACOS")                 # Vector Trigonometric ACos
+ATAN = Function("ATAN")                 # Vector Trigonometric ATan
+
+SINH = Function("SINH")                 # Vector Trigonometric Sinh
+COSH = Function("COSH")                 # Vector Trigonometric Cosh
+TANH = Function("TANH")                 # Vector Trigonometric Tanh

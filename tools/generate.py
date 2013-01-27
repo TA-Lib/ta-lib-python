@@ -42,12 +42,11 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
 print """\
-import talib # unused but we import anyway to make sure initialize and shutdown are handled correctly
 cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
 
-from common_c import _ta_check_success
+from .common_c cimport _ta_check_success
 
 ctypedef np.double_t double_t
 ctypedef np.int32_t int32_t
@@ -68,9 +67,8 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-# extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta-lib/ta_libc.h":
-    char *TA_GetVersionString()"""
+"""
 
 # ! can't use const in function declaration (cython 0.12 restriction)
 # just removing them does the trick
@@ -81,10 +79,6 @@ for f in functions:
     f = f.strip()
     print '    %s' % f
 print
-
-print """
-__version__ = TA_GetVersionString()
-"""
 
 # cleanup variable names to make them more pythonic
 def cleanup(name):

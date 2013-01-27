@@ -1,9 +1,8 @@
-import talib # unused but we import anyway to make sure initialize and shutdown are handled correctly
 cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
 
-from common_c import _ta_check_success
+from .common_c cimport _ta_check_success
 
 ctypedef np.double_t double_t
 ctypedef np.int32_t int32_t
@@ -24,9 +23,8 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-# extract the needed part of ta_libc.h that I will use in the interface
 cdef extern from "ta-lib/ta_libc.h":
-    char *TA_GetVersionString()
+
     TA_RetCode TA_ACOS( int startIdx, int endIdx,  double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_ACOS_Lookback(  )
     TA_RetCode TA_AD( int startIdx, int endIdx,  double inHigh[],  double inLow[],  double inClose[],  double inVolume[], int *outBegIdx, int *outNBElement, double outReal[] )
@@ -344,9 +342,6 @@ cdef extern from "ta-lib/ta_libc.h":
     TA_RetCode TA_WMA( int startIdx, int endIdx,  double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_WMA_Lookback( int optInTimePeriod )
 
-
-__version__ = TA_GetVersionString()
-
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACOS( np.ndarray real not None ):
@@ -399,7 +394,7 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     Chaikin A/D Line (Volume Indicators)
 
     Inputs:
-        prices: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volume']
     Outputs:
         real
     """
@@ -512,7 +507,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Chaikin A/D Oscillator (Volume Indicators)
 
     Inputs:
-        prices: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volume']
     Parameters:
         fastperiod: 3
         slowperiod: 10
@@ -6693,7 +6688,7 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Money Flow Index (Momentum Indicators)
 
     Inputs:
-        prices: ['high', 'low', 'close', 'volumne']
+        prices: ['high', 'low', 'close', 'volume']
     Parameters:
         timeperiod: 14
     Outputs:
@@ -7319,7 +7314,7 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
 
     Inputs:
         real: (any ndarray)
-        prices: ['volumne']
+        prices: ['volume']
     Outputs:
         real
     """
