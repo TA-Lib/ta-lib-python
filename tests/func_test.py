@@ -61,3 +61,6 @@ def get_test_cases():
     ret.append(FuncTestCase('test_DEMA'))
     ret.append(FuncTestCase('test_EMAEMA'))
     return ret
+
+if __name__ == '__main__':
+    unittest.main()

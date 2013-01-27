@@ -76,3 +76,6 @@ def get_test_cases():
     ret.append(AbstractTestCase('test_sma'))
     ret.append(AbstractTestCase('test_stoch'))
     return ret
+
+if __name__ == '__main__':
+    unittest.main()
