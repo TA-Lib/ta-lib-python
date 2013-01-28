@@ -274,8 +274,7 @@ for f in functions:
             else:
                 assert False, args
 
-    print '    if length >= lookback:'
-    print '        retCode = %s(' % name,
+    print '    retCode = %s(' % name,
 
     for i, arg in enumerate(args):
         if i > 0:
@@ -303,7 +302,7 @@ for f in functions:
             print cleanup(var) if var != 'startIdx' else '0',
 
     print ')'
-    print '        _ta_check_success("%s", retCode)' % name
+    print '    _ta_check_success("%s", retCode)' % name
     print '    return',
     i = 0
     for arg in args:

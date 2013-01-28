@@ -1,7 +1,7 @@
 0.4.3
 =====
 
-- [FIX]: Only call underlying functions if length >= lookback.
+- [NEW]: Upgrade to Cython 0.18.
 
 - [FIX]: Improve docstrings for indicators in talib.func.
 
