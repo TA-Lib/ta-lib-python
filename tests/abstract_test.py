@@ -8,7 +8,8 @@ from data import ford_2012
 
 
 class AbstractTestCase(unittest.TestCase):
-    def test_sma(self):
+
+    def test_SMA(self):
         expected = func.SMA(ford_2012['close'], 10)
         self.__assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10).outputs)
         self.__assert_np_arrays_equal(expected, abstract.Function('sma')(ford_2012, 10, price='close'))
@@ -21,7 +22,7 @@ class AbstractTestCase(unittest.TestCase):
         self.__assert_np_arrays_not_equal(expected, abstract.Function('sma', 10)(ford_2012, price='high'))
         self.__assert_np_arrays_not_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10))
 
-    def test_stoch(self):
+    def test_STOCH(self):
         # check defaults match
         expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
         got_k, got_d = abstract.Function('stoch', ford_2012).outputs
@@ -73,8 +74,8 @@ class AbstractTestCase(unittest.TestCase):
 
 def get_test_cases():
     ret = []
-    ret.append(AbstractTestCase('test_sma'))
-    ret.append(AbstractTestCase('test_stoch'))
+    ret.append(AbstractTestCase('test_SMA'))
+    ret.append(AbstractTestCase('test_STOCH'))
     return ret
 
 if __name__ == '__main__':

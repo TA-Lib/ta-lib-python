@@ -7,23 +7,24 @@ from talib import func
 from data import series
 
 class FuncTestCase(unittest.TestCase):
+
     def test_MIN(self):
         result = func.MIN(series, timeperiod=4)
         i = np.where(~np.isnan(result))[0][0]
         self.assertTrue(len(series) == len(result))
-        self.assertTrue(result[i + 1] == 93.780)
-        self.assertTrue(result[i + 2] == 93.780)
-        self.assertTrue(result[i + 3] == 92.530)
-        self.assertTrue(result[i + 4] == 92.530)
+        self.assertEquals(result[i + 1], 93.780)
+        self.assertEquals(result[i + 2], 93.780)
+        self.assertEquals(result[i + 3], 92.530)
+        self.assertEquals(result[i + 4], 92.530)
 
     def test_MAX(self):
         result = func.MAX(series, timeperiod=4)
         i = np.where(~np.isnan(result))[0][0]
         assert len(series) == len(result), (len(series), len(result))
-        #self.assertTrue(result[i + 2] == 95.095)
-        #self.assertTrue(result[i + 3] == 95.095)
-        #self.assertTrue(result[i + 4] == 94.625)
-        #self.assertTrue(result[i + 5] == 94.625)
+        self.assertEquals(result[i + 2], 95.090)
+        self.assertEquals(result[i + 3], 95.090)
+        self.assertEquals(result[i + 4], 94.620)
+        self.assertEquals(result[i + 5], 94.620)
 
     def test_BBANDS(self):
         upper, middle, lower = func.BBANDS(series, timeperiod=20,
