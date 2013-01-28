@@ -1,33 +1,7 @@
 import numpy as np
 
-series = np.array([ 91.50, 94.81, 94.38, 95.09, 93.78, 94.62, 92.53, 92.75,
-     90.31, 92.47, 96.12, 97.25, 98.50, 89.88, 91.00, 92.81, 89.16, 89.34,
-     91.62, 89.88, 88.38, 87.62, 84.78, 83.00, 83.50, 81.38, 84.44, 89.25,
-     86.38, 86.25, 85.25, 87.12, 85.81, 88.97, 88.47, 86.88, 86.81, 84.88,
-     84.19, 83.88, 83.38, 85.50, 89.19, 89.44, 91.09, 90.75, 91.44, 89.00,
-     91.00, 90.50, 89.03, 88.81, 84.28, 83.50, 82.69, 84.75, 85.66, 86.19,
-     88.94, 89.28, 88.62, 88.50, 91.97, 91.50, 93.25, 93.50, 93.16, 91.72,
-     90.00, 89.69, 88.88, 85.19, 83.38, 84.88, 85.94, 97.25, 99.88, 104.94,
-     106.00, 102.50, 102.41, 104.59, 106.12, 106.00, 106.06, 104.62, 108.62,
-     109.31, 110.50, 112.75, 123.00, 119.62, 118.75, 119.25, 117.94, 116.44,
-     115.19, 111.88, 110.59, 118.12, 116.00, 116.00, 112.00, 113.75, 112.94,
-     116.00, 120.50, 116.62, 117.00, 115.25, 114.31, 115.50, 115.87, 120.69,
-     120.19, 120.75, 124.75, 123.37, 122.94, 122.56, 123.12, 122.56, 124.62,
-     129.25, 131.00, 132.25, 131.00, 132.81, 134.00, 137.38, 137.81, 137.88,
-     137.25, 136.31, 136.25, 134.63, 128.25, 129.00, 123.87, 124.81, 123.00,
-     126.25, 128.38, 125.37, 125.69, 122.25, 119.37, 118.50, 123.19, 123.50,
-     122.19, 119.31, 123.31, 121.12, 123.37, 127.37, 128.50, 123.87, 122.94,
-     121.75, 124.44, 122.00, 122.37, 122.94, 124.00, 123.19, 124.56, 127.25,
-     125.87, 128.86, 132.00, 130.75, 134.75, 135.00, 132.38, 133.31, 131.94,
-     130.00, 125.37, 130.13, 127.12, 125.19, 122.00, 125.00, 123.00, 123.50,
-     120.06, 121.00, 117.75, 119.87, 122.00, 119.19, 116.37, 113.50, 114.25,
-     110.00, 105.06, 107.00, 107.87, 107.00, 107.12, 107.00, 91.00, 93.94,
-     93.87, 95.50, 93.00, 94.94, 98.25, 96.75, 94.81, 94.37, 91.56, 90.25,
-     93.94, 93.62, 97.00, 95.00, 95.87, 94.06, 94.62, 93.75, 98.00, 103.94,
-     107.87, 106.06, 104.50, 105.00, 104.19, 103.06, 103.42, 105.27, 111.87,
-     116.00, 116.62, 118.28, 113.37, 109.00, 109.70, 109.25, 107.00, 109.19,
-     110.00, 109.20, 110.12, 108.00, 108.62, 109.75, 109.81, 109.00, 108.75,
-     107.87 ])
+from talib import func
+from talib import abstract
 
 ford_2012_dates = np.asarray([ 20120103, 20120104, 20120105, 20120106, 20120109,
     20120110, 20120111, 20120112, 20120113, 20120117, 20120118, 20120119,
@@ -209,38 +183,64 @@ ford_2012 = {
         47750100, 94489300, 91734900, 140331900, 108315100, 95668600, 106908900 ]),
     }
 
-#def int_formatter(indent, list_, first=0, max_width=80):
-    #print '[',
-    #if first > 0:
-        #print ', '.join(['%i' % x for x in list_[:first]]) + ','
-    #i = first
-    #while i < len(list_):
-        #line = '%s' % indent
-        #while len(line) < max_width and i < len(list_):
-            #if (len(line) + len('%i' % list_[i])) < (max_width - 1):
-                #line = '%s %i,' % (line, list_[i])
-                #i += 1
-            #else:
-                #break
-        #if i < len(list_):
-            #print line
-        #else:
-            #print line[:-1], ']'
+def test_SMA():
+    expected = func.SMA(ford_2012['close'], 10)
+    assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10).outputs)
+    assert_np_arrays_equal(expected, abstract.Function('sma')(ford_2012, 10, price='close'))
+    assert_np_arrays_equal(expected, abstract.Function('sma')(ford_2012, timeperiod=10))
+    expected = func.SMA(ford_2012['open'], 10)
+    assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10, price='open').outputs)
+    assert_np_arrays_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10, price='open'))
+    assert_np_arrays_not_equal(expected, abstract.Function('sma', ford_2012, 10, price='open')(timeperiod=20))
+    assert_np_arrays_not_equal(expected, abstract.Function('sma', ford_2012)(10, price='close'))
+    assert_np_arrays_not_equal(expected, abstract.Function('sma', 10)(ford_2012, price='high'))
+    assert_np_arrays_not_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10))
 
-#def float_formatter(indent, list_, first=0, max_width=80):
-    #print '[',
-    #if first > 0:
-        #print ', '.join(['%.2f' % x for x in list_[:first]]) + ','
-    #i = first
-    #while i < len(list_):
-        #line = '%s' % indent
-        #while len(line) < max_width and i < len(list_):
-            #if (len(line) + len('%.2f' % list_[i])) < (max_width - 1):
-                #line = '%s %.2f,' % (line, list_[i])
-                #i += 1
-            #else:
-                #break
-        #if i < len(list_):
-            #print line
-        #else:
-            #print line[:-1], ']'
+def test_STOCH():
+    # check defaults match
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
+    got_k, got_d = abstract.Function('stoch', ford_2012).outputs
+    assert_np_arrays_equal(expected_k, got_k)
+    assert_np_arrays_equal(expected_d, got_d)
+
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'])
+    got_k, got_d = abstract.Function('stoch', ford_2012)(5, 3, 0, 3, 0)
+    assert_np_arrays_equal(expected_k, got_k)
+    assert_np_arrays_equal(expected_d, got_d)
+
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'], 15)
+    got_k, got_d = abstract.Function('stoch', ford_2012)(15, 5, 0, 5, 0)
+    assert_np_arrays_not_equal(expected_k, got_k)
+    assert_np_arrays_not_equal(expected_d, got_d)
+
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'], 15, 5, 1, 5, 1)
+    got_k, got_d = abstract.Function('stoch', ford_2012)(15, 5, 1, 5, 1)
+    assert_np_arrays_equal(expected_k, got_k)
+    assert_np_arrays_equal(expected_d, got_d)
+
+def assert_np_arrays_equal(expected, got):
+    for i, value in enumerate(expected):
+        if np.isnan(value):
+            assert np.isnan(got[i])
+        else:
+            assert value == got[i]
+
+def assert_np_arrays_not_equal(expected, got):
+    ''' Verifies expected and got have the same number of leading nan fields,
+    followed by different floats.
+    '''
+    nans = []
+    equals = []
+    for i, value in enumerate(expected):
+        if np.isnan(value):
+            assert np.isnan(got[i])
+            nans.append(value)
+        else:
+            try:
+                assert value != got[i]
+            except AssertionError:
+                equals.append(got[i])
+    if len(equals) == len(expected[len(nans):]):
+        raise AssertionError('Arrays were equal.')
+    elif equals:
+        print 'Arrays had %i/%i equivalent values.' % (len(equals), len(expected[len(nans):]))
