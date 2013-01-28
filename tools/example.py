@@ -9,14 +9,14 @@ TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 100
 r = np.arange(TEST_LEN)
 idata = np.random.random(TEST_LEN)
 
-def talib_example():
+def func_example():
     odata = talib.MA(idata)
     upper, middle, lower = talib.BBANDS(idata)
     kama = talib.KAMA(idata)
     plot(odata, upper, middle, lower, kama)
 
 def abstract_example():
-    sma = Function('ma')
+    sma = Function('sma')
     input_arrays = sma.get_input_arrays()
     for key in input_arrays.keys():
         input_arrays[key] = idata
@@ -47,6 +47,8 @@ if __name__ == '__main__':
         print '%s functions: ' % group, functions
 
     if len(sys.argv) == 1 or sys.argv[1] == 'func':
-        talib_example()
+        print 'Using talib.func'
+        func_example()
     else:
+        print 'Using talib.abstract'
         abstract_example()
