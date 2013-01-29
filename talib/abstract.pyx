@@ -555,33 +555,39 @@ def __get_flags(flag, flags_lookup_dict):
             ret.append(flags_lookup_dict[2**i])
     return ret
 
-TA_FUNC_FLAGS = { 16777216: 'Output scale same as input',
-                  67108864: 'Output is over volume',
-                  134217728: 'Function has an unstable period',
-                  268435456: 'Output is a candlestick' }
+TA_FUNC_FLAGS = {
+    16777216: 'Output scale same as input',
+    67108864: 'Output is over volume',
+    134217728: 'Function has an unstable period',
+    268435456: 'Output is a candlestick'
+}
 
 # when flag is 0, the function (should) work on any reasonable input ndarray
-TA_INPUT_FLAGS = { 1: 'open',
-                   2: 'high',
-                   4: 'low',
-                   8: 'close',
-                   16: 'volume',
-                   32: 'openInterest',
-                   64: 'timeStamp' }
+TA_INPUT_FLAGS = {
+    1: 'open',
+    2: 'high',
+    4: 'low',
+    8: 'close',
+    16: 'volume',
+    32: 'openInterest',
+    64: 'timeStamp'
+}
 
-TA_OUTPUT_FLAGS = { 1: 'Line',
-                    2: 'Dotted Line',
-                    4: 'Dashed Line',
-                    8: 'Dot',
-                    16: 'Histogram',
-                    32: 'Pattern (Bool)',
-                    64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
-                    128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
-                    256: 'Output can be positive',
-                    512: 'Output can be negative',
-                    1024: 'Output can be zero',
-                    2048: 'Values represent an upper limit',
-                    4096: 'Values represent a lower limit' }
+TA_OUTPUT_FLAGS = {
+    1: 'Line',
+    2: 'Dotted Line',
+    4: 'Dashed Line',
+    8: 'Dot',
+    16: 'Histogram',
+    32: 'Pattern (Bool)',
+    64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
+    128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
+    256: 'Output can be positive',
+    512: 'Output can be negative',
+    1024: 'Output can be zero',
+    2048: 'Values represent an upper limit',
+    4096: 'Values represent a lower limit'
+}
 
 def _ta_getFuncInfo(char *function_name):
     ''' Returns the info dict for the function. It has the following keys: name,
@@ -747,188 +753,9 @@ cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
     _ta_check_success('TA_GetLookback', retCode)
     return lookback
 
-# --------------  Moving Averages (Overlap Studies) ----------------------------
-MA = Function("MA")             # Moving average
-SMA = Function("SMA")           # Simple Moving Average
-EMA = Function("EMA")           # Exponential Moving Average
-WMA = Function("WMA")           # Weighted Moving Average
-DEMA = Function("DEMA")         # Double Exponential Moving Average
-TEMA = Function("TEMA")         # Triple Exponential Moving Average
-TRIMA = Function("TRIMA")       # Triangular Moving Average
-KAMA = Function("KAMA")         # Kaufman Adaptive Moving Average
-MAMA = Function("MAMA")         # MESA Adaptive Moving Average
-T3 = Function("T3")             # Triple Exponential Moving Average (T3)
-MAVP = Function("MAVP")         # Moving average with variable period
+# Configure all the available TA-Lib functions to be exported as
+# an abstract function wrapper for convenient import.
+for name in _ta_get_functions():
+    exec "%s = Function('%s')" % (name, name)
 
-# --------------  Overlap Studies cont.  ---------------------------------------
-BBANDS = Function("BBANDS")     # Bollinger Bands
-MIDPOINT = Function("MIDPOINT") # MidPoint over period
-MIDPRICE = Function("MIDPRICE") # Midpoint Price over period
-SAR = Function("SAR")           # Parabolic SAR
-SAREXT = Function("SAREXT")     # Parabolic SAR - Extended
-
-# --------------  Momentum Indicators  -----------------------------------------
-ADX = Function("ADX")           # Average Directional Movement Index
-ADXR = Function("ADXR")         # Average Directional Movement Index Rating
-APO = Function("APO")           # Absolute Price Oscillator
-AROON = Function("AROON")       # Aroon
-AROONOSC = Function("AROONOSC") # Aroon Oscillator
-BOP = Function("BOP")           # Balance Of Power
-CCI = Function("CCI")           # Commodity Channel Index
-CMO = Function("CMO")           # Chande Momentum Oscillator
-DX = Function("DX")             # Directional Movement Index
-MACD = Function("MACD")         # Moving Average Convergence/Divergence
-MACDEXT = Function("MACDEXT")   # MACD with controllable MA type
-MACDFIX = Function("MACDFIX")   # Moving Average Convergence/Divergence Fix 12/26
-MFI = Function("MFI")           # Money Flow Index
-MINUS_DI = Function("MINUS_DI") # Minus Directional Indicator
-MINUS_DM = Function("MINUS_DM") # Minus Directional Movement
-MOM = Function("MOM")           # Momentum
-PLUS_DI = Function("PLUS_DI")   # Plus Directional Indicator
-PLUS_DM = Function("PLUS_DM")   # Plus Directional Movement
-PPO = Function("PPO")           # Percentage Price Oscillator
-ROC = Function("ROC")           # Rate of change : ((price/prevPrice)-1)*100
-ROCP = Function("ROCP")         # Rate of change Percentage: (price-prevPrice)/prevPrice
-ROCR = Function("ROCR")         # Rate of change ratio: (price/prevPrice)
-ROCR100 = Function("ROCR100")   # Rate of change ratio 100 scale: (price/prevPrice)*100
-RSI = Function("RSI")           # Relative Strength Index
-STOCH = Function("STOCH")       # Stochastic
-STOCHF = Function("STOCHF")     # Stochastic Fast
-STOCHRSI = Function("STOCHRSI") # Stochastic Relative Strength Index
-TRIX = Function("TRIX")         # 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
-ULTOSC = Function("ULTOSC")     # Ultimate Oscillator
-WILLR = Function("WILLR")       # Williams' %R
-
-# --------------  Volume Indicators  -------------------------------------------
-AD = Function("AD")             # Chaikin A/D Line
-ADOSC = Function("ADOSC")       # Chaikin A/D Oscillator
-OBV = Function("OBV")           # On Balance Volume
-
-# --------------  Volatility Indicators  ---------------------------------------
-ATR = Function("ATR")           # Average True Range
-NATR = Function("NATR")         # Normalized Average True Range
-TRANGE = Function("TRANGE")     # True Range
-
-# --------------  Pattern Recognition  -----------------------------------------
-CDL2CROWS = Function("CDL2CROWS")                     # Two Crows
-CDL3BLACKCROWS = Function("CDL3BLACKCROWS")           # Three Black Crows
-CDL3INSIDE = Function("CDL3INSIDE")                   # Three Inside Up/Down
-CDL3LINESTRIKE = Function("CDL3LINESTRIKE")           # Three-Line Strike
-CDL3OUTSIDE = Function("CDL3OUTSIDE")                 # Three Outside Up/Down
-CDL3STARSINSOUTH = Function("CDL3STARSINSOUTH")       # Three Stars In The South
-CDL3WHITESOLDIERS = Function("CDL3WHITESOLDIERS")     # Three Advancing White Soldiers
-CDLABANDONEDBABY = Function("CDLABANDONEDBABY")       # Abandoned Baby
-CDLADVANCEBLOCK = Function("CDLADVANCEBLOCK")         # Advance Block
-CDLBELTHOLD = Function("CDLBELTHOLD")                 # Belt-hold
-CDLBREAKAWAY = Function("CDLBREAKAWAY")               # Breakaway
-CDLCLOSINGMARUBOZU = Function("CDLCLOSINGMARUBOZU")   # Closing Marubozu
-CDLCONCEALBABYSWALL = Function("CDLCONCEALBABYSWALL") # Concealing Baby Swallow
-CDLCOUNTERATTACK = Function("CDLCOUNTERATTACK")       # Counterattack
-CDLDARKCLOUDCOVER = Function("CDLDARKCLOUDCOVER")     # Dark Cloud Cover
-CDLDOJI = Function("CDLDOJI")                         # Doji
-CDLDOJISTAR = Function("CDLDOJISTAR")                 # Doji Star
-CDLDRAGONFLYDOJI = Function("CDLDRAGONFLYDOJI")       # Dragonfly Doji
-CDLENGULFING = Function("CDLENGULFING")               # Engulfing Pattern
-CDLEVENINGDOJISTAR = Function("CDLEVENINGDOJISTAR")   # Evening Doji Star
-CDLEVENINGSTAR = Function("CDLEVENINGSTAR")           # Evening Star
-CDLGAPSIDESIDEWHITE = Function("CDLGAPSIDESIDEWHITE") # Up/Down-gap side-by-side white lines
-CDLGRAVESTONEDOJI = Function("CDLGRAVESTONEDOJI")     # Gravestone Doji
-CDLHAMMER = Function("CDLHAMMER")                     # Hammer
-CDLHANGINGMAN = Function("CDLHANGINGMAN")             # Hanging Man
-CDLHARAMI = Function("CDLHARAMI")                     # Harami Pattern
-CDLHARAMICROSS = Function("CDLHARAMICROSS")           # Harami Cross Pattern
-CDLHIGHWAVE = Function("CDLHIGHWAVE")                 # High-Wave Candle
-CDLHIKKAKE = Function("CDLHIKKAKE")                   # Hikkake Pattern
-CDLHIKKAKEMOD = Function("CDLHIKKAKEMOD")             # Modified Hikkake Pattern
-CDLHOMINGPIGEON = Function("CDLHOMINGPIGEON")         # Homing Pigeon
-CDLIDENTICAL3CROWS = Function("CDLIDENTICAL3CROWS")   # Identical Three Crows
-CDLINNECK = Function("CDLINNECK")                     # In-Neck Pattern
-CDLINVERTEDHAMMER = Function("CDLINVERTEDHAMMER")     # Inverted Hammer
-CDLKICKING = Function("CDLKICKING")                   # Kicking
-CDLKICKINGBYLENGTH = Function("CDLKICKINGBYLENGTH")   # Kicking - bull/bear determined by the longer marubozu
-CDLLADDERBOTTOM = Function("CDLLADDERBOTTOM")         # Ladder Bottom
-CDLLONGLEGGEDDOJI = Function("CDLLONGLEGGEDDOJI")     # Long Legged Doji
-CDLLONGLINE = Function("CDLLONGLINE")                 # Long Line Candle
-CDLMARUBOZU = Function("CDLMARUBOZU")                 # Marubozu
-CDLMATCHINGLOW = Function("CDLMATCHINGLOW")           # Matching Low
-CDLMATHOLD = Function("CDLMATHOLD")                   # Mat Hold
-CDLMORNINGDOJISTAR = Function("CDLMORNINGDOJISTAR")   # Morning Doji Star
-CDLMORNINGSTAR = Function("CDLMORNINGSTAR")           # Morning Star
-CDLONNECK = Function("CDLONNECK")                     # On-Neck Pattern
-CDLPIERCING = Function("CDLPIERCING")                 # Piercing Pattern
-CDLRICKSHAWMAN = Function("CDLRICKSHAWMAN")           # Rickshaw Man
-CDLRISEFALL3METHODS = Function("CDLRISEFALL3METHODS") # Rising/Falling Three Methods
-CDLSEPARATINGLINES = Function("CDLSEPARATINGLINES")   # Separating Lines
-CDLSHOOTINGSTAR = Function("CDLSHOOTINGSTAR")         # Shooting Star
-CDLSHORTLINE = Function("CDLSHORTLINE")               # Short Line Candle
-CDLSPINNINGTOP = Function("CDLSPINNINGTOP")           # Spinning Top
-CDLSTALLEDPATTERN = Function("CDLSTALLEDPATTERN")     # Stalled Pattern
-CDLSTICKSANDWICH = Function("CDLSTICKSANDWICH")       # Stick Sandwich
-CDLTAKURI = Function("CDLTAKURI")                     # Takuri (Dragonfly Doji with very long lower shadow)
-CDLTASUKIGAP = Function("CDLTASUKIGAP")               # Tasuki Gap
-CDLTHRUSTING = Function("CDLTHRUSTING")               # Thrusting Pattern
-CDLTRISTAR = Function("CDLTRISTAR")                   # Tristar Pattern
-CDLUNIQUE3RIVER = Function("CDLUNIQUE3RIVER")         # Unique 3 River
-CDLUPSIDEGAP2CROWS = Function("CDLUPSIDEGAP2CROWS")   # Upside Gap Two Crows
-CDLXSIDEGAP3METHODS = Function("CDLXSIDEGAP3METHODS") # Upside/Downside Gap Three Methods
-
-# --------------  Statistic Functions  -----------------------------------------
-BETA = Function("BETA")                               # Beta
-CORREL = Function("CORREL")                           # Pearson's Correlation Coefficient (r)
-LINEARREG = Function("LINEARREG")                     # Linear Regression
-LINEARREG_ANGLE = Function("LINEARREG_ANGLE")         # Linear Regression Angle
-LINEARREG_INTERCEPT = Function("LINEARREG_INTERCEPT") # Linear Regression Intercept
-LINEARREG_SLOPE = Function("LINEARREG_SLOPE")         # Linear Regression Slope
-STDDEV = Function("STDDEV")                           # Standard Deviation
-TSF = Function("TSF")                                 # Time Series Forecast
-VAR = Function("VAR")                                 # Variance
-
-# --------------  Cycle Indicators  --------------------------------------------
-HT_DCPERIOD = Function("HT_DCPERIOD")   # Hilbert Transform - Dominant Cycle Period
-HT_DCPHASE = Function("HT_DCPHASE")     # Hilbert Transform - Dominant Cycle Phase
-HT_PHASOR = Function("HT_PHASOR")       # Hilbert Transform - Phasor Components
-HT_SINE = Function("HT_SINE")           # Hilbert Transform - SineWave
-HT_TRENDMODE = Function("HT_TRENDMODE") # Hilbert Transform - Trend vs Cycle Mode
-HT_TRENDLINE = Function("HT_TRENDLINE") # Hilbert Transform - Instantaneous Trendline >> part of "Overlap Studies" group
-
-# --------------  Price Transform  ---------------------------------------------
-AVGPRICE = Function("AVGPRICE")         # Average Price
-MEDPRICE = Function("MEDPRICE")         # Median Price
-TYPPRICE = Function("TYPPRICE")         # Typical Price
-WCLPRICE = Function("WCLPRICE")         # Weighted Close Price
-
-# --------------  Math Transform and Operators  --------------------------------
-ADD = Function("ADD")                   # Vector Arithmetic Add
-SUB = Function("SUB")                   # Vector Arithmetic Substraction
-SUM = Function("SUM")                   # Summation
-MULT = Function("MULT")                 # Vector Arithmetic Mult
-DIV = Function("DIV")                   # Vector Arithmetic Div
-
-CEIL = Function("CEIL")                 # Vector Ceil
-FLOOR = Function("FLOOR")               # Vector Floor
-
-MIN = Function("MIN")                   # Lowest value over a specified period
-MAX = Function("MAX")                   # Highest value over a specified period
-MINMAX = Function("MINMAX")             # Lowest and highest values over a specified period
-MININDEX = Function("MININDEX")         # Index of lowest value over a specified period
-MAXINDEX = Function("MAXINDEX")         # Index of highest value over a specified period
-MINMAXINDEX = Function("MINMAXINDEX")   # Indexes of lowest and highest values over a specified period
-
-SQRT = Function("SQRT")                 # Vector Square Root
-EXP = Function("EXP")                   # Vector Arithmetic Exp
-LOG10 = Function("LOG10")               # Vector Log10
-LN = Function("LN")                     # Vector Log Natural
-
-SIN = Function("SIN")                   # Vector Trigonometric Sin
-COS = Function("COS")                   # Vector Trigonometric Cos
-TAN = Function("TAN")                   # Vector Trigonometric Tan
-
-ASIN = Function("ASIN")                 # Vector Trigonometric ASin
-ACOS = Function("ACOS")                 # Vector Trigonometric ACos
-ATAN = Function("ATAN")                 # Vector Trigonometric ATan
-
-SINH = Function("SINH")                 # Vector Trigonometric Sinh
-COSH = Function("COSH")                 # Vector Trigonometric Cosh
-TANH = Function("TANH")                 # Vector Trigonometric Tanh
-
-__all__ = ["Function","ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMO","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","OBV","PLUS_DI","PLUS_DM","PPO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","WCLPRICE","WILLR","WMA"]
+__all__ = ['Function'] + _ta_get_functions()
