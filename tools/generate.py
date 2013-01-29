@@ -70,10 +70,7 @@ np.import_array() # Initialize the NumPy C API
 cdef extern from "ta-lib/ta_libc.h":
 """
 
-# ! can't use const in function declaration (cython 0.12 restriction)
-# just removing them does the trick
 for f in functions:
-    f = f.replace('const', '')
     f = f.replace(';', '')
     f = f.replace('void', '')
     f = f.strip()
