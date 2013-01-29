@@ -2,7 +2,7 @@
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
 from . import func as func_c
-from .common_c import _ta_check_success, MA_Type
+from .common import _ta_check_success, MA_Type
 from collections import OrderedDict
 from cython.operator cimport dereference as deref
 

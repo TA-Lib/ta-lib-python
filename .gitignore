@@ -2,7 +2,7 @@
 build
 func.so
 abstract.so
-common_c.so
+common.so
 .*
 *~
 

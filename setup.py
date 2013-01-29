@@ -25,7 +25,7 @@ elif sys.platform == "win32":
 else:
     raise NotImplementedError(sys.platform)
 
-common_ext = Extension('talib.common_c', ['talib/common_c.pyx'],
+common_ext = Extension('talib.common', ['talib/common.pyx'],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
     libraries=["ta_lib"]

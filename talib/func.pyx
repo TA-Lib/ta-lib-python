@@ -2,7 +2,7 @@ cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
 
-from .common_c cimport _ta_check_success
+from .common cimport _ta_check_success
 
 ctypedef np.double_t double_t
 ctypedef np.int32_t int32_t

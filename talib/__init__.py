@@ -1,22 +1,21 @@
 
-__version__ = '0.4.3-git'
-
 import atexit
 
-from . import common_c
+from . import common
 from . import abstract
-from .common_c import MA_Type
+from .common import MA_Type, __ta_version__
 from .func import *
 
-'''
-In order to use this python library, talib (ie this __file__) will be imported
-at some point, either explicitly or indirectly via talib.func or talib.abstract.
-Here, we handle initalizing and shutting down the underlying TA-Lib.
-Initialization happens on import, before any other TA-Lib functions are called.
-Finally, when the python process exits, we shutdown the underlying TA-Lib.
-'''
-common_c._ta_initialize()
-atexit.register(common_c._ta_shutdown)
+__version__ = '0.4.3-git'
+
+# In order to use this python library, talib (ie this __file__) will be
+# imported at some point, either explicitly or indirectly via talib.func
+# or talib.abstract. Here, we handle initalizing and shutting down the
+# underlying TA-Lib. Initialization happens on import, before any other TA-Lib
+# functions are called. Finally, when the python process exits, we shutdown
+# the underlying TA-Lib.
+common._ta_initialize()
+atexit.register(common._ta_shutdown)
 
 def get_functions():
     '''
