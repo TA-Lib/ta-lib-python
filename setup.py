@@ -45,12 +45,12 @@ abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.2',
+    version = '0.4.3',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.2.zip',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.3.zip',
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",

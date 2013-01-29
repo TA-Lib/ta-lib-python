@@ -6,7 +6,7 @@ from . import abstract
 from .common import MA_Type, __ta_version__
 from .func import *
 
-__version__ = '0.4.3-git'
+__version__ = '0.4.3'
 
 # In order to use this python library, talib (ie this __file__) will be
 # imported at some point, either explicitly or indirectly via talib.func
