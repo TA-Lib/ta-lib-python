@@ -10,10 +10,11 @@ From [TA-LIB's](http://ta-lib.org) homepage:
 > * Candlestick pattern recognition
 > * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
-Unfortunately, the included Python bindings use SWIG, are a little difficult
-to install (particularly on Mac OS X), and aren't as efficient as they could
-be.  This project uses Cython and Numpy to efficiently and cleanly bind to
-TA-Lib -- producing results 2-4 times faster than the SWIG interface.
+Unfortunately, the included Python bindings use [SWIG](http://swig.org),
+are a little difficult to install (particularly on Mac OS X), and aren't as
+efficient as they could be. This project uses Cython and Numpy to efficiently
+and cleanly bind to TA-Lib -- producing results 2-4 times faster than the SWIG
+interface.
 
 ## Installation
 
@@ -29,7 +30,7 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
-Note: this requires that you have already installed the ``ta-lib`` library
+Note: this requires that you have already installed the ``TA-Lib`` library
 on your computer (you can [download it](http://ta-lib.org/hdr_dw.html) or
 use your computers package manager to install it, e.g.,
 ``brew install ta-lib`` on Mac OS X).
@@ -37,14 +38,14 @@ use your computers package manager to install it, e.g.,
 ## Troubleshooting
 
 If you get build errors like this, it typically means that it can't find the
-underlying ``ta-lib`` library and needs to be installed:
+underlying ``TA-Lib`` library and needs to be installed:
 
 ```
 func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-If you get build errors compiling the underlying ``ta-lib`` such as these:
+If you get build errors compiling the underlying ``TA-Lib`` such as these:
 ```
 mv -f .deps/gen_code-gen_code.Tpo .deps/gen_code-gen_code.Po
 mv: cannot stat `.deps/gen_code-gen_code.Tpo': No such file or directory
@@ -54,62 +55,72 @@ Simply rerunning ``make`` and then ``sudo make install`` seems to always do the 
 
 ## Function API Examples
 
-Similar to TA-Lib, the functions return an index into the input where the
-output data begins and have default values for their parameters, unless
-specified as keyword arguments.
+Similar to TA-Lib, the function interface provides a lightweight wrapper of
+the exposed TA-Lib indicators.
 
-All of the following examples will use these definitions:
+Each function returns an output array and have default values for their
+parameters, unless specified as keyword arguments. Typically, these functions
+will have an initial "lookback" period (a required number of observations
+before an output is generated) set to ``NaN``.
+
+All of the following examples use the function API:
 
 ```python
 import numpy
 import talib
 
-data = numpy.random.random(100)
+close = numpy.random.random(100)
 ```
 
-Calculate a simple moving average:
+Calculate a simple moving average of the close prices:
 
 ```python
-output = talib.SMA(data)
+output = talib.SMA(close)
 ```
 
 Calculating bollinger bands, with triple exponential moving average:
 
 ```python
-upper, middle, lower = talib.BBANDS(data, matype=talib.MA_T3)
+from talib import MA_Type
+
+upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
 ```
 
-Calculating momentum, with a time period of 5:
+Calculating momentum of the close prices, with a time period of 5:
 
 ```python
-output = talib.MOM(data, timeperiod=5)
+output = talib.MOM(close, timeperiod=5)
 ```
 
 ## Abstract API Examples
 
-TA-Lib also provides an abstract interface for calling functions. Our wrapper
-for the abstract interface is somewhat different from the upstream implentation.
-The abstract interface is designed to make the TA-Lib easily introspectable and
-dynamically programmable. Of course Python allows for these things too, but this
-helps do some of the heavy lifting for you, making it much easier to for example
-add a TA-Lib indicator control panel to a GUI charting program. It also unifies
-the interface for using and calling functions making life easier on the developer.
+TA-Lib also provides an abstract interface for calling functions. Our
+wrapper for the abstract interface is somewhat different from the upstream
+implentation. The abstract interface is designed to make the TA-Lib easily
+introspectable and dynamically programmable. Of course Python allows for
+these things too, but this helps do some of the heavy lifting for you, making
+it much easier to for example add a TA-Lib indicator control panel to a
+GUI charting program. It also unifies the interface for using and calling
+functions making life easier on the developer.
 
-If you're already familiar with using the function API, you should feel right at
-home using the abstract interface. To start, every function takes the same input:
+If you're already familiar with using the function API, you should feel right
+at home using the abstract API. Every function takes the same input, passed
+as a dictionary of observed values:
 
 ```python
 import numpy as np
 # note that all ndarrays must be the same length!
-input_arrays = { 'open': np.random.random(100),
-                 'high': np.random.random(100),
-                 'low': np.random.random(100),
-                 'close': np.random.random(100),
-                 'volume': np.random.random(100) }
+inputs = {
+    'open': np.random.random(100),
+    'high': np.random.random(100),
+    'low': np.random.random(100),
+    'close': np.random.random(100),
+    'volume': np.random.random(100)
+}
 ```
 
-From this input data, let's again calculate a SMA, this time with the abstract
-interface:
+From this input data, let's again calculate a simple moving average (SMA),
+this time with the abstract interface:
 
 ```python
 from talib.abstract import Function
@@ -141,8 +152,8 @@ output = sma.outputs
 ```
 
 This works by using keyword arguments. For functions with one undefined input,
-the keyword is 'price'; for two they are 'price0' and 'price1'. That's a lot of
-typing; let's introduce some shortcuts:
+the keyword is ``price``; for two they are ``price0`` and ``price1``. That's a
+lot of typing; let's introduce some shortcuts:
 
 ```python
 output = Function('sma').run(input_arrays)
@@ -152,15 +163,16 @@ output = Function('sma')(input_arrays, price='open')
 The ``run()`` method is a shortcut to ``outputs`` that also optionally accepts
 an ``input_arrays`` dict to use for calculating the function values. You can
 also call the ``Function`` instance directly; this shortcut to ``outputs``
-allows setting both ``input_arrays`` and/or any function parameters and keywords.
-These methods make up all the ways you can call the TA function and get its values.
+allows setting both ``input_arrays`` and/or any function parameters and
+keywords. These methods make up all the ways you can call the TA function and
+get its values.
 
-``Function`` returns either a single ndarray or a list of ndarrays, depending
-on how many outputs the TA function has. This information can be found through
-``Function.output_names`` or ``Function.info['outputs']``.
+``Function.outputs`` returns either a single ndarray or a list of ndarrays,
+depending on how many outputs the TA function has. This information can be
+found through ``Function.output_names`` or ``Function.info['outputs']``.
 
-``Function.info`` is a very useful property. It returns a dict with almost every
-detail of the current state of the ``Function`` instance:
+``Function.info`` is a very useful property. It returns a dict with almost
+every detail of the current state of the ``Function`` instance:
 
 ```python
 print Function('stoch').info
@@ -183,39 +195,59 @@ print Function('stoch').info
 }
 ```
 
-Take a look at the value of the 'inputs' key. There's only one input price
-variable, 'prices', and its value is a list of price series names. This is one
-of those TA functions where TA-Lib defines which price series it expects for
-input. Any time 'inputs' is an OrderedDict with one key, 'prices', and a list
-for a value, it means TA-Lib defined the expected price series names. You can
-override these just the same as undefined inputs, just make sure to use a list
-with the correct number of price series names! (it varies across functions)
+Take a look at the value of the ``input_names`` key. There's only one input
+price variable, 'prices', and its value is a list of price series names.
+This is one of those TA functions where TA-Lib defines which price series it
+expects for input. Any time ``input_names`` is an OrderedDict with one key,
+``prices``, and a list for a value, it means TA-Lib defined the expected price
+series names. You can override these just the same as undefined inputs, just
+make sure to use a list with the correct number of price series names! (it
+varies across functions)
 
-You can also use ``Function.input_names`` to get/set the price series names, and
-``Function.parameters`` to get/set the function parameters. Let's expand on the
-other ways to set TA function arguments:
+You can also use ``Function.input_names`` to get/set the price series names,
+and ``Function.parameters`` to get/set the function parameters. Let's expand
+on the other ways to set TA function arguments:
 
 ```python
 from talib import MA_Type
+
 output = Function('sma')(input_arrays, timeperiod=10, price='high')
+
 upper, middle, lower = Function('bbands')(input_arrays, timeperiod=20, matype=MA_Type.EMA)
+
 stoch = Function('stoch', input_arrays)
 stoch.set_function_args(slowd_period=5)
 slowk, slowd = stoch(15, fastd_period=5) # 15 == fastk_period specified positionally
 ```
 
-``input_arrays`` must be passed as a positional argument (or left out entirely).
-TA function parameters can be passed as positional or keyword arguments. Input
-price series names must be passed as keyword arguments (or left out entirely).
-In fact, the ``__call__`` method of ``Function`` simply calls ``set_function_args()``.
+``input_arrays`` must be passed as a positional argument (or left out
+entirely). TA function parameters can be passed as positional or keyword
+arguments. Input price series names must be passed as keyword arguments (or
+left out entirely). In fact, the ``__call__`` method of ``Function`` simply
+calls ``set_function_args()``.
+
+For your convenience, we create ``Function`` wrappers for all of the available
+TA-Lib functions:
+
+```python
+from talib import SMA, BBANDS, STOCH
+
+output = SMA(input_arrays)
+
+upper, middle, lower = BBANDS(input_arrays, timeperiod=20)
+
+slowk, slowd = STOCH(input_arrays, fastk_period=15, fastd_period=5)
+```
 
 ## Indicators
 
-We can show all the TA functions supported by TA-Lib, either as a list or as a
-dict sorted by group (eg Overlap Studies, Momentum Indicators, etc):
+We can show all the TA functions supported by TA-Lib, either as a ``list`` or
+as a ``dict`` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
+etc):
 
 ```python
 import talib
+
 print talib.get_functions()
 print talib.get_function_groups()
 ```
