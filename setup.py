@@ -45,7 +45,7 @@ abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.3',
+    version = '0.4.4-git',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
