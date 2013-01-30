@@ -9,6 +9,8 @@ from cython.operator cimport dereference as deref
 cimport numpy as np
 cimport abstract_h as abstract
 
+__FUNCTION_NAMES = set(func_c.__all__)
+
 __INPUT_ARRAYS_DEFAULTS = { 'open': None,
                             'high': None,
                             'low': None,
@@ -24,13 +26,15 @@ __INPUT_PRICE_SERIES_DEFAULTS = { 'price': 'close',
                                   'periods': None } # only used by MAVP; not a price series!
 
 class Function(object):
-    ''' This is a pythonic wrapper around TALIB's abstract interface. It is
-    intended to simplify using individual TALIB functions by providing a unified
-    interface for setting/controlling input data, setting function parameters
-    and retrieving results. Input data consists of a dict of numpy arrays, one
-    array for each of open, high, low, close and volume. This can be set with
-    the set_input_arrays() method. Which keyed array(s) are used as inputs when
-    calling the function is controlled using the input_names property.
+    """
+    This is a pythonic wrapper around TALIB's abstract interface. It is
+    intended to simplify using individual TALIB functions by providing a
+    unified interface for setting/controlling input data, setting function
+    parameters and retrieving results. Input data consists of a dict of numpy
+    arrays, one array for each of open, high, low, close and volume. This can
+    be set with the set_input_arrays() method. Which keyed array(s) are used
+    as inputs when calling the function is controlled using the input_names
+    property.
 
     This class gets initialized with a TALIB function name and optionally an
     input_arrays dict. It provides the following primary functions for setting
@@ -40,19 +44,20 @@ class Function(object):
     - set_input_arrays(input_arrays)
     - set_function_args([input_arrays,] [param_args_andor_kwargs])
 
-    Documentation for param_args_andor_kwargs can be seen by printing the Function
-    instance or programatically via the info, input_names and parameters properties.
+    Documentation for param_args_andor_kwargs can be seen by printing the
+    Function instance or programatically via the info, input_names and
+    parameters properties.
 
     ----- result-returning functions -----
     - the outputs property wraps a method which ensures results are always valid
     - run([input_arrays]) # calls set_input_arrays and returns self.outputs
     - FunctionInstance([input_arrays,] [param_args_andor_kwargs]) # calls set_function_args and returns self.outputs
-    '''
+    """
 
     def __init__(self, function_name, *args, **kwargs):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
-        if self.__name not in _ta_get_functions():
+        if self.__name not in __FUNCTION_NAMES:
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__info = None
         self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
@@ -75,7 +80,7 @@ class Function(object):
         for i in xrange(self.__info.pop('num_inputs')):
             info = _ta_getInputParameterInfo(self.__name, i)
             input_name = info['name']
-            if info['price_series'] == None:
+            if info['price_series'] is None:
                 info['price_series'] = __INPUT_PRICE_SERIES_DEFAULTS[input_name]
             self.__input_names[input_name] = info
         self.__info['input_names'] = self.input_names
@@ -96,40 +101,47 @@ class Function(object):
 
     @property
     def info(self):
-        ''' Returns a copy of the function's info dict.
-        '''
+        """
+        Returns a copy of the function's info dict.
+        """
         return self.__info.copy()
 
-    @property
-    def input_names(self):
-        ''' Returns the dict of input price series names that specifies which
+    def get_input_names(self):
+        """
+        Returns the dict of input price series names that specifies which
         of the ndarrays in input_arrays will be used to calculate the function.
-        '''
+        """
         ret = OrderedDict()
         for input_name in self.__input_names:
             ret[input_name] = self.__input_names[input_name]['price_series']
         return ret
 
-    @input_names.setter
     def set_input_names(self, input_names):
-        ''' Sets the input price series names to use.
-        '''
+        """
+        Sets the input price series names to use.
+        """
         for input_name, price_series in input_names.items():
             self.__input_names[input_name]['price_series'] = price_series
         self.__outputs_valid = False
 
+    input_names = property(get_input_names, set_input_names)
+
     def get_input_arrays(self):
-        ''' Returns a copy of the dict of input arrays in use.
-        '''
+        """
+        Returns a copy of the dict of input arrays in use.
+        """
         return self.__input_arrays.copy()
 
     def set_input_arrays(self, input_arrays):
-        ''' Sets the dict of input_arrays to use. Returns True/False for subclasses:
+        """
+        Sets the dict of input_arrays to use. Returns True/False for
+        subclasses:
 
-        If input_arrays is a dict with the keys open, high, low, close and volume,
-        it is assigned as the input_array to use and this function returns True,
-        returning False otherwise. If you implement your own data type and wish
-        to subclass Function, you should wrap this function with an if-statement:
+        If input_arrays is a dict with the keys open, high, low, close and
+        volume, it is assigned as the input_array to use and this function
+        returns True, returning False otherwise. If you implement your own
+        data type and wish to subclass Function, you should wrap this function
+        with an if-statement:
 
         class CustomFunction(Function):
             def __init__(self, function_name):
@@ -144,7 +156,7 @@ class Function(object):
                     Function.set_input_arrays(self, input_arrays)
                     return True
                 return False
-        '''
+        """
         if isinstance(input_arrays, dict) \
           and sorted(input_arrays.keys()) == __INPUT_ARRAYS_KEYS:
             self.__input_arrays = input_arrays
@@ -152,27 +164,32 @@ class Function(object):
             return True
         return False
 
-    @property
-    def parameters(self):
-        ''' Returns the function's optional parameters and their default values.
-        '''
+    input_arrays = property(get_input_arrays, set_input_arrays)
+
+    def get_parameters(self):
+        """
+        Returns the function's optional parameters and their default values.
+        """
         ret = OrderedDict()
         for opt_input in self.__opt_inputs:
             ret[opt_input] = self.__get_opt_input_value(opt_input)
         return ret
 
-    @parameters.setter
     def set_parameters(self, parameters):
-        ''' Sets the function parameter values.
-        '''
+        """
+        Sets the function parameter values.
+        """
         for param, value in parameters.items():
             self.__opt_inputs[param]['value'] = value
         self.__outputs_valid = False
         self.__info['parameters'] = self.parameters
 
+    parameters = property(get_parameters, set_parameters)
+
     def set_function_args(self, *args, **kwargs):
-        ''' optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
-        '''
+        """
+        optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
+        """
         update_info = False
         if args:
             skip_first = 0
@@ -200,10 +217,12 @@ class Function(object):
 
     @property
     def lookback(self):
-        ''' Returns the lookback window size for the function with the parameter
+        """
+        Returns the lookback window size for the function with the parameter
         values that are currently set.
-        '''
-        cdef abstract.TA_ParamHolder *holder = __ta_paramHolderAlloc(self.__name)
+        """
+        cdef abstract.TA_ParamHolder *holder
+        holder = __ta_paramHolderAlloc(self.__name)
         for i, opt_input in enumerate(self.__opt_inputs):
             value = self.__get_opt_input_value(opt_input)
             type_ = self.__opt_inputs[opt_input]['type']
@@ -218,40 +237,42 @@ class Function(object):
 
     @property
     def output_names(self):
-        ''' Returns a list of the output names returned by this function.
-        '''
+        """
+        Returns a list of the output names returned by this function.
+        """
         return self.__outputs.keys()
 
     @property
     def outputs(self):
-        ''' Returns the TA function values for the currently set input_arrays
-        and parameters. Returned values are a ndarray if there is only one
-        output or a list of ndarrays for more than one output.
-        '''
+        """
+        Returns the TA function values for the currently set input_arrays and
+        parameters. Returned values are a ndarray if there is only one output
+        or a list of ndarrays for more than one output.
+        """
         if not self.__outputs_valid:
             self.__call_function()
         ret = self.__outputs.values()
-        if len(ret) == 1:
-            return ret[0]
-        return ret
+        return ret[0] if len(ret) == 1 else ret
 
     def run(self, input_arrays=None):
-        ''' run([input_arrays=None])
+        """
+        run([input_arrays=None])
 
-        This is a shortcut to the outputs property that also allows setting the
-        input_arrays dict.
-        '''
+        This is a shortcut to the outputs property that also allows setting
+        the input_arrays dict.
+        """
         if input_arrays:
             self.set_input_arrays(input_arrays)
         self.__call_function()
         return self.outputs
 
     def __call__(self, *args, **kwargs):
-        ''' func_instance([input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs])
+        """
+        func_instance([input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs])
 
-        This is a shortcut to the outputs property that also allows setting the
-        input_arrays dict and function parameters.
-        '''
+        This is a shortcut to the outputs property that also allows setting
+        the input_arrays dict and function parameters.
+        """
         self.set_function_args(*args, **kwargs)
         self.__call_function()
         return self.outputs
@@ -285,8 +306,9 @@ class Function(object):
         self.__outputs_valid = True
 
     def __get_opt_input_value(self, input_name):
-        ''' Returns the user-set value if there is one, otherwise the default.
-        '''
+        """
+        Returns the user-set value if there is one, otherwise the default.
+        """
         value = self.__opt_inputs[input_name]['value']
         if not value:
             value = self.__opt_inputs[input_name]['default_value']
@@ -303,222 +325,19 @@ class Function(object):
 
 
 ######################  INTERNAL python-level functions  #######################
-'''
-These map 1-1 with native C TALIB abstract interface calls. Their names are the
-same except for having the leading 4 characters lowercased (and the Alloc/Free
-function pairs which have been combined into single get functions)
-
-These are TA function information-discovery calls. The Function class encapsulates
-these functions into an easy-to-use, pythonic interface. It's therefore recommended
-over using these functions directly.
-'''
-
-__GROUPS = [
-    'Math Operators',
-    'Math Transform',
-    'Overlap Studies',
-    'Volatility Indicators',
-    'Momentum Indicators',
-    'Cycle Indicators',
-    'Volume Indicators',
-    'Pattern Recognition',
-    'Statistic Functions',
-    'Price Transform',
-    ]
-
-__FUNCTION_GROUPS = {
-    'Cycle Indicators': [
-        'HT_DCPERIOD',
-        'HT_DCPHASE',
-        'HT_PHASOR',
-        'HT_SINE',
-        'HT_TRENDMODE',
-        ],
-    'Math Operators': [
-        'ADD',
-        'DIV',
-        'MAX',
-        'MAXINDEX',
-        'MIN',
-        'MININDEX',
-        'MINMAX',
-        'MINMAXINDEX',
-        'MULT',
-        'SUB',
-        'SUM',
-        ],
-    'Math Transform': [
-        'ACOS',
-        'ASIN',
-        'ATAN',
-        'CEIL',
-        'COS',
-        'COSH',
-        'EXP',
-        'FLOOR',
-        'LN',
-        'LOG10',
-        'SIN',
-        'SINH',
-        'SQRT',
-        'TAN',
-        'TANH',
-        ],
-    'Momentum Indicators': [
-        'ADX',
-        'ADXR',
-        'APO',
-        'AROON',
-        'AROONOSC',
-        'BOP',
-        'CCI',
-        'CMO',
-        'DX',
-        'MACD',
-        'MACDEXT',
-        'MACDFIX',
-        'MFI',
-        'MINUS_DI',
-        'MINUS_DM',
-        'MOM',
-        'PLUS_DI',
-        'PLUS_DM',
-        'PPO',
-        'ROC',
-        'ROCP',
-        'ROCR',
-        'ROCR100',
-        'RSI',
-        'STOCH',
-        'STOCHF',
-        'STOCHRSI',
-        'TRIX',
-        'ULTOSC',
-        'WILLR',
-        ],
-    'Overlap Studies': [
-        'BBANDS',
-        'DEMA',
-        'EMA',
-        'HT_TRENDLINE',
-        'KAMA',
-        'MA',
-        'MAMA',
-        'MAVP',
-        'MIDPOINT',
-        'MIDPRICE',
-        'SAR',
-        'SAREXT',
-        'SMA',
-        'T3',
-        'TEMA',
-        'TRIMA',
-        'WMA',
-        ],
-    'Pattern Recognition': [
-        'CDL2CROWS',
-        'CDL3BLACKCROWS',
-        'CDL3INSIDE',
-        'CDL3LINESTRIKE',
-        'CDL3OUTSIDE',
-        'CDL3STARSINSOUTH',
-        'CDL3WHITESOLDIERS',
-        'CDLABANDONEDBABY',
-        'CDLADVANCEBLOCK',
-        'CDLBELTHOLD',
-        'CDLBREAKAWAY',
-        'CDLCLOSINGMARUBOZU',
-        'CDLCONCEALBABYSWALL',
-        'CDLCOUNTERATTACK',
-        'CDLDARKCLOUDCOVER',
-        'CDLDOJI',
-        'CDLDOJISTAR',
-        'CDLDRAGONFLYDOJI',
-        'CDLENGULFING',
-        'CDLEVENINGDOJISTAR',
-        'CDLEVENINGSTAR',
-        'CDLGAPSIDESIDEWHITE',
-        'CDLGRAVESTONEDOJI',
-        'CDLHAMMER',
-        'CDLHANGINGMAN',
-        'CDLHARAMI',
-        'CDLHARAMICROSS',
-        'CDLHIGHWAVE',
-        'CDLHIKKAKE',
-        'CDLHIKKAKEMOD',
-        'CDLHOMINGPIGEON',
-        'CDLIDENTICAL3CROWS',
-        'CDLINNECK',
-        'CDLINVERTEDHAMMER',
-        'CDLKICKING',
-        'CDLKICKINGBYLENGTH',
-        'CDLLADDERBOTTOM',
-        'CDLLONGLEGGEDDOJI',
-        'CDLLONGLINE',
-        'CDLMARUBOZU',
-        'CDLMATCHINGLOW',
-        'CDLMATHOLD',
-        'CDLMORNINGDOJISTAR',
-        'CDLMORNINGSTAR',
-        'CDLONNECK',
-        'CDLPIERCING',
-        'CDLRICKSHAWMAN',
-        'CDLRISEFALL3METHODS',
-        'CDLSEPARATINGLINES',
-        'CDLSHOOTINGSTAR',
-        'CDLSHORTLINE',
-        'CDLSPINNINGTOP',
-        'CDLSTALLEDPATTERN',
-        'CDLSTICKSANDWICH',
-        'CDLTAKURI',
-        'CDLTASUKIGAP',
-        'CDLTHRUSTING',
-        'CDLTRISTAR',
-        'CDLUNIQUE3RIVER',
-        'CDLUPSIDEGAP2CROWS',
-        'CDLXSIDEGAP3METHODS',
-        ],
-    'Price Transform': [
-        'AVGPRICE',
-        'MEDPRICE',
-        'TYPPRICE',
-        'WCLPRICE',
-        ],
-    'Statistic Functions': [
-        'BETA',
-        'CORREL',
-        'LINEARREG',
-        'LINEARREG_ANGLE',
-        'LINEARREG_INTERCEPT',
-        'LINEARREG_SLOPE',
-        'STDDEV',
-        'TSF',
-        'VAR',
-        ],
-    'Volatility Indicators': [
-        'ATR',
-        'NATR',
-        'TRANGE',
-        ],
-    'Volume Indicators': [
-        'AD',
-        'ADOSC',
-        'OBV'
-        ],
-    }
-
-def _ta_get_functions():
-    ret = []
-    for group in __FUNCTION_GROUPS:
-        ret.extend(__FUNCTION_GROUPS[group])
-    return ret
-
-def _ta_get_function_groups():
-    return __FUNCTION_GROUPS.copy()
+# These map 1-1 with native C TALIB abstract interface calls. Their names
+# are the same except for having the leading 4 characters lowercased (and
+# the Alloc/Free function pairs which have been combined into single get
+# functions)
+#
+# These are TA function information-discovery calls. The Function class
+# encapsulates these functions into an easy-to-use, pythonic interface. It's
+# therefore recommended over using these functions directly.
 
 def _ta_getGroupTable():
-    ''' Returns the list of available TALIB function group names. *slow*
-    '''
+    """
+    Returns the list of available TALIB function group names. *slow*
+    """
     cdef abstract.TA_StringTable *table
     _ta_check_success('TA_GroupTableAlloc', abstract.TA_GroupTableAlloc(&table))
     groups = []
@@ -528,8 +347,9 @@ def _ta_getGroupTable():
     return groups
 
 def _ta_getFuncTable(char *group):
-    ''' Returns a list of the functions for the specified group name. *slow*
-    '''
+    """
+    Returns a list of the functions for the specified group name. *slow*
+    """
     cdef abstract.TA_StringTable *table
     _ta_check_success('TA_FuncTableAlloc', abstract.TA_FuncTableAlloc(group, &table))
     functions = []
@@ -538,10 +358,12 @@ def _ta_getFuncTable(char *group):
     _ta_check_success('TA_FuncTableFree', abstract.TA_FuncTableFree(table))
     return functions
 
-def __get_flags(flag, flags_lookup_dict):
-    ''' TA-LIB provides hints for multiple flags as a bitwise-ORed int. This
-    function returns the flags from flag found in the provided flags_lookup_dict.
-    '''
+def __get_flags(int flag, dict flags_lookup_dict):
+    """
+    TA-LIB provides hints for multiple flags as a bitwise-ORed int.
+    This function returns the flags from flag found in the provided
+    flags_lookup_dict.
+    """
     # if the flag we got is out-of-range, it just means no extra info provided
     if flag < 1 or flag > 2**len(flags_lookup_dict)-1:
         return None
@@ -590,26 +412,29 @@ TA_OUTPUT_FLAGS = {
 }
 
 def _ta_getFuncInfo(char *function_name):
-    ''' Returns the info dict for the function. It has the following keys: name,
+    """
+    Returns the info dict for the function. It has the following keys: name,
     group, help, flags, num_inputs, num_opt_inputs and num_outputs.
-    '''
+    """
     cdef abstract.TA_FuncInfo *info
     retCode = abstract.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
-    ret = { 'name': info.name,
-            'group': info.group,
-            'display_name': info.hint,
-            'flags': __get_flags(info.flags, TA_FUNC_FLAGS),
-            'num_inputs': int(info.nbInput),
-            'num_opt_inputs': int(info.nbOptInput),
-            'num_outputs': int(info.nbOutput) }
-    return ret
+    return {
+        'name': info.name,
+        'group': info.group,
+        'display_name': info.hint,
+        'flags': __get_flags(info.flags, TA_FUNC_FLAGS),
+        'num_inputs': int(info.nbInput),
+        'num_opt_inputs': int(info.nbOptInput),
+        'num_outputs': int(info.nbOutput)
+    }
 
 def _ta_getInputParameterInfo(char *function_name, int idx):
-    ''' Returns the function's input info dict for the given index. It has two
+    """
+    Returns the function's input info dict for the given index. It has two
     keys: name and flags.
-    '''
+    """
     cdef abstract.TA_InputParameterInfo *info
     retCode = abstract.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
@@ -621,15 +446,16 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     elif 'price' in name:
         name = 'prices'
 
-    ret = { 'name': name,
-            #'type': info.type,
-            'price_series': __get_flags(info.flags, TA_INPUT_FLAGS) }
-    return ret
+    return {
+        'name': name,
+        'price_series': __get_flags(info.flags, TA_INPUT_FLAGS)
+    }
 
 def _ta_getOptInputParameterInfo(char *function_name, int idx):
-    ''' Returns the function's opt_input info dict for the given index. It has
-    the following keys: name, display_name, type, help, default_value and value.
-    '''
+    """
+    Returns the function's opt_input info dict for the given index. It has the
+    following keys: name, display_name, type, help, default_value and value.
+    """
     cdef abstract.TA_OptInputParameterInfo *info
     retCode = abstract.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
@@ -640,18 +466,20 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     if default_value % 1 == 0:
         default_value = int(default_value)
 
-    ret = { 'name': name,
-            'display_name': info.displayName,
-            'type': info.type,
-            'help': info.hint,
-            'default_value': default_value,
-            'value': None }
-    return ret
+    return {
+        'name': name,
+        'display_name': info.displayName,
+        'type': info.type,
+        'help': info.hint,
+        'default_value': default_value,
+        'value': None
+    }
 
 def _ta_getOutputParameterInfo(char *function_name, int idx):
-    ''' Returns the function's output info dict for the given index. It has two
+    """
+    Returns the function's output info dict for the given index. It has two
     keys: name and flags.
-    '''
+    """
     cdef abstract.TA_OutputParameterInfo *info
     retCode = abstract.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
@@ -662,16 +490,17 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     if 'real' in name and name not in ['real', 'real0', 'real1']:
         name = name[len('real'):]
 
-    ret = { 'name': name,
-            #'type': info.type,
-            'description': __get_flags(info.flags, TA_OUTPUT_FLAGS) }
-    return ret
+    return {
+        'name': name,
+        'description': __get_flags(info.flags, TA_OUTPUT_FLAGS)
+    }
 
 def _get_defaults_and_docs(func_info):
-    ''' Returns a tuple with two outputs: defaults, a dict of parameter defaults,
+    """
+    Returns a tuple with two outputs: defaults, a dict of parameter defaults,
     and documentation, a formatted docstring for the function.
     .. Note: func_info should come from Function.info, *not* _ta_getFuncInfo.
-    '''
+    """
     defaults = {}
     func_line = [func_info['name'], '(']
     func_args = ['[input_arrays]']
@@ -719,24 +548,27 @@ def _get_defaults_and_docs(func_info):
 # - Setting TALIB paramholder optInput values and calling the lookback function
 
 cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
-    ''' Returns a pointer to a function handle for the given function name
-    '''
+    """
+    Returns a pointer to a function handle for the given function name
+    """
     cdef abstract.TA_FuncHandle *handle
     _ta_check_success('TA_GetFuncHandle', abstract.TA_GetFuncHandle(function_name, &handle))
     return handle
 
 cdef abstract.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
-    ''' Returns a pointer to a parameter holder for the given function name
-    '''
+    """
+    Returns a pointer to a parameter holder for the given function name
+    """
     cdef abstract.TA_ParamHolder *holder
     retCode = abstract.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
     _ta_check_success('TA_ParamHolderAlloc', retCode)
     return holder
 
 cdef int __ta_paramHolderFree(abstract.TA_ParamHolder *params):
-    ''' Frees the memory allocated by __ta_paramHolderAlloc (call when done with the parameter holder)
+    """
+    Frees the memory allocated by __ta_paramHolderAlloc (call when done with the parameter holder)
     WARNING: Not properly calling this function will cause memory leaks!
-    '''
+    """
     _ta_check_success('TA_ParamHolderFree', abstract.TA_ParamHolderFree(params))
 
 cdef int __ta_setOptInputParamInteger(abstract.TA_ParamHolder *holder, int idx, int value):
@@ -755,7 +587,7 @@ cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
 
 # Configure all the available TA-Lib functions to be exported as
 # an abstract function wrapper for convenient import.
-for name in _ta_get_functions():
+for name in __FUNCTION_NAMES:
     exec "%s = Function('%s')" % (name, name)
 
-__all__ = ['Function'] + _ta_get_functions()
+__all__ = ['Function'] + list(__FUNCTION_NAMES)
