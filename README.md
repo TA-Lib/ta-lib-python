@@ -230,7 +230,7 @@ For your convenience, we create ``Function`` wrappers for all of the available
 TA-Lib functions:
 
 ```python
-from talib import SMA, BBANDS, STOCH
+from talib.abstract import SMA, BBANDS, STOCH
 
 output = SMA(input_arrays)
 
