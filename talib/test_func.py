@@ -13,6 +13,9 @@ def test_MIN():
     assert_equals(result[i + 2], 93.780)
     assert_equals(result[i + 3], 92.530)
     assert_equals(result[i + 4], 92.530)
+    values = np.array([np.nan, 5., 4., 3., 5., 7.])
+    result = func.MIN(values, timeperiod=2)
+    assert_np_arrays_equal(result, [np.nan, np.nan, 4, 3, 3, 5])
 
 def test_MAX():
     result = func.MAX(series, timeperiod=4)

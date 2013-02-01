@@ -12,9 +12,6 @@ ctypedef int TA_MAType
 
 cdef double NaN = nan
 
-cdef extern from "math.h":
-    bint isnan(double x)
-
 cdef extern from "numpy/arrayobject.h":
     int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
@@ -24,7 +21,6 @@ cdef extern from "numpy/arrayobject.h":
 np.import_array() # Initialize the NumPy C API
 
 cdef extern from "ta-lib/ta_libc.h":
-
     TA_RetCode TA_ACOS( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_ACOS_Lookback(  )
     TA_RetCode TA_AD( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[] )
@@ -370,7 +366,8 @@ def ACOS( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -431,7 +428,8 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -481,7 +479,8 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -545,7 +544,8 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -602,7 +602,8 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -659,7 +660,8 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -706,7 +708,8 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -760,7 +763,8 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -815,7 +819,8 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -858,7 +863,8 @@ def ASIN( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -901,7 +907,8 @@ def ATAN( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -958,7 +965,8 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1019,7 +1027,8 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1073,7 +1082,8 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1133,7 +1143,8 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1194,7 +1205,8 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1251,7 +1263,8 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1312,7 +1325,8 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1373,7 +1387,8 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1434,7 +1449,8 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1495,7 +1511,8 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1556,7 +1573,8 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1617,7 +1635,8 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1678,7 +1697,8 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1741,7 +1761,8 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1802,7 +1823,8 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1863,7 +1885,8 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1924,7 +1947,8 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -1985,7 +2009,8 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2046,7 +2071,8 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2107,7 +2133,8 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2170,7 +2197,8 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2231,7 +2259,8 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2292,7 +2321,8 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2353,7 +2383,8 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2414,7 +2445,8 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2477,7 +2509,8 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2540,7 +2573,8 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2601,7 +2635,8 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2662,7 +2697,8 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2723,7 +2759,8 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2784,7 +2821,8 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2845,7 +2883,8 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2906,7 +2945,8 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -2967,7 +3007,8 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3028,7 +3069,8 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3089,7 +3131,8 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3150,7 +3193,8 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3211,7 +3255,8 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3272,7 +3317,8 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3333,7 +3379,8 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3394,7 +3441,8 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3455,7 +3503,8 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3516,7 +3565,8 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3577,7 +3627,8 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3638,7 +3689,8 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3699,7 +3751,8 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3760,7 +3813,8 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3823,7 +3877,8 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3886,7 +3941,8 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -3949,7 +4005,8 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4010,7 +4067,8 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4071,7 +4129,8 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4132,7 +4191,8 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4193,7 +4253,8 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4254,7 +4315,8 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4315,7 +4377,8 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4376,7 +4439,8 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4437,7 +4501,8 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4498,7 +4563,8 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4559,7 +4625,8 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4620,7 +4687,8 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4681,7 +4749,8 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4742,7 +4811,8 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4803,7 +4873,8 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4864,7 +4935,8 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4925,7 +4997,8 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -4986,7 +5059,8 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5029,7 +5103,8 @@ def CEIL( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5074,7 +5149,8 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5126,7 +5202,8 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5169,7 +5246,8 @@ def COS( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5212,7 +5290,8 @@ def COSH( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5257,7 +5336,8 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5307,7 +5387,8 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5364,7 +5445,8 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5409,7 +5491,8 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5452,7 +5535,8 @@ def EXP( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5495,7 +5579,8 @@ def FLOOR( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5538,7 +5623,8 @@ def HT_DCPERIOD( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5581,7 +5667,8 @@ def HT_DCPHASE( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5627,7 +5714,8 @@ def HT_PHASOR( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5677,7 +5765,8 @@ def HT_SINE( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5724,7 +5813,8 @@ def HT_TRENDLINE( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5767,7 +5857,8 @@ def HT_TRENDMODE( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5812,7 +5903,8 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5857,7 +5949,8 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5902,7 +5995,8 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5947,7 +6041,8 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -5992,7 +6087,8 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6035,7 +6131,8 @@ def LN( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6078,7 +6175,8 @@ def LOG10( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6124,7 +6222,8 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6177,7 +6276,8 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6241,7 +6341,8 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6300,7 +6401,8 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6357,7 +6459,8 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6415,7 +6518,8 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6460,7 +6564,8 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6505,7 +6610,8 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6554,7 +6660,8 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6617,7 +6724,8 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6662,7 +6770,8 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6713,7 +6822,8 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6758,7 +6868,8 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6803,7 +6914,8 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6851,7 +6963,8 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6903,7 +7016,8 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -6964,7 +7078,8 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7015,7 +7130,8 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7060,7 +7176,8 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7110,7 +7227,8 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7167,7 +7285,8 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7217,7 +7336,8 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7274,7 +7394,8 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7325,7 +7446,8 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7372,7 +7494,8 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7417,7 +7540,8 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7462,7 +7586,8 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7507,7 +7632,8 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7552,7 +7678,8 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7597,7 +7724,8 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7649,7 +7777,8 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7707,7 +7836,8 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7750,7 +7880,8 @@ def SIN( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7793,7 +7924,8 @@ def SINH( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7838,7 +7970,8 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7881,7 +8014,8 @@ def SQRT( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7927,7 +8061,8 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -7991,7 +8126,8 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8057,7 +8193,8 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8112,7 +8249,8 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8166,7 +8304,8 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     length = real0.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real0_data[i]):
+        val = real0_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8211,7 +8350,8 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8257,7 +8397,8 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8300,7 +8441,8 @@ def TAN( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8343,7 +8485,8 @@ def TANH( np.ndarray real not None ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8388,7 +8531,8 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8443,7 +8587,8 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8488,7 +8633,8 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8533,7 +8679,8 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8578,7 +8725,8 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8633,7 +8781,8 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8692,7 +8841,8 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8738,7 +8888,8 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8793,7 +8944,8 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8850,7 +9002,8 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     length = high.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(high_data[i]):
+        val = high_data[i]
+        if val == val:
             begidx = i
             break
     else:
@@ -8895,7 +9048,8 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     length = real.shape[0]
     begidx = 0
     for i from 0 <= i < length:
-        if not isnan(real_data[i]):
+        val = real_data[i]
+        if val == val:
             begidx = i
             break
     else:

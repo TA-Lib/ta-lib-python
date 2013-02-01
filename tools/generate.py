@@ -56,9 +56,6 @@ ctypedef int TA_MAType
 
 cdef double NaN = nan
 
-cdef extern from "math.h":
-    bint isnan(double x)
-
 cdef extern from "numpy/arrayobject.h":
     int PyArray_TYPE(np.ndarray)
     object PyArray_EMPTY(int, np.npy_intp*, int, int)
@@ -67,8 +64,7 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-cdef extern from "ta-lib/ta_libc.h":
-"""
+cdef extern from "ta-lib/ta_libc.h":"""
 
 for f in functions:
     f = f.replace(';', '')
@@ -234,7 +230,8 @@ for f in functions:
             print '    length = %s.shape[0]' % var
             print '    begidx = 0'
             print '    for i from 0 <= i < length:'
-            print '        if not isnan(%s_data[i]):' % var
+            print '        val = %s_data[i]' % var
+            print '        if val == val:'
             print '            begidx = i'
             print '            break'
             print '    else:'
