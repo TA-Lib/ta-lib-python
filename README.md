@@ -32,8 +32,10 @@ $ python setup.py install
 
 Note: this requires that you have already installed the ``TA-Lib`` library
 on your computer (you can [download it](http://ta-lib.org/hdr_dw.html) or
-use your computers package manager to install it, e.g.,
-``brew install ta-lib`` on Mac OS X).
+use your computer's package manager to install it, e.g.,
+``brew install ta-lib`` on Mac OS X).  On Windows, you can download the
+[ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
+and unzip to ``C:\ta-lib``.
 
 ## Troubleshooting
 
@@ -52,6 +54,7 @@ mv: cannot stat `.deps/gen_code-gen_code.Tpo': No such file or directory
 make[3]: *** [gen_code-gen_code.o] Error 1/bin/bash ../../../libtool --tag=CC --mode=link gcc -g -O2 -L../../ta_common -L../../ta_abstract -L../../ta_func -o gen_code gen_code-gen_code.o -lta_common -lta_abstract_gc -lta_func -lm -lpthread -ldl
 ```
 Simply rerunning ``make`` and then ``sudo make install`` seems to always do the trick.
+
 
 ## Function API Examples
 
