@@ -1,10 +1,7 @@
 
-ctypedef int TA_RetCode
+cimport libc as lib
 
-IF UNAME_SYSNAME == "Windows":
-    cimport lib_windows as lib
-ELSE:
-    cimport lib_unix as lib
+ctypedef int TA_RetCode
 
 __ta_version__ = lib.TA_GetVersionString()
 

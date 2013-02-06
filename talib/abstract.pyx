@@ -7,11 +7,7 @@ from collections import OrderedDict
 from cython.operator cimport dereference as deref
 
 cimport numpy as np
-
-IF UNAME_SYSNAME == "Windows":
-    cimport lib_windows as lib
-ELSE:
-    cimport lib_unix as lib
+cimport libc as lib
 
 __FUNCTION_NAMES = set(func_c.__all__)
 

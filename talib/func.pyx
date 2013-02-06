@@ -5,7 +5,6 @@ from cython import boundscheck, wraparound
 from .common cimport _ta_check_success
 
 ctypedef int TA_RetCode
-ctypedef int TA_MAType
 
 cdef double NaN = nan
 
@@ -17,10 +16,7 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-IF UNAME_SYSNAME == "Windows":
-    cimport lib_windows as lib
-ELSE:
-    cimport lib_unix as lib
+cimport libc as lib
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function

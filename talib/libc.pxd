@@ -1,3 +1,4 @@
+
 cdef extern from "ta-lib/ta_defs.h":
     cdef enum TA_RetCode:
         TA_SUCCESS
