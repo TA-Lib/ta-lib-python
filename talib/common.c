@@ -251,10 +251,14 @@
 #include <math.h>
 #define __PYX_HAVE__talib__common
 #define __PYX_HAVE_API__talib__common
+#if defined(WIN32) || defined(MS_WINDOWS)
+#include "ta_libc.h"
+#else
 #include "ta-lib/ta_defs.h"
 #include "ta-lib/ta_common.h"
 #include "ta-lib/ta_abstract.h"
 #include "ta-lib/ta_func.h"
+#endif
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
