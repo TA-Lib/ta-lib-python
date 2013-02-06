@@ -1,16 +1,15 @@
 
 ctypedef int TA_RetCode
 
-cdef extern from "ta-lib/ta_libc.h":
-    enum: TA_SUCCESS
-    TA_RetCode TA_Initialize()
-    TA_RetCode TA_Shutdown()
-    char *TA_GetVersionString()
+IF UNAME_SYSNAME == "Windows":
+    cimport lib_windows as lib
+ELSE:
+    cimport lib_unix as lib
 
-__ta_version__ = TA_GetVersionString()
+__ta_version__ = lib.TA_GetVersionString()
 
 cpdef _ta_check_success(str function_name, int ret_code):
-    if ret_code == TA_SUCCESS:
+    if ret_code == lib.TA_SUCCESS:
         return True
     ta_errors = {
         0: 'Success',
@@ -37,12 +36,14 @@ cpdef _ta_check_success(str function_name, int ret_code):
         function_name, ret_code, ta_errors[ret_code]))
 
 def _ta_initialize():
-    ret_code = TA_Initialize()
+    cdef TA_RetCode ret_code
+    ret_code = lib.TA_Initialize()
     _ta_check_success('TA_Initialize', ret_code)
     return ret_code
 
 def _ta_shutdown():
-    ret_code = TA_Shutdown()
+    cdef TA_RetCode ret_code
+    ret_code = lib.TA_Shutdown()
     _ta_check_success('TA_Shutdown', ret_code)
     return ret_code
 

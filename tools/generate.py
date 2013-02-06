@@ -48,9 +48,6 @@ from cython import boundscheck, wraparound
 
 from .common cimport _ta_check_success
 
-ctypedef np.double_t double_t
-ctypedef np.int32_t int32_t
-
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
@@ -64,14 +61,11 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-cdef extern from "ta-lib/ta_libc.h":"""
-
-for f in functions:
-    f = f.replace(';', '')
-    f = f.replace('void', '')
-    f = f.strip()
-    print '    %s' % f
-print
+IF UNAME_SYSNAME == "Windows":
+    cimport lib_windows as lib
+ELSE:
+    cimport lib_unix as lib
+"""
 
 # cleanup variable names to make them more pythonic
 def cleanup(name):
@@ -167,6 +161,7 @@ for f in functions:
     print '    cdef:'
     print '        np.npy_intp length'
     print '        int begidx, endidx, lookback'
+    print '        TA_RetCode retCode'
     for arg in args:
         var = arg.split()[-1]
 
@@ -239,7 +234,7 @@ for f in functions:
             print '    endidx = length - begidx - 1'
             break
 
-    print '    lookback = begidx + %s_Lookback(' % name,
+    print '    lookback = begidx + lib.%s_Lookback(' % name,
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
         if i > 0:
@@ -268,7 +263,7 @@ for f in functions:
             else:
                 assert False, args
 
-    print '    retCode = %s(' % name,
+    print '    retCode = lib.%s(' % name,
 
     for i, arg in enumerate(args):
         if i > 0:

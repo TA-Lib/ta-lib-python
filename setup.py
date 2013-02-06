@@ -19,28 +19,30 @@ elif sys.platform == "linux2" or "freebsd" in sys.platform:
     lib_talib_dir = "/usr/local/lib/"
 
 elif sys.platform == "win32":
-    include_talib_dir = r"c:\msys\1.0\local\include"
-    lib_talib_dir = r"c:\msys\1.0\local\lib"
+    include_talib_dir = r"c:\ta-lib\c\include"
+    lib_talib_dir = r"c:\ta-lib\c\lib"
 
 else:
     raise NotImplementedError(sys.platform)
 
+lib_talib_name = 'ta_lib' if not sys.platform == 'win32' else 'ta_libc_cdr'
+
 common_ext = Extension('talib.common', ['talib/common.pyx'],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
-    libraries=["ta_lib"]
+    libraries=[lib_talib_name]
 )
 
 func_ext = Extension("talib.func", ["talib/func.pyx"],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
-    libraries=["ta_lib"]
+    libraries=[lib_talib_name]
 )
 
 abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
     include_dirs=[numpy.get_include(), include_talib_dir],
     library_dirs=[lib_talib_dir],
-    libraries=['ta_lib']
+    libraries=[lib_talib_name]
 )
 
 setup(

@@ -4,9 +4,6 @@ from cython import boundscheck, wraparound
 
 from .common cimport _ta_check_success
 
-ctypedef np.double_t double_t
-ctypedef np.int32_t int32_t
-
 ctypedef int TA_RetCode
 ctypedef int TA_MAType
 
@@ -20,323 +17,10 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-cdef extern from "ta-lib/ta_libc.h":
-    TA_RetCode TA_ACOS( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ACOS_Lookback(  )
-    TA_RetCode TA_AD( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_AD_Lookback(  )
-    TA_RetCode TA_ADD( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ADD_Lookback(  )
-    TA_RetCode TA_ADOSC( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int optInFastPeriod, int optInSlowPeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ADOSC_Lookback( int optInFastPeriod, int optInSlowPeriod )
-    TA_RetCode TA_ADX( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ADX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_ADXR( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ADXR_Lookback( int optInTimePeriod )
-    TA_RetCode TA_APO( int startIdx, int endIdx, const double inReal[], int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_APO_Lookback( int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType )
-    TA_RetCode TA_AROON( int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outAroonDown[], double outAroonUp[] )
-    int TA_AROON_Lookback( int optInTimePeriod )
-    TA_RetCode TA_AROONOSC( int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_AROONOSC_Lookback( int optInTimePeriod )
-    TA_RetCode TA_ASIN( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ASIN_Lookback(  )
-    TA_RetCode TA_ATAN( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ATAN_Lookback(  )
-    TA_RetCode TA_ATR( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ATR_Lookback( int optInTimePeriod )
-    TA_RetCode TA_AVGPRICE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_AVGPRICE_Lookback(  )
-    TA_RetCode TA_BBANDS( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[] )
-    int TA_BBANDS_Lookback( int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType )
-    TA_RetCode TA_BETA( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_BETA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_BOP( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_BOP_Lookback(  )
-    TA_RetCode TA_CCI( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_CCI_Lookback( int optInTimePeriod )
-    TA_RetCode TA_CDL2CROWS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL2CROWS_Lookback(  )
-    TA_RetCode TA_CDL3BLACKCROWS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3BLACKCROWS_Lookback(  )
-    TA_RetCode TA_CDL3INSIDE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3INSIDE_Lookback(  )
-    TA_RetCode TA_CDL3LINESTRIKE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3LINESTRIKE_Lookback(  )
-    TA_RetCode TA_CDL3OUTSIDE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3OUTSIDE_Lookback(  )
-    TA_RetCode TA_CDL3STARSINSOUTH( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3STARSINSOUTH_Lookback(  )
-    TA_RetCode TA_CDL3WHITESOLDIERS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDL3WHITESOLDIERS_Lookback(  )
-    TA_RetCode TA_CDLABANDONEDBABY( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLABANDONEDBABY_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLADVANCEBLOCK( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLADVANCEBLOCK_Lookback(  )
-    TA_RetCode TA_CDLBELTHOLD( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLBELTHOLD_Lookback(  )
-    TA_RetCode TA_CDLBREAKAWAY( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLBREAKAWAY_Lookback(  )
-    TA_RetCode TA_CDLCLOSINGMARUBOZU( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLCLOSINGMARUBOZU_Lookback(  )
-    TA_RetCode TA_CDLCONCEALBABYSWALL( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLCONCEALBABYSWALL_Lookback(  )
-    TA_RetCode TA_CDLCOUNTERATTACK( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLCOUNTERATTACK_Lookback(  )
-    TA_RetCode TA_CDLDARKCLOUDCOVER( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLDARKCLOUDCOVER_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLDOJI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLDOJI_Lookback(  )
-    TA_RetCode TA_CDLDOJISTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLDOJISTAR_Lookback(  )
-    TA_RetCode TA_CDLDRAGONFLYDOJI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLDRAGONFLYDOJI_Lookback(  )
-    TA_RetCode TA_CDLENGULFING( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLENGULFING_Lookback(  )
-    TA_RetCode TA_CDLEVENINGDOJISTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLEVENINGDOJISTAR_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLEVENINGSTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLEVENINGSTAR_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLGAPSIDESIDEWHITE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLGAPSIDESIDEWHITE_Lookback(  )
-    TA_RetCode TA_CDLGRAVESTONEDOJI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLGRAVESTONEDOJI_Lookback(  )
-    TA_RetCode TA_CDLHAMMER( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHAMMER_Lookback(  )
-    TA_RetCode TA_CDLHANGINGMAN( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHANGINGMAN_Lookback(  )
-    TA_RetCode TA_CDLHARAMI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHARAMI_Lookback(  )
-    TA_RetCode TA_CDLHARAMICROSS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHARAMICROSS_Lookback(  )
-    TA_RetCode TA_CDLHIGHWAVE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHIGHWAVE_Lookback(  )
-    TA_RetCode TA_CDLHIKKAKE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHIKKAKE_Lookback(  )
-    TA_RetCode TA_CDLHIKKAKEMOD( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHIKKAKEMOD_Lookback(  )
-    TA_RetCode TA_CDLHOMINGPIGEON( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLHOMINGPIGEON_Lookback(  )
-    TA_RetCode TA_CDLIDENTICAL3CROWS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLIDENTICAL3CROWS_Lookback(  )
-    TA_RetCode TA_CDLINNECK( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLINNECK_Lookback(  )
-    TA_RetCode TA_CDLINVERTEDHAMMER( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLINVERTEDHAMMER_Lookback(  )
-    TA_RetCode TA_CDLKICKING( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLKICKING_Lookback(  )
-    TA_RetCode TA_CDLKICKINGBYLENGTH( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLKICKINGBYLENGTH_Lookback(  )
-    TA_RetCode TA_CDLLADDERBOTTOM( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLLADDERBOTTOM_Lookback(  )
-    TA_RetCode TA_CDLLONGLEGGEDDOJI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLLONGLEGGEDDOJI_Lookback(  )
-    TA_RetCode TA_CDLLONGLINE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLLONGLINE_Lookback(  )
-    TA_RetCode TA_CDLMARUBOZU( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLMARUBOZU_Lookback(  )
-    TA_RetCode TA_CDLMATCHINGLOW( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLMATCHINGLOW_Lookback(  )
-    TA_RetCode TA_CDLMATHOLD( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLMATHOLD_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLMORNINGDOJISTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLMORNINGDOJISTAR_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLMORNINGSTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], double optInPenetration, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLMORNINGSTAR_Lookback( double optInPenetration )
-    TA_RetCode TA_CDLONNECK( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLONNECK_Lookback(  )
-    TA_RetCode TA_CDLPIERCING( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLPIERCING_Lookback(  )
-    TA_RetCode TA_CDLRICKSHAWMAN( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLRICKSHAWMAN_Lookback(  )
-    TA_RetCode TA_CDLRISEFALL3METHODS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLRISEFALL3METHODS_Lookback(  )
-    TA_RetCode TA_CDLSEPARATINGLINES( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSEPARATINGLINES_Lookback(  )
-    TA_RetCode TA_CDLSHOOTINGSTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSHOOTINGSTAR_Lookback(  )
-    TA_RetCode TA_CDLSHORTLINE( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSHORTLINE_Lookback(  )
-    TA_RetCode TA_CDLSPINNINGTOP( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSPINNINGTOP_Lookback(  )
-    TA_RetCode TA_CDLSTALLEDPATTERN( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSTALLEDPATTERN_Lookback(  )
-    TA_RetCode TA_CDLSTICKSANDWICH( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLSTICKSANDWICH_Lookback(  )
-    TA_RetCode TA_CDLTAKURI( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLTAKURI_Lookback(  )
-    TA_RetCode TA_CDLTASUKIGAP( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLTASUKIGAP_Lookback(  )
-    TA_RetCode TA_CDLTHRUSTING( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLTHRUSTING_Lookback(  )
-    TA_RetCode TA_CDLTRISTAR( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLTRISTAR_Lookback(  )
-    TA_RetCode TA_CDLUNIQUE3RIVER( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLUNIQUE3RIVER_Lookback(  )
-    TA_RetCode TA_CDLUPSIDEGAP2CROWS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLUPSIDEGAP2CROWS_Lookback(  )
-    TA_RetCode TA_CDLXSIDEGAP3METHODS( int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_CDLXSIDEGAP3METHODS_Lookback(  )
-    TA_RetCode TA_CEIL( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_CEIL_Lookback(  )
-    TA_RetCode TA_CMO( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_CMO_Lookback( int optInTimePeriod )
-    TA_RetCode TA_CORREL( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_CORREL_Lookback( int optInTimePeriod )
-    TA_RetCode TA_COS( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_COS_Lookback(  )
-    TA_RetCode TA_COSH( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_COSH_Lookback(  )
-    TA_RetCode TA_DEMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_DEMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_DIV( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_DIV_Lookback(  )
-    TA_RetCode TA_DX( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_DX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_EMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_EMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_EXP( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_EXP_Lookback(  )
-    TA_RetCode TA_FLOOR( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_FLOOR_Lookback(  )
-    TA_RetCode TA_HT_DCPERIOD( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_HT_DCPERIOD_Lookback(  )
-    TA_RetCode TA_HT_DCPHASE( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_HT_DCPHASE_Lookback(  )
-    TA_RetCode TA_HT_PHASOR( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outInPhase[], double outQuadrature[] )
-    int TA_HT_PHASOR_Lookback(  )
-    TA_RetCode TA_HT_SINE( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outSine[], double outLeadSine[] )
-    int TA_HT_SINE_Lookback(  )
-    TA_RetCode TA_HT_TRENDLINE( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_HT_TRENDLINE_Lookback(  )
-    TA_RetCode TA_HT_TRENDMODE( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_HT_TRENDMODE_Lookback(  )
-    TA_RetCode TA_KAMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_KAMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_LINEARREG( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LINEARREG_Lookback( int optInTimePeriod )
-    TA_RetCode TA_LINEARREG_ANGLE( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LINEARREG_ANGLE_Lookback( int optInTimePeriod )
-    TA_RetCode TA_LINEARREG_INTERCEPT( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LINEARREG_INTERCEPT_Lookback( int optInTimePeriod )
-    TA_RetCode TA_LINEARREG_SLOPE( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LINEARREG_SLOPE_Lookback( int optInTimePeriod )
-    TA_RetCode TA_LN( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LN_Lookback(  )
-    TA_RetCode TA_LOG10( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_LOG10_Lookback(  )
-    TA_RetCode TA_MA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MA_Lookback( int optInTimePeriod, TA_MAType optInMAType )
-    TA_RetCode TA_MACD( int startIdx, int endIdx, const double inReal[], int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outMACD[], double outMACDSignal[], double outMACDHist[] )
-    int TA_MACD_Lookback( int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod )
-    TA_RetCode TA_MACDEXT( int startIdx, int endIdx, const double inReal[], int optInFastPeriod, TA_MAType optInFastMAType, int optInSlowPeriod, TA_MAType optInSlowMAType, int optInSignalPeriod, TA_MAType optInSignalMAType, int *outBegIdx, int *outNBElement, double outMACD[], double outMACDSignal[], double outMACDHist[] )
-    int TA_MACDEXT_Lookback( int optInFastPeriod, TA_MAType optInFastMAType, int optInSlowPeriod, TA_MAType optInSlowMAType, int optInSignalPeriod, TA_MAType optInSignalMAType )
-    TA_RetCode TA_MACDFIX( int startIdx, int endIdx, const double inReal[], int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outMACD[], double outMACDSignal[], double outMACDHist[] )
-    int TA_MACDFIX_Lookback( int optInSignalPeriod )
-    TA_RetCode TA_MAMA( int startIdx, int endIdx, const double inReal[], double optInFastLimit, double optInSlowLimit, int *outBegIdx, int *outNBElement, double outMAMA[], double outFAMA[] )
-    int TA_MAMA_Lookback( double optInFastLimit, double optInSlowLimit )
-    TA_RetCode TA_MAVP( int startIdx, int endIdx, const double inReal[], const double inPeriods[], int optInMinPeriod, int optInMaxPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MAVP_Lookback( int optInMinPeriod, int optInMaxPeriod, TA_MAType optInMAType )
-    TA_RetCode TA_MAX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MAX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MAXINDEX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_MAXINDEX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MEDPRICE( int startIdx, int endIdx, const double inHigh[], const double inLow[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MEDPRICE_Lookback(  )
-    TA_RetCode TA_MFI( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MFI_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MIDPOINT( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MIDPOINT_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MIDPRICE( int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MIDPRICE_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MIN( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MIN_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MININDEX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, int outInteger[] )
-    int TA_MININDEX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MINMAX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outMin[], double outMax[] )
-    int TA_MINMAX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MINMAXINDEX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, int outMinIdx[], int outMaxIdx[] )
-    int TA_MINMAXINDEX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MINUS_DI( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MINUS_DI_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MINUS_DM( int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MINUS_DM_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MOM( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MOM_Lookback( int optInTimePeriod )
-    TA_RetCode TA_MULT( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_MULT_Lookback(  )
-    TA_RetCode TA_NATR( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_NATR_Lookback( int optInTimePeriod )
-    TA_RetCode TA_OBV( int startIdx, int endIdx, const double inReal[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_OBV_Lookback(  )
-    TA_RetCode TA_PLUS_DI( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_PLUS_DI_Lookback( int optInTimePeriod )
-    TA_RetCode TA_PLUS_DM( int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_PLUS_DM_Lookback( int optInTimePeriod )
-    TA_RetCode TA_PPO( int startIdx, int endIdx, const double inReal[], int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_PPO_Lookback( int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType )
-    TA_RetCode TA_ROC( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ROC_Lookback( int optInTimePeriod )
-    TA_RetCode TA_ROCP( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ROCP_Lookback( int optInTimePeriod )
-    TA_RetCode TA_ROCR( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ROCR_Lookback( int optInTimePeriod )
-    TA_RetCode TA_ROCR100( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ROCR100_Lookback( int optInTimePeriod )
-    TA_RetCode TA_RSI( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_RSI_Lookback( int optInTimePeriod )
-    TA_RetCode TA_SAR( int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInAcceleration, double optInMaximum, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SAR_Lookback( double optInAcceleration, double optInMaximum )
-    TA_RetCode TA_SAREXT( int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInStartValue, double optInOffsetOnReverse, double optInAccelerationInitLong, double optInAccelerationLong, double optInAccelerationMaxLong, double optInAccelerationInitShort, double optInAccelerationShort, double optInAccelerationMaxShort, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SAREXT_Lookback( double optInStartValue, double optInOffsetOnReverse, double optInAccelerationInitLong, double optInAccelerationLong, double optInAccelerationMaxLong, double optInAccelerationInitShort, double optInAccelerationShort, double optInAccelerationMaxShort )
-    TA_RetCode TA_SIN( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SIN_Lookback(  )
-    TA_RetCode TA_SINH( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SINH_Lookback(  )
-    TA_RetCode TA_SMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_SQRT( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SQRT_Lookback(  )
-    TA_RetCode TA_STDDEV( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDev, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_STDDEV_Lookback( int optInTimePeriod, double optInNbDev )
-    TA_RetCode TA_STOCH( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInFastK_Period, int optInSlowK_Period, TA_MAType optInSlowK_MAType, int optInSlowD_Period, TA_MAType optInSlowD_MAType, int *outBegIdx, int *outNBElement, double outSlowK[], double outSlowD[] )
-    int TA_STOCH_Lookback( int optInFastK_Period, int optInSlowK_Period, TA_MAType optInSlowK_MAType, int optInSlowD_Period, TA_MAType optInSlowD_MAType )
-    TA_RetCode TA_STOCHF( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInFastK_Period, int optInFastD_Period, TA_MAType optInFastD_MAType, int *outBegIdx, int *outNBElement, double outFastK[], double outFastD[] )
-    int TA_STOCHF_Lookback( int optInFastK_Period, int optInFastD_Period, TA_MAType optInFastD_MAType )
-    TA_RetCode TA_STOCHRSI( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int optInFastK_Period, int optInFastD_Period, TA_MAType optInFastD_MAType, int *outBegIdx, int *outNBElement, double outFastK[], double outFastD[] )
-    int TA_STOCHRSI_Lookback( int optInTimePeriod, int optInFastK_Period, int optInFastD_Period, TA_MAType optInFastD_MAType )
-    TA_RetCode TA_SUB( int startIdx, int endIdx, const double inReal0[], const double inReal1[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SUB_Lookback(  )
-    TA_RetCode TA_SUM( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_SUM_Lookback( int optInTimePeriod )
-    TA_RetCode TA_T3( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInVFactor, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_T3_Lookback( int optInTimePeriod, double optInVFactor )
-    TA_RetCode TA_TAN( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TAN_Lookback(  )
-    TA_RetCode TA_TANH( int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TANH_Lookback(  )
-    TA_RetCode TA_TEMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TEMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_TRANGE( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TRANGE_Lookback(  )
-    TA_RetCode TA_TRIMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TRIMA_Lookback( int optInTimePeriod )
-    TA_RetCode TA_TRIX( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TRIX_Lookback( int optInTimePeriod )
-    TA_RetCode TA_TSF( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TSF_Lookback( int optInTimePeriod )
-    TA_RetCode TA_TYPPRICE( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_TYPPRICE_Lookback(  )
-    TA_RetCode TA_ULTOSC( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_ULTOSC_Lookback( int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3 )
-    TA_RetCode TA_VAR( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDev, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_VAR_Lookback( int optInTimePeriod, double optInNbDev )
-    TA_RetCode TA_WCLPRICE( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_WCLPRICE_Lookback(  )
-    TA_RetCode TA_WILLR( int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_WILLR_Lookback( int optInTimePeriod )
-    TA_RetCode TA_WMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
-    int TA_WMA_Lookback( int optInTimePeriod )
+IF UNAME_SYSNAME == "Windows":
+    cimport lib_windows as lib
+ELSE:
+    cimport lib_unix as lib
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
@@ -353,6 +37,7 @@ def ACOS( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -373,12 +58,12 @@ def ACOS( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ACOS_Lookback( )
+    lookback = begidx + lib.TA_ACOS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ACOS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ACOS", retCode)
     return outreal
 
@@ -397,6 +82,7 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -435,12 +121,12 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_AD_Lookback( )
+    lookback = begidx + lib.TA_AD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_AD( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_AD", retCode)
     return outreal
 
@@ -460,6 +146,7 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -486,12 +173,12 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ADD_Lookback( )
+    lookback = begidx + lib.TA_ADD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ADD( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ADD", retCode)
     return outreal
 
@@ -513,6 +200,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -551,12 +239,12 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ADOSC_Lookback( fastperiod , slowperiod )
+    lookback = begidx + lib.TA_ADOSC_Lookback( fastperiod , slowperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ADOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ADOSC", retCode)
     return outreal
 
@@ -577,6 +265,7 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -609,12 +298,12 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ADX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ADX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ADX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ADX", retCode)
     return outreal
 
@@ -635,6 +324,7 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -667,12 +357,12 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ADXR_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ADXR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ADXR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ADXR", retCode)
     return outreal
 
@@ -695,6 +385,7 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -715,12 +406,12 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_APO_Lookback( fastperiod , slowperiod , matype )
+    lookback = begidx + lib.TA_APO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_APO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_APO", retCode)
     return outreal
 
@@ -742,6 +433,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -770,7 +462,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_AROON_Lookback( timeperiod )
+    lookback = begidx + lib.TA_AROON_Lookback( timeperiod )
     outaroondown = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outaroondown_data = <double*>outaroondown.data
     for i from 0 <= i < min(lookback, length):
@@ -779,7 +471,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     outaroonup_data = <double*>outaroonup.data
     for i from 0 <= i < min(lookback, length):
         outaroonup_data[i] = NaN
-    retCode = TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
+    retCode = lib.TA_AROON( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown_data+lookback) , <double *>(outaroonup_data+lookback) )
     _ta_check_success("TA_AROON", retCode)
     return outaroondown , outaroonup
 
@@ -800,6 +492,7 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -826,12 +519,12 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_AROONOSC_Lookback( timeperiod )
+    lookback = begidx + lib.TA_AROONOSC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_AROONOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_AROONOSC", retCode)
     return outreal
 
@@ -850,6 +543,7 @@ def ASIN( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -870,12 +564,12 @@ def ASIN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ASIN_Lookback( )
+    lookback = begidx + lib.TA_ASIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ASIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ASIN", retCode)
     return outreal
 
@@ -894,6 +588,7 @@ def ATAN( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -914,12 +609,12 @@ def ATAN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ATAN_Lookback( )
+    lookback = begidx + lib.TA_ATAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ATAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ATAN", retCode)
     return outreal
 
@@ -940,6 +635,7 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -972,12 +668,12 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ATR_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ATR", retCode)
     return outreal
 
@@ -996,6 +692,7 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1034,12 +731,12 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_AVGPRICE_Lookback( )
+    lookback = begidx + lib.TA_AVGPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_AVGPRICE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_AVGPRICE", retCode)
     return outreal
 
@@ -1065,6 +762,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -1089,7 +787,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
+    lookback = begidx + lib.TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
     outrealupperband = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outrealupperband_data = <double*>outrealupperband.data
     for i from 0 <= i < min(lookback, length):
@@ -1102,7 +800,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     outreallowerband_data = <double*>outreallowerband.data
     for i from 0 <= i < min(lookback, length):
         outreallowerband_data[i] = NaN
-    retCode = TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
+    retCode = lib.TA_BBANDS( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband_data+lookback) , <double *>(outrealmiddleband_data+lookback) , <double *>(outreallowerband_data+lookback) )
     _ta_check_success("TA_BBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband
 
@@ -1124,6 +822,7 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -1150,12 +849,12 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_BETA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_BETA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_BETA( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_BETA", retCode)
     return outreal
 
@@ -1174,6 +873,7 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1212,12 +912,12 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_BOP_Lookback( )
+    lookback = begidx + lib.TA_BOP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_BOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_BOP", retCode)
     return outreal
 
@@ -1238,6 +938,7 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -1270,12 +971,12 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CCI_Lookback( timeperiod )
+    lookback = begidx + lib.TA_CCI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_CCI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_CCI", retCode)
     return outreal
 
@@ -1294,6 +995,7 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1332,12 +1034,12 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL2CROWS_Lookback( )
+    lookback = begidx + lib.TA_CDL2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL2CROWS", retCode)
     return outinteger
 
@@ -1356,6 +1058,7 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1394,12 +1097,12 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3BLACKCROWS_Lookback( )
+    lookback = begidx + lib.TA_CDL3BLACKCROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3BLACKCROWS", retCode)
     return outinteger
 
@@ -1418,6 +1121,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1456,12 +1160,12 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3INSIDE_Lookback( )
+    lookback = begidx + lib.TA_CDL3INSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3INSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3INSIDE", retCode)
     return outinteger
 
@@ -1480,6 +1184,7 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1518,12 +1223,12 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3LINESTRIKE_Lookback( )
+    lookback = begidx + lib.TA_CDL3LINESTRIKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3LINESTRIKE", retCode)
     return outinteger
 
@@ -1542,6 +1247,7 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1580,12 +1286,12 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3OUTSIDE_Lookback( )
+    lookback = begidx + lib.TA_CDL3OUTSIDE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3OUTSIDE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3OUTSIDE", retCode)
     return outinteger
 
@@ -1604,6 +1310,7 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1642,12 +1349,12 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3STARSINSOUTH_Lookback( )
+    lookback = begidx + lib.TA_CDL3STARSINSOUTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
     return outinteger
 
@@ -1666,6 +1373,7 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1704,12 +1412,12 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDL3WHITESOLDIERS_Lookback( )
+    lookback = begidx + lib.TA_CDL3WHITESOLDIERS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
     return outinteger
 
@@ -1730,6 +1438,7 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1768,12 +1477,12 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLABANDONEDBABY_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLABANDONEDBABY_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLABANDONEDBABY", retCode)
     return outinteger
 
@@ -1792,6 +1501,7 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1830,12 +1540,12 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLADVANCEBLOCK_Lookback( )
+    lookback = begidx + lib.TA_CDLADVANCEBLOCK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
     return outinteger
 
@@ -1854,6 +1564,7 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1892,12 +1603,12 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLBELTHOLD_Lookback( )
+    lookback = begidx + lib.TA_CDLBELTHOLD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLBELTHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLBELTHOLD", retCode)
     return outinteger
 
@@ -1916,6 +1627,7 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -1954,12 +1666,12 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLBREAKAWAY_Lookback( )
+    lookback = begidx + lib.TA_CDLBREAKAWAY_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLBREAKAWAY( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLBREAKAWAY", retCode)
     return outinteger
 
@@ -1978,6 +1690,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2016,12 +1729,12 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLCLOSINGMARUBOZU_Lookback( )
+    lookback = begidx + lib.TA_CDLCLOSINGMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
     return outinteger
 
@@ -2040,6 +1753,7 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2078,12 +1792,12 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLCONCEALBABYSWALL_Lookback( )
+    lookback = begidx + lib.TA_CDLCONCEALBABYSWALL_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
     return outinteger
 
@@ -2102,6 +1816,7 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2140,12 +1855,12 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLCOUNTERATTACK_Lookback( )
+    lookback = begidx + lib.TA_CDLCOUNTERATTACK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
     return outinteger
 
@@ -2166,6 +1881,7 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2204,12 +1920,12 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLDARKCLOUDCOVER_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
     return outinteger
 
@@ -2228,6 +1944,7 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2266,12 +1983,12 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLDOJI_Lookback( )
+    lookback = begidx + lib.TA_CDLDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLDOJI", retCode)
     return outinteger
 
@@ -2290,6 +2007,7 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2328,12 +2046,12 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLDOJISTAR_Lookback( )
+    lookback = begidx + lib.TA_CDLDOJISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLDOJISTAR", retCode)
     return outinteger
 
@@ -2352,6 +2070,7 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2390,12 +2109,12 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLDRAGONFLYDOJI_Lookback( )
+    lookback = begidx + lib.TA_CDLDRAGONFLYDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
     return outinteger
 
@@ -2414,6 +2133,7 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2452,12 +2172,12 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLENGULFING_Lookback( )
+    lookback = begidx + lib.TA_CDLENGULFING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLENGULFING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLENGULFING", retCode)
     return outinteger
 
@@ -2478,6 +2198,7 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2516,12 +2237,12 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLEVENINGDOJISTAR_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
     return outinteger
 
@@ -2542,6 +2263,7 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2580,12 +2302,12 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLEVENINGSTAR_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLEVENINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLEVENINGSTAR", retCode)
     return outinteger
 
@@ -2604,6 +2326,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2642,12 +2365,12 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLGAPSIDESIDEWHITE_Lookback( )
+    lookback = begidx + lib.TA_CDLGAPSIDESIDEWHITE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
     return outinteger
 
@@ -2666,6 +2389,7 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2704,12 +2428,12 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLGRAVESTONEDOJI_Lookback( )
+    lookback = begidx + lib.TA_CDLGRAVESTONEDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
     return outinteger
 
@@ -2728,6 +2452,7 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2766,12 +2491,12 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHAMMER_Lookback( )
+    lookback = begidx + lib.TA_CDLHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHAMMER", retCode)
     return outinteger
 
@@ -2790,6 +2515,7 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2828,12 +2554,12 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHANGINGMAN_Lookback( )
+    lookback = begidx + lib.TA_CDLHANGINGMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHANGINGMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHANGINGMAN", retCode)
     return outinteger
 
@@ -2852,6 +2578,7 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2890,12 +2617,12 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHARAMI_Lookback( )
+    lookback = begidx + lib.TA_CDLHARAMI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHARAMI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHARAMI", retCode)
     return outinteger
 
@@ -2914,6 +2641,7 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -2952,12 +2680,12 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHARAMICROSS_Lookback( )
+    lookback = begidx + lib.TA_CDLHARAMICROSS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHARAMICROSS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHARAMICROSS", retCode)
     return outinteger
 
@@ -2976,6 +2704,7 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3014,12 +2743,12 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHIGHWAVE_Lookback( )
+    lookback = begidx + lib.TA_CDLHIGHWAVE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHIGHWAVE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHIGHWAVE", retCode)
     return outinteger
 
@@ -3038,6 +2767,7 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3076,12 +2806,12 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHIKKAKE_Lookback( )
+    lookback = begidx + lib.TA_CDLHIKKAKE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHIKKAKE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHIKKAKE", retCode)
     return outinteger
 
@@ -3100,6 +2830,7 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3138,12 +2869,12 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHIKKAKEMOD_Lookback( )
+    lookback = begidx + lib.TA_CDLHIKKAKEMOD_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
     return outinteger
 
@@ -3162,6 +2893,7 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3200,12 +2932,12 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLHOMINGPIGEON_Lookback( )
+    lookback = begidx + lib.TA_CDLHOMINGPIGEON_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
     return outinteger
 
@@ -3224,6 +2956,7 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3262,12 +2995,12 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLIDENTICAL3CROWS_Lookback( )
+    lookback = begidx + lib.TA_CDLIDENTICAL3CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
     return outinteger
 
@@ -3286,6 +3019,7 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3324,12 +3058,12 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLINNECK_Lookback( )
+    lookback = begidx + lib.TA_CDLINNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLINNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLINNECK", retCode)
     return outinteger
 
@@ -3348,6 +3082,7 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3386,12 +3121,12 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLINVERTEDHAMMER_Lookback( )
+    lookback = begidx + lib.TA_CDLINVERTEDHAMMER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
     return outinteger
 
@@ -3410,6 +3145,7 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3448,12 +3184,12 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLKICKING_Lookback( )
+    lookback = begidx + lib.TA_CDLKICKING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLKICKING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLKICKING", retCode)
     return outinteger
 
@@ -3472,6 +3208,7 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3510,12 +3247,12 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLKICKINGBYLENGTH_Lookback( )
+    lookback = begidx + lib.TA_CDLKICKINGBYLENGTH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
     return outinteger
 
@@ -3534,6 +3271,7 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3572,12 +3310,12 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLLADDERBOTTOM_Lookback( )
+    lookback = begidx + lib.TA_CDLLADDERBOTTOM_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
     return outinteger
 
@@ -3596,6 +3334,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3634,12 +3373,12 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLLONGLEGGEDDOJI_Lookback( )
+    lookback = begidx + lib.TA_CDLLONGLEGGEDDOJI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
     return outinteger
 
@@ -3658,6 +3397,7 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3696,12 +3436,12 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLLONGLINE_Lookback( )
+    lookback = begidx + lib.TA_CDLLONGLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLLONGLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLLONGLINE", retCode)
     return outinteger
 
@@ -3720,6 +3460,7 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3758,12 +3499,12 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLMARUBOZU_Lookback( )
+    lookback = begidx + lib.TA_CDLMARUBOZU_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLMARUBOZU( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLMARUBOZU", retCode)
     return outinteger
 
@@ -3782,6 +3523,7 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3820,12 +3562,12 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLMATCHINGLOW_Lookback( )
+    lookback = begidx + lib.TA_CDLMATCHINGLOW_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLMATCHINGLOW", retCode)
     return outinteger
 
@@ -3846,6 +3588,7 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3884,12 +3627,12 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLMATHOLD_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLMATHOLD_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLMATHOLD( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLMATHOLD", retCode)
     return outinteger
 
@@ -3910,6 +3653,7 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -3948,12 +3692,12 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLMORNINGDOJISTAR_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
     return outinteger
 
@@ -3974,6 +3718,7 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4012,12 +3757,12 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLMORNINGSTAR_Lookback( penetration )
+    lookback = begidx + lib.TA_CDLMORNINGSTAR_Lookback( penetration )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , penetration , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLMORNINGSTAR", retCode)
     return outinteger
 
@@ -4036,6 +3781,7 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4074,12 +3820,12 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLONNECK_Lookback( )
+    lookback = begidx + lib.TA_CDLONNECK_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLONNECK( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLONNECK", retCode)
     return outinteger
 
@@ -4098,6 +3844,7 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4136,12 +3883,12 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLPIERCING_Lookback( )
+    lookback = begidx + lib.TA_CDLPIERCING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLPIERCING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLPIERCING", retCode)
     return outinteger
 
@@ -4160,6 +3907,7 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4198,12 +3946,12 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLRICKSHAWMAN_Lookback( )
+    lookback = begidx + lib.TA_CDLRICKSHAWMAN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
     return outinteger
 
@@ -4222,6 +3970,7 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4260,12 +4009,12 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLRISEFALL3METHODS_Lookback( )
+    lookback = begidx + lib.TA_CDLRISEFALL3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
     return outinteger
 
@@ -4284,6 +4033,7 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4322,12 +4072,12 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSEPARATINGLINES_Lookback( )
+    lookback = begidx + lib.TA_CDLSEPARATINGLINES_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
     return outinteger
 
@@ -4346,6 +4096,7 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4384,12 +4135,12 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSHOOTINGSTAR_Lookback( )
+    lookback = begidx + lib.TA_CDLSHOOTINGSTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
     return outinteger
 
@@ -4408,6 +4159,7 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4446,12 +4198,12 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSHORTLINE_Lookback( )
+    lookback = begidx + lib.TA_CDLSHORTLINE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSHORTLINE( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSHORTLINE", retCode)
     return outinteger
 
@@ -4470,6 +4222,7 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4508,12 +4261,12 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSPINNINGTOP_Lookback( )
+    lookback = begidx + lib.TA_CDLSPINNINGTOP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSPINNINGTOP", retCode)
     return outinteger
 
@@ -4532,6 +4285,7 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4570,12 +4324,12 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSTALLEDPATTERN_Lookback( )
+    lookback = begidx + lib.TA_CDLSTALLEDPATTERN_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
     return outinteger
 
@@ -4594,6 +4348,7 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4632,12 +4387,12 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLSTICKSANDWICH_Lookback( )
+    lookback = begidx + lib.TA_CDLSTICKSANDWICH_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
     return outinteger
 
@@ -4656,6 +4411,7 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4694,12 +4450,12 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLTAKURI_Lookback( )
+    lookback = begidx + lib.TA_CDLTAKURI_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLTAKURI( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLTAKURI", retCode)
     return outinteger
 
@@ -4718,6 +4474,7 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4756,12 +4513,12 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLTASUKIGAP_Lookback( )
+    lookback = begidx + lib.TA_CDLTASUKIGAP_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLTASUKIGAP( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLTASUKIGAP", retCode)
     return outinteger
 
@@ -4780,6 +4537,7 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4818,12 +4576,12 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLTHRUSTING_Lookback( )
+    lookback = begidx + lib.TA_CDLTHRUSTING_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLTHRUSTING( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLTHRUSTING", retCode)
     return outinteger
 
@@ -4842,6 +4600,7 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4880,12 +4639,12 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLTRISTAR_Lookback( )
+    lookback = begidx + lib.TA_CDLTRISTAR_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLTRISTAR( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLTRISTAR", retCode)
     return outinteger
 
@@ -4904,6 +4663,7 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -4942,12 +4702,12 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLUNIQUE3RIVER_Lookback( )
+    lookback = begidx + lib.TA_CDLUNIQUE3RIVER_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
     return outinteger
 
@@ -4966,6 +4726,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -5004,12 +4765,12 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLUPSIDEGAP2CROWS_Lookback( )
+    lookback = begidx + lib.TA_CDLUPSIDEGAP2CROWS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
     return outinteger
 
@@ -5028,6 +4789,7 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* open_data
         double* high_data
         double* low_data
@@ -5066,12 +4828,12 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CDLXSIDEGAP3METHODS_Lookback( )
+    lookback = begidx + lib.TA_CDLXSIDEGAP3METHODS_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open_data+begidx) , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
     return outinteger
 
@@ -5090,6 +4852,7 @@ def CEIL( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5110,12 +4873,12 @@ def CEIL( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CEIL_Lookback( )
+    lookback = begidx + lib.TA_CEIL_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_CEIL( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_CEIL", retCode)
     return outreal
 
@@ -5136,6 +4899,7 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5156,12 +4920,12 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CMO_Lookback( timeperiod )
+    lookback = begidx + lib.TA_CMO_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_CMO( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_CMO", retCode)
     return outreal
 
@@ -5183,6 +4947,7 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -5209,12 +4974,12 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_CORREL_Lookback( timeperiod )
+    lookback = begidx + lib.TA_CORREL_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_CORREL( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_CORREL", retCode)
     return outreal
 
@@ -5233,6 +4998,7 @@ def COS( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5253,12 +5019,12 @@ def COS( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_COS_Lookback( )
+    lookback = begidx + lib.TA_COS_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_COS( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_COS", retCode)
     return outreal
 
@@ -5277,6 +5043,7 @@ def COSH( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5297,12 +5064,12 @@ def COSH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_COSH_Lookback( )
+    lookback = begidx + lib.TA_COSH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_COSH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_COSH", retCode)
     return outreal
 
@@ -5323,6 +5090,7 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5343,12 +5111,12 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_DEMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_DEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_DEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_DEMA", retCode)
     return outreal
 
@@ -5368,6 +5136,7 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -5394,12 +5163,12 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_DIV_Lookback( )
+    lookback = begidx + lib.TA_DIV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_DIV( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_DIV", retCode)
     return outreal
 
@@ -5420,6 +5189,7 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -5452,12 +5222,12 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_DX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_DX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_DX( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_DX", retCode)
     return outreal
 
@@ -5478,6 +5248,7 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5498,12 +5269,12 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_EMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_EMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_EMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_EMA", retCode)
     return outreal
 
@@ -5522,6 +5293,7 @@ def EXP( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5542,12 +5314,12 @@ def EXP( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_EXP_Lookback( )
+    lookback = begidx + lib.TA_EXP_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_EXP( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_EXP", retCode)
     return outreal
 
@@ -5566,6 +5338,7 @@ def FLOOR( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5586,12 +5359,12 @@ def FLOOR( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_FLOOR_Lookback( )
+    lookback = begidx + lib.TA_FLOOR_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_FLOOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_FLOOR", retCode)
     return outreal
 
@@ -5610,6 +5383,7 @@ def HT_DCPERIOD( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5630,12 +5404,12 @@ def HT_DCPERIOD( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_DCPERIOD_Lookback( )
+    lookback = begidx + lib.TA_HT_DCPERIOD_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_HT_DCPERIOD( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_HT_DCPERIOD", retCode)
     return outreal
 
@@ -5654,6 +5428,7 @@ def HT_DCPHASE( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5674,12 +5449,12 @@ def HT_DCPHASE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_DCPHASE_Lookback( )
+    lookback = begidx + lib.TA_HT_DCPHASE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_HT_DCPHASE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_HT_DCPHASE", retCode)
     return outreal
 
@@ -5699,6 +5474,7 @@ def HT_PHASOR( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5721,7 +5497,7 @@ def HT_PHASOR( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_PHASOR_Lookback( )
+    lookback = begidx + lib.TA_HT_PHASOR_Lookback( )
     outinphase = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outinphase_data = <double*>outinphase.data
     for i from 0 <= i < min(lookback, length):
@@ -5730,7 +5506,7 @@ def HT_PHASOR( np.ndarray real not None ):
     outquadrature_data = <double*>outquadrature.data
     for i from 0 <= i < min(lookback, length):
         outquadrature_data[i] = NaN
-    retCode = TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
+    retCode = lib.TA_HT_PHASOR( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outinphase_data+lookback) , <double *>(outquadrature_data+lookback) )
     _ta_check_success("TA_HT_PHASOR", retCode)
     return outinphase , outquadrature
 
@@ -5750,6 +5526,7 @@ def HT_SINE( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5772,7 +5549,7 @@ def HT_SINE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_SINE_Lookback( )
+    lookback = begidx + lib.TA_HT_SINE_Lookback( )
     outsine = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outsine_data = <double*>outsine.data
     for i from 0 <= i < min(lookback, length):
@@ -5781,7 +5558,7 @@ def HT_SINE( np.ndarray real not None ):
     outleadsine_data = <double*>outleadsine.data
     for i from 0 <= i < min(lookback, length):
         outleadsine_data[i] = NaN
-    retCode = TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
+    retCode = lib.TA_HT_SINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outsine_data+lookback) , <double *>(outleadsine_data+lookback) )
     _ta_check_success("TA_HT_SINE", retCode)
     return outsine , outleadsine
 
@@ -5800,6 +5577,7 @@ def HT_TRENDLINE( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5820,12 +5598,12 @@ def HT_TRENDLINE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_TRENDLINE_Lookback( )
+    lookback = begidx + lib.TA_HT_TRENDLINE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_HT_TRENDLINE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_HT_TRENDLINE", retCode)
     return outreal
 
@@ -5844,6 +5622,7 @@ def HT_TRENDMODE( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5864,12 +5643,12 @@ def HT_TRENDMODE( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_HT_TRENDMODE_Lookback( )
+    lookback = begidx + lib.TA_HT_TRENDMODE_Lookback( )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_HT_TRENDMODE( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_HT_TRENDMODE", retCode)
     return outinteger
 
@@ -5890,6 +5669,7 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5910,12 +5690,12 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_KAMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_KAMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_KAMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_KAMA", retCode)
     return outreal
 
@@ -5936,6 +5716,7 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -5956,12 +5737,12 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LINEARREG_Lookback( timeperiod )
+    lookback = begidx + lib.TA_LINEARREG_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LINEARREG( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LINEARREG", retCode)
     return outreal
 
@@ -5982,6 +5763,7 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6002,12 +5784,12 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LINEARREG_ANGLE_Lookback( timeperiod )
+    lookback = begidx + lib.TA_LINEARREG_ANGLE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LINEARREG_ANGLE", retCode)
     return outreal
 
@@ -6028,6 +5810,7 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6048,12 +5831,12 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
+    lookback = begidx + lib.TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
     return outreal
 
@@ -6074,6 +5857,7 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6094,12 +5878,12 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LINEARREG_SLOPE_Lookback( timeperiod )
+    lookback = begidx + lib.TA_LINEARREG_SLOPE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LINEARREG_SLOPE", retCode)
     return outreal
 
@@ -6118,6 +5902,7 @@ def LN( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6138,12 +5923,12 @@ def LN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LN_Lookback( )
+    lookback = begidx + lib.TA_LN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LN", retCode)
     return outreal
 
@@ -6162,6 +5947,7 @@ def LOG10( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6182,12 +5968,12 @@ def LOG10( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_LOG10_Lookback( )
+    lookback = begidx + lib.TA_LOG10_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_LOG10( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_LOG10", retCode)
     return outreal
 
@@ -6209,6 +5995,7 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6229,12 +6016,12 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MA_Lookback( timeperiod , matype )
+    lookback = begidx + lib.TA_MA_Lookback( timeperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MA", retCode)
     return outreal
 
@@ -6259,6 +6046,7 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6283,7 +6071,7 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
+    lookback = begidx + lib.TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
@@ -6296,7 +6084,7 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
-    retCode = TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
+    retCode = lib.TA_MACD( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     _ta_check_success("TA_MACD", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
@@ -6324,6 +6112,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6348,7 +6137,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
+    lookback = begidx + lib.TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
@@ -6361,7 +6150,7 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
-    retCode = TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
+    retCode = lib.TA_MACDEXT( 0 , endidx , <double *>(real_data+begidx) , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     _ta_check_success("TA_MACDEXT", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
@@ -6384,6 +6173,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6408,7 +6198,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MACDFIX_Lookback( signalperiod )
+    lookback = begidx + lib.TA_MACDFIX_Lookback( signalperiod )
     outmacd = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmacd_data = <double*>outmacd.data
     for i from 0 <= i < min(lookback, length):
@@ -6421,7 +6211,7 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     outmacdhist_data = <double*>outmacdhist.data
     for i from 0 <= i < min(lookback, length):
         outmacdhist_data[i] = NaN
-    retCode = TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
+    retCode = lib.TA_MACDFIX( 0 , endidx , <double *>(real_data+begidx) , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd_data+lookback) , <double *>(outmacdsignal_data+lookback) , <double *>(outmacdhist_data+lookback) )
     _ta_check_success("TA_MACDFIX", retCode)
     return outmacd , outmacdsignal , outmacdhist
 
@@ -6444,6 +6234,7 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6466,7 +6257,7 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MAMA_Lookback( fastlimit , slowlimit )
+    lookback = begidx + lib.TA_MAMA_Lookback( fastlimit , slowlimit )
     outmama = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmama_data = <double*>outmama.data
     for i from 0 <= i < min(lookback, length):
@@ -6475,7 +6266,7 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     outfama_data = <double*>outfama.data
     for i from 0 <= i < min(lookback, length):
         outfama_data[i] = NaN
-    retCode = TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
+    retCode = lib.TA_MAMA( 0 , endidx , <double *>(real_data+begidx) , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama_data+lookback) , <double *>(outfama_data+lookback) )
     _ta_check_success("TA_MAMA", retCode)
     return outmama , outfama
 
@@ -6499,6 +6290,7 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         double* periods_data
         int outbegidx
@@ -6525,12 +6317,12 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MAVP_Lookback( minperiod , maxperiod , matype )
+    lookback = begidx + lib.TA_MAVP_Lookback( minperiod , maxperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MAVP( 0 , endidx , <double *>(real_data+begidx) , <double *>(periods_data+begidx) , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MAVP", retCode)
     return outreal
 
@@ -6551,6 +6343,7 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6571,12 +6364,12 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MAX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MAX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MAX", retCode)
     return outreal
 
@@ -6597,6 +6390,7 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6617,12 +6411,12 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MAXINDEX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MAXINDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_MAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_MAXINDEX", retCode)
     return outinteger
 
@@ -6641,6 +6435,7 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -6667,12 +6462,12 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MEDPRICE_Lookback( )
+    lookback = begidx + lib.TA_MEDPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MEDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MEDPRICE", retCode)
     return outreal
 
@@ -6693,6 +6488,7 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -6731,12 +6527,12 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MFI_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MFI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MFI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , <double *>(volume_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MFI", retCode)
     return outreal
 
@@ -6757,6 +6553,7 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6777,12 +6574,12 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MIDPOINT_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MIDPOINT_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MIDPOINT( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MIDPOINT", retCode)
     return outreal
 
@@ -6803,6 +6600,7 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -6829,12 +6627,12 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MIDPRICE_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MIDPRICE_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MIDPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MIDPRICE", retCode)
     return outreal
 
@@ -6855,6 +6653,7 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6875,12 +6674,12 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MIN_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MIN_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MIN( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MIN", retCode)
     return outreal
 
@@ -6901,6 +6700,7 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6921,12 +6721,12 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MININDEX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MININDEX_Lookback( timeperiod )
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
-    retCode = TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
+    retCode = lib.TA_MININDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger_data+lookback) )
     _ta_check_success("TA_MININDEX", retCode)
     return outinteger
 
@@ -6948,6 +6748,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -6970,7 +6771,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MINMAX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MINMAX_Lookback( timeperiod )
     outmin = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outmin_data = <double*>outmin.data
     for i from 0 <= i < min(lookback, length):
@@ -6979,7 +6780,7 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     outmax_data = <double*>outmax.data
     for i from 0 <= i < min(lookback, length):
         outmax_data[i] = NaN
-    retCode = TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
+    retCode = lib.TA_MINMAX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outmin_data+lookback) , <double *>(outmax_data+lookback) )
     _ta_check_success("TA_MINMAX", retCode)
     return outmin , outmax
 
@@ -7001,6 +6802,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7023,7 +6825,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MINMAXINDEX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MINMAXINDEX_Lookback( timeperiod )
     outminidx = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
     outminidx_data = <int*>outminidx.data
     for i from 0 <= i < min(lookback, length):
@@ -7032,7 +6834,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     outmaxidx_data = <int*>outmaxidx.data
     for i from 0 <= i < min(lookback, length):
         outmaxidx_data[i] = 0
-    retCode = TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
+    retCode = lib.TA_MINMAXINDEX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx_data+lookback) , <int *>(outmaxidx_data+lookback) )
     _ta_check_success("TA_MINMAXINDEX", retCode)
     return outminidx , outmaxidx
 
@@ -7053,6 +6855,7 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -7085,12 +6888,12 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MINUS_DI_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MINUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MINUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MINUS_DI", retCode)
     return outreal
 
@@ -7111,6 +6914,7 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -7137,12 +6941,12 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MINUS_DM_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MINUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MINUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MINUS_DM", retCode)
     return outreal
 
@@ -7163,6 +6967,7 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7183,12 +6988,12 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MOM_Lookback( timeperiod )
+    lookback = begidx + lib.TA_MOM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MOM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MOM", retCode)
     return outreal
 
@@ -7208,6 +7013,7 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -7234,12 +7040,12 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_MULT_Lookback( )
+    lookback = begidx + lib.TA_MULT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_MULT( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_MULT", retCode)
     return outreal
 
@@ -7260,6 +7066,7 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -7292,12 +7099,12 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_NATR_Lookback( timeperiod )
+    lookback = begidx + lib.TA_NATR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_NATR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_NATR", retCode)
     return outreal
 
@@ -7317,6 +7124,7 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         double* volume_data
         int outbegidx
@@ -7343,12 +7151,12 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_OBV_Lookback( )
+    lookback = begidx + lib.TA_OBV_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_OBV( 0 , endidx , <double *>(real_data+begidx) , <double *>(volume_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_OBV", retCode)
     return outreal
 
@@ -7369,6 +7177,7 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -7401,12 +7210,12 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_PLUS_DI_Lookback( timeperiod )
+    lookback = begidx + lib.TA_PLUS_DI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_PLUS_DI( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_PLUS_DI", retCode)
     return outreal
 
@@ -7427,6 +7236,7 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -7453,12 +7263,12 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_PLUS_DM_Lookback( timeperiod )
+    lookback = begidx + lib.TA_PLUS_DM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_PLUS_DM( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_PLUS_DM", retCode)
     return outreal
 
@@ -7481,6 +7291,7 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7501,12 +7312,12 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_PPO_Lookback( fastperiod , slowperiod , matype )
+    lookback = begidx + lib.TA_PPO_Lookback( fastperiod , slowperiod , matype )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_PPO( 0 , endidx , <double *>(real_data+begidx) , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_PPO", retCode)
     return outreal
 
@@ -7527,6 +7338,7 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7547,12 +7359,12 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ROC_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ROC_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ROC( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ROC", retCode)
     return outreal
 
@@ -7573,6 +7385,7 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7593,12 +7406,12 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ROCP_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ROCP_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ROCP( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ROCP", retCode)
     return outreal
 
@@ -7619,6 +7432,7 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7639,12 +7453,12 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ROCR_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ROCR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ROCR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ROCR", retCode)
     return outreal
 
@@ -7665,6 +7479,7 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7685,12 +7500,12 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ROCR100_Lookback( timeperiod )
+    lookback = begidx + lib.TA_ROCR100_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ROCR100( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ROCR100", retCode)
     return outreal
 
@@ -7711,6 +7526,7 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7731,12 +7547,12 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_RSI_Lookback( timeperiod )
+    lookback = begidx + lib.TA_RSI_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_RSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_RSI", retCode)
     return outreal
 
@@ -7758,6 +7574,7 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -7784,12 +7601,12 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SAR_Lookback( acceleration , maximum )
+    lookback = begidx + lib.TA_SAR_Lookback( acceleration , maximum )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SAR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SAR", retCode)
     return outreal
 
@@ -7817,6 +7634,7 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         int outbegidx
@@ -7843,12 +7661,12 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
+    lookback = begidx + lib.TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SAREXT( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SAREXT", retCode)
     return outreal
 
@@ -7867,6 +7685,7 @@ def SIN( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7887,12 +7706,12 @@ def SIN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SIN_Lookback( )
+    lookback = begidx + lib.TA_SIN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SIN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SIN", retCode)
     return outreal
 
@@ -7911,6 +7730,7 @@ def SINH( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7931,12 +7751,12 @@ def SINH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SINH_Lookback( )
+    lookback = begidx + lib.TA_SINH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SINH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SINH", retCode)
     return outreal
 
@@ -7957,6 +7777,7 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -7977,12 +7798,12 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_SMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SMA", retCode)
     return outreal
 
@@ -8001,6 +7822,7 @@ def SQRT( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8021,12 +7843,12 @@ def SQRT( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SQRT_Lookback( )
+    lookback = begidx + lib.TA_SQRT_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SQRT( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SQRT", retCode)
     return outreal
 
@@ -8048,6 +7870,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8068,12 +7891,12 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_STDDEV_Lookback( timeperiod , nbdev )
+    lookback = begidx + lib.TA_STDDEV_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_STDDEV( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_STDDEV", retCode)
     return outreal
 
@@ -8099,6 +7922,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8133,7 +7957,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
+    lookback = begidx + lib.TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     outslowk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outslowk_data = <double*>outslowk.data
     for i from 0 <= i < min(lookback, length):
@@ -8142,7 +7966,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     outslowd_data = <double*>outslowd.data
     for i from 0 <= i < min(lookback, length):
         outslowd_data[i] = NaN
-    retCode = TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
+    retCode = lib.TA_STOCH( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk_data+lookback) , <double *>(outslowd_data+lookback) )
     _ta_check_success("TA_STOCH", retCode)
     return outslowk , outslowd
 
@@ -8166,6 +7990,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8200,7 +8025,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
+    lookback = begidx + lib.TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outfastk_data = <double*>outfastk.data
     for i from 0 <= i < min(lookback, length):
@@ -8209,7 +8034,7 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     outfastd_data = <double*>outfastd.data
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
-    retCode = TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
+    retCode = lib.TA_STOCHF( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
     _ta_check_success("TA_STOCHF", retCode)
     return outfastk , outfastd
 
@@ -8234,6 +8059,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8256,7 +8082,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
+    lookback = begidx + lib.TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     outfastk = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outfastk_data = <double*>outfastk.data
     for i from 0 <= i < min(lookback, length):
@@ -8265,7 +8091,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     outfastd_data = <double*>outfastd.data
     for i from 0 <= i < min(lookback, length):
         outfastd_data[i] = NaN
-    retCode = TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
+    retCode = lib.TA_STOCHRSI( 0 , endidx , <double *>(real_data+begidx) , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk_data+lookback) , <double *>(outfastd_data+lookback) )
     _ta_check_success("TA_STOCHRSI", retCode)
     return outfastk , outfastd
 
@@ -8285,6 +8111,7 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real0_data
         double* real1_data
         int outbegidx
@@ -8311,12 +8138,12 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SUB_Lookback( )
+    lookback = begidx + lib.TA_SUB_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SUB( 0 , endidx , <double *>(real0_data+begidx) , <double *>(real1_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SUB", retCode)
     return outreal
 
@@ -8337,6 +8164,7 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8357,12 +8185,12 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_SUM_Lookback( timeperiod )
+    lookback = begidx + lib.TA_SUM_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_SUM( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_SUM", retCode)
     return outreal
 
@@ -8384,6 +8212,7 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8404,12 +8233,12 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_T3_Lookback( timeperiod , vfactor )
+    lookback = begidx + lib.TA_T3_Lookback( timeperiod , vfactor )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_T3( 0 , endidx , <double *>(real_data+begidx) , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_T3", retCode)
     return outreal
 
@@ -8428,6 +8257,7 @@ def TAN( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8448,12 +8278,12 @@ def TAN( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TAN_Lookback( )
+    lookback = begidx + lib.TA_TAN_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TAN( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TAN", retCode)
     return outreal
 
@@ -8472,6 +8302,7 @@ def TANH( np.ndarray real not None ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8492,12 +8323,12 @@ def TANH( np.ndarray real not None ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TANH_Lookback( )
+    lookback = begidx + lib.TA_TANH_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TANH( 0 , endidx , <double *>(real_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TANH", retCode)
     return outreal
 
@@ -8518,6 +8349,7 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8538,12 +8370,12 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TEMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_TEMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TEMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TEMA", retCode)
     return outreal
 
@@ -8562,6 +8394,7 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8594,12 +8427,12 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TRANGE_Lookback( )
+    lookback = begidx + lib.TA_TRANGE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TRANGE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TRANGE", retCode)
     return outreal
 
@@ -8620,6 +8453,7 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8640,12 +8474,12 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TRIMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_TRIMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TRIMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TRIMA", retCode)
     return outreal
 
@@ -8666,6 +8500,7 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8686,12 +8521,12 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TRIX_Lookback( timeperiod )
+    lookback = begidx + lib.TA_TRIX_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TRIX( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TRIX", retCode)
     return outreal
 
@@ -8712,6 +8547,7 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8732,12 +8568,12 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TSF_Lookback( timeperiod )
+    lookback = begidx + lib.TA_TSF_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TSF( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TSF", retCode)
     return outreal
 
@@ -8756,6 +8592,7 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8788,12 +8625,12 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_TYPPRICE_Lookback( )
+    lookback = begidx + lib.TA_TYPPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_TYPPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_TYPPRICE", retCode)
     return outreal
 
@@ -8816,6 +8653,7 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8848,12 +8686,12 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
+    lookback = begidx + lib.TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_ULTOSC( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_ULTOSC", retCode)
     return outreal
 
@@ -8875,6 +8713,7 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -8895,12 +8734,12 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_VAR_Lookback( timeperiod , nbdev )
+    lookback = begidx + lib.TA_VAR_Lookback( timeperiod , nbdev )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_VAR( 0 , endidx , <double *>(real_data+begidx) , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_VAR", retCode)
     return outreal
 
@@ -8919,6 +8758,7 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -8951,12 +8791,12 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_WCLPRICE_Lookback( )
+    lookback = begidx + lib.TA_WCLPRICE_Lookback( )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_WCLPRICE( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_WCLPRICE", retCode)
     return outreal
 
@@ -8977,6 +8817,7 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* high_data
         double* low_data
         double* close_data
@@ -9009,12 +8850,12 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_WILLR_Lookback( timeperiod )
+    lookback = begidx + lib.TA_WILLR_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_WILLR( 0 , endidx , <double *>(high_data+begidx) , <double *>(low_data+begidx) , <double *>(close_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_WILLR", retCode)
     return outreal
 
@@ -9035,6 +8876,7 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
+        TA_RetCode retCode
         double* real_data
         int outbegidx
         int outnbelement
@@ -9055,12 +8897,12 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     else:
         raise Exception("inputs are all NaN")
     endidx = length - begidx - 1
-    lookback = begidx + TA_WMA_Lookback( timeperiod )
+    lookback = begidx + lib.TA_WMA_Lookback( timeperiod )
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
-    retCode = TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
+    retCode = lib.TA_WMA( 0 , endidx , <double *>(real_data+begidx) , timeperiod , &outbegidx , &outnbelement , <double *>(outreal_data+lookback) )
     _ta_check_success("TA_WMA", retCode)
     return outreal
 

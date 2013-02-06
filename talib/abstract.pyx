@@ -7,7 +7,11 @@ from collections import OrderedDict
 from cython.operator cimport dereference as deref
 
 cimport numpy as np
-cimport abstract_h as abstract
+
+IF UNAME_SYSNAME == "Windows":
+    cimport lib_windows as lib
+ELSE:
+    cimport lib_unix as lib
 
 __FUNCTION_NAMES = set(func_c.__all__)
 
@@ -221,14 +225,14 @@ class Function(object):
         Returns the lookback window size for the function with the parameter
         values that are currently set.
         """
-        cdef abstract.TA_ParamHolder *holder
+        cdef lib.TA_ParamHolder *holder
         holder = __ta_paramHolderAlloc(self.__name)
         for i, opt_input in enumerate(self.__opt_inputs):
             value = self.__get_opt_input_value(opt_input)
             type_ = self.__opt_inputs[opt_input]['type']
-            if type_ == abstract.TA_OptInput_RealRange or type_ == abstract.TA_OptInput_RealList:
+            if type_ == lib.TA_OptInput_RealRange or type_ == lib.TA_OptInput_RealList:
                 __ta_setOptInputParamReal(holder, i, value)
-            elif type_ == abstract.TA_OptInput_IntegerRange or type_ == abstract.TA_OptInput_IntegerList:
+            elif type_ == lib.TA_OptInput_IntegerRange or type_ == lib.TA_OptInput_IntegerList:
                 __ta_setOptInputParamInteger(holder, i, value)
 
         lookback = __ta_getLookback(holder)
@@ -338,24 +342,24 @@ def _ta_getGroupTable():
     """
     Returns the list of available TALIB function group names. *slow*
     """
-    cdef abstract.TA_StringTable *table
-    _ta_check_success('TA_GroupTableAlloc', abstract.TA_GroupTableAlloc(&table))
+    cdef lib.TA_StringTable *table
+    _ta_check_success('TA_GroupTableAlloc', lib.TA_GroupTableAlloc(&table))
     groups = []
     for i in xrange(table.size):
         groups.append(deref(&table.string[i]))
-    _ta_check_success('TA_GroupTableFree', abstract.TA_GroupTableFree(table))
+    _ta_check_success('TA_GroupTableFree', lib.TA_GroupTableFree(table))
     return groups
 
 def _ta_getFuncTable(char *group):
     """
     Returns a list of the functions for the specified group name. *slow*
     """
-    cdef abstract.TA_StringTable *table
-    _ta_check_success('TA_FuncTableAlloc', abstract.TA_FuncTableAlloc(group, &table))
+    cdef lib.TA_StringTable *table
+    _ta_check_success('TA_FuncTableAlloc', lib.TA_FuncTableAlloc(group, &table))
     functions = []
     for i in xrange(table.size):
         functions.append(deref(&table.string[i]))
-    _ta_check_success('TA_FuncTableFree', abstract.TA_FuncTableFree(table))
+    _ta_check_success('TA_FuncTableFree', lib.TA_FuncTableFree(table))
     return functions
 
 def __get_flags(int flag, dict flags_lookup_dict):
@@ -416,8 +420,8 @@ def _ta_getFuncInfo(char *function_name):
     Returns the info dict for the function. It has the following keys: name,
     group, help, flags, num_inputs, num_opt_inputs and num_outputs.
     """
-    cdef abstract.TA_FuncInfo *info
-    retCode = abstract.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
+    cdef lib.TA_FuncInfo *info
+    retCode = lib.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
     return {
@@ -435,8 +439,8 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     Returns the function's input info dict for the given index. It has two
     keys: name and flags.
     """
-    cdef abstract.TA_InputParameterInfo *info
-    retCode = abstract.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef lib.TA_InputParameterInfo *info
+    retCode = lib.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
     name = info.paramName
@@ -456,8 +460,8 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     Returns the function's opt_input info dict for the given index. It has the
     following keys: name, display_name, type, help, default_value and value.
     """
-    cdef abstract.TA_OptInputParameterInfo *info
-    retCode = abstract.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef lib.TA_OptInputParameterInfo *info
+    retCode = lib.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
     name = info.paramName
@@ -480,8 +484,8 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     Returns the function's output info dict for the given index. It has two
     keys: name and flags.
     """
-    cdef abstract.TA_OutputParameterInfo *info
-    retCode = abstract.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef lib.TA_OutputParameterInfo *info
+    retCode = lib.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
     name = info.paramName
@@ -547,41 +551,41 @@ def _get_defaults_and_docs(func_info):
 # - Getting TALIB handle and paramholder pointers
 # - Setting TALIB paramholder optInput values and calling the lookback function
 
-cdef abstract.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
+cdef lib.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     """
     Returns a pointer to a function handle for the given function name
     """
-    cdef abstract.TA_FuncHandle *handle
-    _ta_check_success('TA_GetFuncHandle', abstract.TA_GetFuncHandle(function_name, &handle))
+    cdef lib.TA_FuncHandle *handle
+    _ta_check_success('TA_GetFuncHandle', lib.TA_GetFuncHandle(function_name, &handle))
     return handle
 
-cdef abstract.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
+cdef lib.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
     """
     Returns a pointer to a parameter holder for the given function name
     """
-    cdef abstract.TA_ParamHolder *holder
-    retCode = abstract.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
+    cdef lib.TA_ParamHolder *holder
+    retCode = lib.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
     _ta_check_success('TA_ParamHolderAlloc', retCode)
     return holder
 
-cdef int __ta_paramHolderFree(abstract.TA_ParamHolder *params):
+cdef int __ta_paramHolderFree(lib.TA_ParamHolder *params):
     """
     Frees the memory allocated by __ta_paramHolderAlloc (call when done with the parameter holder)
     WARNING: Not properly calling this function will cause memory leaks!
     """
-    _ta_check_success('TA_ParamHolderFree', abstract.TA_ParamHolderFree(params))
+    _ta_check_success('TA_ParamHolderFree', lib.TA_ParamHolderFree(params))
 
-cdef int __ta_setOptInputParamInteger(abstract.TA_ParamHolder *holder, int idx, int value):
-    retCode = abstract.TA_SetOptInputParamInteger(holder, idx, value)
+cdef int __ta_setOptInputParamInteger(lib.TA_ParamHolder *holder, int idx, int value):
+    retCode = lib.TA_SetOptInputParamInteger(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamInteger', retCode)
 
-cdef int __ta_setOptInputParamReal(abstract.TA_ParamHolder *holder, int idx, int value):
-    retCode = abstract.TA_SetOptInputParamReal(holder, idx, value)
+cdef int __ta_setOptInputParamReal(lib.TA_ParamHolder *holder, int idx, int value):
+    retCode = lib.TA_SetOptInputParamReal(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamReal', retCode)
 
-cdef int __ta_getLookback(abstract.TA_ParamHolder *holder):
+cdef int __ta_getLookback(lib.TA_ParamHolder *holder):
     cdef int lookback
-    retCode = abstract.TA_GetLookback(holder, &lookback)
+    retCode = lib.TA_GetLookback(holder, &lookback)
     _ta_check_success('TA_GetLookback', retCode)
     return lookback
 
