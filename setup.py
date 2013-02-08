@@ -14,7 +14,7 @@ if sys.platform == "darwin":
         include_talib_dir = "/usr/local/include/"
         lib_talib_dir = "/usr/local/lib/"
 
-elif sys.platform == "linux2" or "freebsd" in sys.platform:
+elif "linux" in sys.platform or "freebsd" in sys.platform:
     include_talib_dir = "/usr/local/include/"
     lib_talib_dir = "/usr/local/lib/"
 
@@ -47,7 +47,7 @@ abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.4',
+    version = '0.4.5-git',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
