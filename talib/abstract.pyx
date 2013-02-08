@@ -60,7 +60,8 @@ class Function(object):
         if self.__name not in __FUNCTION_NAMES:
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__namestr = self.__name
-        self.__name = bytes(self.__name, 'ascii')
+        if not isinstance(self.__name, bytes):
+            self.__name = bytes(self.__name, 'ascii')
         self.__info = None
         self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
 
