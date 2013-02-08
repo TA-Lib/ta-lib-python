@@ -11,4 +11,4 @@ perf:
 	python2.7 tools/perf_talib.py
 
 test:
-	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests
+	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests-2.7
