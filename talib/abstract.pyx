@@ -59,6 +59,8 @@ class Function(object):
         self.__name = function_name.upper()
         if self.__name not in __FUNCTION_NAMES:
             raise Exception('%s not supported by TA-LIB.' % self.__name)
+        self.__namestr = self.__name
+        self.__name = bytes(self.__name, 'ascii')
         self.__info = None
         self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
 
@@ -252,6 +254,8 @@ class Function(object):
         if not self.__outputs_valid:
             self.__call_function()
         ret = self.__outputs.values()
+        if not isinstance(ret, list):
+            ret = list(ret)
         return ret[0] if len(ret) == 1 else ret
 
     def run(self, input_arrays=None):
@@ -297,9 +301,12 @@ class Function(object):
             args.append(value)
 
         # Use the func module to actually call the function.
-        results = func_c.__getattribute__(self.__name)(*args)
+        results = func_c.__getattribute__(self.__namestr)(*args)
         if isinstance(results, np.ndarray):
-            self.__outputs[self.__outputs.keys()[0]] = results
+            keys = self.__outputs.keys()
+            if not isinstance(keys, list):
+                keys = list(keys)
+            self.__outputs[keys[0]] = results
         else:
             for i, output in enumerate(self.__outputs):
                 self.__outputs[output] = results[i]
@@ -440,6 +447,8 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
     name = info.paramName
+    if not isinstance(name, str):
+        name = name.decode('ascii')
     name = name[len('in'):].lower()
     if 'real' in name:
         name = name.replace('real', 'price')
@@ -461,6 +470,8 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
     name = info.paramName
+    if not isinstance(name, str):
+        name = name.decode('ascii')
     name = name[len('optIn'):].lower()
     default_value = info.defaultValue
     if default_value % 1 == 0:
@@ -485,6 +496,8 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
     name = info.paramName
+    if not isinstance(name, str):
+        name = name.decode('ascii')
     name = name[len('out'):].lower()
     # chop off leading 'real' if a descriptive name follows
     if 'real' in name and name not in ['real', 'real0', 'real1']:

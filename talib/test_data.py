@@ -1,4 +1,6 @@
 
+from __future__ import print_function
+
 import numpy as np
 
 from nose.tools import assert_equal, assert_not_equal, assert_true
@@ -237,4 +239,4 @@ def assert_np_arrays_not_equal(expected, got):
     if len(equals) == len(expected[len(nans):]):
         raise AssertionError('Arrays were equal.')
     elif equals:
-        print 'Arrays had %i/%i equivalent values.' % (len(equals), len(expected[len(nans):]))
+        print('Arrays had %i/%i equivalent values.' % (len(equals), len(expected[len(nans):])))
