@@ -3,6 +3,9 @@ VERSION?=2.7
 build:
 	python$(VERSION) setup.py build_ext --inplace
 
+install:
+	python$(VERSION) setup.py install
+
 generate:
 	python$(VERSION) tools/generate.py > talib/func.pyx
 
