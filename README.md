@@ -37,14 +37,6 @@ use your computer's package manager to install it, e.g.,
 [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
 and unzip to ``C:\ta-lib``.
 
-## Manual Installation from git sources [Unix variants]
-```
-$ git clone git://github.com/mrjbq7/ta-lib.git
-$ cd ta-lib
-# optionally run ``git pull`` here to update the sources in the future
-$ make build
-$ [sudo] make install
-```
 
 ## Troubleshooting
 
@@ -59,24 +51,6 @@ compilation terminated.
 If you install ``TA-Lib`` manually using ``make -jX``, the build will fail but
 it's OK! Simply rerun ``make -jX`` followed by ``[sudo] make install`` and
 everything will work as expected.
-
-If you are interested in developing new functions or whatnot on the underlying
-TA-Lib, you must install TA-Lib from svn. Here's how (on *nix at least):
-```
-$ cd ~/dev
-$ svn checkout svn://svn.code.sf.net/p/ta-lib/code/trunk@1545 ta-lib-code
-# later revisions break building ta_regtest (but claim to add support for VS2012)
-$ cd ta-lib-code/ta-lib/c/make/gen_make
-$ perl ./gen_make.pl
-$ # cd ta-lib-code/ta-lib/c/make/cmr && make --> compile the code (no install)
-$ cd ~/dev/ta-lib-code/tools
-# Depending upon your platform you may need to make minor changes to this script:
-$ perl ./release_unix.pl -version 0.4.X -source ../ta-lib/c
-$ cd ~/ta-lib-0.4.X-work/dist
-# the installable source package will be here, and if you wanted, the deb/rpm
-# packages then see http://ta-lib.org/d_misc/how-to_function.html and the
-# README/comments in the src
-```
 
 
 ## Function API Examples
