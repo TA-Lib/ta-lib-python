@@ -37,25 +37,16 @@ if sys.platform == "win32":
 if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-
-common_ext = Extension('talib.common', ['talib/common.pyx'],
-    include_dirs=include_dirs,
-    library_dirs=lib_talib_dirs,
-    libraries=[lib_talib_name]
-)
-
-func_ext = Extension("talib.func", ["talib/func.pyx"],
-    include_dirs=include_dirs,
-    library_dirs=lib_talib_dirs,
-    libraries=[lib_talib_name]
-)
-
-abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
-    include_dirs=include_dirs,
-    library_dirs=lib_talib_dirs,
-    libraries=[lib_talib_name]
-)
-
+ext_modules = []
+for name in ['common', 'func', 'abstract']:
+    ext = Extension(
+        'talib.%s' % name,
+        ['talib/%s.pyx' % name],
+        include_dirs=include_dirs,
+        library_dirs=lib_talib_dirs,
+        libraries=[lib_talib_name]
+    )
+    ext_modules.append(ext)
 
 setup(
     name = 'TA-Lib',
@@ -83,6 +74,6 @@ setup(
         "Intended Audience :: Financial and Insurance Industry",
     ],
     packages=['talib'],
-    ext_modules=[common_ext, func_ext, abstract_ext],
+    ext_modules=ext_modules,
     cmdclass = {'build_ext': build_ext}
 )
