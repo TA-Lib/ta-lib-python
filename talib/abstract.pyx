@@ -1,10 +1,12 @@
 '''
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
+
 from . import func as func_c
 from .common import _ta_check_success, MA_Type
 from collections import OrderedDict
 from cython.operator cimport dereference as deref
+import sys
 
 cimport numpy as np
 cimport libc as lib
@@ -24,6 +26,22 @@ __INPUT_PRICE_SERIES_DEFAULTS = { 'price': 'close',
                                   'price0': 'high',
                                   'price1': 'low',
                                   'periods': None } # only used by MAVP; not a price series!
+
+if sys.version >= '3':
+
+    def str2bytes(s):
+        return bytes(s, 'ascii')
+
+    def bytes2str(b):
+        return b.decode('ascii')
+
+else:
+
+    def str2bytes(s):
+        return s
+
+    def bytes2str(b):
+        return b
 
 class Function(object):
     """
@@ -60,8 +78,7 @@ class Function(object):
         if self.__name not in __FUNCTION_NAMES:
             raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__namestr = self.__name
-        if not isinstance(self.__name, bytes):
-            self.__name = bytes(self.__name, 'ascii')
+        self.__name = str2bytes(self.__name)
         self.__info = None
         self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
 
@@ -421,16 +438,6 @@ TA_OUTPUT_FLAGS = {
     4096: 'Values represent a lower limit'
 }
 
-def __py23_str_dict(d):
-    # python2/3: converts dict values into str, when possible
-    for k, v in d.items():
-        if not isinstance(v, str):
-            try:
-                d[k] = v.decode('ascii')
-            except AttributeError:
-                pass
-    return d
-
 def _ta_getFuncInfo(char *function_name):
     """
     Returns the info dict for the function. It has the following keys: name,
@@ -440,15 +447,15 @@ def _ta_getFuncInfo(char *function_name):
     retCode = lib.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
-    return __py23_str_dict({
-        'name': info.name,
-        'group': info.group,
-        'display_name': info.hint,
+    return {
+        'name': bytes2str(info.name),
+        'group': bytes2str(info.group),
+        'display_name': bytes2str(info.hint),
         'flags': __get_flags(info.flags, TA_FUNC_FLAGS),
         'num_inputs': int(info.nbInput),
         'num_opt_inputs': int(info.nbOptInput),
         'num_outputs': int(info.nbOutput)
-    })
+    }
 
 def _ta_getInputParameterInfo(char *function_name, int idx):
     """
@@ -459,19 +466,17 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     retCode = lib.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
-    name = info.paramName
-    if not isinstance(name, str):
-        name = name.decode('ascii')
+    name = bytes2str(info.paramName)
     name = name[len('in'):].lower()
     if 'real' in name:
         name = name.replace('real', 'price')
     elif 'price' in name:
         name = 'prices'
 
-    return __py23_str_dict({
+    return {
         'name': name,
         'price_series': __get_flags(info.flags, TA_INPUT_FLAGS)
-    })
+    }
 
 def _ta_getOptInputParameterInfo(char *function_name, int idx):
     """
@@ -482,22 +487,20 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     retCode = lib.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
-    name = info.paramName
-    if not isinstance(name, str):
-        name = name.decode('ascii')
+    name = bytes2str(info.paramName)
     name = name[len('optIn'):].lower()
     default_value = info.defaultValue
     if default_value % 1 == 0:
         default_value = int(default_value)
 
-    return __py23_str_dict({
+    return {
         'name': name,
-        'display_name': info.displayName,
+        'display_name': bytes2str(info.displayName),
         'type': info.type,
-        'help': info.hint,
+        'help': bytes2str(info.hint),
         'default_value': default_value,
         'value': None
-    })
+    }
 
 def _ta_getOutputParameterInfo(char *function_name, int idx):
     """
@@ -508,18 +511,16 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     retCode = lib.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
-    name = info.paramName
-    if not isinstance(name, str):
-        name = name.decode('ascii')
+    name = bytes2str(info.paramName)
     name = name[len('out'):].lower()
     # chop off leading 'real' if a descriptive name follows
     if 'real' in name and name not in ['real', 'real0', 'real1']:
         name = name[len('real'):]
 
-    return __py23_str_dict({
+    return {
         'name': name,
         'description': __get_flags(info.flags, TA_OUTPUT_FLAGS)
-    })
+    }
 
 def _get_defaults_and_docs(func_info):
     """
