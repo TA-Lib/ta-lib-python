@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 import re
 import sys
@@ -9,14 +11,17 @@ from talib import abstract
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
-include_paths = ['/usr/include', '/usr/local/include']
-ta_func_header = None
+include_paths = ['/usr/include', '/usr/local/include', '/opt/include', '/opt/local/include']
+if sys.platform == 'win32':
+    include_paths = [r'c:\ta-lib\c\include']
+header_found = False
 for path in include_paths:
-    if os.path.exists(path + '/ta-lib/ta_func.h'):
-        ta_func_header = path + '/ta-lib/ta_func.h'
+    ta_func_header = os.path.join(path, 'ta-lib', 'ta_func.h')
+    if os.path.exists(ta_func_header):
+        header_found = True
         break
-if not ta_func_header:
-    print >> sys.stderr, 'Error: ta-lib/ta_func.h not found'
+if not header_found:
+    print('Error: ta-lib/ta_func.h not found', file=sys.stderr)
     sys.exit(1)
 with open(ta_func_header) as f:
     tmp = []
@@ -41,7 +46,7 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Set')]
 functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
 # print headers
-print """\
+print("""\
 cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
@@ -61,7 +66,7 @@ cdef extern from "numpy/arrayobject.h":
 np.import_array() # Initialize the NumPy C API
 
 cimport libc as lib
-"""
+""")
 
 # cleanup variable names to make them more pythonic
 def cleanup(name):
@@ -88,9 +93,9 @@ for f in functions:
     func_info = abstract.Function(shortname).info
     defaults, documentation = abstract._get_defaults_and_docs(func_info)
 
-    print '@wraparound(False)  # turn off relative indexing from end of lists'
-    print '@boundscheck(False) # turn off bounds-checking for entire function'
-    print 'def %s(' % shortname,
+    print('@wraparound(False)  # turn off relative indexing from end of lists')
+    print('@boundscheck(False) # turn off bounds-checking for entire function')
+    print('def %s(' % shortname, end=' ')
     docs = [' %s(' % shortname]
     i = 0
     for arg in args:
@@ -103,13 +108,13 @@ for f in functions:
             break
 
         if i > 0:
-            print ',',
+            print(',', end=' ')
         i += 1
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             assert arg.startswith('const double'), arg
-            print 'np.ndarray %s not None' % var,
+            print('np.ndarray %s not None' % var, end=' ')
             docs.append(var)
             docs.append(', ')
 
@@ -120,16 +125,16 @@ for f in functions:
 
             if arg.startswith('double'):
                 if default_arg in defaults:
-                    print 'double %s=%s' % (var, defaults[default_arg]),
+                    print('double %s=%s' % (var, defaults[default_arg]), end=' ')
                 else:
-                    print 'double %s=-4e37' % var, # TA_REAL_DEFAULT
+                    print('double %s=-4e37' % var, end=' ') # TA_REAL_DEFAULT
             elif arg.startswith('int'):
                 if default_arg in defaults:
-                    print 'int %s=%s' % (var, defaults[default_arg]),
+                    print('int %s=%s' % (var, defaults[default_arg]), end=' ')
                 else:
-                    print 'int %s=-2**31' % var,   # TA_INTEGER_DEFAULT
+                    print('int %s=-2**31' % var, end=' ')   # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
-                print 'int %s=0' % var,        # TA_MAType_SMA
+                print('int %s=0' % var, end=' ')            # TA_MAType_SMA
             else:
                 assert False, arg
             if '[, ' not in docs:
@@ -152,12 +157,12 @@ for f in functions:
         docs.append('\n\n')
         docs.append('\n'.join(tmp_docs))
         docs.append('\n    ')
-    print '):'
-    print '    """%s"""' % ''.join(docs)
-    print '    cdef:'
-    print '        np.npy_intp length'
-    print '        int begidx, endidx, lookback'
-    print '        TA_RetCode retCode'
+    print('):')
+    print('    """%s"""' % ''.join(docs))
+    print('    cdef:')
+    print('        np.npy_intp length')
+    print('        int begidx, endidx, lookback')
+    print('        TA_RetCode retCode')
     for arg in args:
         var = arg.split()[-1]
 
@@ -167,9 +172,9 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print '        double* %s_data' % var
+                print('        double* %s_data' % var)
             elif 'int' in arg:
-                print '        int* %s_data' % var
+                print('        int* %s_data' % var)
             else:
                 assert False, args
 
@@ -181,17 +186,17 @@ for f in functions:
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
-            print '        np.ndarray %s' % var
+            print('        np.ndarray %s' % var)
             if 'double' in arg:
-                print '        double* %s_data' % var
+                print('        double* %s_data' % var)
             elif 'int' in arg:
-                print '        int* %s_data' % var
+                print('        int* %s_data' % var)
             else:
                 assert False, args
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
-            print '        int %s' % var
+            print('        int %s' % var)
 
         else:
             assert False, arg
@@ -208,35 +213,35 @@ for f in functions:
                 cast = '<int*>'
             else:
                 assert False, arg
-            print '    assert PyArray_TYPE(%s) == np.NPY_DOUBLE, "%s is not double"' % (var, var)
-            print '    assert %s.ndim == 1, "%s has wrong dimensions"' % (var, var)
-            print '    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var
-            print '        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var)
-            print '    %s_data = %s%s.data' % (var, cast, var)
+            print('    assert PyArray_TYPE(%s) == np.NPY_DOUBLE, "%s is not double"' % (var, var))
+            print('    assert %s.ndim == 1, "%s has wrong dimensions"' % (var, var))
+            print('    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var)
+            print('        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var))
+            print('    %s_data = %s%s.data' % (var, cast, var))
 
     for arg in args:
         var = arg.split()[-1]
         if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
             var = cleanup(var[:-2])
-            print '    length = %s.shape[0]' % var
-            print '    begidx = 0'
-            print '    for i from 0 <= i < length:'
-            print '        val = %s_data[i]' % var
-            print '        if val == val:'
-            print '            begidx = i'
-            print '            break'
-            print '    else:'
-            print '        raise Exception("inputs are all NaN")'
-            print '    endidx = length - begidx - 1'
+            print('    length = %s.shape[0]' % var)
+            print('    begidx = 0')
+            print('    for i from 0 <= i < length:')
+            print('        val = %s_data[i]' % var)
+            print('        if val == val:')
+            print('            begidx = i')
+            print('            break')
+            print('    else:')
+            print('        raise Exception("inputs are all NaN")')
+            print('    endidx = length - begidx - 1')
             break
 
-    print '    lookback = begidx + lib.%s_Lookback(' % name,
+    print('    lookback = begidx + lib.%s_Lookback(' % name, end=' ')
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
         if i > 0:
-            print ',',
-        print cleanup(opt.split()[-1]),
-    print ')'
+            print(',', end=' ')
+        print(cleanup(opt.split()[-1]), end=' ')
+    print(')')
 
     for arg in args:
         var = arg.split()[-1]
@@ -247,23 +252,23 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print '    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var
-                print '    %s_data = <double*>%s.data' % (var, var)
-                print '    for i from 0 <= i < min(lookback, length):'
-                print '        %s_data[i] = NaN' % var
+                print('    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var)
+                print('    %s_data = <double*>%s.data' % (var, var))
+                print('    for i from 0 <= i < min(lookback, length):')
+                print('        %s_data[i] = NaN' % var)
             elif 'int' in arg:
-                print '    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var
-                print '    %s_data = <int*>%s.data' % (var, var)
-                print '    for i from 0 <= i < min(lookback, length):'
-                print '        %s_data[i] = 0' % var
+                print('    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var)
+                print('    %s_data = <int*>%s.data' % (var, var))
+                print('    for i from 0 <= i < min(lookback, length):')
+                print('        %s_data[i] = 0' % var)
             else:
                 assert False, args
 
-    print '    retCode = lib.%s(' % name,
+    print('    retCode = lib.%s(' % name, end=' ')
 
     for i, arg in enumerate(args):
         if i > 0:
-            print ',',
+            print(',', end=' ')
         var = arg.split()[-1]
 
         if var.endswith('[]'):
@@ -273,22 +278,23 @@ for f in functions:
             else:
                 data = '(%s_data+begidx)' % var
             if 'double' in arg:
-                print '<double *>%s' % data,
+                print('<double *>%s' % data, end=' ')
             elif 'int' in arg:
-                print '<int *>%s' % data,
+                print('<int *>%s' % data, end=' ')
             else:
                 assert False, arg
 
         elif var.startswith('*'):
             var = cleanup(var[1:])
-            print '&%s' % var,
+            print('&%s' % var, end=' ')
 
         else:
-            print cleanup(var) if var != 'startIdx' else '0',
+            cleaned = cleanup(var) if var != 'startIdx' else '0'
+            print(cleaned, end=' ')
 
-    print ')'
-    print '    _ta_check_success("%s", retCode)' % name
-    print '    return',
+    print(')')
+    print('    _ta_check_success("%s", retCode)' % name)
+    print('    return',)
     i = 0
     for arg in args:
         var = arg.split()[-1]
@@ -299,12 +305,12 @@ for f in functions:
         if var.startswith('out'):
             if var not in ("outNBElement", "outBegIdx"):
                 if i > 0:
-                    print ',',
+                    print(',', end=' ')
                 i += 1
-                print cleanup(var),
+                print(cleanup(var), end=' ')
         else:
             assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
-    print
-    print
+    print('')
+    print('')
 
-print '__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names])
+print('__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names]))

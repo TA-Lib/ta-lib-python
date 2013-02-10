@@ -37,6 +37,7 @@ use your computer's package manager to install it, e.g.,
 [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
 and unzip to ``C:\ta-lib``.
 
+
 ## Troubleshooting
 
 If you get build errors like this, it typically means that it can't find the
@@ -47,13 +48,9 @@ func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-If you get build errors compiling the underlying ``TA-Lib`` such as these:
-```
-mv -f .deps/gen_code-gen_code.Tpo .deps/gen_code-gen_code.Po
-mv: cannot stat `.deps/gen_code-gen_code.Tpo': No such file or directory
-make[3]: *** [gen_code-gen_code.o] Error 1/bin/bash ../../../libtool --tag=CC --mode=link gcc -g -O2 -L../../ta_common -L../../ta_abstract -L../../ta_func -o gen_code gen_code-gen_code.o -lta_common -lta_abstract_gc -lta_func -lm -lpthread -ldl
-```
-Simply rerunning ``make`` and then ``sudo make install`` seems to always do the trick.
+If you install ``TA-Lib`` manually using ``make -jX``, the build will fail but
+it's OK! Simply rerun ``make -jX`` followed by ``[sudo] make install`` and
+everything will work as expected.
 
 
 ## Function API Examples

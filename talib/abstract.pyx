@@ -125,6 +125,7 @@ class Function(object):
         """
         for input_name, price_series in input_names.items():
             self.__input_names[input_name]['price_series'] = price_series
+            self.__info['input_names'][input_name] = price_series
         self.__outputs_valid = False
 
     input_names = property(get_input_names, set_input_names)
@@ -212,6 +213,7 @@ class Function(object):
                 update_info = True
             elif key in self.__input_names:
                 self.__input_names[key]['price_series'] = kwargs[key]
+                self.__info['input_names'][key] = kwargs[key]
 
         if args or kwargs:
             if update_info:
@@ -419,6 +421,16 @@ TA_OUTPUT_FLAGS = {
     4096: 'Values represent a lower limit'
 }
 
+def __py23_str_dict(d):
+    # python2/3: converts dict values into str, when possible
+    for k, v in d.items():
+        if not isinstance(v, str):
+            try:
+                d[k] = v.decode('ascii')
+            except AttributeError:
+                pass
+    return d
+
 def _ta_getFuncInfo(char *function_name):
     """
     Returns the info dict for the function. It has the following keys: name,
@@ -428,7 +440,7 @@ def _ta_getFuncInfo(char *function_name):
     retCode = lib.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
-    return {
+    return __py23_str_dict({
         'name': info.name,
         'group': info.group,
         'display_name': info.hint,
@@ -436,7 +448,7 @@ def _ta_getFuncInfo(char *function_name):
         'num_inputs': int(info.nbInput),
         'num_opt_inputs': int(info.nbOptInput),
         'num_outputs': int(info.nbOutput)
-    }
+    })
 
 def _ta_getInputParameterInfo(char *function_name, int idx):
     """
@@ -456,10 +468,10 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     elif 'price' in name:
         name = 'prices'
 
-    return {
+    return __py23_str_dict({
         'name': name,
         'price_series': __get_flags(info.flags, TA_INPUT_FLAGS)
-    }
+    })
 
 def _ta_getOptInputParameterInfo(char *function_name, int idx):
     """
@@ -478,14 +490,14 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     if default_value % 1 == 0:
         default_value = int(default_value)
 
-    return {
+    return __py23_str_dict({
         'name': name,
         'display_name': info.displayName,
         'type': info.type,
         'help': info.hint,
         'default_value': default_value,
         'value': None
-    }
+    })
 
 def _ta_getOutputParameterInfo(char *function_name, int idx):
     """
@@ -504,10 +516,10 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     if 'real' in name and name not in ['real', 'real0', 'real1']:
         name = name[len('real'):]
 
-    return {
+    return __py23_str_dict({
         'name': name,
         'description': __get_flags(info.flags, TA_OUTPUT_FLAGS)
-    }
+    })
 
 def _get_defaults_and_docs(func_info):
     """

@@ -6,44 +6,56 @@ import numpy
 import os
 import sys
 
-if sys.platform == "darwin":
-    if os.path.exists("/opt/local/include/ta-lib"):
-        include_talib_dir = "/opt/local/include"
-        lib_talib_dir = "/opt/local/lib"
-    else:
-        include_talib_dir = "/usr/local/include/"
-        lib_talib_dir = "/usr/local/lib/"
 
-elif "linux" in sys.platform or "freebsd" in sys.platform:
-    include_talib_dir = "/usr/local/include/"
-    lib_talib_dir = "/usr/local/lib/"
+lib_talib_name = 'ta_lib' # the underlying C library's name
 
-elif sys.platform == "win32":
-    include_talib_dir = r"c:\ta-lib\c\include"
-    lib_talib_dir = r"c:\ta-lib\c\lib"
+platform_supported = False
+for prefix in ['darwin', 'linux', 'bsd']:
+    if prefix in sys.platform:
+        platform_supported = True
+        include_dirs = [
+            numpy.get_include(),
+            '/usr/include',
+            '/usr/local/include',
+            '/opt/include',
+            '/opt/local/include',
+            ]
+        lib_talib_dirs = [
+            '/usr/lib',
+            '/usr/local/lib',
+            '/opt/lib',
+            '/opt/local/lib',
+            ]
+        break
 
-else:
+if sys.platform == "win32":
+    platform_supported = True
+    lib_talib_name = 'ta_libc_cdr'
+    include_dirs = [numpy.get_include(), r"c:\ta-lib\c\include"]
+    lib_talib_dirs = [r"c:\ta-lib\c\lib"]
+
+if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-lib_talib_name = 'ta_lib' if not sys.platform == 'win32' else 'ta_libc_cdr'
 
 common_ext = Extension('talib.common', ['talib/common.pyx'],
-    include_dirs=[numpy.get_include(), include_talib_dir],
-    library_dirs=[lib_talib_dir],
+    include_dirs=include_dirs,
+    library_dirs=lib_talib_dirs,
     libraries=[lib_talib_name]
 )
 
 func_ext = Extension("talib.func", ["talib/func.pyx"],
-    include_dirs=[numpy.get_include(), include_talib_dir],
-    library_dirs=[lib_talib_dir],
+    include_dirs=include_dirs,
+    library_dirs=lib_talib_dirs,
     libraries=[lib_talib_name]
 )
 
 abstract_ext = Extension('talib.abstract', ['talib/abstract.pyx'],
-    include_dirs=[numpy.get_include(), include_talib_dir],
-    library_dirs=[lib_talib_dir],
+    include_dirs=include_dirs,
+    library_dirs=lib_talib_dirs,
     libraries=[lib_talib_name]
 )
+
 
 setup(
     name = 'TA-Lib',
