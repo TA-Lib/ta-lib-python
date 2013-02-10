@@ -1,4 +1,5 @@
 import numpy as np
+from nose.tools import assert_equals, assert_true, assert_false
 
 from collections import OrderedDict
 
@@ -65,7 +66,7 @@ def test_info():
             ('fastd_matype', 1),
             ]),
         }
-    assert(expected == stochrsi.info)
+    assert_equals(expected, stochrsi.info)
 
     expected = {
         'display_name': 'Bollinger Bands',
@@ -81,11 +82,11 @@ def test_info():
             ('matype', 0),
             ]),
         }
-    assert(expected == abstract.Function('BBANDS').info)
+    assert_equals(expected, abstract.Function('BBANDS').info)
 
 def test_input_names():
     expected = OrderedDict([('price', 'close')])
-    assert(expected == abstract.Function('MAMA').input_names)
+    assert_equals(expected, abstract.Function('MAMA').input_names)
 
     # test setting input_names
     obv = abstract.Function('OBV')
@@ -94,13 +95,13 @@ def test_input_names():
         ('prices', ['volume']),
         ])
     obv.input_names = expected
-    assert(obv.input_names == expected)
+    assert_equals(obv.input_names, expected)
 
     obv.input_names = {
         'price': 'open',
         'prices': ['volume'],
         }
-    assert(obv.input_names == expected)
+    assert_equals(obv.input_names, expected)
 
 def test_input_arrays():
     mama = abstract.Function('MAMA')
@@ -112,11 +113,11 @@ def test_input_arrays():
         'close': None,
         'volume': None,
         }
-    assert(expected == mama.get_input_arrays())
+    assert_equals(expected, mama.get_input_arrays())
     # test setting/getting input_arrays
-    assert(mama.set_input_arrays(ford_2012))
-    assert(mama.get_input_arrays() == ford_2012)
-    assert(not mama.set_input_arrays({'hello': 'fail', 'world': 'bye'}))
+    assert_true(mama.set_input_arrays(ford_2012))
+    assert_equals(mama.get_input_arrays(), ford_2012)
+    assert_false(mama.set_input_arrays({'hello': 'fail', 'world': 'bye'}))
 
 def test_parameters():
     stoch = abstract.Function('STOCH')
@@ -127,20 +128,20 @@ def test_parameters():
         ('slowd_period', 3),
         ('slowd_matype', 0),
         ])
-    assert(expected == stoch.parameters)
+    assert_equals(expected, stoch.parameters)
 
     stoch.parameters = {'fastk_period': 10}
     expected['fastk_period'] = 10
-    assert(expected == stoch.parameters)
+    assert_equals(expected, stoch.parameters)
 
     stoch.parameters = {'slowk_period': 8, 'slowd_period': 5}
     expected['slowk_period'] = 8
     expected['slowd_period'] = 5
-    assert(expected == stoch.parameters)
+    assert_equals(expected, stoch.parameters)
 
     stoch.parameters = {'slowd_matype': talib.MA_Type.T3}
     expected['slowd_matype'] = 8
-    assert(expected == stoch.parameters)
+    assert_equals(expected, stoch.parameters)
 
     stoch.parameters = {
         'slowk_matype': talib.MA_Type.WMA,
@@ -148,10 +149,10 @@ def test_parameters():
         }
     expected['slowk_matype'] = 2
     expected['slowd_matype'] = 1
-    assert(expected == stoch.parameters)
+    assert_equals(expected, stoch.parameters)
 
 def test_lookback():
-    assert(abstract.Function('SMA', 10).lookback == 9)
+    assert_equals(abstract.Function('SMA', 10).lookback, 9)
 
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
-    assert(stochrsi.lookback == 26)
+    assert_equals(stochrsi.lookback, 26)
