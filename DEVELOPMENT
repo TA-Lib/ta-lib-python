@@ -1,0 +1,55 @@
+To get started developing on talib, clone the latest code from git and install:
+
+$ git clone git://github.com/mrjbq7/ta-lib.git
+$ cd ta-lib
+# you can run "git pull" here (no quotes) to update the sources in the future
+$ make build
+$ [sudo] make install
+
+Here's the full list of make commands (see the Makefile file):
+make build     # builds and places libs in the project directory; required for testing
+make clean     # cleans the local build files
+make install   # installs talib system-wide
+make generate: # generates a fresh func.pyx file. Requires talib and TA-Lib to both be installed
+make perf      # run performance profiling
+make test      # run tests
+
+The source code is comprised of one python package, located in the talib directory,
+which itself has three Cython modules: func, abstract, and common.
+
+talib/common.pyx
+  An internal-use module for functionality shared between func and abstract.
+
+talib/func.pyx
+  This file is generated automatically by tools/generate.py and any changes made
+  to it directly will get overwritten!
+
+talib/abstract.pyx
+  This file contains the code for interfacing with the TA-Lib abstract interface
+  and wrapping it into a pythonic Function class.
+
+talib/libc.pxd
+  This "Cython header file" defines the C-level functions, variables and types we
+  need to use in the above pyx files.
+
+tools/generate.py
+  A script that generates and prints func.pyx to stdout. Gets information
+  about all functions from the C headers of the installed TA-Lib.
+
+If you are interested in developing new indicator functions or whatnot on the
+underlying TA-Lib, you must install TA-Lib from svn. Here's how (Linux tested):
+```
+$ cd ~/dev
+$ svn checkout svn://svn.code.sf.net/p/ta-lib/code/trunk@1545 ta-lib-code
+# later revisions break building ta_regtest (but claim to add support for VS2012)
+$ cd ta-lib-code/ta-lib/c/make/gen_make
+$ perl ./gen_make.pl
+$ # cd ta-lib-code/ta-lib/c/make/cmr && make --> compile the code (no install)
+$ cd ~/dev/ta-lib-code/tools
+# Depending upon your platform you may need to make minor changes to this script:
+$ perl ./release_unix.pl -version 0.4.X -source ../ta-lib/c
+$ cd ~/ta-lib-0.4.X-work/dist
+# the installable source package will be here, and if you wanted, the deb/rpm
+# packages then see http://ta-lib.org/d_misc/how-to_function.html and the
+# README/comments in the src
+```
