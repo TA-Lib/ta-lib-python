@@ -125,6 +125,7 @@ class Function(object):
         """
         for input_name, price_series in input_names.items():
             self.__input_names[input_name]['price_series'] = price_series
+            self.__info['input_names'][input_name] = price_series
         self.__outputs_valid = False
 
     input_names = property(get_input_names, set_input_names)
@@ -212,6 +213,7 @@ class Function(object):
                 update_info = True
             elif key in self.__input_names:
                 self.__input_names[key]['price_series'] = kwargs[key]
+                self.__info['input_names'][key] = kwargs[key]
 
         if args or kwargs:
             if update_info:
