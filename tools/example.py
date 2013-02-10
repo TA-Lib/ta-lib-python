@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import numpy as np
 import pylab
@@ -41,14 +43,14 @@ def plot(odata, upper, middle, lower, kama):
     pylab.show()
 
 if __name__ == '__main__':
-    print 'All functions (sorted by group):'
+    print('All functions (sorted by group):')
     groups = talib.get_function_groups()
     for group, functions in sorted(groups.items()):
-        print '%s functions: ' % group, functions
+        print('%s functions: %s' % (group, functions))
 
     if len(sys.argv) == 1 or sys.argv[1] == 'func':
-        print 'Using talib.func'
+        print('Using talib.func')
         func_example()
     else:
-        print 'Using talib.abstract'
+        print('Using talib.abstract')
         abstract_example()
