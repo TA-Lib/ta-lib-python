@@ -262,7 +262,10 @@ class Function(object):
         """
         Returns a list of the output names returned by this function.
         """
-        return self.__outputs.keys()
+        ret = self.__outputs.keys()
+        if not isinstance(ret, list):
+            ret = list(ret)
+        return ret
 
     @property
     def outputs(self):
