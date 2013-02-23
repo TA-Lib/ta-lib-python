@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title">TA-Lib</h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+
+  <div class="page">
+    
+  <div class="previewPage">
+    <div id="readme" class="announce md">
+      <article class="markdown-body entry-content">
+        <h2>
+<a name="installation" class="anchor" href="#installation"><span class="mini-icon mini-icon-link"></span></a>Installation</h2>
+
+<p>You can install from PyPI:</p>
+
+<pre>$ easy_install TA-Lib
+</pre>
+
+<p>Or checkout the sources and run <code>setup.py</code> yourself:</p>
+
+<pre>$ python setup.py install
+</pre>
+
+<p>Note: this requires that you have already installed the <code>TA-Lib</code> library
+on your computer (you can <a href="http://ta-lib.org/hdr_dw.html">download it</a> or
+use your computer's package manager to install it, e.g.,
+<code>brew install ta-lib</code> on Mac OS X).  On Windows, you can download the
+<a href="http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip">ta-lib-0.4.0-msvc.zip</a>
+and unzip to <code>C:\ta-lib</code>.</p>
+
+<h2>
+<a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="mini-icon mini-icon-link"></span></a>Troubleshooting</h2>
+
+<p>If you get build errors like this, it typically means that it can't find the
+underlying <code>TA-Lib</code> library and needs to be installed:</p>
+
+<pre>func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
+compilation terminated.
+</pre>
+
+<p>If you install <code>TA-Lib</code> manually using <code>make -jX</code>, the build will fail but
+it's OK! Simply rerun <code>make -jX</code> followed by <code>[sudo] make install</code> and
+everything will work as expected.</p>
+
+<p><a href="func.html">Next: Using the function API</a></p>
+      </article>
+    </div>
+  </div>
+  
+  <div>&nbsp;</div>
+
+  </div>
+  
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>

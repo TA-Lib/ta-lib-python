@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title">TA-Lib</h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+
+  <div class="page">
+    
+  <div class="previewPage">
+    <div id="readme" class="announce md">
+      <article class="markdown-body entry-content">
+        <h2>
+<a name="function-api-examples" class="anchor" href="#function-api-examples"><span class="mini-icon mini-icon-link"></span></a>Function API Examples</h2>
+
+<p>Similar to TA-Lib, the function interface provides a lightweight wrapper of
+the exposed TA-Lib indicators.</p>
+
+<p>Each function returns an output array and have default values for their
+parameters, unless specified as keyword arguments. Typically, these functions
+will have an initial "lookback" period (a required number of observations
+before an output is generated) set to <code>NaN</code>.</p>
+
+<p>All of the following examples use the function API:</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">talib</span>
+
+<span class="n">close</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+<p>Calculate a simple moving average of the close prices:</p>
+
+<div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">SMA</span><span class="p">(</span><span class="n">close</span><span class="p">)</span>
+</pre></div>
+
+<p>Calculating bollinger bands, with triple exponential moving average:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib</span> <span class="kn">import</span> <span class="n">MA_Type</span>
+
+<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">BBANDS</span><span class="p">(</span><span class="n">close</span><span class="p">,</span> <span class="n">matype</span><span class="o">=</span><span class="n">MA_Type</span><span class="o">.</span><span class="n">T3</span><span class="p">)</span>
+</pre></div>
+
+<p>Calculating momentum of the close prices, with a time period of 5:</p>
+
+<div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MOM</span><span class="p">(</span><span class="n">close</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+<p><a href="abstract.html">Next: Using the Abstract API</a></p>
+      </article>
+    </div>
+  </div>
+  
+  <div>&nbsp;</div>
+
+  </div>
+  
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
