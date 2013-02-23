@@ -1,0 +1,41 @@
+
+## Function API Examples
+
+Similar to TA-Lib, the function interface provides a lightweight wrapper of
+the exposed TA-Lib indicators.
+
+Each function returns an output array and have default values for their
+parameters, unless specified as keyword arguments. Typically, these functions
+will have an initial "lookback" period (a required number of observations
+before an output is generated) set to ``NaN``.
+
+All of the following examples use the function API:
+
+```python
+import numpy
+import talib
+
+close = numpy.random.random(100)
+```
+
+Calculate a simple moving average of the close prices:
+
+```python
+output = talib.SMA(close)
+```
+
+Calculating bollinger bands, with triple exponential moving average:
+
+```python
+from talib import MA_Type
+
+upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
+```
+
+Calculating momentum of the close prices, with a time period of 5:
+
+```python
+output = talib.MOM(close, timeperiod=5)
+```
+
+[Next: Using the Abstract API](abstract.html)
