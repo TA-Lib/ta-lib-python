@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title">TA-Lib</h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+
+  <div class="page">
+    
+  <div class="previewPage">
+    <div id="readme" class="announce md">
+      <article class="markdown-body entry-content">
+        <h1>
+<a name="momentum-indicator-functions" class="anchor" href="#momentum-indicator-functions"><span class="mini-icon mini-icon-link"></span></a>Momentum Indicator Functions</h1>
+
+<h3>
+<a name="adx---average-directional-movement-index" class="anchor" href="#adx---average-directional-movement-index"><span class="mini-icon mini-icon-link"></span></a>ADX - Average Directional Movement Index</h3>
+
+<pre>real = ADX(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Average Directional Movement Index at <a href="http://www.tadoc.org/indicator/ADX.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="adxr---average-directional-movement-index-rating" class="anchor" href="#adxr---average-directional-movement-index-rating"><span class="mini-icon mini-icon-link"></span></a>ADXR - Average Directional Movement Index Rating</h3>
+
+<pre>real = ADXR(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Average Directional Movement Index Rating at <a href="http://www.tadoc.org/indicator/ADXR.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="apo---absolute-price-oscillator" class="anchor" href="#apo---absolute-price-oscillator"><span class="mini-icon mini-icon-link"></span></a>APO - Absolute Price Oscillator</h3>
+
+<pre>real = APO(close, fastperiod=12, slowperiod=26, matype=0)
+</pre>
+
+<p>Learn more about the Absolute Price Oscillator at <a href="http://www.tadoc.org/indicator/APO.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="aroon---aroon" class="anchor" href="#aroon---aroon"><span class="mini-icon mini-icon-link"></span></a>AROON - Aroon</h3>
+
+<pre>aroondown, aroonup = AROON(high, low, timeperiod=14)
+</pre>
+
+<p>Learn more about the Aroon at <a href="http://www.tadoc.org/indicator/AROON.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="aroonosc---aroon-oscillator" class="anchor" href="#aroonosc---aroon-oscillator"><span class="mini-icon mini-icon-link"></span></a>AROONOSC - Aroon Oscillator</h3>
+
+<pre>real = AROONOSC(high, low, timeperiod=14)
+</pre>
+
+<p>Learn more about the Aroon Oscillator at <a href="http://www.tadoc.org/indicator/AROONOSC.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="bop---balance-of-power" class="anchor" href="#bop---balance-of-power"><span class="mini-icon mini-icon-link"></span></a>BOP - Balance Of Power</h3>
+
+<pre>real = BOP(high, low, close)
+</pre>
+
+<p>Learn more about the Balance Of Power at <a href="http://www.tadoc.org/indicator/BOP.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="cci---commodity-channel-index" class="anchor" href="#cci---commodity-channel-index"><span class="mini-icon mini-icon-link"></span></a>CCI - Commodity Channel Index</h3>
+
+<pre>real = CCI(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Commodity Channel Index at <a href="http://www.tadoc.org/indicator/CCI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="cmo---chande-momentum-oscillator" class="anchor" href="#cmo---chande-momentum-oscillator"><span class="mini-icon mini-icon-link"></span></a>CMO - Chande Momentum Oscillator</h3>
+
+<pre>real = CMO(close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Chande Momentum Oscillator at <a href="http://www.tadoc.org/indicator/CMO.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="dx---directional-movement-index" class="anchor" href="#dx---directional-movement-index"><span class="mini-icon mini-icon-link"></span></a>DX - Directional Movement Index</h3>
+
+<pre>real = DX(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Directional Movement Index at <a href="http://www.tadoc.org/indicator/DX.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="macd---moving-average-convergencedivergence" class="anchor" href="#macd---moving-average-convergencedivergence"><span class="mini-icon mini-icon-link"></span></a>MACD - Moving Average Convergence/Divergence</h3>
+
+<pre>macd, macdsignal, macdhist = MACD(close, fastperiod=12, slowperiod=26, signalperiod=9)
+</pre>
+
+<p>Learn more about the Moving Average Convergence/Divergence at <a href="http://www.tadoc.org/indicator/MACD.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="macdext---macd-with-controllable-ma-type" class="anchor" href="#macdext---macd-with-controllable-ma-type"><span class="mini-icon mini-icon-link"></span></a>MACDEXT - MACD with controllable MA type</h3>
+
+<pre>macd, macdsignal, macdhist = MACDEXT(close, fastperiod=12, fastmatype=0, slowperiod=26, slowmatype=0, signalperiod=9, signalmatype=0)
+</pre>
+
+<h3>
+<a name="macdfix---moving-average-convergencedivergence-fix-1226" class="anchor" href="#macdfix---moving-average-convergencedivergence-fix-1226"><span class="mini-icon mini-icon-link"></span></a>MACDFIX - Moving Average Convergence/Divergence Fix 12/26</h3>
+
+<pre>macd, macdsignal, macdhist = MACDFIX(close, signalperiod=9)
+</pre>
+
+<h3>
+<a name="mfi---money-flow-index" class="anchor" href="#mfi---money-flow-index"><span class="mini-icon mini-icon-link"></span></a>MFI - Money Flow Index</h3>
+
+<pre>real = MFI(high, low, close, volume, timeperiod=14)
+</pre>
+
+<p>Learn more about the Money Flow Index at <a href="http://www.tadoc.org/indicator/MFI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="minus_di---minus-directional-indicator" class="anchor" href="#minus_di---minus-directional-indicator"><span class="mini-icon mini-icon-link"></span></a>MINUS_DI - Minus Directional Indicator</h3>
+
+<pre>real = MINUS_DI(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Minus Directional Indicator at <a href="http://www.tadoc.org/indicator/MINUS_DI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="minus_dm---minus-directional-movement" class="anchor" href="#minus_dm---minus-directional-movement"><span class="mini-icon mini-icon-link"></span></a>MINUS_DM - Minus Directional Movement</h3>
+
+<pre>real = MINUS_DM(high, low, timeperiod=14)
+</pre>
+
+<p>Learn more about the Minus Directional Movement at <a href="http://www.tadoc.org/indicator/MINUS_DM.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="mom---momentum" class="anchor" href="#mom---momentum"><span class="mini-icon mini-icon-link"></span></a>MOM - Momentum</h3>
+
+<pre>real = MOM(close, timeperiod=10)
+</pre>
+
+<p>Learn more about the Momentum at <a href="http://www.tadoc.org/indicator/MOM.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="plus_di---plus-directional-indicator" class="anchor" href="#plus_di---plus-directional-indicator"><span class="mini-icon mini-icon-link"></span></a>PLUS_DI - Plus Directional Indicator</h3>
+
+<pre>real = PLUS_DI(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Plus Directional Indicator at <a href="http://www.tadoc.org/indicator/PLUS_DI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="plus_dm---plus-directional-movement" class="anchor" href="#plus_dm---plus-directional-movement"><span class="mini-icon mini-icon-link"></span></a>PLUS_DM - Plus Directional Movement</h3>
+
+<pre>real = PLUS_DM(high, low, timeperiod=14)
+</pre>
+
+<p>Learn more about the Plus Directional Movement at <a href="http://www.tadoc.org/indicator/PLUS_DM.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="ppo---percentage-price-oscillator" class="anchor" href="#ppo---percentage-price-oscillator"><span class="mini-icon mini-icon-link"></span></a>PPO - Percentage Price Oscillator</h3>
+
+<pre>real = PPO(close, fastperiod=12, slowperiod=26, matype=0)
+</pre>
+
+<p>Learn more about the Percentage Price Oscillator at <a href="http://www.tadoc.org/indicator/PPO.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="roc---rate-of-change--priceprevprice-1100" class="anchor" href="#roc---rate-of-change--priceprevprice-1100"><span class="mini-icon mini-icon-link"></span></a>ROC - Rate of change : ((price/prevPrice)-1)*100</h3>
+
+<pre>real = ROC(close, timeperiod=10)
+</pre>
+
+<p>Learn more about the Rate of change : ((price/prevPrice)-1)*100 at <a href="http://www.tadoc.org/indicator/ROC.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="rocp---rate-of-change-percentage-price-prevpriceprevprice" class="anchor" href="#rocp---rate-of-change-percentage-price-prevpriceprevprice"><span class="mini-icon mini-icon-link"></span></a>ROCP - Rate of change Percentage: (price-prevPrice)/prevPrice</h3>
+
+<pre>real = ROCP(close, timeperiod=10)
+</pre>
+
+<p>Learn more about the Rate of change Percentage: (price-prevPrice)/prevPrice at <a href="http://www.tadoc.org/indicator/ROCP.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="rocr---rate-of-change-ratio-priceprevprice" class="anchor" href="#rocr---rate-of-change-ratio-priceprevprice"><span class="mini-icon mini-icon-link"></span></a>ROCR - Rate of change ratio: (price/prevPrice)</h3>
+
+<pre>real = ROCR(close, timeperiod=10)
+</pre>
+
+<p>Learn more about the Rate of change ratio: (price/prevPrice) at <a href="http://www.tadoc.org/indicator/ROCR.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="rocr100---rate-of-change-ratio-100-scale-priceprevprice100" class="anchor" href="#rocr100---rate-of-change-ratio-100-scale-priceprevprice100"><span class="mini-icon mini-icon-link"></span></a>ROCR100 - Rate of change ratio 100 scale: (price/prevPrice)*100</h3>
+
+<pre>real = ROCR100(close, timeperiod=10)
+</pre>
+
+<p>Learn more about the Rate of change ratio 100 scale: (price/prevPrice)*100 at <a href="http://www.tadoc.org/indicator/ROCR100.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="rsi---relative-strength-index" class="anchor" href="#rsi---relative-strength-index"><span class="mini-icon mini-icon-link"></span></a>RSI - Relative Strength Index</h3>
+
+<pre>real = RSI(close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Relative Strength Index at <a href="http://www.tadoc.org/indicator/RSI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="stoch---stochastic" class="anchor" href="#stoch---stochastic"><span class="mini-icon mini-icon-link"></span></a>STOCH - Stochastic</h3>
+
+<pre>slowk, slowd = STOCH(high, low, close, fastk_period=5, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0)
+</pre>
+
+<p>Learn more about the Stochastic at <a href="http://www.tadoc.org/indicator/STOCH.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="stochf---stochastic-fast" class="anchor" href="#stochf---stochastic-fast"><span class="mini-icon mini-icon-link"></span></a>STOCHF - Stochastic Fast</h3>
+
+<pre>fastk, fastd = STOCHF(high, low, close, fastk_period=5, fastd_period=3, fastd_matype=0)
+</pre>
+
+<p>Learn more about the Stochastic Fast at <a href="http://www.tadoc.org/indicator/STOCHF.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="stochrsi---stochastic-relative-strength-index" class="anchor" href="#stochrsi---stochastic-relative-strength-index"><span class="mini-icon mini-icon-link"></span></a>STOCHRSI - Stochastic Relative Strength Index</h3>
+
+<pre>fastk, fastd = STOCHRSI(close, timeperiod=14, fastk_period=5, fastd_period=3, fastd_matype=0)
+</pre>
+
+<p>Learn more about the Stochastic Relative Strength Index at <a href="http://www.tadoc.org/indicator/STOCHRSI.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="trix---1-day-rate-of-change-roc-of-a-triple-smooth-ema" class="anchor" href="#trix---1-day-rate-of-change-roc-of-a-triple-smooth-ema"><span class="mini-icon mini-icon-link"></span></a>TRIX - 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA</h3>
+
+<pre>real = TRIX(close, timeperiod=30)
+</pre>
+
+<p>Learn more about the 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA at <a href="http://www.tadoc.org/indicator/TRIX.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="ultosc---ultimate-oscillator" class="anchor" href="#ultosc---ultimate-oscillator"><span class="mini-icon mini-icon-link"></span></a>ULTOSC - Ultimate Oscillator</h3>
+
+<pre>real = ULTOSC(high, low, close, timeperiod1=7, timeperiod2=14, timeperiod3=28)
+</pre>
+
+<p>Learn more about the Ultimate Oscillator at <a href="http://www.tadoc.org/indicator/ULTOSC.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="willr---williams-r" class="anchor" href="#willr---williams-r"><span class="mini-icon mini-icon-link"></span></a>WILLR - Williams' %R</h3>
+
+<pre>real = WILLR(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Williams' %R at <a href="http://www.tadoc.org/indicator/WILLR.htm">tadoc.org</a>.  </p>
+
+<p><a href="../doc_index.html">Documentation Index</a>
+<a class="float-right" href="../funcs.html">All Function Groups</a></p>
+      </article>
+    </div>
+  </div>
+  
+  <div>&nbsp;</div>
+
+  </div>
+  
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
