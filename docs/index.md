@@ -72,7 +72,7 @@ print talib.get_functions()
 print talib.get_function_groups()
 ```
 
-#### [Overlap Studies](overlap_studies.html)
+#### [Overlap Studies](func_groups/overlap_studies.html)
 ```
 BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
@@ -93,7 +93,7 @@ TRIMA                Triangular Moving Average
 WMA                  Weighted Moving Average
 ```
 
-#### [Momentum Indicators](momentum_indicators.html)
+#### [Momentum Indicators](func_groups/momentum_indicators.html)
 ```
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
@@ -127,14 +127,14 @@ ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
 ```
 
-#### [Volume Indicators](volume_indicators.html)
+#### [Volume Indicators](func_groups/volume_indicators.html)
 ```
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
 OBV                  On Balance Volume
 ```
 
-#### [Volatility Indicators](volatility_indicators.html)
+#### [Volatility Indicators](func_groups/volatility_indicators.html)
 ```
 ATR                  Average True Range
 NATR                 Normalized Average True Range

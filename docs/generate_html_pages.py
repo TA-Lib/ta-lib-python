@@ -137,6 +137,8 @@ def get_groups_markdown(update=False):
                 ret[group].append(
                     'Learn more about the %s at [tadoc.org](%s).' % (
                         f.info['display_name'], doc_links[func]))
+        ret[group].append('[Documentation Index](../doc_index.html)')
+        ret[group].append('[FLOAT_RIGHTAll Function Groups](../funcs.html)')
         ret[group] = '\n'.join(ret[group])
     return ret
 
@@ -200,7 +202,12 @@ def run_convert_to_html():
             head = head.replace('"doc_index.html"', '"../doc_index.html"')
             head = head.replace('"stylesheets/', '"../stylesheets/')
 
-        html = ''.join([head, html, footer])
+        lines = html.split('\n')
+        for i, line in enumerate(lines):
+            if 'FLOAT_RIGHT' in line:
+                line = line.replace('FLOAT_RIGHT', '')
+                lines[i] = line.replace('<a ', '<a class="float-right" ')
+        html = ''.join([head, '\n'.join(lines), footer])
 
         with open(save_file_path, 'w') as f:
             f.write(html)

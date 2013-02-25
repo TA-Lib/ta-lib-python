@@ -50,4 +50,5 @@ If you install ``TA-Lib`` manually using ``make -jX``, the build will fail but
 it's OK! Simply rerun ``make -jX`` followed by ``[sudo] make install`` and
 everything will work as expected.
 
-[Next: Using the Function API](func.html)
+[Documentation Index](doc_index.html)
+[FLOAT_RIGHTNext: Using the Function API](func.html)

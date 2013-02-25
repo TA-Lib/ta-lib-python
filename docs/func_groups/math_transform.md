@@ -73,3 +73,6 @@ real = TAN(close)
 ```
 real = TANH(close)
 ```
+
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)

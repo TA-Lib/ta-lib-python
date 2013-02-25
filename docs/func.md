@@ -50,4 +50,5 @@ Documentation for all functions:
 * [Math Transform](func_groups/math_transform.html)
 * [Math Operators](func_groups/math_operators.html)
 
-[Next: Using the Abstract API](abstract.html)
+[Documentation Index](doc_index.html)
+[FLOAT_RIGHTNext: Using the Abstract API](abstract.html)

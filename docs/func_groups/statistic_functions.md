@@ -53,3 +53,5 @@ real = VAR(close, timeperiod=5, nbdev=1)
 ```
 
 Learn more about the Variance at [tadoc.org](http://www.tadoc.org/indicator/VAR.htm).
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)

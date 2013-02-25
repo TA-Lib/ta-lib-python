@@ -17,3 +17,5 @@ real = TRANGE(high, low, close)
 ```
 
 Learn more about the True Range at [tadoc.org](http://www.tadoc.org/indicator/TRANGE.htm).
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)

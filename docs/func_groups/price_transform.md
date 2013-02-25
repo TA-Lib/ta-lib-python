@@ -23,3 +23,5 @@ real = WCLPRICE(high, low, close)
 ```
 
 Learn more about the Weighted Close Price at [tadoc.org](http://www.tadoc.org/indicator/WCLPRICE.htm).
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)

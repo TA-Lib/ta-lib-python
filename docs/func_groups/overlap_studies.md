@@ -98,3 +98,5 @@ real = WMA(close, timeperiod=30)
 ```
 
 Learn more about the Weighted Moving Average at [tadoc.org](http://www.tadoc.org/indicator/WMA.htm).
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)

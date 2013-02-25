@@ -29,3 +29,5 @@ integer = HT_TRENDMODE(close)
 ```
 
 Learn more about the Hilbert Transform - Trend vs Cycle Mode at [tadoc.org](http://www.tadoc.org/indicator/HT_TRENDMODE.htm).
+[Documentation Index](../doc_index.html)
+[FLOAT_RIGHTAll Function Groups](../funcs.html)
