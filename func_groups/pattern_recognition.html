@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title">TA-Lib</h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+
+  <div class="page">
+    
+  <div class="previewPage">
+    <div id="readme" class="announce md">
+      <article class="markdown-body entry-content">
+        <h1>
+<a name="pattern-recognition-functions" class="anchor" href="#pattern-recognition-functions"><span class="mini-icon mini-icon-link"></span></a>Pattern Recognition Functions</h1>
+
+<h3>
+<a name="cdl2crows---two-crows" class="anchor" href="#cdl2crows---two-crows"><span class="mini-icon mini-icon-link"></span></a>CDL2CROWS - Two Crows</h3>
+
+<pre>integer = CDL2CROWS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3blackcrows---three-black-crows" class="anchor" href="#cdl3blackcrows---three-black-crows"><span class="mini-icon mini-icon-link"></span></a>CDL3BLACKCROWS - Three Black Crows</h3>
+
+<pre>integer = CDL3BLACKCROWS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3inside---three-inside-updown" class="anchor" href="#cdl3inside---three-inside-updown"><span class="mini-icon mini-icon-link"></span></a>CDL3INSIDE - Three Inside Up/Down</h3>
+
+<pre>integer = CDL3INSIDE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3linestrike---three-line-strike" class="anchor" href="#cdl3linestrike---three-line-strike"><span class="mini-icon mini-icon-link"></span></a>CDL3LINESTRIKE - Three-Line Strike</h3>
+
+<pre>integer = CDL3LINESTRIKE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3outside---three-outside-updown" class="anchor" href="#cdl3outside---three-outside-updown"><span class="mini-icon mini-icon-link"></span></a>CDL3OUTSIDE - Three Outside Up/Down</h3>
+
+<pre>integer = CDL3OUTSIDE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3starsinsouth---three-stars-in-the-south" class="anchor" href="#cdl3starsinsouth---three-stars-in-the-south"><span class="mini-icon mini-icon-link"></span></a>CDL3STARSINSOUTH - Three Stars In The South</h3>
+
+<pre>integer = CDL3STARSINSOUTH(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdl3whitesoldiers---three-advancing-white-soldiers" class="anchor" href="#cdl3whitesoldiers---three-advancing-white-soldiers"><span class="mini-icon mini-icon-link"></span></a>CDL3WHITESOLDIERS - Three Advancing White Soldiers</h3>
+
+<pre>integer = CDL3WHITESOLDIERS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlabandonedbaby---abandoned-baby" class="anchor" href="#cdlabandonedbaby---abandoned-baby"><span class="mini-icon mini-icon-link"></span></a>CDLABANDONEDBABY - Abandoned Baby</h3>
+
+<pre>integer = CDLABANDONEDBABY(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdladvanceblock---advance-block" class="anchor" href="#cdladvanceblock---advance-block"><span class="mini-icon mini-icon-link"></span></a>CDLADVANCEBLOCK - Advance Block</h3>
+
+<pre>integer = CDLADVANCEBLOCK(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlbelthold---belt-hold" class="anchor" href="#cdlbelthold---belt-hold"><span class="mini-icon mini-icon-link"></span></a>CDLBELTHOLD - Belt-hold</h3>
+
+<pre>integer = CDLBELTHOLD(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlbreakaway---breakaway" class="anchor" href="#cdlbreakaway---breakaway"><span class="mini-icon mini-icon-link"></span></a>CDLBREAKAWAY - Breakaway</h3>
+
+<pre>integer = CDLBREAKAWAY(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlclosingmarubozu---closing-marubozu" class="anchor" href="#cdlclosingmarubozu---closing-marubozu"><span class="mini-icon mini-icon-link"></span></a>CDLCLOSINGMARUBOZU - Closing Marubozu</h3>
+
+<pre>integer = CDLCLOSINGMARUBOZU(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlconcealbabyswall---concealing-baby-swallow" class="anchor" href="#cdlconcealbabyswall---concealing-baby-swallow"><span class="mini-icon mini-icon-link"></span></a>CDLCONCEALBABYSWALL - Concealing Baby Swallow</h3>
+
+<pre>integer = CDLCONCEALBABYSWALL(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlcounterattack---counterattack" class="anchor" href="#cdlcounterattack---counterattack"><span class="mini-icon mini-icon-link"></span></a>CDLCOUNTERATTACK - Counterattack</h3>
+
+<pre>integer = CDLCOUNTERATTACK(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdldarkcloudcover---dark-cloud-cover" class="anchor" href="#cdldarkcloudcover---dark-cloud-cover"><span class="mini-icon mini-icon-link"></span></a>CDLDARKCLOUDCOVER - Dark Cloud Cover</h3>
+
+<pre>integer = CDLDARKCLOUDCOVER(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdldoji---doji" class="anchor" href="#cdldoji---doji"><span class="mini-icon mini-icon-link"></span></a>CDLDOJI - Doji</h3>
+
+<pre>integer = CDLDOJI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdldojistar---doji-star" class="anchor" href="#cdldojistar---doji-star"><span class="mini-icon mini-icon-link"></span></a>CDLDOJISTAR - Doji Star</h3>
+
+<pre>integer = CDLDOJISTAR(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdldragonflydoji---dragonfly-doji" class="anchor" href="#cdldragonflydoji---dragonfly-doji"><span class="mini-icon mini-icon-link"></span></a>CDLDRAGONFLYDOJI - Dragonfly Doji</h3>
+
+<pre>integer = CDLDRAGONFLYDOJI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlengulfing---engulfing-pattern" class="anchor" href="#cdlengulfing---engulfing-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLENGULFING - Engulfing Pattern</h3>
+
+<pre>integer = CDLENGULFING(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdleveningdojistar---evening-doji-star" class="anchor" href="#cdleveningdojistar---evening-doji-star"><span class="mini-icon mini-icon-link"></span></a>CDLEVENINGDOJISTAR - Evening Doji Star</h3>
+
+<pre>integer = CDLEVENINGDOJISTAR(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdleveningstar---evening-star" class="anchor" href="#cdleveningstar---evening-star"><span class="mini-icon mini-icon-link"></span></a>CDLEVENINGSTAR - Evening Star</h3>
+
+<pre>integer = CDLEVENINGSTAR(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdlgapsidesidewhite---updown-gap-side-by-side-white-lines" class="anchor" href="#cdlgapsidesidewhite---updown-gap-side-by-side-white-lines"><span class="mini-icon mini-icon-link"></span></a>CDLGAPSIDESIDEWHITE - Up/Down-gap side-by-side white lines</h3>
+
+<pre>integer = CDLGAPSIDESIDEWHITE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlgravestonedoji---gravestone-doji" class="anchor" href="#cdlgravestonedoji---gravestone-doji"><span class="mini-icon mini-icon-link"></span></a>CDLGRAVESTONEDOJI - Gravestone Doji</h3>
+
+<pre>integer = CDLGRAVESTONEDOJI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhammer---hammer" class="anchor" href="#cdlhammer---hammer"><span class="mini-icon mini-icon-link"></span></a>CDLHAMMER - Hammer</h3>
+
+<pre>integer = CDLHAMMER(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhangingman---hanging-man" class="anchor" href="#cdlhangingman---hanging-man"><span class="mini-icon mini-icon-link"></span></a>CDLHANGINGMAN - Hanging Man</h3>
+
+<pre>integer = CDLHANGINGMAN(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlharami---harami-pattern" class="anchor" href="#cdlharami---harami-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLHARAMI - Harami Pattern</h3>
+
+<pre>integer = CDLHARAMI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlharamicross---harami-cross-pattern" class="anchor" href="#cdlharamicross---harami-cross-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLHARAMICROSS - Harami Cross Pattern</h3>
+
+<pre>integer = CDLHARAMICROSS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhighwave---high-wave-candle" class="anchor" href="#cdlhighwave---high-wave-candle"><span class="mini-icon mini-icon-link"></span></a>CDLHIGHWAVE - High-Wave Candle</h3>
+
+<pre>integer = CDLHIGHWAVE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhikkake---hikkake-pattern" class="anchor" href="#cdlhikkake---hikkake-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLHIKKAKE - Hikkake Pattern</h3>
+
+<pre>integer = CDLHIKKAKE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhikkakemod---modified-hikkake-pattern" class="anchor" href="#cdlhikkakemod---modified-hikkake-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLHIKKAKEMOD - Modified Hikkake Pattern</h3>
+
+<pre>integer = CDLHIKKAKEMOD(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlhomingpigeon---homing-pigeon" class="anchor" href="#cdlhomingpigeon---homing-pigeon"><span class="mini-icon mini-icon-link"></span></a>CDLHOMINGPIGEON - Homing Pigeon</h3>
+
+<pre>integer = CDLHOMINGPIGEON(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlidentical3crows---identical-three-crows" class="anchor" href="#cdlidentical3crows---identical-three-crows"><span class="mini-icon mini-icon-link"></span></a>CDLIDENTICAL3CROWS - Identical Three Crows</h3>
+
+<pre>integer = CDLIDENTICAL3CROWS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlinneck---in-neck-pattern" class="anchor" href="#cdlinneck---in-neck-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLINNECK - In-Neck Pattern</h3>
+
+<pre>integer = CDLINNECK(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlinvertedhammer---inverted-hammer" class="anchor" href="#cdlinvertedhammer---inverted-hammer"><span class="mini-icon mini-icon-link"></span></a>CDLINVERTEDHAMMER - Inverted Hammer</h3>
+
+<pre>integer = CDLINVERTEDHAMMER(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlkicking---kicking" class="anchor" href="#cdlkicking---kicking"><span class="mini-icon mini-icon-link"></span></a>CDLKICKING - Kicking</h3>
+
+<pre>integer = CDLKICKING(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlkickingbylength---kicking---bullbear-determined-by-the-longer-marubozu" class="anchor" href="#cdlkickingbylength---kicking---bullbear-determined-by-the-longer-marubozu"><span class="mini-icon mini-icon-link"></span></a>CDLKICKINGBYLENGTH - Kicking - bull/bear determined by the longer marubozu</h3>
+
+<pre>integer = CDLKICKINGBYLENGTH(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlladderbottom---ladder-bottom" class="anchor" href="#cdlladderbottom---ladder-bottom"><span class="mini-icon mini-icon-link"></span></a>CDLLADDERBOTTOM - Ladder Bottom</h3>
+
+<pre>integer = CDLLADDERBOTTOM(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdllongleggeddoji---long-legged-doji" class="anchor" href="#cdllongleggeddoji---long-legged-doji"><span class="mini-icon mini-icon-link"></span></a>CDLLONGLEGGEDDOJI - Long Legged Doji</h3>
+
+<pre>integer = CDLLONGLEGGEDDOJI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdllongline---long-line-candle" class="anchor" href="#cdllongline---long-line-candle"><span class="mini-icon mini-icon-link"></span></a>CDLLONGLINE - Long Line Candle</h3>
+
+<pre>integer = CDLLONGLINE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlmarubozu---marubozu" class="anchor" href="#cdlmarubozu---marubozu"><span class="mini-icon mini-icon-link"></span></a>CDLMARUBOZU - Marubozu</h3>
+
+<pre>integer = CDLMARUBOZU(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlmatchinglow---matching-low" class="anchor" href="#cdlmatchinglow---matching-low"><span class="mini-icon mini-icon-link"></span></a>CDLMATCHINGLOW - Matching Low</h3>
+
+<pre>integer = CDLMATCHINGLOW(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlmathold---mat-hold" class="anchor" href="#cdlmathold---mat-hold"><span class="mini-icon mini-icon-link"></span></a>CDLMATHOLD - Mat Hold</h3>
+
+<pre>integer = CDLMATHOLD(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdlmorningdojistar---morning-doji-star" class="anchor" href="#cdlmorningdojistar---morning-doji-star"><span class="mini-icon mini-icon-link"></span></a>CDLMORNINGDOJISTAR - Morning Doji Star</h3>
+
+<pre>integer = CDLMORNINGDOJISTAR(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdlmorningstar---morning-star" class="anchor" href="#cdlmorningstar---morning-star"><span class="mini-icon mini-icon-link"></span></a>CDLMORNINGSTAR - Morning Star</h3>
+
+<pre>integer = CDLMORNINGSTAR(open, high, low, close, penetration=0)
+</pre>
+
+<h3>
+<a name="cdlonneck---on-neck-pattern" class="anchor" href="#cdlonneck---on-neck-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLONNECK - On-Neck Pattern</h3>
+
+<pre>integer = CDLONNECK(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlpiercing---piercing-pattern" class="anchor" href="#cdlpiercing---piercing-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLPIERCING - Piercing Pattern</h3>
+
+<pre>integer = CDLPIERCING(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlrickshawman---rickshaw-man" class="anchor" href="#cdlrickshawman---rickshaw-man"><span class="mini-icon mini-icon-link"></span></a>CDLRICKSHAWMAN - Rickshaw Man</h3>
+
+<pre>integer = CDLRICKSHAWMAN(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlrisefall3methods---risingfalling-three-methods" class="anchor" href="#cdlrisefall3methods---risingfalling-three-methods"><span class="mini-icon mini-icon-link"></span></a>CDLRISEFALL3METHODS - Rising/Falling Three Methods</h3>
+
+<pre>integer = CDLRISEFALL3METHODS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlseparatinglines---separating-lines" class="anchor" href="#cdlseparatinglines---separating-lines"><span class="mini-icon mini-icon-link"></span></a>CDLSEPARATINGLINES - Separating Lines</h3>
+
+<pre>integer = CDLSEPARATINGLINES(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlshootingstar---shooting-star" class="anchor" href="#cdlshootingstar---shooting-star"><span class="mini-icon mini-icon-link"></span></a>CDLSHOOTINGSTAR - Shooting Star</h3>
+
+<pre>integer = CDLSHOOTINGSTAR(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlshortline---short-line-candle" class="anchor" href="#cdlshortline---short-line-candle"><span class="mini-icon mini-icon-link"></span></a>CDLSHORTLINE - Short Line Candle</h3>
+
+<pre>integer = CDLSHORTLINE(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlspinningtop---spinning-top" class="anchor" href="#cdlspinningtop---spinning-top"><span class="mini-icon mini-icon-link"></span></a>CDLSPINNINGTOP - Spinning Top</h3>
+
+<pre>integer = CDLSPINNINGTOP(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlstalledpattern---stalled-pattern" class="anchor" href="#cdlstalledpattern---stalled-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLSTALLEDPATTERN - Stalled Pattern</h3>
+
+<pre>integer = CDLSTALLEDPATTERN(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlsticksandwich---stick-sandwich" class="anchor" href="#cdlsticksandwich---stick-sandwich"><span class="mini-icon mini-icon-link"></span></a>CDLSTICKSANDWICH - Stick Sandwich</h3>
+
+<pre>integer = CDLSTICKSANDWICH(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdltakuri---takuri-dragonfly-doji-with-very-long-lower-shadow" class="anchor" href="#cdltakuri---takuri-dragonfly-doji-with-very-long-lower-shadow"><span class="mini-icon mini-icon-link"></span></a>CDLTAKURI - Takuri (Dragonfly Doji with very long lower shadow)</h3>
+
+<pre>integer = CDLTAKURI(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdltasukigap---tasuki-gap" class="anchor" href="#cdltasukigap---tasuki-gap"><span class="mini-icon mini-icon-link"></span></a>CDLTASUKIGAP - Tasuki Gap</h3>
+
+<pre>integer = CDLTASUKIGAP(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlthrusting---thrusting-pattern" class="anchor" href="#cdlthrusting---thrusting-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLTHRUSTING - Thrusting Pattern</h3>
+
+<pre>integer = CDLTHRUSTING(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdltristar---tristar-pattern" class="anchor" href="#cdltristar---tristar-pattern"><span class="mini-icon mini-icon-link"></span></a>CDLTRISTAR - Tristar Pattern</h3>
+
+<pre>integer = CDLTRISTAR(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlunique3river---unique-3-river" class="anchor" href="#cdlunique3river---unique-3-river"><span class="mini-icon mini-icon-link"></span></a>CDLUNIQUE3RIVER - Unique 3 River</h3>
+
+<pre>integer = CDLUNIQUE3RIVER(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlupsidegap2crows---upside-gap-two-crows" class="anchor" href="#cdlupsidegap2crows---upside-gap-two-crows"><span class="mini-icon mini-icon-link"></span></a>CDLUPSIDEGAP2CROWS - Upside Gap Two Crows</h3>
+
+<pre>integer = CDLUPSIDEGAP2CROWS(open, high, low, close)
+</pre>
+
+<h3>
+<a name="cdlxsidegap3methods---upsidedownside-gap-three-methods" class="anchor" href="#cdlxsidegap3methods---upsidedownside-gap-three-methods"><span class="mini-icon mini-icon-link"></span></a>CDLXSIDEGAP3METHODS - Upside/Downside Gap Three Methods</h3>
+
+<pre>integer = CDLXSIDEGAP3METHODS(open, high, low, close)
+</pre>
+
+<p><a href="../doc_index.html">Documentation Index</a>
+<a class="float-right" href="../funcs.html">All Function Groups</a></p>
+      </article>
+    </div>
+  </div>
+  
+  <div>&nbsp;</div>
+
+  </div>
+  
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
