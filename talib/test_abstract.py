@@ -54,10 +54,14 @@ def test_info():
     stochrsi.parameters = {'fastd_matype': talib.MA_Type.EMA}
     expected = {
         'display_name': 'Stochastic Relative Strength Index',
-        'flags': None,
+        'function_flags': ['Function has an unstable period'],
         'group': 'Momentum Indicators',
         'input_names': OrderedDict([('price', 'open')]),
         'name': 'STOCHRSI',
+        'output_flags': OrderedDict([
+            ('fastk', ['Line']),
+            ('fastd', ['Line']),
+            ]),
         'output_names': ['fastk', 'fastd'],
         'parameters': OrderedDict([
             ('timeperiod', 14),
@@ -70,10 +74,15 @@ def test_info():
 
     expected = {
         'display_name': 'Bollinger Bands',
-        'flags': None,
+        'function_flags': ['Output scale same as input'],
         'group': 'Overlap Studies',
         'input_names': OrderedDict([('price', 'close')]),
         'name': 'BBANDS',
+        'output_flags': OrderedDict([
+            ('upperband', ['Values represent an upper limit']),
+            ('middleband', ['Line']),
+            ('lowerband', ['Values represent a lower limit']),
+            ]),
         'output_names': ['upperband', 'middleband', 'lowerband'],
         'parameters': OrderedDict([
             ('timeperiod', 5),
