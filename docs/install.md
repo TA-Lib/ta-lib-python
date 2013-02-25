@@ -1,5 +1,4 @@
-
-## Installation
+# Installation
 
 You can install from PyPI:
 
@@ -14,12 +13,28 @@ $ python setup.py install
 ```
 
 Note: this requires that you have already installed the ``TA-Lib`` library
-on your computer (you can [download it](http://ta-lib.org/hdr_dw.html) or
-use your computer's package manager to install it, e.g.,
-``brew install ta-lib`` on Mac OS X).  On Windows, you can download the
-[ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
-and unzip to ``C:\ta-lib``.
+on your computer:
+#### Mac OS X
+```
+$ brew install ta-lib
+```
 
+#### Windows
+```
+Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
+and unzip to ``C:\ta-lib``.
+```
+
+#### Linux
+```
+Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz)
+$ untar and cd
+$ ./configure --prefix=/usr
+$ make -j5 && make -j5 # the first make fails when building in parallel
+$ sudo make install
+```
+
+All supported download/install options are listed [here](http://ta-lib.org/hdr_dw.html).
 
 ## Troubleshooting
 
@@ -35,4 +50,4 @@ If you install ``TA-Lib`` manually using ``make -jX``, the build will fail but
 it's OK! Simply rerun ``make -jX`` followed by ``[sudo] make install`` and
 everything will work as expected.
 
-[Next: Using the function API](func.html)
+[Next: Using the Function API](func.html)
