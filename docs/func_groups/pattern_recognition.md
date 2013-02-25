@@ -304,5 +304,6 @@ integer = CDLUPSIDEGAP2CROWS(high, low, close)
 integer = CDLXSIDEGAP3METHODS(high, low, close)
 ```
 
+
 [Documentation Index](../doc_index.html)
 [FLOAT_RIGHTAll Function Groups](../funcs.html)

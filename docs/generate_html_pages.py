@@ -135,9 +135,9 @@ def get_groups_markdown(update=False):
             # print extra info if we can
             if func in doc_links:
                 ret[group].append(
-                    'Learn more about the %s at [tadoc.org](%s).' % (
+                    'Learn more about the %s at [tadoc.org](%s).  ' % (
                         f.info['display_name'], doc_links[func]))
-        ret[group].append('[Documentation Index](../doc_index.html)')
+        ret[group].append('\n[Documentation Index](../doc_index.html)')
         ret[group].append('[FLOAT_RIGHTAll Function Groups](../funcs.html)')
         ret[group] = '\n'.join(ret[group])
     return ret

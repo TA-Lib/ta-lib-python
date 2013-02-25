@@ -412,12 +412,12 @@ ul.drop li:hover > ul {
 
 #downloads {
   position: absolute;
-  width: 210px;
+  width: 207px;
   z-index: 10;
   bottom: -40px;
   right: 0;
   height: 70px;
-/*   background: url('../images/icon_download.png') no-repeat 0% 90%; */
+  background: url('../images/icon_download.png') no-repeat 0% 90%;
 }
 
 #download_label {
