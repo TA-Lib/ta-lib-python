@@ -1,170 +1,18 @@
-# About TA-Lib
+# All Supported Indicators and Functions
 
-This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
-instead of SWIG. From the homepage:
+* [Overlap Studies](func_groups/overlap_studies.html)
+* [Momentum Indicators](func_groups/momentum_indicators.html)
+* [Volume Indicators](func_groups/volume_indicators.html)
+* [Volatility Indicators](func_groups/volatility_indicators.html)
+* [Price Transform](func_groups/price_transform.html)
+* [Cycle Indicators](func_groups/cycle_indicators.html)
+* [Pattern Recognition](func_groups/pattern_recognition.html)
+* [Statistic Functions](func_groups/statistic_functions.html)
+* [Math Transform](func_groups/math_transform.html)
+* [Math Operators](func_groups/math_operators.html)
 
-> TA-Lib is widely used by trading software developers requiring to perform
-> technical analysis of financial market data.
+#### [Overlap Studies](func_groups/overlap_studies.html)
 
-> * Includes 150+ indicators such as ADX, MACD, RSI, Stochastic, Bollinger
->   Bands, etc.
-> * Candlestick pattern recognition
-> * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
-
-The original Python bindings use [SWIG](http://swig.org) which unfortunately
-are difficult to install and aren't as efficient as they could be. Therefore
-this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
--- producing results 2-4 times faster than the SWIG interface.
-
-# Install TA-Lib
-
-You can install from PyPI:
-
-```
-$ easy_install TA-Lib
-```
-
-Or checkout the sources and run ``setup.py`` yourself:
-
-```
-$ python setup.py install
-```
-
-### Troubleshooting Install Errors
-
-```
-func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
-compilation terminated.
-```
-
-If you get build errors like this, it typically means that it can't find the
-underlying ``TA-Lib`` library and needs to be installed:
-
-# Dependencies
-To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org/hdr_dw.html)
-already installed:
-
-##### Mac OS X
-```
-$ brew install ta-lib
-```
-
-##### Windows
-Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
-and unzip to ``C:\ta-lib``
-
-##### Linux
-Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
-```
-$ untar and cd
-$ ./configure --prefix=/usr
-$ make
-$ sudo make install
-```
-
-> If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
-> Simply rerun ``make -jX`` followed by ``[sudo] make install``.
-
-# Function API Examples
-
-Similar to TA-Lib, the function interface provides a lightweight wrapper of
-the exposed TA-Lib indicators.
-
-Each function returns an output array and have default values for their
-parameters, unless specified as keyword arguments. Typically, these functions
-will have an initial "lookback" period (a required number of observations
-before an output is generated) set to ``NaN``.
-
-All of the following examples use the function API:
-
-```python
-import numpy
-import talib
-
-close = numpy.random.random(100)
-```
-
-Calculate a simple moving average of the close prices:
-
-```python
-output = talib.SMA(close)
-```
-
-Calculating bollinger bands, with triple exponential moving average:
-
-```python
-from talib import MA_Type
-
-upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
-```
-
-Calculating momentum of the close prices, with a time period of 5:
-
-```python
-output = talib.MOM(close, timeperiod=5)
-```
-
-# Abstract API Quick Start Examples
-
-If you're already familiar with using the function API, you should feel right
-at home using the abstract API. Every function takes the same input, passed
-as a dictionary of Numpy arrays:
-
-```python
-import numpy as np
-# note that all ndarrays must be the same length!
-inputs = {
-    'open': np.random.random(100),
-    'high': np.random.random(100),
-    'low': np.random.random(100),
-    'close': np.random.random(100),
-    'volume': np.random.random(100)
-}
-```
-
-Functions can either be imported directly or instantiated by name:
-
-```python
-from talib import abstract
-sma = abstract.SMA
-sma = abstract.Function('sma')
-```
-
-From there, calling functions is basically the same as the function API:
-
-```python
-from talib.abstract import *
-output = SMA(input_arrays, timeperiod=25) # calculate on close prices by default
-output = SMA(input_arrays, timeperiod=25, price='open') # calculate on opens
-upper, middle, lower = BBANDS(input_arrays, 20, 2, 2)
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0) # uses high, low, close by default
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
-```
-
-# Supported Indicators and Functions
-
-We can show all the TA functions supported by TA-Lib, either as a ``list`` or
-as a ``dict`` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
-etc):
-
-```python
-import talib
-
-print talib.get_functions()
-print talib.get_function_groups()
-```
-
-## Indicator Groups
-
-* Overlap Studies
-* Momentum Indicators
-* Volume Indicators
-* Volatility Indicators
-* Price Transform
-* Cycle Indicators
-* Pattern Recognition
-
-#### Overlap Studies
 ```
 BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
@@ -185,7 +33,8 @@ TRIMA                Triangular Moving Average
 WMA                  Weighted Moving Average
 ```
 
-#### Momentum Indicators
+#### [Momentum Indicators](func_groups/momentum_indicators.html)
+
 ```
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
@@ -219,14 +68,16 @@ ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
 ```
 
-#### Volume Indicators
+#### [Volume Indicators](func_groups/volume_indicators.html)
+
 ```
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
 OBV                  On Balance Volume
 ```
 
-#### Cycle Indicators
+#### [Cycle Indicators](func_groups/cycle_indicators.html)
+
 ```
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
@@ -235,7 +86,8 @@ HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 ```
 
-#### Price Transform
+#### [Price Transform](func_groups/price_transform.html)
+
 ```
 AVGPRICE             Average Price
 MEDPRICE             Median Price
@@ -243,14 +95,16 @@ TYPPRICE             Typical Price
 WCLPRICE             Weighted Close Price
 ```
 
-#### Volatility Indicators
+#### [Volatility Indicators](func_groups/volatility_indicators.html)
+
 ```
 ATR                  Average True Range
 NATR                 Normalized Average True Range
 TRANGE               True Range
 ```
 
-#### Pattern Recognition
+#### [Pattern Recognition](func_groups/pattern_recognition.html)
+
 ```
 CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
@@ -314,3 +168,55 @@ CDLUNIQUE3RIVER      Unique 3 River
 CDLUPSIDEGAP2CROWS   Upside Gap Two Crows
 CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 ```
+
+#### [Statistic Functions](func_groups/statistic_functions.html)
+
+```
+BETA                 Beta
+CORREL               Pearson's Correlation Coefficient (r)
+LINEARREG            Linear Regression
+LINEARREG_ANGLE      Linear Regression Angle
+LINEARREG_INTERCEPT  Linear Regression Intercept
+LINEARREG_SLOPE      Linear Regression Slope
+STDDEV               Standard Deviation
+TSF                  Time Series Forecast
+VAR                  Variance
+```
+
+#### [Math Transform](func_groups/math_transform.html)
+
+```
+ACOS                 Vector Trigonometric ACos
+ASIN                 Vector Trigonometric ASin
+ATAN                 Vector Trigonometric ATan
+CEIL                 Vector Ceil
+COS                  Vector Trigonometric Cos
+COSH                 Vector Trigonometric Cosh
+EXP                  Vector Arithmetic Exp
+FLOOR                Vector Floor
+LN                   Vector Log Natural
+LOG10                Vector Log10
+SIN                  Vector Trigonometric Sin
+SINH                 Vector Trigonometric Sinh
+SQRT                 Vector Square Root
+TAN                  Vector Trigonometric Tan
+TANH                 Vector Trigonometric Tanh
+```
+
+#### [Math Operators](func_groups/math_operators.html)
+
+```
+ADD                  Vector Arithmetic Add
+DIV                  Vector Arithmetic Div
+MAX                  Highest value over a specified period
+MAXINDEX             Index of highest value over a specified period
+MIN                  Lowest value over a specified period
+MININDEX             Index of lowest value over a specified period
+MINMAX               Lowest and highest values over a specified period
+MINMAXINDEX          Indexes of lowest and highest values over a specified period
+MULT                 Vector Arithmetic Mult
+SUB                  Vector Arithmetic Substraction
+SUM                  Summation
+```
+
+[Documentation Index](doc_index.html)
