@@ -1,6 +1,7 @@
 '''
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
+import math
 
 from . import func as func_c
 from .common import _ta_check_success, MA_Type
@@ -113,9 +114,11 @@ class Function(object):
         self.__info['parameters'] = self.parameters
 
         # outputs
+        self.__info['output_flags'] = OrderedDict()
         for i in xrange(self.__info.pop('num_outputs')):
             info = _ta_getOutputParameterInfo(self.__name, i)
             output_name = info['name']
+            self.__info['output_flags'][output_name] = info['flags']
             self.__outputs[output_name] = None
         self.__info['output_names'] = self.output_names
 
@@ -125,6 +128,20 @@ class Function(object):
         Returns a copy of the function's info dict.
         """
         return self.__info.copy()
+
+    @property
+    def function_flags(self):
+        """
+        Returns any function flags defined for this indicator function.
+        """
+        return self.__info['function_flags']
+
+    @property
+    def output_flags(self):
+        """
+        Returns the flags for each output for this indicator function.
+        """
+        return self.__info['output_flags'].copy()
 
     def get_input_names(self):
         """
@@ -394,15 +411,21 @@ def __get_flags(int flag, dict flags_lookup_dict):
     This function returns the flags from flag found in the provided
     flags_lookup_dict.
     """
+    value_range = flags_lookup_dict.keys()
+    if not isinstance(value_range, list):
+        value_range = list(value_range)
+    min_int = int(math.log(min(value_range), 2))
+    max_int = int(math.log(max(value_range), 2))
+
     # if the flag we got is out-of-range, it just means no extra info provided
-    if flag < 1 or flag > 2**len(flags_lookup_dict)-1:
+    if flag < 1 or flag > 2**max_int:
         return None
 
     # In this loop, i is essentially the bit-position, which represents an
     # input from flags_lookup_dict. We loop through as many flags_lookup_dict
     # bit-positions as we need to check, bitwise-ANDing each with flag for a hit.
     ret = []
-    for i in xrange(len(flags_lookup_dict)):
+    for i in xrange(min_int, max_int+1):
         if 2**i & flag:
             ret.append(flags_lookup_dict[2**i])
     return ret
@@ -454,7 +477,7 @@ def _ta_getFuncInfo(char *function_name):
         'name': bytes2str(info.name),
         'group': bytes2str(info.group),
         'display_name': bytes2str(info.hint),
-        'flags': __get_flags(info.flags, TA_FUNC_FLAGS),
+        'function_flags': __get_flags(info.flags, TA_FUNC_FLAGS),
         'num_inputs': int(info.nbInput),
         'num_opt_inputs': int(info.nbOptInput),
         'num_outputs': int(info.nbOutput)
@@ -522,7 +545,7 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
 
     return {
         'name': name,
-        'description': __get_flags(info.flags, TA_OUTPUT_FLAGS)
+        'flags': __get_flags(info.flags, TA_OUTPUT_FLAGS)
     }
 
 def _get_defaults_and_docs(func_info):
