@@ -38,8 +38,8 @@
   <div class="previewPage">
     <div id="readme" class="announce md">
       <article class="markdown-body entry-content">
-        <h2>
-<a name="installation" class="anchor" href="#installation"><span class="mini-icon mini-icon-link"></span></a>Installation</h2>
+        <h1>
+<a name="installation" class="anchor" href="#installation"><span class="mini-icon mini-icon-link"></span></a>Installation</h1>
 
 <p>You can install from PyPI:</p>
 
@@ -52,11 +52,32 @@
 </pre>
 
 <p>Note: this requires that you have already installed the <code>TA-Lib</code> library
-on your computer (you can <a href="http://ta-lib.org/hdr_dw.html">download it</a> or
-use your computer's package manager to install it, e.g.,
-<code>brew install ta-lib</code> on Mac OS X).  On Windows, you can download the
-<a href="http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip">ta-lib-0.4.0-msvc.zip</a>
-and unzip to <code>C:\ta-lib</code>.</p>
+on your computer:</p>
+
+<h4>
+<a name="mac-os-x" class="anchor" href="#mac-os-x"><span class="mini-icon mini-icon-link"></span></a>Mac OS X</h4>
+
+<pre>$ brew install ta-lib
+</pre>
+
+<h4>
+<a name="windows" class="anchor" href="#windows"><span class="mini-icon mini-icon-link"></span></a>Windows</h4>
+
+<pre>Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
+and unzip to ``C:\ta-lib``.
+</pre>
+
+<h4>
+<a name="linux" class="anchor" href="#linux"><span class="mini-icon mini-icon-link"></span></a>Linux</h4>
+
+<pre>Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz)
+$ untar and cd
+$ ./configure --prefix=/usr
+$ make -j5 &amp;&amp; make -j5 # the first make fails when building in parallel
+$ sudo make install
+</pre>
+
+<p>All supported download/install options are listed <a href="http://ta-lib.org/hdr_dw.html">here</a>.</p>
 
 <h2>
 <a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="mini-icon mini-icon-link"></span></a>Troubleshooting</h2>
@@ -72,7 +93,8 @@ compilation terminated.
 it's OK! Simply rerun <code>make -jX</code> followed by <code>[sudo] make install</code> and
 everything will work as expected.</p>
 
-<p><a href="func.html">Next: Using the function API</a></p>
+<p><a href="doc_index.html">Documentation Index</a>
+<a class="float-right" href="func.html">Next: Using the Function API</a></p>
       </article>
     </div>
   </div>
@@ -87,7 +109,10 @@ everything will work as expected.</p>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>

@@ -38,21 +38,12 @@
   <div class="previewPage">
     <div id="readme" class="announce md">
       <article class="markdown-body entry-content">
-        <h2>
-<a name="abstract-api-examples" class="anchor" href="#abstract-api-examples"><span class="mini-icon mini-icon-link"></span></a>Abstract API Examples</h2>
-
-<p>TA-Lib also provides an abstract interface for calling functions. Our
-wrapper for the abstract interface is somewhat different from the upstream
-implementation. The abstract interface is designed to make the TA-Lib easily
-introspectable and dynamically programmable. Of course Python allows for
-these things too, but this helps do some of the heavy lifting for you, making
-it much easier to for example add a TA-Lib indicator control panel to a
-GUI charting program. It also unifies the interface for using and calling
-functions making life easier on the developer.</p>
+        <h1>
+<a name="abstract-api-quick-start" class="anchor" href="#abstract-api-quick-start"><span class="mini-icon mini-icon-link"></span></a>Abstract API Quick Start</h1>
 
 <p>If you're already familiar with using the function API, you should feel right
 at home using the abstract API. Every function takes the same input, passed
-as a dictionary of observed values:</p>
+as a dictionary of Numpy arrays:</p>
 
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="c"># note that all ndarrays must be the same length!</span>
@@ -65,57 +56,32 @@ as a dictionary of observed values:</p>
 <span class="p">}</span>
 </pre></div>
 
-<p>From this input data, let's again calculate a simple moving average (SMA),
-this time with the abstract interface:</p>
+<p>Functions can either be imported directly or instantiated by name:</p>
 
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib.abstract</span> <span class="kn">import</span> <span class="n">Function</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">,</span> <span class="n">input_arrays</span><span class="p">)</span><span class="o">.</span><span class="n">outputs</span>
-
-<span class="c"># teaser:</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'close'</span><span class="p">)</span>
-<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'bbands'</span><span class="p">)(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">Function</span><span class="p">(</span><span class="s">'STOCH'</span><span class="p">)</span><span class="o">.</span><span class="n">info</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib</span> <span class="kn">import</span> <span class="n">abstract</span>
+<span class="n">sma</span> <span class="o">=</span> <span class="n">abstract</span><span class="o">.</span><span class="n">SMA</span>
+<span class="n">sma</span> <span class="o">=</span> <span class="n">abstract</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)</span>
 </pre></div>
 
-<p>You'll notice a few things are different. The function is now a class,
-initialized with any supported function name (case insensitive) and optionally
-<code>input_arrays</code>. To run the TA function with our input data, we access the
-<code>outputs</code> property. It wraps a method that ensures the results are always
-valid so long as the <code>input_arrays</code> dict was already set. Speaking of which,
-the SMA function only takes one input, and we gave it five!</p>
+<p>From there, calling functions is basically the same as the function API:</p>
 
-<p>Certain TA functions define which price series names they expect for input.
-Others, like SMA, don't (we'll explain how to figure out which in a moment).
-<code>Function</code> will use the closing prices by default on TA functions that take
-one undefined input, or the high and the low prices for functions taking two.
-We can override the default like so:</p>
-
-<div class="highlight"><pre><span class="n">sma</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">,</span> <span class="n">input_arrays</span><span class="p">)</span>
-<span class="n">sma</span><span class="o">.</span><span class="n">set_function_args</span><span class="p">(</span><span class="n">timeperiod</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'open'</span><span class="p">)</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">sma</span><span class="o">.</span><span class="n">outputs</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib.abstract</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span> <span class="c"># calculate on close prices by default</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'open'</span><span class="p">)</span> <span class="c"># calculate on opens</span>
+<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">BBANDS</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">STOCH</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c"># uses high, low, close by default</span>
+<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">STOCH</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prices</span><span class="o">=</span><span class="p">[</span><span class="s">'high'</span><span class="p">,</span> <span class="s">'low'</span><span class="p">,</span> <span class="s">'open'</span><span class="p">])</span>
 </pre></div>
 
-<p>This works by using keyword arguments. For functions with one undefined input,
-the keyword is <code>price</code>; for two they are <code>price0</code> and <code>price1</code>. That's a
-lot of typing; let's introduce some shortcuts:</p>
+<h2>
+<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="mini-icon mini-icon-link"></span></a>Advanced Usage</h2>
 
-<div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">)</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'open'</span><span class="p">)</span>
-</pre></div>
+<p>For more advanced use cases of TA-Lib, the Abstract API also offers much more
+flexibility. You can even subclass <code>abstract.Function</code> and override
+<code>set_input_arrays</code> to customize the type of input data Function accepts
+(e.g. a pandas DataFrame).</p>
 
-<p>The <code>run()</code> method is a shortcut to <code>outputs</code> that also optionally accepts
-an <code>input_arrays</code> dict to use for calculating the function values. You can
-also call the <code>Function</code> instance directly; this shortcut to <code>outputs</code>
-allows setting both <code>input_arrays</code> and/or any function parameters and
-keywords. These methods make up all the ways you can call the TA function and
-get its values.</p>
-
-<p><code>Function.outputs</code> returns either a single ndarray or a list of ndarrays,
-depending on how many outputs the TA function has. This information can be
-found through <code>Function.output_names</code> or <code>Function.info['outputs']</code>.</p>
-
-<p><code>Function.info</code> is a very useful property. It returns a dict with almost
-every detail of the current state of the <code>Function</code> instance:</p>
+<p>Details about every function can be accessed via the info property:</p>
 
 <div class="highlight"><pre><span class="k">print</span> <span class="n">Function</span><span class="p">(</span><span class="s">'stoch'</span><span class="p">)</span><span class="o">.</span><span class="n">info</span>
 <span class="p">{</span>
@@ -137,47 +103,40 @@ every detail of the current state of the <code>Function</code> instance:</p>
 <span class="p">}</span>
 </pre></div>
 
-<p>Take a look at the value of the <code>input_names</code> key. There's only one input
-price variable, 'prices', and its value is a list of price series names.
-This is one of those TA functions where TA-Lib defines which price series it
-expects for input. Any time <code>input_names</code> is an OrderedDict with one key,
-<code>prices</code>, and a list for a value, it means TA-Lib defined the expected price
-series names. You can override these just the same as undefined inputs, just
-make sure to use a list with the correct number of price series names! (it
-varies across functions)</p>
+<p>Or in human-readable format:</p>
 
-<p>You can also use <code>Function.input_names</code> to get/set the price series names,
-and <code>Function.parameters</code> to get/set the function parameters. Let's expand
-on the other ways to set TA function arguments:</p>
-
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib</span> <span class="kn">import</span> <span class="n">MA_Type</span>
-
-<span class="n">output</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'high'</span><span class="p">)</span>
-
-<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'bbands'</span><span class="p">)(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">matype</span><span class="o">=</span><span class="n">MA_Type</span><span class="o">.</span><span class="n">EMA</span><span class="p">)</span>
-
-<span class="n">stoch</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s">'stoch'</span><span class="p">,</span> <span class="n">input_arrays</span><span class="p">)</span>
-<span class="n">stoch</span><span class="o">.</span><span class="n">set_function_args</span><span class="p">(</span><span class="n">slowd_period</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">stoch</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">fastd_period</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c"># 15 == fastk_period specified positionally</span>
+<div class="highlight"><pre><span class="n">help</span><span class="p">(</span><span class="n">STOCH</span><span class="p">)</span>
+<span class="nb">str</span><span class="p">(</span><span class="n">STOCH</span><span class="p">)</span>
 </pre></div>
 
-<p><code>input_arrays</code> must be passed as a positional argument (or left out
-entirely). TA function parameters can be passed as positional or keyword
-arguments. Input price series names must be passed as keyword arguments (or
-left out entirely). In fact, the <code>__call__</code> method of <code>Function</code> simply
-calls <code>set_function_args()</code>.</p>
+<p>Other useful properties of <code>Function</code>:</p>
 
-<p>For your convenience, we create <code>Function</code> wrappers for all of the available
-TA-Lib functions:</p>
-
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib.abstract</span> <span class="kn">import</span> <span class="n">SMA</span><span class="p">,</span> <span class="n">BBANDS</span><span class="p">,</span> <span class="n">STOCH</span>
-
-<span class="n">output</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">)</span>
-
-<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">BBANDS</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-
-<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">STOCH</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">fastk_period</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">fastd_period</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">input_names</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">input_arrays</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">lookback</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">output_names</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">outputs</span>
 </pre></div>
+
+<p>Aside from calling the function directly, Functions maintain state and will
+remember their parameters/input_arrays after they've been set. You can set
+parameters and recalculate with new input data using run():</p>
+
+<div class="highlight"><pre><span class="n">SMA</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">'timeperiod'</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">SMA</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_arrays1</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">SMA</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_arrays2</span><span class="p">)</span>
+
+<span class="c"># Or set input_arrays and change the parameters:</span>
+<span class="n">SMA</span><span class="o">.</span><span class="n">input_arrays</span> <span class="o">=</span> <span class="n">input_arrays1</span>
+<span class="n">ma10</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">timeperiod</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ma20</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+<p>For more details, take a look at the
+<a href="https://github.com/mrjbq7/ta-lib/blob/master/talib/abstract.pyx#L46">code</a>.</p>
+
+<p><a href="doc_index.html">Documentation Index</a></p>
       </article>
     </div>
   </div>
@@ -192,7 +151,10 @@ TA-Lib functions:</p>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>

@@ -5,7 +5,7 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
     <title>TA-Lib</title>
   </head>
 
@@ -15,8 +15,8 @@
             <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="doc_index.html">Documentation</a></li>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../doc_index.html">Documentation</a></li>
                 </ul>
             </div>
             <br>
@@ -39,29 +39,34 @@
     <div id="readme" class="announce md">
       <article class="markdown-body entry-content">
         <h1>
-<a name="documentation" class="anchor" href="#documentation"><span class="mini-icon mini-icon-link"></span></a>Documentation</h1>
+<a name="volatility-indicator-functions" class="anchor" href="#volatility-indicator-functions"><span class="mini-icon mini-icon-link"></span></a>Volatility Indicator Functions</h1>
 
-<ul>
-<li><a href="install.html">Installation and Troubleshooting</a></li>
-<li><a href="func.html">Using the Function API</a></li>
-<li><a href="abstract.html">Using the Abstract API</a></li>
-<li>
-<a href="funcs.html">All Functions</a>
+<h3>
+<a name="atr---average-true-range" class="anchor" href="#atr---average-true-range"><span class="mini-icon mini-icon-link"></span></a>ATR - Average True Range</h3>
 
-<ul>
-<li><a href="func_groups/overlap_studies.html">Overlap Studies</a></li>
-<li><a href="func_groups/momentum_indicators.html">Momentum Indicators</a></li>
-<li><a href="func_groups/volume_indicators.html">Volume Indicators</a></li>
-<li><a href="func_groups/volatility_indicators.html">Volatility Indicators</a></li>
-<li><a href="func_groups/price_transform.html">Price Transform</a></li>
-<li><a href="func_groups/cycle_indicators.html">Cycle Indicators</a></li>
-<li><a href="func_groups/pattern_recognition.html">Pattern Recognition</a></li>
-<li><a href="func_groups/statistic_functions.html">Statistic Functions</a></li>
-<li><a href="func_groups/math_transform.html">Math Transform</a></li>
-<li><a href="func_groups/math_operators.html">Math Operators</a></li>
-</ul>
-</li>
-</ul>
+<pre>real = ATR(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Average True Range at <a href="http://www.tadoc.org/indicator/ATR.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="natr---normalized-average-true-range" class="anchor" href="#natr---normalized-average-true-range"><span class="mini-icon mini-icon-link"></span></a>NATR - Normalized Average True Range</h3>
+
+<pre>real = NATR(high, low, close, timeperiod=14)
+</pre>
+
+<p>Learn more about the Normalized Average True Range at <a href="http://www.tadoc.org/indicator/NATR.htm">tadoc.org</a>.  </p>
+
+<h3>
+<a name="trange---true-range" class="anchor" href="#trange---true-range"><span class="mini-icon mini-icon-link"></span></a>TRANGE - True Range</h3>
+
+<pre>real = TRANGE(high, low, close)
+</pre>
+
+<p>Learn more about the True Range at <a href="http://www.tadoc.org/indicator/TRANGE.htm">tadoc.org</a>.  </p>
+
+<p><a href="../doc_index.html">Documentation Index</a>
+<a class="float-right" href="../funcs.html">All Function Groups</a></p>
       </article>
     </div>
   </div>

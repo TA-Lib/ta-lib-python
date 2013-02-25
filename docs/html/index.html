@@ -39,32 +39,34 @@
     <div id="readme" class="announce md">
       <article class="markdown-body entry-content">
         <h1>
-<a name="ta-lib" class="anchor" href="#ta-lib"><span class="mini-icon mini-icon-link"></span></a>TA-Lib</h1>
+<a name="about" class="anchor" href="#about"><span class="mini-icon mini-icon-link"></span></a>About</h1>
 
-<p>From <a href="http://ta-lib.org">TA-LIB's</a> homepage:</p>
+<p>This is a Python wrapper for <a href="http://ta-lib.org">TA-LIB's</a> based on Cython
+instead of SWIG. From the homepage:</p>
 
 <blockquote>
 <p>TA-Lib is widely used by trading software developers requiring to perform
 technical analysis of financial market data.</p>
 
 <ul>
-<li>Includes 200 indicators such as ADX, MACD, RSI, Stochastic, Bollinger
+<li>Includes 150+ indicators such as ADX, MACD, RSI, Stochastic, Bollinger
 Bands, etc.</li>
 <li>Candlestick pattern recognition</li>
 <li>Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET</li>
 </ul>
 </blockquote>
 
-<p>Unfortunately, the included Python bindings use <a href="http://swig.org">SWIG</a>,
-are a little difficult to install (particularly on Mac OS X), and aren't as
-efficient as they could be. This project uses Cython and Numpy to efficiently
-and cleanly bind to TA-Lib -- producing results 2-4 times faster than the SWIG
-interface.</p>
+<p>The original Python bindings use <a href="http://swig.org">SWIG</a> which unfortunately
+are difficult to install and aren't as efficient as they could be. Therefore
+this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
+-- producing results 2-4 times faster than the SWIG interface.</p>
 
-<p><a href="install.html">Installation Directions</a></p>
+<h3>
+<a name="install-ta-lib-for-python-or-read-the-docs" class="anchor" href="#install-ta-lib-for-python-or-read-the-docs"><span class="mini-icon mini-icon-link"></span></a><a href="install.html">Install TA-Lib for Python</a> or <a href="doc_index.html">Read the Docs</a>
+</h3>
 
 <h2>
-<a name="function-api-examples" class="anchor" href="#function-api-examples"><span class="mini-icon mini-icon-link"></span></a>Function API Examples</h2>
+<a name="examples" class="anchor" href="#examples"><span class="mini-icon mini-icon-link"></span></a>Examples</h2>
 
 <p>Similar to TA-Lib, the function interface provides a lightweight wrapper of
 the exposed TA-Lib indicators.</p>
@@ -99,8 +101,10 @@ before an output is generated) set to <code>NaN</code>.</p>
 <div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MOM</span><span class="p">(</span><span class="n">close</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
+<p>There is also an API for TA-Lib's <a href="abstract.html">Abstract Interface</a>.</p>
+
 <h2>
-<a name="indicators" class="anchor" href="#indicators"><span class="mini-icon mini-icon-link"></span></a>Indicators</h2>
+<a name="supported-indicators" class="anchor" href="#supported-indicators"><span class="mini-icon mini-icon-link"></span></a>Supported Indicators</h2>
 
 <p>We can show all the TA functions supported by TA-Lib, either as a <code>list</code> or
 as a <code>dict</code> sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
@@ -112,146 +116,184 @@ etc):</p>
 <span class="k">print</span> <span class="n">talib</span><span class="o">.</span><span class="n">get_function_groups</span><span class="p">()</span>
 </pre></div>
 
-<p>Here are some of the included indicators:</p>
+<h4>
+<a name="overlap-studies" class="anchor" href="#overlap-studies"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/overlap_studies.html">Overlap Studies</a>
+</h4>
 
-<pre>AD                  Chaikin A/D Line
-ADOSC               Chaikin A/D Oscillator
-ADX                 Average Directional Movement Index
-ADXR                Average Directional Movement Index Rating
-APO                 Absolute Price Oscillator
-AROON               Aroon
-AROONOSC            Aroon Oscillator
-ATR                 Average True Range
-AVGPRICE            Average Price
-BBANDS              Bollinger Bands
-BETA                Beta
-BOP                 Balance Of Power
-CCI                 Commodity Channel Index
-CDL2CROWS           Two Crows
-CDL3BLACKCROWS      Three Black Crows
-CDL3INSIDE          Three Inside Up/Down
-CDL3LINESTRIKE      Three-Line Strike 
-CDL3OUTSIDE         Three Outside Up/Down
-CDL3STARSINSOUTH    Three Stars In The South
-CDL3WHITESOLDIERS   Three Advancing White Soldiers
-CDLABANDONEDBABY    Abandoned Baby
-CDLADVANCEBLOCK     Advance Block
-CDLBELTHOLD         Belt-hold
-CDLBREAKAWAY        Breakaway
-CDLCLOSINGMARUBOZU  Closing Marubozu
-CDLCONCEALBABYSWALL Concealing Baby Swallow
-CDLCOUNTERATTACK    Counterattack
-CDLDARKCLOUDCOVER   Dark Cloud Cover
-CDLDOJI             Doji
-CDLDOJISTAR         Doji Star
-CDLDRAGONFLYDOJI    Dragonfly Doji
-CDLENGULFING        Engulfing Pattern
-CDLEVENINGDOJISTAR  Evening Doji Star
-CDLEVENINGSTAR      Evening Star
-CDLGAPSIDESIDEWHITE Up/Down-gap side-by-side white lines
-CDLGRAVESTONEDOJI   Gravestone Doji
-CDLHAMMER           Hammer
-CDLHANGINGMAN       Hanging Man
-CDLHARAMI           Harami Pattern
-CDLHARAMICROSS      Harami Cross Pattern
-CDLHIGHWAVE         High-Wave Candle
-CDLHIKKAKE          Hikkake Pattern
-CDLHIKKAKEMOD       Modified Hikkake Pattern
-CDLHOMINGPIGEON     Homing Pigeon
-CDLIDENTICAL3CROWS  Identical Three Crows
-CDLINNECK           In-Neck Pattern
-CDLINVERTEDHAMMER   Inverted Hammer
-CDLKICKING          Kicking
-CDLKICKINGBYLENGTH  Kicking - bull/bear determined by the longer marubozu
-CDLLADDERBOTTOM     Ladder Bottom
-CDLLONGLEGGEDDOJI   Long Legged Doji
-CDLLONGLINE         Long Line Candle
-CDLMARUBOZU         Marubozu
-CDLMATCHINGLOW      Matching Low
-CDLMATHOLD          Mat Hold
-CDLMORNINGDOJISTAR  Morning Doji Star
-CDLMORNINGSTAR      Morning Star
-CDLONNECK           On-Neck Pattern
-CDLPIERCING         Piercing Pattern
-CDLRICKSHAWMAN      Rickshaw Man
-CDLRISEFALL3METHODS Rising/Falling Three Methods
-CDLSEPARATINGLINES  Separating Lines
-CDLSHOOTINGSTAR     Shooting Star
-CDLSHORTLINE        Short Line Candle
-CDLSPINNINGTOP      Spinning Top
-CDLSTALLEDPATTERN   Stalled Pattern
-CDLSTICKSANDWICH    Stick Sandwich
-CDLTAKURI           Takuri (Dragonfly Doji with very long lower shadow)
-CDLTASUKIGAP        Tasuki Gap
-CDLTHRUSTING        Thrusting Pattern
-CDLTRISTAR          Tristar Pattern
-CDLUNIQUE3RIVER     Unique 3 River
-CDLUPSIDEGAP2CROWS  Upside Gap Two Crows
-CDLXSIDEGAP3METHODS Upside/Downside Gap Three Methods
-CMO                 Chande Momentum Oscillator
-CORREL              Pearson's Correlation Coefficient (r)
-DEMA                Double Exponential Moving Average
-DX                  Directional Movement Index
-EMA                 Exponential Moving Average
-HT_DCPERIOD         Hilbert Transform - Dominant Cycle Period
-HT_DCPHASE          Hilbert Transform - Dominant Cycle Phase
-HT_PHASOR           Hilbert Transform - Phasor Components
-HT_SINE             Hilbert Transform - SineWave
-HT_TRENDLINE        Hilbert Transform - Instantaneous Trendline
-HT_TRENDMODE        Hilbert Transform - Trend vs Cycle Mode
-KAMA                Kaufman Adaptive Moving Average
-LINEARREG           Linear Regression
-LINEARREG_ANGLE     Linear Regression Angle
-LINEARREG_INTERCEPT Linear Regression Intercept
-LINEARREG_SLOPE     Linear Regression Slope
-MA                  All Moving Average
-MACD                Moving Average Convergence/Divergence
-MACDEXT             MACD with controllable MA type
-MACDFIX             Moving Average Convergence/Divergence Fix 12/26
-MAMA                MESA Adaptive Moving Average
-MAX                 Highest value over a specified period
-MAXINDEX            Index of highest value over a specified period
-MEDPRICE            Median Price
-MFI                 Money Flow Index
-MIDPOINT            MidPoint over period
-MIDPRICE            Midpoint Price over period
-MIN                 Lowest value over a specified period
-MININDEX            Index of lowest value over a specified period
-MINMAX              Lowest and highest values over a specified period
-MINMAXINDEX         Indexes of lowest and highest values over a specified period
-MINUS_DI            Minus Directional Indicator
-MINUS_DM            Minus Directional Movement
-MOM                 Momentum
-NATR                Normalized Average True Range
-OBV                 On Balance Volume
-PLUS_DI             Plus Directional Indicator
-PLUS_DM             Plus Directional Movement
-PPO                 Percentage Price Oscillator
-ROC                 Rate of change : ((price/prevPrice)-1)*100
-ROCP                Rate of change Percentage: (price-prevPrice)/prevPrice
-ROCR                Rate of change ratio: (price/prevPrice)
-ROCR100             Rate of change ratio 100 scale: (price/prevPrice)*100
-RSI                 Relative Strength Index
-SAR                 Parabolic SAR
-SAREXT              Parabolic SAR - Extended
-SMA                 Simple Moving Average
-STDDEV              Standard Deviation
-STOCH               Stochastic
-STOCHF              Stochastic Fast
-STOCHRSI            Stochastic Relative Strength Index
-SUM                 Summation
-T3                  Triple Exponential Moving Average (T3)
-TEMA                Triple Exponential Moving Average
-TRANGE              True Range
-TRIMA               Triangular Moving Average
-TRIX                1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
-TSF                 Time Series Forecast
-TYPPRICE            Typical Price
-ULTOSC              Ultimate Oscillator
-VAR                 Variance
-WCLPRICE            Weighted Close Price
-WILLR               Williams' %R
-WMA                 Weighted Moving Average
+<pre>BBANDS               Bollinger Bands
+DEMA                 Double Exponential Moving Average
+EMA                  Exponential Moving Average
+HT_TRENDLINE         Hilbert Transform - Instantaneous Trendline
+KAMA                 Kaufman Adaptive Moving Average
+MA                   Moving average
+MAMA                 MESA Adaptive Moving Average
+MAVP                 Moving average with variable period
+MIDPOINT             MidPoint over period
+MIDPRICE             Midpoint Price over period
+SAR                  Parabolic SAR
+SAREXT               Parabolic SAR - Extended
+SMA                  Simple Moving Average
+T3                   Triple Exponential Moving Average (T3)
+TEMA                 Triple Exponential Moving Average
+TRIMA                Triangular Moving Average
+WMA                  Weighted Moving Average
+</pre>
+
+<h4>
+<a name="momentum-indicators" class="anchor" href="#momentum-indicators"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/momentum_indicators.html">Momentum Indicators</a>
+</h4>
+
+<pre>ADX                  Average Directional Movement Index
+ADXR                 Average Directional Movement Index Rating
+APO                  Absolute Price Oscillator
+AROON                Aroon
+AROONOSC             Aroon Oscillator
+BOP                  Balance Of Power
+CCI                  Commodity Channel Index
+CMO                  Chande Momentum Oscillator
+DX                   Directional Movement Index
+MACD                 Moving Average Convergence/Divergence
+MACDEXT              MACD with controllable MA type
+MACDFIX              Moving Average Convergence/Divergence Fix 12/26
+MFI                  Money Flow Index
+MINUS_DI             Minus Directional Indicator
+MINUS_DM             Minus Directional Movement
+MOM                  Momentum
+PLUS_DI              Plus Directional Indicator
+PLUS_DM              Plus Directional Movement
+PPO                  Percentage Price Oscillator
+ROC                  Rate of change : ((price/prevPrice)-1)*100
+ROCP                 Rate of change Percentage: (price-prevPrice)/prevPrice
+ROCR                 Rate of change ratio: (price/prevPrice)
+ROCR100              Rate of change ratio 100 scale: (price/prevPrice)*100
+RSI                  Relative Strength Index
+STOCH                Stochastic
+STOCHF               Stochastic Fast
+STOCHRSI             Stochastic Relative Strength Index
+TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+ULTOSC               Ultimate Oscillator
+WILLR                Williams' %R
+</pre>
+
+<h4>
+<a name="volume-indicators" class="anchor" href="#volume-indicators"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/volume_indicators.html">Volume Indicators</a>
+</h4>
+
+<pre>AD                   Chaikin A/D Line
+ADOSC                Chaikin A/D Oscillator
+OBV                  On Balance Volume
+</pre>
+
+<h4>
+<a name="volatility-indicators" class="anchor" href="#volatility-indicators"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/volatility_indicators.html">Volatility Indicators</a>
+</h4>
+
+<pre>ATR                  Average True Range
+NATR                 Normalized Average True Range
+TRANGE               True Range
+</pre>
+
+<h4>
+<a name="price-transform" class="anchor" href="#price-transform"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/price_transform.html">Price Transform</a>
+</h4>
+
+<pre>AVGPRICE             Average Price
+MEDPRICE             Median Price
+TYPPRICE             Typical Price
+WCLPRICE             Weighted Close Price
+</pre>
+
+<h4>
+<a name="cycle-indicators" class="anchor" href="#cycle-indicators"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/cycle_indicators.html">Cycle Indicators</a>
+</h4>
+
+<pre>HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
+HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
+HT_PHASOR            Hilbert Transform - Phasor Components
+HT_SINE              Hilbert Transform - SineWave
+HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
+</pre>
+
+<h4>
+<a name="pattern-recognition" class="anchor" href="#pattern-recognition"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/pattern_recognition.html">Pattern Recognition</a>
+</h4>
+
+<pre>CDL2CROWS            Two Crows
+CDL3BLACKCROWS       Three Black Crows
+CDL3INSIDE           Three Inside Up/Down
+CDL3LINESTRIKE       Three-Line Strike 
+CDL3OUTSIDE          Three Outside Up/Down
+CDL3STARSINSOUTH     Three Stars In The South
+CDL3WHITESOLDIERS    Three Advancing White Soldiers
+CDLABANDONEDBABY     Abandoned Baby
+CDLADVANCEBLOCK      Advance Block
+CDLBELTHOLD          Belt-hold
+CDLBREAKAWAY         Breakaway
+CDLCLOSINGMARUBOZU   Closing Marubozu
+CDLCONCEALBABYSWALL  Concealing Baby Swallow
+CDLCOUNTERATTACK     Counterattack
+CDLDARKCLOUDCOVER    Dark Cloud Cover
+CDLDOJI              Doji
+CDLDOJISTAR          Doji Star
+CDLDRAGONFLYDOJI     Dragonfly Doji
+CDLENGULFING         Engulfing Pattern
+CDLEVENINGDOJISTAR   Evening Doji Star
+CDLEVENINGSTAR       Evening Star
+CDLGAPSIDESIDEWHITE  Up/Down-gap side-by-side white lines
+CDLGRAVESTONEDOJI    Gravestone Doji
+CDLHAMMER            Hammer
+CDLHANGINGMAN        Hanging Man
+CDLHARAMI            Harami Pattern
+CDLHARAMICROSS       Harami Cross Pattern
+CDLHIGHWAVE          High-Wave Candle
+CDLHIKKAKE           Hikkake Pattern
+CDLHIKKAKEMOD        Modified Hikkake Pattern
+CDLHOMINGPIGEON      Homing Pigeon
+CDLIDENTICAL3CROWS   Identical Three Crows
+CDLINNECK            In-Neck Pattern
+CDLINVERTEDHAMMER    Inverted Hammer
+CDLKICKING           Kicking
+CDLKICKINGBYLENGTH   Kicking - bull/bear determined by the longer marubozu
+CDLLADDERBOTTOM      Ladder Bottom
+CDLLONGLEGGEDDOJI    Long Legged Doji
+CDLLONGLINE          Long Line Candle
+CDLMARUBOZU          Marubozu
+CDLMATCHINGLOW       Matching Low
+CDLMATHOLD           Mat Hold
+CDLMORNINGDOJISTAR   Morning Doji Star
+CDLMORNINGSTAR       Morning Star
+CDLONNECK            On-Neck Pattern
+CDLPIERCING          Piercing Pattern
+CDLRICKSHAWMAN       Rickshaw Man
+CDLRISEFALL3METHODS  Rising/Falling Three Methods
+CDLSEPARATINGLINES   Separating Lines
+CDLSHOOTINGSTAR      Shooting Star
+CDLSHORTLINE         Short Line Candle
+CDLSPINNINGTOP       Spinning Top
+CDLSTALLEDPATTERN    Stalled Pattern
+CDLSTICKSANDWICH     Stick Sandwich
+CDLTAKURI            Takuri (Dragonfly Doji with very long lower shadow)
+CDLTASUKIGAP         Tasuki Gap
+CDLTHRUSTING         Thrusting Pattern
+CDLTRISTAR           Tristar Pattern
+CDLUNIQUE3RIVER      Unique 3 River
+CDLUPSIDEGAP2CROWS   Upside Gap Two Crows
+CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
+</pre>
+
+<h4>
+<a name="statistic-functions" class="anchor" href="#statistic-functions"><span class="mini-icon mini-icon-link"></span></a><a href="func_groups/statistic_functions.html">Statistic Functions</a>
+</h4>
+
+<pre>BETA                 Beta
+CORREL               Pearson's Correlation Coefficient (r)
+LINEARREG            Linear Regression
+LINEARREG_ANGLE      Linear Regression Angle
+LINEARREG_INTERCEPT  Linear Regression Intercept
+LINEARREG_SLOPE      Linear Regression Slope
+STDDEV               Standard Deviation
+TSF                  Time Series Forecast
+VAR                  Variance
 </pre>
       </article>
     </div>
@@ -267,7 +309,10 @@ WMA                 Weighted Moving Average
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a></p>
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
