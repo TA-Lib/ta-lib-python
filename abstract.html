@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title">TA-Lib</h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+
+  <div class="page">
+    
+  <div class="previewPage">
+    <div id="readme" class="announce md">
+      <article class="markdown-body entry-content">
+        <h1>
+<a name="abstract-api-quick-start" class="anchor" href="#abstract-api-quick-start"><span class="mini-icon mini-icon-link"></span></a>Abstract API Quick Start</h1>
+
+<p>If you're already familiar with using the function API, you should feel right
+at home using the abstract API. Every function takes the same input, passed
+as a dictionary of Numpy arrays:</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c"># note that all ndarrays must be the same length!</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'open'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s">'high'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s">'low'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s">'close'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s">'volume'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Functions can either be imported directly or instantiated by name:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib</span> <span class="kn">import</span> <span class="n">abstract</span>
+<span class="n">sma</span> <span class="o">=</span> <span class="n">abstract</span><span class="o">.</span><span class="n">SMA</span>
+<span class="n">sma</span> <span class="o">=</span> <span class="n">abstract</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s">'sma'</span><span class="p">)</span>
+</pre></div>
+
+<p>From there, calling functions is basically the same as the function API:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">talib.abstract</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span> <span class="c"># calculate on close prices by default</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="s">'open'</span><span class="p">)</span> <span class="c"># calculate on opens</span>
+<span class="n">upper</span><span class="p">,</span> <span class="n">middle</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">BBANDS</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">STOCH</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c"># uses high, low, close by default</span>
+<span class="n">slowk</span><span class="p">,</span> <span class="n">slowd</span> <span class="o">=</span> <span class="n">STOCH</span><span class="p">(</span><span class="n">input_arrays</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prices</span><span class="o">=</span><span class="p">[</span><span class="s">'high'</span><span class="p">,</span> <span class="s">'low'</span><span class="p">,</span> <span class="s">'open'</span><span class="p">])</span>
+</pre></div>
+
+<h2>
+<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="mini-icon mini-icon-link"></span></a>Advanced Usage</h2>
+
+<p>For more advanced use cases of TA-Lib, the Abstract API also offers much more
+flexibility. You can even subclass <code>abstract.Function</code> and override
+<code>set_input_arrays</code> to customize the type of input data Function accepts
+(e.g. a pandas DataFrame).</p>
+
+<p>Details about every function can be accessed via the info property:</p>
+
+<div class="highlight"><pre><span class="k">print</span> <span class="n">Function</span><span class="p">(</span><span class="s">'stoch'</span><span class="p">)</span><span class="o">.</span><span class="n">info</span>
+<span class="p">{</span>
+  <span class="s">'name'</span><span class="p">:</span> <span class="s">'STOCH'</span><span class="p">,</span>
+  <span class="s">'display_name'</span><span class="p">:</span> <span class="s">'Stochastic'</span><span class="p">,</span>
+  <span class="s">'group'</span><span class="p">:</span> <span class="s">'Momentum Indicators'</span><span class="p">,</span>
+  <span class="s">'input_names'</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">'prices'</span><span class="p">,</span> <span class="p">[</span><span class="s">'high'</span><span class="p">,</span> <span class="s">'low'</span><span class="p">,</span> <span class="s">'close'</span><span class="p">]),</span>
+  <span class="p">]),</span>
+  <span class="s">'parameters'</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">'fastk_period'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">'slowk_period'</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">'slowk_matype'</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">'slowd_period'</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">'slowd_matype'</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+  <span class="p">]),</span>
+  <span class="s">'output_names'</span><span class="p">:</span> <span class="p">[</span><span class="s">'slowk'</span><span class="p">,</span> <span class="s">'slowd'</span><span class="p">],</span>
+<span class="p">}</span>
+
+</pre></div>
+
+<p>Or in human-readable format:</p>
+
+<div class="highlight"><pre><span class="n">help</span><span class="p">(</span><span class="n">STOCH</span><span class="p">)</span>
+<span class="nb">str</span><span class="p">(</span><span class="n">STOCH</span><span class="p">)</span>
+</pre></div>
+
+<p>Other useful properties of <code>Function</code>:</p>
+
+<div class="highlight"><pre><span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">function_flags</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">input_names</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">input_arrays</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">lookback</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">output_names</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">output_flags</span>
+<span class="n">Function</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span><span class="o">.</span><span class="n">outputs</span>
+</pre></div>
+
+<p>Aside from calling the function directly, Functions maintain state and will
+remember their parameters/input_arrays after they've been set. You can set
+parameters and recalculate with new input data using run():</p>
+
+<div class="highlight"><pre><span class="n">SMA</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s">'timeperiod'</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">SMA</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_arrays1</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">SMA</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_arrays2</span><span class="p">)</span>
+
+<span class="c"># Or set input_arrays and change the parameters:</span>
+<span class="n">SMA</span><span class="o">.</span><span class="n">input_arrays</span> <span class="o">=</span> <span class="n">input_arrays1</span>
+<span class="n">ma10</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="n">timeperiod</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ma20</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+<p>For more details, take a look at the
+<a href="https://github.com/mrjbq7/ta-lib/blob/master/talib/abstract.pyx#L46">code</a>.</p>
+
+<p><a href="doc_index.html">Documentation Index</a></p>
+      </article>
+    </div>
+  </div>
+  
+  <div>&nbsp;</div>
+
+  </div>
+  
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        with contributions by <a href="https://github.com/briancappello">briancappello</a>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
