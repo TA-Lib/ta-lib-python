@@ -256,10 +256,10 @@
 #include "stdlib.h"
 #include "numpy/arrayobject.h"
 #include "numpy/ufuncobject.h"
-#include "ta-lib/ta_defs.h"
-#include "ta-lib/ta_common.h"
-#include "ta-lib/ta_abstract.h"
-#include "ta-lib/ta_func.h"
+#include "C:/ta-lib/c/include/ta_defs.h"
+#include "C:/ta-lib/c/include/ta_common.h"
+#include "C:/ta-lib/c/include/ta_abstract.h"
+#include "C:/ta-lib/c/include/ta_func.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
