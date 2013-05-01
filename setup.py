@@ -50,7 +50,7 @@ for name in ['common', 'func', 'abstract']:
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.6-git',
+    version = '0.4.6',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
