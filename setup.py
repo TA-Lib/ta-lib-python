@@ -55,7 +55,7 @@ setup(
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.5.zip',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.6.zip',
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",
