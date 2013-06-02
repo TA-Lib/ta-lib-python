@@ -26,7 +26,7 @@ __INPUT_ARRAYS_KEYS = ['close', 'high', 'low', 'open', 'volume']
 __INPUT_PRICE_SERIES_DEFAULTS = { 'price': 'close',
                                   'price0': 'high',
                                   'price1': 'low',
-                                  'periods': None } # only used by MAVP; not a price series!
+                                  'periods': 'periods' } # only used by MAVP; not a price series!
 
 if sys.version >= '3':
 
@@ -196,7 +196,7 @@ class Function(object):
                 return False
         """
         if isinstance(input_arrays, dict) \
-          and sorted(input_arrays.keys()) == __INPUT_ARRAYS_KEYS:
+          and set(input_arrays.keys()) == set(self.__input_price_series_names() + __INPUT_ARRAYS_KEYS):
             self.__input_arrays = input_arrays
             self.__outputs_valid = False
             return True
@@ -321,8 +321,8 @@ class Function(object):
         self.__call_function()
         return self.outputs
 
-    def __call_function(self):
-        # figure out which price series names we're using for inputs
+    # figure out which price series names we're using for inputs
+    def __input_price_series_names(self):
         input_price_series_names = []
         for input_name in self.__input_names:
             price_series = self.__input_names[input_name]['price_series']
@@ -331,6 +331,10 @@ class Function(object):
                     input_price_series_names.append(name)
             else: # name came from __INPUT_PRICE_SERIES_DEFAULTS
                 input_price_series_names.append(price_series)
+        return input_price_series_names
+
+    def __call_function(self):
+        input_price_series_names = self.__input_price_series_names()
 
         # populate the ordered args we'll call the function with
         args = []
