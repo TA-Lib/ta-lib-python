@@ -6,44 +6,74 @@ import numpy
 import os
 import sys
 
-if sys.platform == "darwin":
-    if os.path.exists("/opt/local/include/ta-lib"):
-        include_talib_dir = "/opt/local/include"
-        lib_talib_dir = "/opt/local/lib"
-    else:
-        include_talib_dir = "/usr/local/include/"
-        lib_talib_dir = "/usr/local/lib/"
 
-elif sys.platform == "linux2" or "freebsd" in sys.platform:
-    include_talib_dir = "/usr/local/include/"
-    lib_talib_dir = "/usr/local/lib/"
+lib_talib_name = 'ta_lib' # the underlying C library's name
 
-elif sys.platform == "win32":
-    include_talib_dir = r"c:\msys\1.0\local\include"
-    lib_talib_dir = r"c:\msys\1.0\local\lib"
+platform_supported = False
+for prefix in ['darwin', 'linux', 'bsd']:
+    if prefix in sys.platform:
+        platform_supported = True
+        include_dirs = [
+            numpy.get_include(),
+            '/usr/include',
+            '/usr/local/include',
+            '/opt/include',
+            '/opt/local/include',
+            ]
+        lib_talib_dirs = [
+            '/usr/lib',
+            '/usr/local/lib',
+            '/opt/lib',
+            '/opt/local/lib',
+            ]
+        break
 
-else:
+if sys.platform == "win32":
+    platform_supported = True
+    lib_talib_name = 'ta_libc_cdr'
+    include_dirs = [numpy.get_include(), r"c:\ta-lib\c\include"]
+    lib_talib_dirs = [r"c:\ta-lib\c\lib"]
+
+if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-ext = Extension("talib", ["talib.pyx"],
-    include_dirs=[numpy.get_include(), include_talib_dir],
-    library_dirs=[lib_talib_dir],
-    libraries=["ta_lib"]
-)
+ext_modules = []
+for name in ['common', 'func', 'abstract']:
+    ext = Extension(
+        'talib.%s' % name,
+        ['talib/%s.pyx' % name],
+        include_dirs=include_dirs,
+        library_dirs=lib_talib_dirs,
+        libraries=[lib_talib_name]
+    )
+    ext_modules.append(ext)
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.1',
+    version = '0.4.6',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'http://github.com/mrjbq7/ta-lib/zipball/master#egg=TA-Lib-0.4.1',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.6.zip',
     classifiers = [
-        "Development Status :: 4 - Beta",
-        "Topic :: Scientific/Engineering :: Mathematics",
         "License :: OSI Approved :: BSD License",
+        "Development Status :: 4 - Beta",
+        "Operating System :: Unix",
+        "Operating System :: POSIX",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Cython",
+        "Topic :: Office/Business :: Financial",
+        "Topic :: Scientific/Engineering :: Mathematics",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Financial and Insurance Industry",
     ],
-    ext_modules=[ext],
+    packages=['talib'],
+    ext_modules=ext_modules,
     cmdclass = {'build_ext': build_ext}
 )

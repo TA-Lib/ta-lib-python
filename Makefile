@@ -1,12 +1,19 @@
+VERSION?=2.7
+
 build:
-	python2.7 setup.py build_ext --inplace
+	python$(VERSION) setup.py build_ext --inplace
+
+install:
+	python$(VERSION) setup.py install
 
 generate:
-	python2.7 generate.py > talib.pyx
+	python$(VERSION) tools/generate.py > talib/func.pyx
 
 clean:
-	rm -rf build talib.so talib.c
+	rm -rf build talib/func*.so talib/abstract*.so talib/common*.so talib/*.pyc
+
+perf:
+	python$(VERSION) tools/perf_talib.py
 
 test:
-	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests
-
+	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests-$(VERSION)

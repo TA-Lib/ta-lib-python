@@ -1,3 +1,6 @@
 *.pyc
 build
-talib.so
+*.so
+.*
+*~
+
