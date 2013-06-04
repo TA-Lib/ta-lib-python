@@ -53,6 +53,15 @@ def test_doji_candle():
     got = abstract.Function('CDLDOJI').run(ford_2012)
     assert_np_arrays_equal(got, expected)
 
+def test_MAVP():
+    mavp = abstract.MAVP
+    assert_raises(Exception, mavp.set_input_arrays, ford_2012)
+    input_d = {}
+    input_d['close'] = ford_2012['close']
+    input_d['periods'] = np.arange(30)
+    assert_true(mavp.set_input_arrays(input_d))
+    assert_equals(mavp.input_arrays, input_d)
+
 def test_info():
     stochrsi = abstract.Function('STOCHRSI')
     stochrsi.input_names = {'price': 'open'}
