@@ -134,6 +134,27 @@ def test_input_arrays():
     assert_raises(Exception,
                   mama.set_input_arrays, {'hello': 'fail', 'world': 'bye'})
 
+    # test only required keys are needed
+    willr = abstract.Function('WILLR')
+    reqd = willr.input_names['prices']
+    input_d = dict([(key, ford_2012[key]) for key in reqd])
+    assert_true(willr.set_input_arrays(input_d))
+    assert_equals(willr.input_arrays, input_d)
+
+    # test extraneous keys are ignored
+    input_d['extra_stuffs'] = 'you should never see me'
+    input_d['date'] = np.random.rand(100)
+    assert_true(willr.set_input_arrays(input_d))
+
+    # test missing keys get detected
+    input_d['open'] = ford_2012['open']
+    input_d.pop('close')
+    assert_raises(Exception, willr.set_input_arrays, input_d)
+
+    # test changing input_names on the Function
+    willr.input_names = {'prices': ['high', 'low', 'open']}
+    assert_true(willr.set_input_arrays(input_d))
+
 def test_parameters():
     stoch = abstract.Function('STOCH')
     expected = OrderedDict([
