@@ -14,19 +14,20 @@ cimport libc as lib
 
 __FUNCTION_NAMES = set(func_c.__all__)
 
-__INPUT_ARRAYS_DEFAULTS = { 'open': None,
-                            'high': None,
-                            'low': None,
-                            'close': None,
-                            'volume': None }
-
-__INPUT_ARRAYS_KEYS = ['close', 'high', 'low', 'open', 'volume']
+__INPUT_ARRAYS_DEFAULTS = {'open':   None,
+                           'high':   None,
+                           'low':    None,
+                           'close':  None,
+                           'volume': None,
+                           }
 
 # lookup for TALIB input parameters which don't define expected price series inputs
-__INPUT_PRICE_SERIES_DEFAULTS = { 'price': 'close',
-                                  'price0': 'high',
-                                  'price1': 'low',
-                                  'periods': None } # only used by MAVP; not a price series!
+__INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
+                                 'price0':  'high',
+                                 'price1':  'low',
+                                 'periods': 'periods', # only used by MAVP; not a price series!
+                                 }
+
 
 if sys.version >= '3':
 
@@ -195,11 +196,20 @@ class Function(object):
                     return True
                 return False
         """
-        if isinstance(input_arrays, dict) \
-          and sorted(input_arrays.keys()) == __INPUT_ARRAYS_KEYS:
-            self.__input_arrays = input_arrays
-            self.__outputs_valid = False
-            return True
+        if isinstance(input_arrays, dict):
+            missing_keys = []
+            for key in self.__input_price_series_names():
+                if key not in input_arrays:
+                    missing_keys.append(key)
+            if len(missing_keys) == 0:
+                self.__input_arrays = input_arrays
+                self.__outputs_valid = False
+                return True
+            else:
+                raise Exception('input_arrays parameter missing required data '\
+                                'key%s: %s' % ('s' if len(missing_keys) > 1 \
+                                                    else '',
+                                                ', '.join(missing_keys)))
         return False
 
     input_arrays = property(get_input_arrays, set_input_arrays)
@@ -321,8 +331,8 @@ class Function(object):
         self.__call_function()
         return self.outputs
 
-    def __call_function(self):
-        # figure out which price series names we're using for inputs
+    # figure out which price series names we're using for inputs
+    def __input_price_series_names(self):
         input_price_series_names = []
         for input_name in self.__input_names:
             price_series = self.__input_names[input_name]['price_series']
@@ -331,6 +341,10 @@ class Function(object):
                     input_price_series_names.append(name)
             else: # name came from __INPUT_PRICE_SERIES_DEFAULTS
                 input_price_series_names.append(price_series)
+        return input_price_series_names
+
+    def __call_function(self):
+        input_price_series_names = self.__input_price_series_names()
 
         # populate the ordered args we'll call the function with
         args = []

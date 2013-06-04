@@ -1,5 +1,10 @@
 import numpy as np
-from nose.tools import assert_equals, assert_true, assert_false
+from nose.tools import (
+    assert_equals,
+    assert_true,
+    assert_false,
+    assert_raises,
+    )
 
 from collections import OrderedDict
 
@@ -47,6 +52,15 @@ def test_doji_candle():
     expected = func.CDLDOJI(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
     got = abstract.Function('CDLDOJI').run(ford_2012)
     assert_np_arrays_equal(got, expected)
+
+def test_MAVP():
+    mavp = abstract.MAVP
+    assert_raises(Exception, mavp.set_input_arrays, ford_2012)
+    input_d = {}
+    input_d['close'] = ford_2012['close']
+    input_d['periods'] = np.arange(30)
+    assert_true(mavp.set_input_arrays(input_d))
+    assert_equals(mavp.input_arrays, input_d)
 
 def test_info():
     stochrsi = abstract.Function('STOCHRSI')
@@ -126,7 +140,29 @@ def test_input_arrays():
     # test setting/getting input_arrays
     assert_true(mama.set_input_arrays(ford_2012))
     assert_equals(mama.get_input_arrays(), ford_2012)
-    assert_false(mama.set_input_arrays({'hello': 'fail', 'world': 'bye'}))
+    assert_raises(Exception,
+                  mama.set_input_arrays, {'hello': 'fail', 'world': 'bye'})
+
+    # test only required keys are needed
+    willr = abstract.Function('WILLR')
+    reqd = willr.input_names['prices']
+    input_d = dict([(key, ford_2012[key]) for key in reqd])
+    assert_true(willr.set_input_arrays(input_d))
+    assert_equals(willr.input_arrays, input_d)
+
+    # test extraneous keys are ignored
+    input_d['extra_stuffs'] = 'you should never see me'
+    input_d['date'] = np.random.rand(100)
+    assert_true(willr.set_input_arrays(input_d))
+
+    # test missing keys get detected
+    input_d['open'] = ford_2012['open']
+    input_d.pop('close')
+    assert_raises(Exception, willr.set_input_arrays, input_d)
+
+    # test changing input_names on the Function
+    willr.input_names = {'prices': ['high', 'low', 'open']}
+    assert_true(willr.set_input_arrays(input_d))
 
 def test_parameters():
     stoch = abstract.Function('STOCH')
