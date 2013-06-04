@@ -50,12 +50,12 @@ for name in ['common', 'func', 'abstract']:
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.6',
+    version = '0.4.7',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.6.zip',
+    download_url = 'https://github.com/mrjbq7/ta-lib/archive/TA_Lib-0.4.7.zip',
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",
