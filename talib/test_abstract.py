@@ -1,5 +1,10 @@
 import numpy as np
-from nose.tools import assert_equals, assert_true, assert_false
+from nose.tools import (
+    assert_equals,
+    assert_true,
+    assert_false,
+    assert_raises,
+    )
 
 from collections import OrderedDict
 
@@ -126,7 +131,8 @@ def test_input_arrays():
     # test setting/getting input_arrays
     assert_true(mama.set_input_arrays(ford_2012))
     assert_equals(mama.get_input_arrays(), ford_2012)
-    assert_false(mama.set_input_arrays({'hello': 'fail', 'world': 'bye'}))
+    assert_raises(Exception,
+                  mama.set_input_arrays, {'hello': 'fail', 'world': 'bye'})
 
 def test_parameters():
     stoch = abstract.Function('STOCH')
