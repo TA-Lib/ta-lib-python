@@ -239,6 +239,15 @@ class Function(object):
         optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         """
         update_info = False
+
+        for key in kwargs:
+            if key in self.__opt_inputs:
+                self.__opt_inputs[key]['value'] = kwargs[key]
+                update_info = True
+            elif key in self.__input_names:
+                self.__input_names[key]['price_series'] = kwargs[key]
+                self.__info['input_names'][key] = kwargs[key]
+
         if args:
             skip_first = 0
             if self.set_input_arrays(args[0]):
@@ -250,14 +259,6 @@ class Function(object):
                         value = args[i]
                         self.__opt_inputs[param_name]['value'] = value
                         update_info = True
-
-        for key in kwargs:
-            if key in self.__opt_inputs:
-                self.__opt_inputs[key]['value'] = kwargs[key]
-                update_info = True
-            elif key in self.__input_names:
-                self.__input_names[key]['price_series'] = kwargs[key]
-                self.__info['input_names'][key] = kwargs[key]
 
         if args or kwargs:
             if update_info:
