@@ -25,6 +25,9 @@ def test_SMA():
     assert_np_arrays_not_equal(expected, abstract.Function('sma', ford_2012)(10, price='close'))
     assert_np_arrays_not_equal(expected, abstract.Function('sma', 10)(ford_2012, price='high'))
     assert_np_arrays_not_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10))
+    input_arrays = {'foobarbaz': ford_2012['open']}
+    assert_np_arrays_equal(expected, abstract.SMA(input_arrays, 10, price='foobarbaz'))
+
 
 def test_STOCH():
     # check defaults match
