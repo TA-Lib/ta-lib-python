@@ -5,9 +5,10 @@ from Cython.Distutils import build_ext
 import numpy
 import os
 import sys
+import warnings
 
 
-lib_talib_name = 'ta_lib' # the underlying C library's name
+lib_talib_name = 'ta_lib'  # the underlying C library's name
 
 platform_supported = False
 for prefix in ['darwin', 'linux', 'bsd']:
@@ -19,13 +20,13 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/include',
             '/opt/include',
             '/opt/local/include',
-            ]
+        ]
         lib_talib_dirs = [
             '/usr/lib',
             '/usr/local/lib',
             '/opt/lib',
             '/opt/local/lib',
-            ]
+        ]
         break
 
 if sys.platform == "win32":
@@ -36,6 +37,16 @@ if sys.platform == "win32":
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
+
+for lib_talib_dir in lib_talib_dirs:
+    try:
+        files = os.listdir(lib_talib_dir)
+        if any(lib_talib_name in f for f in files):
+            break
+    except OSError:
+        pass
+else:
+    warnings.warn('Cannot find ta-lib library, installation may fail.')
 
 ext_modules = []
 for name in ['common', 'func', 'abstract']:
