@@ -210,7 +210,7 @@ def get_functions():
 
 def get_function_groups():
     """
-    Returns a dict with kyes of function-group names and values of lists
+    Returns a dict with keys of function-group names and values of lists
     of function names ie {'group_names': ['function_names']}
     """
     return __function_groups__.copy()
