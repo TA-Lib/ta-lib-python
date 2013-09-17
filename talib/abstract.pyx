@@ -28,6 +28,12 @@ __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
                                  'periods': 'periods', # only used by MAVP; not a price series!
                                  }
 
+# allow use of pandas.DataFrame for input arrays
+try:
+    import pandas
+    __INPUT_ARRAYS_TYPES = (dict, pandas.DataFrame)
+except ImportError:
+    __INPUT_ARRAYS_TYPES = (dict,)
 
 if sys.version >= '3':
 
@@ -50,15 +56,15 @@ class Function(object):
     This is a pythonic wrapper around TALIB's abstract interface. It is
     intended to simplify using individual TALIB functions by providing a
     unified interface for setting/controlling input data, setting function
-    parameters and retrieving results. Input data consists of a dict of numpy
-    arrays, one array for each of open, high, low, close and volume. This can
-    be set with the set_input_arrays() method. Which keyed array(s) are used
-    as inputs when calling the function is controlled using the input_names
-    property.
+    parameters and retrieving results. Input data consists of a ``dict`` of
+    ``numpy`` arrays (or a ``pandas.DataFrame``), one array for each of open,
+    high, low, close and volume. This can be set with the set_input_arrays()
+    method. Which keyed array(s) are used as inputs when calling the function
+    is controlled using the input_names property.
 
     This class gets initialized with a TALIB function name and optionally an
-    input_arrays dict. It provides the following primary functions for setting
-    inputs and retrieving results:
+    input_arrays object. It provides the following primary functions for
+    setting inputs and retrieving results:
 
     ---- input_array/TA-function-parameter set-only functions -----
     - set_input_arrays(input_arrays)
@@ -196,7 +202,7 @@ class Function(object):
                     return True
                 return False
         """
-        if isinstance(input_arrays, dict):
+        if isinstance(input_arrays, __INPUT_ARRAYS_TYPES):
             missing_keys = []
             for key in self.__input_price_series_names():
                 if key not in input_arrays:
