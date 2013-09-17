@@ -37,8 +37,8 @@ try:
     __PANDAS_SERIES = pandas.Series
 except ImportError:
     __INPUT_ARRAYS_TYPES = (dict,)
-    __PANDAS_DATAFRAME = False
-    __PANDAS_SERIES = False
+    __PANDAS_DATAFRAME = None
+    __PANDAS_SERIES = None
 
 if sys.version >= '3':
 
