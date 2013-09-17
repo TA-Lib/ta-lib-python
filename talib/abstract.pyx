@@ -7,6 +7,7 @@ from . import func as func_c
 from .common import _ta_check_success, MA_Type
 from collections import OrderedDict
 from cython.operator cimport dereference as deref
+import numpy
 import sys
 
 cimport numpy as np
@@ -32,8 +33,12 @@ __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
 try:
     import pandas
     __INPUT_ARRAYS_TYPES = (dict, pandas.DataFrame)
+    __PANDAS_DATAFRAME = pandas.DataFrame
+    __PANDAS_SERIES = pandas.Series
 except ImportError:
     __INPUT_ARRAYS_TYPES = (dict,)
+    __PANDAS_DATAFRAME = False
+    __PANDAS_SERIES = False
 
 if sys.version >= '3':
 
@@ -313,7 +318,17 @@ class Function(object):
         ret = self.__outputs.values()
         if not isinstance(ret, list):
             ret = list(ret)
-        return ret[0] if len(ret) == 1 else ret
+        if __PANDAS_DATAFRAME is not None and \
+                isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
+            index = self.__input_arrays.index
+            if len(ret) == 1:
+                return __PANDAS_SERIES(ret[0], index=index)
+            else:
+                return __PANDAS_DATAFRAME(numpy.column_stack(ret),
+                                          index=index,
+                                          columns=self.output_names)
+        else:
+            return ret[0] if len(ret) == 1 else ret
 
     def run(self, input_arrays=None):
         """
