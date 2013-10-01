@@ -371,7 +371,11 @@ class Function(object):
         # populate the ordered args we'll call the function with
         args = []
         for price_series in input_price_series_names:
-            args.append( self.__input_arrays[price_series] )
+            series = self.__input_arrays[price_series]
+            if __PANDAS_SERIES is not None and \
+                    isinstance(series, __PANDAS_SERIES):
+                series = series.values
+            args.append(series)
         for opt_input in self.__opt_inputs:
             value = self.__get_opt_input_value(opt_input)
             args.append(value)
