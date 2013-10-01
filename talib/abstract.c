@@ -313,10 +313,14 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include "stdlib.h"
 #include "numpy/arrayobject.h"
 #include "numpy/ufuncobject.h"
+#if defined(WIN32) || defined(MS_WINDOWS)
+#include "ta_libc.h"
+#else
 #include "ta-lib/ta_defs.h"
 #include "ta-lib/ta_common.h"
 #include "ta-lib/ta_abstract.h"
 #include "ta-lib/ta_func.h"
+#endif
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
