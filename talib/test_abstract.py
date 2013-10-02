@@ -17,16 +17,24 @@ from talib.test_data import ford_2012, assert_np_arrays_equal, assert_np_arrays_
 def test_pandas():
     import pandas
     input_df = pandas.DataFrame(ford_2012)
+    input_dict = dict((k, pandas.Series(v)) for k, v in ford_2012.items())
 
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
     output = abstract.Function('stoch', input_df).outputs
     assert_true(isinstance(output, pandas.DataFrame))
     assert_np_arrays_equal(expected_k, output['slowk'])
     assert_np_arrays_equal(expected_d, output['slowd'])
+    output = abstract.Function('stoch', input_dict).outputs
+    assert_true(isinstance(output, list))
+    assert_np_arrays_equal(expected_k, output[0])
+    assert_np_arrays_equal(expected_d, output[1])
 
     expected = func.SMA(ford_2012['close'], 10)
     output = abstract.Function('sma', input_df, 10).outputs
     assert_true(isinstance(output, pandas.Series))
+    assert_np_arrays_equal(expected, output)
+    output = abstract.Function('sma', input_dict, 10).outputs
+    assert_true(isinstance(output, np.ndarray))
     assert_np_arrays_equal(expected, output)
 
 
