@@ -16,7 +16,7 @@ are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.
 
-## Install TA-Lib
+## Installation
 
 You can install from PyPI:
 
@@ -30,7 +30,7 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
-### Troubleshooting Install Errors
+### Troubleshooting
 
 ```
 func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
