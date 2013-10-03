@@ -38,9 +38,9 @@ compilation terminated.
 ```
 
 If you get build errors like this, it typically means that it can't find the
-underlying ``TA-Lib`` library and needs to be installed:
+underlying ``TA-Lib`` library, which needs to be installed.
 
-## Dependencies
+### Dependencies
 
 To use TA-Lib for python, you need to have the
 [TA-Lib](http://ta-lib.org/hdr_dw.html) already installed:
