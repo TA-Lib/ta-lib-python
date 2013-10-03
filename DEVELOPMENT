@@ -1,4 +1,5 @@
-To get started developing on talib, clone the latest code from git and install:
+To get started developing on talib, clone the latest code from git and
+install:
 
 $ git clone git://github.com/mrjbq7/ta-lib.git
 $ cd ta-lib
@@ -7,6 +8,7 @@ $ make build
 $ [sudo] make install
 
 Here's the full list of make commands (see the Makefile file):
+
 make build     # builds and places libs in the project directory; required for testing
 make clean     # cleans the local build files
 make install   # installs talib system-wide
@@ -14,8 +16,9 @@ make generate: # generates a fresh func.pyx file. Requires talib and TA-Lib to b
 make perf      # run performance profiling
 make test      # run tests
 
-The source code is comprised of one python package, located in the talib directory,
-which itself has three Cython modules: func, abstract, and common.
+The source code is comprised of one python package, located in the talib
+directory, which itself has three Cython modules: func, abstract, and
+common.
 
 talib/common.pyx
   An internal-use module for functionality shared between func and abstract.
@@ -36,8 +39,10 @@ tools/generate.py
   A script that generates and prints func.pyx to stdout. Gets information
   about all functions from the C headers of the installed TA-Lib.
 
-If you are interested in developing new indicator functions or whatnot on the
-underlying TA-Lib, you must install TA-Lib from svn. Here's how (Linux tested):
+If you are interested in developing new indicator functions or whatnot on
+the underlying TA-Lib, you must install TA-Lib from svn. Here's how (Linux
+tested):
+
 ```
 $ cd ~/dev
 $ svn checkout svn://svn.code.sf.net/p/ta-lib/code/trunk@1545 ta-lib-code

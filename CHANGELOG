@@ -1,3 +1,21 @@
+0.4.8
+=====
+
+- [NEW]: Support pandas.Series and pandas.Dataframe inputs.
+
+- [FIX]: Simple check to warn if ta-lib library is not installed
+
+- [FIX]: Fix missing key error when inputs are not default names.
+
+0.4.7
+=====
+
+- [NEW]: Upgrade to Cython 0.19.1.
+
+- [FIX]: Fix "periods" input arrays in abstract interface.
+
+- [FIX]: Only require necessary input arrays in abstract interface.
+
 0.4.6
 =====
 
