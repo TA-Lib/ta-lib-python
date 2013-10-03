@@ -1,4 +1,4 @@
-# About TA-Lib
+# TA-Lib
 
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
@@ -16,7 +16,7 @@ are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.
 
-# Install TA-Lib
+## Install TA-Lib
 
 You can install from PyPI:
 
@@ -40,20 +40,24 @@ compilation terminated.
 If you get build errors like this, it typically means that it can't find the
 underlying ``TA-Lib`` library and needs to be installed:
 
-# Dependencies
-To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org/hdr_dw.html)
-already installed:
+## Dependencies
+
+To use TA-Lib for python, you need to have the
+[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed:
 
 ##### Mac OS X
+
 ```
 $ brew install ta-lib
 ```
 
 ##### Windows
+
 Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
 and unzip to ``C:\ta-lib``
 
 ##### Linux
+
 Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
 ```
 $ untar and cd
@@ -65,17 +69,20 @@ $ sudo make install
 > If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
 > Simply rerun ``make -jX`` followed by ``[sudo] make install``.
 
-# Function API Examples
+## Function API
 
-Similar to TA-Lib, the function interface provides a lightweight wrapper of
-the exposed TA-Lib indicators.
+Similar to TA-Lib, the Function API provides a lightweight wrapper of the
+exposed TA-Lib indicators.
 
 Each function returns an output array and have default values for their
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to ``NaN``.
 
-All of the following examples use the function API:
+For convenience, the Function API supports both ``numpy.ndarray`` and
+``pandas.Series`` types.
+
+All of the following examples use the Function API:
 
 ```python
 import numpy
@@ -104,14 +111,21 @@ Calculating momentum of the close prices, with a time period of 5:
 output = talib.MOM(close, timeperiod=5)
 ```
 
-# Abstract API Quick Start Examples
+## Abstract API
 
 If you're already familiar with using the function API, you should feel right
-at home using the abstract API. Every function takes the same input, passed
-as a dictionary of Numpy arrays:
+at home using the Abstract API.
+
+Every function takes a collection of named inputs, either a ``dict`` of
+``numpy.ndarray`` or ``pandas.Series``, or a ``pandas.DataFrame``. If a
+``pandas.DataFrame`` is provided, the output is returned as a
+``pandas.DataFrame`` with named output columns.
+
+For example, inputs could be provided for the typical "OHLCV" data:
 
 ```python
 import numpy as np
+
 # note that all ndarrays must be the same length!
 inputs = {
     'open': np.random.random(100),
@@ -126,7 +140,11 @@ Functions can either be imported directly or instantiated by name:
 
 ```python
 from talib import abstract
+
+# directly
 sma = abstract.SMA
+
+# or by name
 sma = abstract.Function('sma')
 ```
 
@@ -134,14 +152,24 @@ From there, calling functions is basically the same as the function API:
 
 ```python
 from talib.abstract import *
-output = SMA(input_arrays, timeperiod=25) # calculate on close prices by default
-output = SMA(input_arrays, timeperiod=25, price='open') # calculate on opens
-upper, middle, lower = BBANDS(input_arrays, 20, 2, 2)
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0) # uses high, low, close by default
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
+
+# uses close prices (default)
+output = SMA(inputs, timeperiod=25)
+
+# uses open prices
+output = SMA(inputs, timeperiod=25, price='open')
+
+# uses close prices (default)
+upper, middle, lower = BBANDS(inputs, 20, 2, 2)
+
+# uses high, low, close (default)
+slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0) # uses high, low, close by default
+
+# uses high, low, open instead
+slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 ```
 
-# Supported Indicators and Functions
+## Supported Indicators and Functions
 
 We can show all the TA functions supported by TA-Lib, either as a ``list`` or
 as a ``dict`` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
@@ -150,11 +178,14 @@ etc):
 ```python
 import talib
 
+# list of functions
 print talib.get_functions()
+
+# dict of functions by group
 print talib.get_function_groups()
 ```
 
-## Indicator Groups
+### Indicator Groups
 
 * Overlap Studies
 * Momentum Indicators
