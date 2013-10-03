@@ -32,13 +32,15 @@ $ python setup.py install
 
 ### Troubleshooting
 
+Sometimes installation will produce build errors like this:
+
 ```
 func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-If you get build errors like this, it typically means that it can't find the
-underlying ``TA-Lib`` library, which needs to be installed.
+This typically means that it can't find the underlying ``TA-Lib`` library,
+a dependency which needs to be installed.
 
 ### Dependencies
 
