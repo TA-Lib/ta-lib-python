@@ -26,7 +26,11 @@ def abstract_example():
     odata = sma(30) # timePeriod=30, specified as an arg
 
     bbands = Function('bbands', input_arrays)
-    bbands.set_function_parameters(timePeriod=20, nbDevUp=2, nbDevDown=2)
+    bbands.parameters = {
+        'timeperiod': 20,
+        'nbdevup': 2,
+        'nbdevdn': 2
+    }
     upper, middle, lower = bbands() # multiple output values unpacked (these will always have the correct order)
 
     kama = Function('kama').run(input_arrays) # alternative run() calling method.
