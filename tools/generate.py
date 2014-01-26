@@ -161,14 +161,13 @@ for f in functions:
     print('    """%s"""' % ''.join(docs))
     print('    cdef:')
     print('        np.npy_intp length')
+    print('        double val')
     print('        int begidx, endidx, lookback')
     print('        TA_RetCode retCode')
     for arg in args:
         var = arg.split()[-1]
-
         if 'out' in var:
             break
-
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
@@ -180,10 +179,8 @@ for f in functions:
 
     for arg in args:
         var = arg.split()[-1]
-
         if 'out' not in var:
             continue
-
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             print('        np.ndarray %s' % var)
@@ -193,11 +190,9 @@ for f in functions:
                 print('        int* %s_data' % var)
             else:
                 assert False, args
-
         elif var.startswith('*'):
             var = cleanup(var[1:])
             print('        int %s' % var)
-
         else:
             assert False, arg
 
@@ -219,22 +214,49 @@ for f in functions:
             print('        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var))
             print('    %s_data = %s%s.data' % (var, cast, var))
 
+    # check all input array lengths are the same
+    seen = False
     for arg in args:
         var = arg.split()[-1]
-        if var in ('inReal0[]', 'inReal1[]', 'inReal[]', 'inHigh[]'):
-            var = cleanup(var[:-2])
-            print('    length = %s.shape[0]' % var)
-            print('    begidx = 0')
-            print('    for i from 0 <= i < length:')
-            print('        val = %s_data[i]' % var)
-            print('        if val == val:')
-            print('            begidx = i')
-            print('            break')
-            print('    else:')
-            print('        raise Exception("inputs are all NaN")')
-            print('    endidx = length - begidx - 1')
+        if 'out' in var:
             break
+        if var.endswith('[]'):
+            var = cleanup(var[:-2])
+            if not seen:
+                print('    length = %s.shape[0]' % var)
+                seen = True
+            else:
+                print('    if length != %s.shape[0]:' % var)
+                print('        raise Exception("input lengths are different")')
 
+    # check for all input values are non-NaN
+    seen = False
+    for arg in args:
+        var = arg.split()[-1]
+        if 'out' in var:
+            break
+        if var.endswith('[]') and 'double' in arg:
+            seen = True
+            break
+    print('    begidx = 0')
+    if seen:
+        print('    for i from 0 <= i < length:')
+        for arg in args:
+            var = arg.split()[-1]
+            if 'out' in var:
+                break
+            if var.endswith('[]'):
+                var = cleanup(var[:-2])
+                if 'double' in arg:
+                    print('        val = %s_data[i]' % var)
+                    print('        if val != val:')
+                    print('            continue')
+        print('        begidx = i')
+        print('        break')
+        print('    else:')
+        print('        raise Exception("inputs are all NaN")')
+
+    print('    endidx = length - begidx - 1')
     print('    lookback = begidx + lib.%s_Lookback(' % name, end=' ')
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
@@ -294,7 +316,7 @@ for f in functions:
 
     print(')')
     print('    _ta_check_success("%s", retCode)' % name)
-    print('    return',)
+    print('    return ', end='')
     i = 0
     for arg in args:
         var = arg.split()[-1]

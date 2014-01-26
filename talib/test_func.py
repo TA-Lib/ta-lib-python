@@ -1,9 +1,33 @@
 import numpy as np
-from nose.tools import assert_equals, assert_true
+from nose.tools import assert_equals, assert_true, assert_raises
 
 import talib
 from talib import func
 from talib.test_data import series, assert_np_arrays_equal, assert_np_arrays_not_equal
+
+def test_input_lengths():
+    a1 = np.arange(10, dtype=float)
+    a2 = np.arange(11, dtype=float)
+    with assert_raises(Exception):
+        func.BOP(a2, a1, a1, a1)
+    with assert_raises(Exception):
+        func.BOP(a1, a2, a1, a1)
+    with assert_raises(Exception):
+        func.BOP(a1, a1, a2, a1)
+    with assert_raises(Exception):
+        func.BOP(a1, a1, a1, a2)
+
+def test_input_nans():
+    a1 = np.arange(10, dtype=float)
+    a2 = np.arange(10, dtype=float)
+    a2[0] = np.nan
+    a2[1] = np.nan
+    r1, r2 = func.AROON(a1, a2, 2)
+    assert_np_arrays_equal(r1, [np.nan, np.nan, np.nan, np.nan, 0, 0, 0, 0, 0, 0])
+    assert_np_arrays_equal(r2, [np.nan, np.nan, np.nan, np.nan, 100, 100, 100, 100, 100, 100])
+    r1, r2 = func.AROON(a2, a1, 2)
+    assert_np_arrays_equal(r1, [np.nan, np.nan, np.nan, np.nan, 0, 0, 0, 0, 0, 0])
+    assert_np_arrays_equal(r2, [np.nan, np.nan, np.nan, np.nan, 100, 100, 100, 100, 100, 100])
 
 def test_MIN():
     result = func.MIN(series, timeperiod=4)
