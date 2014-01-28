@@ -7,6 +7,12 @@
 
 - [FIX]: Fix missing key error when inputs are not default names.
 
+- [NEW]: Upgrade to Cython 0.20.
+
+- [FIX]: Check all input array lengths are same.
+
+- [FIX]: Check all input arrays for NaN elements.
+
 0.4.7
 =====
 
