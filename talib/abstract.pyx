@@ -397,7 +397,7 @@ class Function(object):
         Returns the user-set value if there is one, otherwise the default.
         """
         value = self.__opt_inputs[input_name]['value']
-        if not value:
+        if value is None:
             value = self.__opt_inputs[input_name]['default_value']
         return value
 
