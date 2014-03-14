@@ -5,7 +5,10 @@ import math
 
 from . import func as func_c
 from .common import _ta_check_success, MA_Type
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError: # handle python 2.6 and earlier
+    from ordereddict import OrderedDict
 from cython.operator cimport dereference as deref
 import numpy
 import sys

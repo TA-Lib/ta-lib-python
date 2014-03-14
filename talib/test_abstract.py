@@ -6,7 +6,10 @@ from nose.tools import (
     assert_raises,
     )
 
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError: # handle python 2.6 and earlier
+    from ordereddict import OrderedDict
 
 import talib
 from talib import func
