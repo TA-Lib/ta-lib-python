@@ -24,6 +24,8 @@ for prefix in ['darwin', 'linux', 'bsd']:
         lib_talib_dirs = [
             '/usr/lib',
             '/usr/local/lib',
+            '/usr/lib64',
+            '/usr/local/lib64',
             '/opt/lib',
             '/opt/local/lib',
         ]
