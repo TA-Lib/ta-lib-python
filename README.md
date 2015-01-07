@@ -187,6 +187,16 @@ print talib.get_functions()
 print talib.get_function_groups()
 ```
 
+If Pandas is installed, you can get all the TA functions supported by TA-Lib as a ``DataFrame``:
+
+```python
+# DataFrame of functions
+print talib.get_functions_df()
+
+# DataFrame of functions by group
+print talib.get_functions_grouped_df()
+```
+
 ### Indicator Groups
 
 * Overlap Studies
