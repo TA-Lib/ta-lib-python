@@ -1,4 +1,5 @@
 from distutils.core import setup
+from distutils.command.install import install
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
@@ -20,6 +21,7 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/include',
             '/opt/include',
             '/opt/local/include',
+            os.getenv('VIRTUAL_ENV', './venv') + '/include',
         ]
         lib_talib_dirs = [
             '/usr/lib',
@@ -28,6 +30,7 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/lib64',
             '/opt/lib',
             '/opt/local/lib',
+            os.getenv('VIRTUAL_ENV', './venv') + '/lib',
         ]
         break
 
@@ -60,6 +63,12 @@ for name in ['common', 'func', 'abstract']:
         libraries=[lib_talib_name]
     )
     ext_modules.append(ext)
+
+# Hack to install ta-lib library loading into virtualenv
+def install_virtualenv_lib_loader():
+    with open(os.getenv('VIRTUAL_ENV', './venv') + '/bin/activate', 'a') as f:
+        f.write("\nexport LD_LIBRARY_PATH=$VIRTUAL_ENV/lib:$LD_LIBRARY_PATH\n")
+install_virtualenv_lib_loader()
 
 setup(
     name = 'TA-Lib',
