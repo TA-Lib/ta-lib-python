@@ -1,5 +1,7 @@
 
 cdef extern from "ta-lib/ta_defs.h":
+    ctypedef int TA_RetCode
+
     cdef enum TA_RetCode:
         TA_SUCCESS
         TA_LIB_NOT_INITIALIZE

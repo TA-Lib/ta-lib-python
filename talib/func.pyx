@@ -4,8 +4,6 @@ from cython import boundscheck, wraparound
 
 from .common cimport _ta_check_success
 
-ctypedef int TA_RetCode
-
 cdef double NaN = nan
 
 cdef extern from "numpy/arrayobject.h":
@@ -17,6 +15,7 @@ cdef extern from "numpy/arrayobject.h":
 np.import_array() # Initialize the NumPy C API
 
 cimport libc as lib
+from libc cimport TA_RetCode
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function

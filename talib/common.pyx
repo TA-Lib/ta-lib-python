@@ -1,11 +1,10 @@
 
 cimport libc as lib
-
-ctypedef int TA_RetCode
+from libc cimport TA_RetCode
 
 __ta_version__ = lib.TA_GetVersionString()
 
-cpdef _ta_check_success(str function_name, int ret_code):
+cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
     if ret_code == lib.TA_SUCCESS:
         return True
     ta_errors = {
