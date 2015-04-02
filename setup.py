@@ -6,7 +6,8 @@ import warnings
 
 from distutils.dist import Distribution
 
-query_only = any('--' + opt in sys.argv for opt in Distribution.display_option_names) or sys.argv[1] == 'egg_info'
+display_option_names = Distribution.display_option_names + ['help', 'help-commands']
+query_only = any('--' + opt in sys.argv for opt in display_option_names) or sys.argv[1] == 'egg_info'
 
 # Use setuptools for querying the package, normal builds use distutils
 if query_only:
