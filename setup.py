@@ -53,11 +53,11 @@ if not query_only:
     import numpy
     include_dirs.insert(0, numpy.get_include())
 
-    try:
-        from Cython.Distutils import build_ext
-        has_cython = True
-    except ImportError:
-        has_cython = False
+try:
+    from Cython.Distutils import build_ext
+    has_cython = True
+except ImportError:
+    has_cython = False
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
