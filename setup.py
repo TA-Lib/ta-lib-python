@@ -1,21 +1,21 @@
 from distutils.core import setup
+from distutils.dist import Distribution
 from distutils.extension import Extension
-from Cython.Distutils import build_ext
 
-import numpy
 import os
 import sys
 import warnings
 
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
+ext_modules = []
+cmdclass = {}
 
 platform_supported = False
 for prefix in ['darwin', 'linux', 'bsd']:
     if prefix in sys.platform:
         platform_supported = True
         include_dirs = [
-            numpy.get_include(),
             '/usr/include',
             '/usr/local/include',
             '/opt/include',
@@ -34,8 +34,19 @@ for prefix in ['darwin', 'linux', 'bsd']:
 if sys.platform == "win32":
     platform_supported = True
     lib_talib_name = 'ta_libc_cdr'
-    include_dirs = [numpy.get_include(), r"c:\ta-lib\c\include"]
+    include_dirs = [r"c:\ta-lib\c\include"]
     lib_talib_dirs = [r"c:\ta-lib\c\lib"]
+
+# Do not require numpy or cython for just querying the package
+if any('--' + opt in sys.argv for opt in Distribution.display_option_names +
+       ['help-commands', 'help']) or sys.argv[1] == 'egg_info':
+    pass
+else:
+    import numpy
+    include_dirs.insert(0, numpy.get_include())
+
+    from Cython.Distutils import build_ext
+    cmdclass['build_ext'] = build_ext
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
@@ -50,7 +61,6 @@ for lib_talib_dir in lib_talib_dirs:
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
-ext_modules = []
 for name in ['common', 'func', 'abstract']:
     ext = Extension(
         'talib.%s' % name,
@@ -88,5 +98,6 @@ setup(
     ],
     packages=['talib'],
     ext_modules=ext_modules,
-    cmdclass = {'build_ext': build_ext}
+    cmdclass=cmdclass,
+    requires=['numpy'],
 )
