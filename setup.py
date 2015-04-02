@@ -7,7 +7,7 @@ import warnings
 from distutils.dist import Distribution
 
 display_option_names = Distribution.display_option_names + ['help', 'help-commands']
-query_only = any('--' + opt in sys.argv for opt in display_option_names) or sys.argv[1] == 'egg_info'
+query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
 
 # Use setuptools for querying the package, normal builds use distutils
 if query_only:
@@ -55,8 +55,11 @@ if not query_only:
     import numpy
     include_dirs.insert(0, numpy.get_include())
 
-    from Cython.Distutils import build_ext
-    cmdclass['build_ext'] = build_ext
+    try:
+        from Cython.Distutils import build_ext
+        cmdclass['build_ext'] = build_ext
+    except ImportError:
+        pass
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
