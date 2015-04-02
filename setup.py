@@ -1,11 +1,23 @@
-from distutils.core import setup
-from distutils.dist import Distribution
-from distutils.extension import Extension
+#!/usr/bin/env python
 
-import os
 import sys
+import os
 import warnings
 
+from distutils.dist import Distribution
+
+query_only = any('--' + opt in sys.argv for opt in Distribution.display_option_names) or sys.argv[1] == 'egg_info'
+
+# Use setuptools for querying the package, normal builds use distutils
+if query_only:
+    try:
+        from setuptools import setup
+    except ImportError:
+        from distutils.core import setup
+else:
+    from distutils.core import setup
+
+from distutils.extension import Extension
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
 ext_modules = []
@@ -38,10 +50,7 @@ if sys.platform == "win32":
     lib_talib_dirs = [r"c:\ta-lib\c\lib"]
 
 # Do not require numpy or cython for just querying the package
-if any('--' + opt in sys.argv for opt in Distribution.display_option_names +
-       ['help-commands', 'help']) or sys.argv[1] == 'egg_info':
-    pass
-else:
+if not query_only:
     import numpy
     include_dirs.insert(0, numpy.get_include())
 
@@ -65,9 +74,9 @@ for name in ['common', 'func', 'abstract']:
     ext = Extension(
         'talib.%s' % name,
         ['talib/%s.pyx' % name],
-        include_dirs=include_dirs,
-        library_dirs=lib_talib_dirs,
-        libraries=[lib_talib_name]
+        include_dirs = include_dirs,
+        library_dirs = lib_talib_dirs,
+        libraries = [lib_talib_name]
     )
     ext_modules.append(ext)
 
@@ -96,8 +105,8 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Financial and Insurance Industry",
     ],
-    packages=['talib'],
-    ext_modules=ext_modules,
-    cmdclass=cmdclass,
-    requires=['numpy'],
+    packages = ['talib'],
+    ext_modules = ext_modules,
+    cmdclass = cmdclass,
+    requires = ['numpy'],
 )
