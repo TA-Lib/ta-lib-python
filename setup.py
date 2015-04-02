@@ -21,8 +21,6 @@ else:
 from distutils.extension import Extension
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
-ext_modules = []
-cmdclass = {}
 
 platform_supported = False
 for prefix in ['darwin', 'linux', 'bsd']:
@@ -57,9 +55,9 @@ if not query_only:
 
     try:
         from Cython.Distutils import build_ext
-        cmdclass['build_ext'] = build_ext
+        has_cython = True
     except ImportError:
-        pass
+        has_cython = False
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
@@ -74,10 +72,15 @@ for lib_talib_dir in lib_talib_dirs:
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
+cmdclass = {}
+if has_cython:
+    cmdclass['build_ext'] = build_ext
+
+ext_modules = []
 for name in ['common', 'func', 'abstract']:
     ext = Extension(
         'talib.%s' % name,
-        ['talib/%s.pyx' % name],
+        [('talib/%s.pyx' if has_cython else 'talib/%s.c') % name],
         include_dirs = include_dirs,
         library_dirs = lib_talib_dirs,
         libraries = [lib_talib_name]
