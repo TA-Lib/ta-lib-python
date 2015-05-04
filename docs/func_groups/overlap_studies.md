@@ -42,7 +42,7 @@ mama, fama = MAMA(close, fastlimit=0, slowlimit=0)
 Learn more about the MESA Adaptive Moving Average at [tadoc.org](http://www.tadoc.org/indicator/MAMA.htm).  
 ### MAVP - Moving average with variable period
 ```
-real = MAVP(close, minperiod=2, maxperiod=30, matype=0)
+real = MAVP(close, periods, minperiod=2, maxperiod=30, matype=0)
 ```
 
 ### MIDPOINT - MidPoint over period
