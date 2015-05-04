@@ -2,7 +2,7 @@ import os
 import sys
 import talib
 
-from grip import render_page
+from grip import render_content
 from bs4 import BeautifulSoup
 
 from talib.abstract import Function
@@ -189,7 +189,7 @@ def get_open_save_file_paths():
 def run_convert_to_html():
     for md_file_path, save_file_path in get_open_save_file_paths():
         with open(md_file_path, 'r') as f:
-            html = render_page(f.read(), os.path.split(md_file_path)[1])
+            html = render_content(f.read())
 
         html = html.replace('<pre><code>', '<pre>')
         html = html.replace('</code></pre>', '</pre>')
