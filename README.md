@@ -21,7 +21,7 @@ this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 You can install from PyPI:
 
 ```
-$ easy_install TA-Lib
+$ pip install TA-Lib
 ```
 
 Or checkout the sources and run ``setup.py`` yourself:
