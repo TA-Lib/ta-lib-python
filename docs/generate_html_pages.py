@@ -25,7 +25,7 @@ header = '''\
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
