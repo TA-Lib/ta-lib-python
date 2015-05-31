@@ -31,8 +31,9 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/include',
             '/opt/include',
             '/opt/local/include',
-            os.path.expanduser('~/opt/include'),
         ]
+        if 'TA_INCLUDE_PATH' in os.environ:
+            include_dirs.append(os.environ['TA_INCLUDE_PATH'])
         lib_talib_dirs = [
             '/usr/lib',
             '/usr/local/lib',
@@ -42,6 +43,8 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/opt/local/lib',
             os.path.expanduser('~/opt/lib'),
         ]
+        if 'TA_LIBRARY_PATH' in os.environ:
+            include_dirs.append(os.environ['TA_LIBRARY_PATH'])
         break
 
 if sys.platform == "win32":
