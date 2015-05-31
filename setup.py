@@ -31,7 +31,7 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/include',
             '/opt/include',
             '/opt/local/include',
-            '/home/travis/opt/include',
+            os.path.expanduser('~/opt/include'),
         ]
         lib_talib_dirs = [
             '/usr/lib',
@@ -40,7 +40,7 @@ for prefix in ['darwin', 'linux', 'bsd']:
             '/usr/local/lib64',
             '/opt/lib',
             '/opt/local/lib',
-            '/home/travis/opt/lib',
+            os.path.expanduser('~/opt/lib'),
         ]
         break
 
