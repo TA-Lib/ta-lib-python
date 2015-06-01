@@ -93,7 +93,7 @@ for name in ['common', 'func', 'abstract']:
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.8',
+    version = '0.4.9',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',

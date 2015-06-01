@@ -1,3 +1,16 @@
+0.4.9
+=====
+
+- [NEW]: Support for python 2.6 and earlier for ordereddict.
+
+- [FIX]: Add lib64 paths to setup.py.
+
+- [NEW]: Upgrade to Cython 0.22.
+
+- [FIX]: Allow running setup.py without numpy or cython
+
+- [NEW]: Allow TA_LIBRARY_PATH and TA_INCLUDE_PATH environment variables.
+
 0.4.8
 =====
 
