@@ -1,3 +1,8 @@
+0.4.10
+======
+
+- [NEW]: Support for TA_SetUnstablePeriod and TA_GetUnstablePeriod
+
 0.4.9
 =====
 
