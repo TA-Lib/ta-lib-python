@@ -25,6 +25,8 @@ cdef extern from "ta-lib/ta_defs.h":
 
     ctypedef int TA_MAType
 
+    ctypedef int TA_FuncUnstId
+
 cdef extern from "ta-lib/ta_common.h":
     ctypedef int TA_Integer
     ctypedef double TA_Real
@@ -437,3 +439,7 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_WILLR_Lookback( int optInTimePeriod )
     TA_RetCode TA_WMA( int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[] )
     int TA_WMA_Lookback( int optInTimePeriod )
+
+    # TALIB functions for TA_SetUnstablePeriod
+    TA_RetCode TA_SetUnstablePeriod(TA_FuncUnstId id, unsigned int unstablePeriod)
+    unsigned int TA_GetUnstablePeriod(TA_FuncUnstId id)

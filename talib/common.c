@@ -684,6 +684,12 @@ static CYTHON_INLINE TA_RetCode __Pyx_PyInt_As_TA_RetCode(PyObject *);
 
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_TA_RetCode(TA_RetCode value);
 
+static CYTHON_INLINE TA_FuncUnstId __Pyx_PyInt_As_TA_FuncUnstId(PyObject *);
+
+static CYTHON_INLINE unsigned int __Pyx_PyInt_As_unsigned_int(PyObject *);
+
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value);
+
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
@@ -707,23 +713,39 @@ int __pyx_module_is_main_talib__common = 0;
 /* Implementation of 'talib.common' */
 static PyObject *__pyx_builtin_object;
 static PyObject *__pyx_builtin_range;
+static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_Exception;
 static PyObject *__pyx_pf_5talib_6common__ta_check_success(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_function_name, TA_RetCode __pyx_v_ret_code); /* proto */
 static PyObject *__pyx_pf_5talib_6common_2_ta_initialize(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_5talib_6common_4_ta_shutdown(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_5talib_6common_7MA_Type___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_5talib_6common_7MA_Type_2__getitem__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_type_); /* proto */
+static PyObject *__pyx_pf_5talib_6common_6_ta_set_unstable_period(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_name, PyObject *__pyx_v_period); /* proto */
+static PyObject *__pyx_pf_5talib_6common_8_ta_get_unstable_period(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_name); /* proto */
+static char __pyx_k_i[] = "i";
+static char __pyx_k_DX[] = "DX";
 static char __pyx_k_T3[] = "T3";
+static char __pyx_k_id[] = "id";
+static char __pyx_k_ADX[] = "ADX";
+static char __pyx_k_ALL[] = "ALL";
+static char __pyx_k_ATR[] = "ATR";
+static char __pyx_k_CMO[] = "CMO";
 static char __pyx_k_EMA[] = "EMA";
+static char __pyx_k_MFI[] = "MFI";
+static char __pyx_k_RSI[] = "RSI";
 static char __pyx_k_SMA[] = "SMA";
 static char __pyx_k_WMA[] = "WMA";
 static char __pyx_k_doc[] = "__doc__";
+static char __pyx_k_ADXR[] = "ADXR";
 static char __pyx_k_DEMA[] = "DEMA";
 static char __pyx_k_KAMA[] = "KAMA";
 static char __pyx_k_MAMA[] = "MAMA";
+static char __pyx_k_NATR[] = "NATR";
+static char __pyx_k_NONE[] = "NONE";
 static char __pyx_k_TEMA[] = "TEMA";
 static char __pyx_k_init[] = "__init__";
 static char __pyx_k_main[] = "__main__";
+static char __pyx_k_name[] = "name";
 static char __pyx_k_self[] = "self";
 static char __pyx_k_test[] = "__test__";
 static char __pyx_k_type[] = "type_";
@@ -732,24 +754,41 @@ static char __pyx_k_range[] = "range";
 static char __pyx_k_lookup[] = "_lookup";
 static char __pyx_k_module[] = "__module__";
 static char __pyx_k_object[] = "object";
+static char __pyx_k_period[] = "period";
+static char __pyx_k_HT_SINE[] = "HT_SINE";
 static char __pyx_k_MA_Type[] = "MA_Type";
+static char __pyx_k_PLUS_DI[] = "PLUS_DI";
+static char __pyx_k_PLUS_DM[] = "PLUS_DM";
 static char __pyx_k_Success[] = "Success";
 static char __pyx_k_getitem[] = "__getitem__";
 static char __pyx_k_prepare[] = "__prepare__";
+static char __pyx_k_MINUS_DI[] = "MINUS_DI";
+static char __pyx_k_MINUS_DM[] = "MINUS_DM";
+static char __pyx_k_STOCHRSI[] = "STOCHRSI";
 static char __pyx_k_qualname[] = "__qualname__";
 static char __pyx_k_ret_code[] = "ret_code";
 static char __pyx_k_Exception[] = "Exception";
+static char __pyx_k_HT_PHASOR[] = "HT_PHASOR";
+static char __pyx_k_enumerate[] = "enumerate";
 static char __pyx_k_metaclass[] = "__metaclass__";
+static char __pyx_k_HT_DCPHASE[] = "HT_DCPHASE";
 static char __pyx_k_ta_version[] = "__ta_version__";
+static char __pyx_k_HT_DCPERIOD[] = "HT_DCPERIOD";
 static char __pyx_k_TA_Shutdown[] = "TA_Shutdown";
 static char __pyx_k_ta_shutdown[] = "_ta_shutdown";
+static char __pyx_k_HT_TRENDLINE[] = "HT_TRENDLINE";
+static char __pyx_k_HT_TRENDMODE[] = "HT_TRENDMODE";
 static char __pyx_k_talib_common[] = "talib.common";
 static char __pyx_k_TA_Initialize[] = "TA_Initialize";
 static char __pyx_k_function_name[] = "function_name";
 static char __pyx_k_ta_initialize[] = "_ta_initialize";
 static char __pyx_k_MA_Type___init[] = "MA_Type.__init__";
+static char __pyx_k_ta_func_unst_ids[] = "_ta_func_unst_ids";
 static char __pyx_k_MA_Type___getitem[] = "MA_Type.__getitem__";
+static char __pyx_k_TA_SetUnstablePeriod[] = "TA_SetUnstablePeriod";
 static char __pyx_k_Simple_Moving_Average[] = "Simple Moving Average";
+static char __pyx_k_ta_get_unstable_period[] = "_ta_get_unstable_period";
+static char __pyx_k_ta_set_unstable_period[] = "_ta_set_unstable_period";
 static char __pyx_k_Weighted_Moving_Average[] = "Weighted Moving Average";
 static char __pyx_k_Bad_Object_TA_BAD_OBJECT[] = "Bad Object (TA_BAD_OBJECT)";
 static char __pyx_k_Triangular_Moving_Average[] = "Triangular Moving Average";
@@ -778,16 +817,28 @@ static char __pyx_k_Out_of_Range_End_Index_TA_OUT_OF[] = "Out-of-Range End Index
 static char __pyx_k_Output_Not_All_Initialized_TA_OU[] = "Output Not All Initialized (TA_OUTPUT_NOT_ALL_INITIALIZE)";
 static char __pyx_k_Triple_Exponential_Moving_Averag[] = "Triple Exponential Moving Average";
 static char __pyx_k_Triple_Generalized_Double_Expone[] = "Triple Generalized Double Exponential Moving Average";
+static PyObject *__pyx_n_s_ADX;
+static PyObject *__pyx_n_s_ADXR;
+static PyObject *__pyx_n_s_ALL;
+static PyObject *__pyx_n_s_ATR;
 static PyObject *__pyx_kp_s_Allocation_Error_TA_ALLOC_ERR;
 static PyObject *__pyx_kp_s_Bad_Object_TA_BAD_OBJECT;
 static PyObject *__pyx_kp_s_Bad_Parameter_TA_BAD_PARAM;
+static PyObject *__pyx_n_s_CMO;
 static PyObject *__pyx_n_s_DEMA;
+static PyObject *__pyx_n_s_DX;
 static PyObject *__pyx_kp_s_Double_Exponential_Moving_Averag;
 static PyObject *__pyx_n_s_EMA;
 static PyObject *__pyx_n_s_Exception;
 static PyObject *__pyx_kp_s_Exponential_Moving_Average;
 static PyObject *__pyx_kp_s_Function_Not_Found_TA_FUNC_NOT_F;
 static PyObject *__pyx_kp_s_Group_Not_Found_TA_GROUP_NOT_FOU;
+static PyObject *__pyx_n_s_HT_DCPERIOD;
+static PyObject *__pyx_n_s_HT_DCPHASE;
+static PyObject *__pyx_n_s_HT_PHASOR;
+static PyObject *__pyx_n_s_HT_SINE;
+static PyObject *__pyx_n_s_HT_TRENDLINE;
+static PyObject *__pyx_n_s_HT_TRENDMODE;
 static PyObject *__pyx_kp_s_Input_Not_All_Initialized_TA_INP;
 static PyObject *__pyx_kp_s_Internal_Error_TA_INTERNAL_ERROR;
 static PyObject *__pyx_kp_s_Invalid_Handle_TA_INVALID_HANDLE;
@@ -803,15 +854,25 @@ static PyObject *__pyx_n_s_MA_Type;
 static PyObject *__pyx_n_s_MA_Type___getitem;
 static PyObject *__pyx_n_s_MA_Type___init;
 static PyObject *__pyx_kp_s_MESA_Adaptive_Moving_Average;
+static PyObject *__pyx_n_s_MFI;
+static PyObject *__pyx_n_s_MINUS_DI;
+static PyObject *__pyx_n_s_MINUS_DM;
+static PyObject *__pyx_n_s_NATR;
+static PyObject *__pyx_n_s_NONE;
 static PyObject *__pyx_kp_s_Not_Supported_TA_NOT_SUPPORTED;
 static PyObject *__pyx_kp_s_Out_of_Range_End_Index_TA_OUT_OF;
 static PyObject *__pyx_kp_s_Out_of_Range_Start_Index_TA_OUT;
 static PyObject *__pyx_kp_s_Output_Not_All_Initialized_TA_OU;
+static PyObject *__pyx_n_s_PLUS_DI;
+static PyObject *__pyx_n_s_PLUS_DM;
+static PyObject *__pyx_n_s_RSI;
 static PyObject *__pyx_n_s_SMA;
+static PyObject *__pyx_n_s_STOCHRSI;
 static PyObject *__pyx_kp_s_Simple_Moving_Average;
 static PyObject *__pyx_n_s_Success;
 static PyObject *__pyx_n_s_T3;
 static PyObject *__pyx_n_s_TA_Initialize;
+static PyObject *__pyx_n_s_TA_SetUnstablePeriod;
 static PyObject *__pyx_n_s_TA_Shutdown;
 static PyObject *__pyx_n_s_TEMA;
 static PyObject *__pyx_n_s_TRIMA;
@@ -823,21 +884,29 @@ static PyObject *__pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib;
 static PyObject *__pyx_n_s_WMA;
 static PyObject *__pyx_kp_s_Weighted_Moving_Average;
 static PyObject *__pyx_n_s_doc;
+static PyObject *__pyx_n_s_enumerate;
 static PyObject *__pyx_n_s_function_name;
 static PyObject *__pyx_n_s_getitem;
+static PyObject *__pyx_n_s_i;
+static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_init;
 static PyObject *__pyx_n_s_lookup;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_n_s_module;
+static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_object;
+static PyObject *__pyx_n_s_period;
 static PyObject *__pyx_n_s_prepare;
 static PyObject *__pyx_n_s_qualname;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_ret_code;
 static PyObject *__pyx_kp_s_s_function_failed_with_error_co;
 static PyObject *__pyx_n_s_self;
+static PyObject *__pyx_n_s_ta_func_unst_ids;
+static PyObject *__pyx_n_s_ta_get_unstable_period;
 static PyObject *__pyx_n_s_ta_initialize;
+static PyObject *__pyx_n_s_ta_set_unstable_period;
 static PyObject *__pyx_n_s_ta_shutdown;
 static PyObject *__pyx_n_s_ta_version;
 static PyObject *__pyx_n_s_talib_common;
@@ -862,15 +931,20 @@ static PyObject *__pyx_int_15;
 static PyObject *__pyx_int_16;
 static PyObject *__pyx_int_5000;
 static PyObject *__pyx_int_65535;
+static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__5;
 static PyObject *__pyx_tuple__6;
 static PyObject *__pyx_tuple__8;
+static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__12;
 static PyObject *__pyx_codeobj__2;
 static PyObject *__pyx_codeobj__4;
 static PyObject *__pyx_codeobj__7;
 static PyObject *__pyx_codeobj__9;
+static PyObject *__pyx_codeobj__11;
+static PyObject *__pyx_codeobj__13;
 
 /* "talib/common.pyx":7
  * __ta_version__ = lib.TA_GetVersionString()
@@ -1147,7 +1221,7 @@ static PyObject *__pyx_pf_5talib_6common_2_ta_initialize(CYTHON_UNUSED PyObject 
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Initialize()             # <<<<<<<<<<<<<<
  *     _ta_check_success('TA_Initialize', ret_code)
- *     return ret_code
+ * 
  */
   __pyx_v_ret_code = TA_Initialize();
 
@@ -1155,26 +1229,12 @@ static PyObject *__pyx_pf_5talib_6common_2_ta_initialize(CYTHON_UNUSED PyObject 
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Initialize()
  *     _ta_check_success('TA_Initialize', ret_code)             # <<<<<<<<<<<<<<
- *     return ret_code
  * 
+ * def _ta_shutdown():
  */
   __pyx_t_1 = __pyx_f_5talib_6common__ta_check_success(__pyx_n_s_TA_Initialize, __pyx_v_ret_code, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "talib/common.pyx":38
- *     ret_code = lib.TA_Initialize()
- *     _ta_check_success('TA_Initialize', ret_code)
- *     return ret_code             # <<<<<<<<<<<<<<
- * 
- * def _ta_shutdown():
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_TA_RetCode(__pyx_v_ret_code); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 38; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
 
   /* "talib/common.pyx":34
  *         function_name, ret_code, ta_errors[ret_code]))
@@ -1185,6 +1245,8 @@ static PyObject *__pyx_pf_5talib_6common_2_ta_initialize(CYTHON_UNUSED PyObject 
  */
 
   /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("talib.common._ta_initialize", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -1195,8 +1257,8 @@ static PyObject *__pyx_pf_5talib_6common_2_ta_initialize(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "talib/common.pyx":40
- *     return ret_code
+/* "talib/common.pyx":39
+ *     _ta_check_success('TA_Initialize', ret_code)
  * 
  * def _ta_shutdown():             # <<<<<<<<<<<<<<
  *     cdef TA_RetCode ret_code
@@ -1227,42 +1289,28 @@ static PyObject *__pyx_pf_5talib_6common_4_ta_shutdown(CYTHON_UNUSED PyObject *_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_ta_shutdown", 0);
 
-  /* "talib/common.pyx":42
+  /* "talib/common.pyx":41
  * def _ta_shutdown():
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Shutdown()             # <<<<<<<<<<<<<<
  *     _ta_check_success('TA_Shutdown', ret_code)
- *     return ret_code
+ * 
  */
   __pyx_v_ret_code = TA_Shutdown();
 
-  /* "talib/common.pyx":43
+  /* "talib/common.pyx":42
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Shutdown()
  *     _ta_check_success('TA_Shutdown', ret_code)             # <<<<<<<<<<<<<<
- *     return ret_code
- * 
- */
-  __pyx_t_1 = __pyx_f_5talib_6common__ta_check_success(__pyx_n_s_TA_Shutdown, __pyx_v_ret_code, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "talib/common.pyx":44
- *     ret_code = lib.TA_Shutdown()
- *     _ta_check_success('TA_Shutdown', ret_code)
- *     return ret_code             # <<<<<<<<<<<<<<
  * 
  * class MA_Type(object):
  */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_TA_RetCode(__pyx_v_ret_code); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_f_5talib_6common__ta_check_success(__pyx_n_s_TA_Shutdown, __pyx_v_ret_code, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "talib/common.pyx":40
- *     return ret_code
+  /* "talib/common.pyx":39
+ *     _ta_check_success('TA_Initialize', ret_code)
  * 
  * def _ta_shutdown():             # <<<<<<<<<<<<<<
  *     cdef TA_RetCode ret_code
@@ -1270,6 +1318,8 @@ static PyObject *__pyx_pf_5talib_6common_4_ta_shutdown(CYTHON_UNUSED PyObject *_
  */
 
   /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("talib.common._ta_shutdown", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -1280,7 +1330,7 @@ static PyObject *__pyx_pf_5talib_6common_4_ta_shutdown(CYTHON_UNUSED PyObject *_
   return __pyx_r;
 }
 
-/* "talib/common.pyx":49
+/* "talib/common.pyx":47
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -1313,162 +1363,162 @@ static PyObject *__pyx_pf_5talib_6common_7MA_Type___init__(CYTHON_UNUSED PyObjec
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "talib/common.pyx":50
+  /* "talib/common.pyx":48
  * 
  *     def __init__(self):
  *         self._lookup = {             # <<<<<<<<<<<<<<
  *             MA_Type.SMA: 'Simple Moving Average',
  *             MA_Type.EMA: 'Exponential Moving Average',
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "talib/common.pyx":51
+  /* "talib/common.pyx":49
  *     def __init__(self):
  *         self._lookup = {
  *             MA_Type.SMA: 'Simple Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.EMA: 'Exponential Moving Average',
  *             MA_Type.WMA: 'Weighted Moving Average',
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_SMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_SMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Simple_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Simple_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "talib/common.pyx":52
+  /* "talib/common.pyx":50
  *         self._lookup = {
  *             MA_Type.SMA: 'Simple Moving Average',
  *             MA_Type.EMA: 'Exponential Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.WMA: 'Weighted Moving Average',
  *             MA_Type.DEMA: 'Double Exponential Moving Average',
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_EMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_EMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Exponential_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Exponential_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "talib/common.pyx":53
+  /* "talib/common.pyx":51
  *             MA_Type.SMA: 'Simple Moving Average',
  *             MA_Type.EMA: 'Exponential Moving Average',
  *             MA_Type.WMA: 'Weighted Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.DEMA: 'Double Exponential Moving Average',
  *             MA_Type.TEMA: 'Triple Exponential Moving Average',
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_WMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_WMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Weighted_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Weighted_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "talib/common.pyx":54
+  /* "talib/common.pyx":52
  *             MA_Type.EMA: 'Exponential Moving Average',
  *             MA_Type.WMA: 'Weighted Moving Average',
  *             MA_Type.DEMA: 'Double Exponential Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.TEMA: 'Triple Exponential Moving Average',
  *             MA_Type.TRIMA: 'Triangular Moving Average',
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_DEMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_DEMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Double_Exponential_Moving_Averag) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Double_Exponential_Moving_Averag) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "talib/common.pyx":55
+  /* "talib/common.pyx":53
  *             MA_Type.WMA: 'Weighted Moving Average',
  *             MA_Type.DEMA: 'Double Exponential Moving Average',
  *             MA_Type.TEMA: 'Triple Exponential Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.TRIMA: 'Triangular Moving Average',
  *             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_TEMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_TEMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Triple_Exponential_Moving_Averag) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Triple_Exponential_Moving_Averag) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "talib/common.pyx":56
+  /* "talib/common.pyx":54
  *             MA_Type.DEMA: 'Double Exponential Moving Average',
  *             MA_Type.TEMA: 'Triple Exponential Moving Average',
  *             MA_Type.TRIMA: 'Triangular Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
  *             MA_Type.MAMA: 'MESA Adaptive Moving Average',
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_TRIMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_TRIMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Triangular_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_Triangular_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "talib/common.pyx":57
+  /* "talib/common.pyx":55
  *             MA_Type.TEMA: 'Triple Exponential Moving Average',
  *             MA_Type.TRIMA: 'Triangular Moving Average',
  *             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.MAMA: 'MESA Adaptive Moving Average',
  *             MA_Type.T3: 'Triple Generalized Double Exponential Moving Average',
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_KAMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_KAMA); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Kaufman_Adaptive_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Kaufman_Adaptive_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "talib/common.pyx":58
+  /* "talib/common.pyx":56
  *             MA_Type.TRIMA: 'Triangular Moving Average',
  *             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
  *             MA_Type.MAMA: 'MESA Adaptive Moving Average',             # <<<<<<<<<<<<<<
  *             MA_Type.T3: 'Triple Generalized Double Exponential Moving Average',
  *             }
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_MAMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_MAMA); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_MESA_Adaptive_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_2, __pyx_kp_s_MESA_Adaptive_Moving_Average) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "talib/common.pyx":59
+  /* "talib/common.pyx":57
  *             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
  *             MA_Type.MAMA: 'MESA Adaptive Moving Average',
  *             MA_Type.T3: 'Triple Generalized Double Exponential Moving Average',             # <<<<<<<<<<<<<<
  *             }
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_T3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_T3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Triple_Generalized_Double_Expone) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_t_3, __pyx_kp_s_Triple_Generalized_Double_Expone) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "talib/common.pyx":50
+  /* "talib/common.pyx":48
  * 
  *     def __init__(self):
  *         self._lookup = {             # <<<<<<<<<<<<<<
  *             MA_Type.SMA: 'Simple Moving Average',
  *             MA_Type.EMA: 'Exponential Moving Average',
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_lookup, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_lookup, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "talib/common.pyx":49
+  /* "talib/common.pyx":47
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -1491,7 +1541,7 @@ static PyObject *__pyx_pf_5talib_6common_7MA_Type___init__(CYTHON_UNUSED PyObjec
   return __pyx_r;
 }
 
-/* "talib/common.pyx":62
+/* "talib/common.pyx":60
  *             }
  * 
  *     def __getitem__(self, type_):             # <<<<<<<<<<<<<<
@@ -1531,11 +1581,11 @@ static PyObject *__pyx_pw_5talib_6common_7MA_Type_3__getitem__(PyObject *__pyx_s
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_type)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__getitem__", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__getitem__", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__getitem__") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__getitem__") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1548,7 +1598,7 @@ static PyObject *__pyx_pw_5talib_6common_7MA_Type_3__getitem__(PyObject *__pyx_s
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__getitem__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__getitem__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("talib.common.MA_Type.__getitem__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1571,7 +1621,7 @@ static PyObject *__pyx_pf_5talib_6common_7MA_Type_2__getitem__(CYTHON_UNUSED PyO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getitem__", 0);
 
-  /* "talib/common.pyx":63
+  /* "talib/common.pyx":61
  * 
  *     def __getitem__(self, type_):
  *         return self._lookup[type_]             # <<<<<<<<<<<<<<
@@ -1579,16 +1629,16 @@ static PyObject *__pyx_pf_5talib_6common_7MA_Type_2__getitem__(CYTHON_UNUSED PyO
  * MA_Type = MA_Type()
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_lookup); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_lookup); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_type_); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_type_); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "talib/common.pyx":62
+  /* "talib/common.pyx":60
  *             }
  * 
  *     def __getitem__(self, type_):             # <<<<<<<<<<<<<<
@@ -1601,6 +1651,240 @@ static PyObject *__pyx_pf_5talib_6common_7MA_Type_2__getitem__(CYTHON_UNUSED PyO
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_AddTraceback("talib.common.MA_Type.__getitem__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "talib/common.pyx":74
+ *     _ta_func_unst_ids[name] = i
+ * 
+ * def _ta_set_unstable_period(name, period):             # <<<<<<<<<<<<<<
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5talib_6common_7_ta_set_unstable_period(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5talib_6common_7_ta_set_unstable_period = {"_ta_set_unstable_period", (PyCFunction)__pyx_pw_5talib_6common_7_ta_set_unstable_period, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5talib_6common_7_ta_set_unstable_period(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_name = 0;
+  PyObject *__pyx_v_period = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_ta_set_unstable_period (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_name,&__pyx_n_s_period,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_name)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_period)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_ta_set_unstable_period", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_ta_set_unstable_period") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_name = values[0];
+    __pyx_v_period = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_ta_set_unstable_period", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("talib.common._ta_set_unstable_period", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5talib_6common_6_ta_set_unstable_period(__pyx_self, __pyx_v_name, __pyx_v_period);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5talib_6common_6_ta_set_unstable_period(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_name, PyObject *__pyx_v_period) {
+  TA_RetCode __pyx_v_ret_code;
+  TA_FuncUnstId __pyx_v_id;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  TA_FuncUnstId __pyx_t_3;
+  unsigned int __pyx_t_4;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_ta_set_unstable_period", 0);
+
+  /* "talib/common.pyx":76
+ * def _ta_set_unstable_period(name, period):
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]             # <<<<<<<<<<<<<<
+ *     ret_code = lib.TA_SetUnstablePeriod(id, period)
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ */
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ta_func_unst_ids); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_name); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_TA_FuncUnstId(__pyx_t_2); if (unlikely((__pyx_t_3 == (TA_FuncUnstId)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_id = __pyx_t_3;
+
+  /* "talib/common.pyx":77
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ *     ret_code = lib.TA_SetUnstablePeriod(id, period)             # <<<<<<<<<<<<<<
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ * 
+ */
+  __pyx_t_4 = __Pyx_PyInt_As_unsigned_int(__pyx_v_period); if (unlikely((__pyx_t_4 == (unsigned int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_v_ret_code = TA_SetUnstablePeriod(__pyx_v_id, __pyx_t_4);
+
+  /* "talib/common.pyx":78
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ *     ret_code = lib.TA_SetUnstablePeriod(id, period)
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)             # <<<<<<<<<<<<<<
+ * 
+ * def _ta_get_unstable_period(name):
+ */
+  __pyx_t_2 = __pyx_f_5talib_6common__ta_check_success(__pyx_n_s_TA_SetUnstablePeriod, __pyx_v_ret_code, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "talib/common.pyx":74
+ *     _ta_func_unst_ids[name] = i
+ * 
+ * def _ta_set_unstable_period(name, period):             # <<<<<<<<<<<<<<
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("talib.common._ta_set_unstable_period", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "talib/common.pyx":80
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ * 
+ * def _ta_get_unstable_period(name):             # <<<<<<<<<<<<<<
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5talib_6common_9_ta_get_unstable_period(PyObject *__pyx_self, PyObject *__pyx_v_name); /*proto*/
+static PyMethodDef __pyx_mdef_5talib_6common_9_ta_get_unstable_period = {"_ta_get_unstable_period", (PyCFunction)__pyx_pw_5talib_6common_9_ta_get_unstable_period, METH_O, 0};
+static PyObject *__pyx_pw_5talib_6common_9_ta_get_unstable_period(PyObject *__pyx_self, PyObject *__pyx_v_name) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_ta_get_unstable_period (wrapper)", 0);
+  __pyx_r = __pyx_pf_5talib_6common_8_ta_get_unstable_period(__pyx_self, ((PyObject *)__pyx_v_name));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5talib_6common_8_ta_get_unstable_period(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_name) {
+  unsigned int __pyx_v_period;
+  TA_FuncUnstId __pyx_v_id;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  TA_FuncUnstId __pyx_t_3;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_ta_get_unstable_period", 0);
+
+  /* "talib/common.pyx":82
+ * def _ta_get_unstable_period(name):
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]             # <<<<<<<<<<<<<<
+ *     period = lib.TA_GetUnstablePeriod(id)
+ *     return period
+ */
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ta_func_unst_ids); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_name); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_TA_FuncUnstId(__pyx_t_2); if (unlikely((__pyx_t_3 == (TA_FuncUnstId)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_id = __pyx_t_3;
+
+  /* "talib/common.pyx":83
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ *     period = lib.TA_GetUnstablePeriod(id)             # <<<<<<<<<<<<<<
+ *     return period
+ */
+  __pyx_v_period = TA_GetUnstablePeriod(__pyx_v_id);
+
+  /* "talib/common.pyx":84
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ *     period = lib.TA_GetUnstablePeriod(id)
+ *     return period             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = __Pyx_PyInt_From_unsigned_int(__pyx_v_period); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "talib/common.pyx":80
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ * 
+ * def _ta_get_unstable_period(name):             # <<<<<<<<<<<<<<
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("talib.common._ta_get_unstable_period", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1632,16 +1916,28 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_s_ADX, __pyx_k_ADX, sizeof(__pyx_k_ADX), 0, 0, 1, 1},
+  {&__pyx_n_s_ADXR, __pyx_k_ADXR, sizeof(__pyx_k_ADXR), 0, 0, 1, 1},
+  {&__pyx_n_s_ALL, __pyx_k_ALL, sizeof(__pyx_k_ALL), 0, 0, 1, 1},
+  {&__pyx_n_s_ATR, __pyx_k_ATR, sizeof(__pyx_k_ATR), 0, 0, 1, 1},
   {&__pyx_kp_s_Allocation_Error_TA_ALLOC_ERR, __pyx_k_Allocation_Error_TA_ALLOC_ERR, sizeof(__pyx_k_Allocation_Error_TA_ALLOC_ERR), 0, 0, 1, 0},
   {&__pyx_kp_s_Bad_Object_TA_BAD_OBJECT, __pyx_k_Bad_Object_TA_BAD_OBJECT, sizeof(__pyx_k_Bad_Object_TA_BAD_OBJECT), 0, 0, 1, 0},
   {&__pyx_kp_s_Bad_Parameter_TA_BAD_PARAM, __pyx_k_Bad_Parameter_TA_BAD_PARAM, sizeof(__pyx_k_Bad_Parameter_TA_BAD_PARAM), 0, 0, 1, 0},
+  {&__pyx_n_s_CMO, __pyx_k_CMO, sizeof(__pyx_k_CMO), 0, 0, 1, 1},
   {&__pyx_n_s_DEMA, __pyx_k_DEMA, sizeof(__pyx_k_DEMA), 0, 0, 1, 1},
+  {&__pyx_n_s_DX, __pyx_k_DX, sizeof(__pyx_k_DX), 0, 0, 1, 1},
   {&__pyx_kp_s_Double_Exponential_Moving_Averag, __pyx_k_Double_Exponential_Moving_Averag, sizeof(__pyx_k_Double_Exponential_Moving_Averag), 0, 0, 1, 0},
   {&__pyx_n_s_EMA, __pyx_k_EMA, sizeof(__pyx_k_EMA), 0, 0, 1, 1},
   {&__pyx_n_s_Exception, __pyx_k_Exception, sizeof(__pyx_k_Exception), 0, 0, 1, 1},
   {&__pyx_kp_s_Exponential_Moving_Average, __pyx_k_Exponential_Moving_Average, sizeof(__pyx_k_Exponential_Moving_Average), 0, 0, 1, 0},
   {&__pyx_kp_s_Function_Not_Found_TA_FUNC_NOT_F, __pyx_k_Function_Not_Found_TA_FUNC_NOT_F, sizeof(__pyx_k_Function_Not_Found_TA_FUNC_NOT_F), 0, 0, 1, 0},
   {&__pyx_kp_s_Group_Not_Found_TA_GROUP_NOT_FOU, __pyx_k_Group_Not_Found_TA_GROUP_NOT_FOU, sizeof(__pyx_k_Group_Not_Found_TA_GROUP_NOT_FOU), 0, 0, 1, 0},
+  {&__pyx_n_s_HT_DCPERIOD, __pyx_k_HT_DCPERIOD, sizeof(__pyx_k_HT_DCPERIOD), 0, 0, 1, 1},
+  {&__pyx_n_s_HT_DCPHASE, __pyx_k_HT_DCPHASE, sizeof(__pyx_k_HT_DCPHASE), 0, 0, 1, 1},
+  {&__pyx_n_s_HT_PHASOR, __pyx_k_HT_PHASOR, sizeof(__pyx_k_HT_PHASOR), 0, 0, 1, 1},
+  {&__pyx_n_s_HT_SINE, __pyx_k_HT_SINE, sizeof(__pyx_k_HT_SINE), 0, 0, 1, 1},
+  {&__pyx_n_s_HT_TRENDLINE, __pyx_k_HT_TRENDLINE, sizeof(__pyx_k_HT_TRENDLINE), 0, 0, 1, 1},
+  {&__pyx_n_s_HT_TRENDMODE, __pyx_k_HT_TRENDMODE, sizeof(__pyx_k_HT_TRENDMODE), 0, 0, 1, 1},
   {&__pyx_kp_s_Input_Not_All_Initialized_TA_INP, __pyx_k_Input_Not_All_Initialized_TA_INP, sizeof(__pyx_k_Input_Not_All_Initialized_TA_INP), 0, 0, 1, 0},
   {&__pyx_kp_s_Internal_Error_TA_INTERNAL_ERROR, __pyx_k_Internal_Error_TA_INTERNAL_ERROR, sizeof(__pyx_k_Internal_Error_TA_INTERNAL_ERROR), 0, 0, 1, 0},
   {&__pyx_kp_s_Invalid_Handle_TA_INVALID_HANDLE, __pyx_k_Invalid_Handle_TA_INVALID_HANDLE, sizeof(__pyx_k_Invalid_Handle_TA_INVALID_HANDLE), 0, 0, 1, 0},
@@ -1657,15 +1953,25 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_MA_Type___getitem, __pyx_k_MA_Type___getitem, sizeof(__pyx_k_MA_Type___getitem), 0, 0, 1, 1},
   {&__pyx_n_s_MA_Type___init, __pyx_k_MA_Type___init, sizeof(__pyx_k_MA_Type___init), 0, 0, 1, 1},
   {&__pyx_kp_s_MESA_Adaptive_Moving_Average, __pyx_k_MESA_Adaptive_Moving_Average, sizeof(__pyx_k_MESA_Adaptive_Moving_Average), 0, 0, 1, 0},
+  {&__pyx_n_s_MFI, __pyx_k_MFI, sizeof(__pyx_k_MFI), 0, 0, 1, 1},
+  {&__pyx_n_s_MINUS_DI, __pyx_k_MINUS_DI, sizeof(__pyx_k_MINUS_DI), 0, 0, 1, 1},
+  {&__pyx_n_s_MINUS_DM, __pyx_k_MINUS_DM, sizeof(__pyx_k_MINUS_DM), 0, 0, 1, 1},
+  {&__pyx_n_s_NATR, __pyx_k_NATR, sizeof(__pyx_k_NATR), 0, 0, 1, 1},
+  {&__pyx_n_s_NONE, __pyx_k_NONE, sizeof(__pyx_k_NONE), 0, 0, 1, 1},
   {&__pyx_kp_s_Not_Supported_TA_NOT_SUPPORTED, __pyx_k_Not_Supported_TA_NOT_SUPPORTED, sizeof(__pyx_k_Not_Supported_TA_NOT_SUPPORTED), 0, 0, 1, 0},
   {&__pyx_kp_s_Out_of_Range_End_Index_TA_OUT_OF, __pyx_k_Out_of_Range_End_Index_TA_OUT_OF, sizeof(__pyx_k_Out_of_Range_End_Index_TA_OUT_OF), 0, 0, 1, 0},
   {&__pyx_kp_s_Out_of_Range_Start_Index_TA_OUT, __pyx_k_Out_of_Range_Start_Index_TA_OUT, sizeof(__pyx_k_Out_of_Range_Start_Index_TA_OUT), 0, 0, 1, 0},
   {&__pyx_kp_s_Output_Not_All_Initialized_TA_OU, __pyx_k_Output_Not_All_Initialized_TA_OU, sizeof(__pyx_k_Output_Not_All_Initialized_TA_OU), 0, 0, 1, 0},
+  {&__pyx_n_s_PLUS_DI, __pyx_k_PLUS_DI, sizeof(__pyx_k_PLUS_DI), 0, 0, 1, 1},
+  {&__pyx_n_s_PLUS_DM, __pyx_k_PLUS_DM, sizeof(__pyx_k_PLUS_DM), 0, 0, 1, 1},
+  {&__pyx_n_s_RSI, __pyx_k_RSI, sizeof(__pyx_k_RSI), 0, 0, 1, 1},
   {&__pyx_n_s_SMA, __pyx_k_SMA, sizeof(__pyx_k_SMA), 0, 0, 1, 1},
+  {&__pyx_n_s_STOCHRSI, __pyx_k_STOCHRSI, sizeof(__pyx_k_STOCHRSI), 0, 0, 1, 1},
   {&__pyx_kp_s_Simple_Moving_Average, __pyx_k_Simple_Moving_Average, sizeof(__pyx_k_Simple_Moving_Average), 0, 0, 1, 0},
   {&__pyx_n_s_Success, __pyx_k_Success, sizeof(__pyx_k_Success), 0, 0, 1, 1},
   {&__pyx_n_s_T3, __pyx_k_T3, sizeof(__pyx_k_T3), 0, 0, 1, 1},
   {&__pyx_n_s_TA_Initialize, __pyx_k_TA_Initialize, sizeof(__pyx_k_TA_Initialize), 0, 0, 1, 1},
+  {&__pyx_n_s_TA_SetUnstablePeriod, __pyx_k_TA_SetUnstablePeriod, sizeof(__pyx_k_TA_SetUnstablePeriod), 0, 0, 1, 1},
   {&__pyx_n_s_TA_Shutdown, __pyx_k_TA_Shutdown, sizeof(__pyx_k_TA_Shutdown), 0, 0, 1, 1},
   {&__pyx_n_s_TEMA, __pyx_k_TEMA, sizeof(__pyx_k_TEMA), 0, 0, 1, 1},
   {&__pyx_n_s_TRIMA, __pyx_k_TRIMA, sizeof(__pyx_k_TRIMA), 0, 0, 1, 1},
@@ -1677,21 +1983,29 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_WMA, __pyx_k_WMA, sizeof(__pyx_k_WMA), 0, 0, 1, 1},
   {&__pyx_kp_s_Weighted_Moving_Average, __pyx_k_Weighted_Moving_Average, sizeof(__pyx_k_Weighted_Moving_Average), 0, 0, 1, 0},
   {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
+  {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
   {&__pyx_n_s_function_name, __pyx_k_function_name, sizeof(__pyx_k_function_name), 0, 0, 1, 1},
   {&__pyx_n_s_getitem, __pyx_k_getitem, sizeof(__pyx_k_getitem), 0, 0, 1, 1},
+  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
+  {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
   {&__pyx_n_s_lookup, __pyx_k_lookup, sizeof(__pyx_k_lookup), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
   {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
+  {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_object, __pyx_k_object, sizeof(__pyx_k_object), 0, 0, 1, 1},
+  {&__pyx_n_s_period, __pyx_k_period, sizeof(__pyx_k_period), 0, 0, 1, 1},
   {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
   {&__pyx_n_s_qualname, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_ret_code, __pyx_k_ret_code, sizeof(__pyx_k_ret_code), 0, 0, 1, 1},
   {&__pyx_kp_s_s_function_failed_with_error_co, __pyx_k_s_function_failed_with_error_co, sizeof(__pyx_k_s_function_failed_with_error_co), 0, 0, 1, 0},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
+  {&__pyx_n_s_ta_func_unst_ids, __pyx_k_ta_func_unst_ids, sizeof(__pyx_k_ta_func_unst_ids), 0, 0, 1, 1},
+  {&__pyx_n_s_ta_get_unstable_period, __pyx_k_ta_get_unstable_period, sizeof(__pyx_k_ta_get_unstable_period), 0, 0, 1, 1},
   {&__pyx_n_s_ta_initialize, __pyx_k_ta_initialize, sizeof(__pyx_k_ta_initialize), 0, 0, 1, 1},
+  {&__pyx_n_s_ta_set_unstable_period, __pyx_k_ta_set_unstable_period, sizeof(__pyx_k_ta_set_unstable_period), 0, 0, 1, 1},
   {&__pyx_n_s_ta_shutdown, __pyx_k_ta_shutdown, sizeof(__pyx_k_ta_shutdown), 0, 0, 1, 1},
   {&__pyx_n_s_ta_version, __pyx_k_ta_version, sizeof(__pyx_k_ta_version), 0, 0, 1, 1},
   {&__pyx_n_s_talib_common, __pyx_k_talib_common, sizeof(__pyx_k_talib_common), 0, 0, 1, 1},
@@ -1700,8 +2014,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_Exception = __Pyx_GetBuiltinName(__pyx_n_s_Exception); if (!__pyx_builtin_Exception) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   return 0;
   __pyx_L1_error:;
@@ -1724,52 +2039,76 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple_);
   __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_ta_initialize, 34, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "talib/common.pyx":40
- *     return ret_code
+  /* "talib/common.pyx":39
+ *     _ta_check_success('TA_Initialize', ret_code)
  * 
  * def _ta_shutdown():             # <<<<<<<<<<<<<<
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Shutdown()
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_ret_code); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_ret_code); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_ta_shutdown, 40, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_ta_shutdown, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "talib/common.pyx":47
+  /* "talib/common.pyx":45
  * 
  * class MA_Type(object):
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self):
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_int_9); if (unlikely(!__pyx_tuple__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_int_9); if (unlikely(!__pyx_tuple__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "talib/common.pyx":49
+  /* "talib/common.pyx":47
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self._lookup = {
  *             MA_Type.SMA: 'Simple Moving Average',
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_init, 49, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_init, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "talib/common.pyx":62
+  /* "talib/common.pyx":60
  *             }
  * 
  *     def __getitem__(self, type_):             # <<<<<<<<<<<<<<
  *         return self._lookup[type_]
  * 
  */
-  __pyx_tuple__8 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_type); if (unlikely(!__pyx_tuple__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__8 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_type); if (unlikely(!__pyx_tuple__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_getitem, 62, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_getitem, 60, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+
+  /* "talib/common.pyx":74
+ *     _ta_func_unst_ids[name] = i
+ * 
+ * def _ta_set_unstable_period(name, period):             # <<<<<<<<<<<<<<
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+  __pyx_tuple__10 = PyTuple_Pack(4, __pyx_n_s_name, __pyx_n_s_period, __pyx_n_s_ret_code, __pyx_n_s_id); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_ta_set_unstable_period, 74, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+
+  /* "talib/common.pyx":80
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ * 
+ * def _ta_get_unstable_period(name):             # <<<<<<<<<<<<<<
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+  __pyx_tuple__12 = PyTuple_Pack(3, __pyx_n_s_name, __pyx_n_s_period, __pyx_n_s_id); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_jbenedik_Dev_ta_lib_talib, __pyx_n_s_ta_get_unstable_period, 80, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -1798,6 +2137,7 @@ static int __Pyx_InitGlobals(void) {
   __pyx_int_16 = PyInt_FromLong(16); if (unlikely(!__pyx_int_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_5000 = PyInt_FromLong(5000); if (unlikely(!__pyx_int_5000)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_65535 = PyInt_FromLong(65535L); if (unlikely(!__pyx_int_65535)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1826,6 +2166,7 @@ PyMODINIT_FUNC PyInit_common(void)
   PyObject *__pyx_t_13 = NULL;
   PyObject *__pyx_t_14 = NULL;
   PyObject *(*__pyx_t_15)(PyObject *);
+  Py_ssize_t __pyx_t_16;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1904,7 +2245,7 @@ PyMODINIT_FUNC PyInit_common(void)
   /*--- Execution code ---*/
 
   /* "talib/common.pyx":5
- * from libc cimport TA_RetCode
+ * from libc cimport TA_RetCode, TA_FuncUnstId
  * 
  * __ta_version__ = lib.TA_GetVersionString()             # <<<<<<<<<<<<<<
  * 
@@ -1927,43 +2268,43 @@ PyMODINIT_FUNC PyInit_common(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_initialize, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "talib/common.pyx":40
- *     return ret_code
+  /* "talib/common.pyx":39
+ *     _ta_check_success('TA_Initialize', ret_code)
  * 
  * def _ta_shutdown():             # <<<<<<<<<<<<<<
  *     cdef TA_RetCode ret_code
  *     ret_code = lib.TA_Shutdown()
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_5talib_6common_5_ta_shutdown, NULL, __pyx_n_s_talib_common); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_5talib_6common_5_ta_shutdown, NULL, __pyx_n_s_talib_common); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_shutdown, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_shutdown, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "talib/common.pyx":46
- *     return ret_code
+  /* "talib/common.pyx":44
+ *     _ta_check_success('TA_Shutdown', ret_code)
  * 
  * class MA_Type(object):             # <<<<<<<<<<<<<<
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  */
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_builtin_object);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_builtin_object);
   __Pyx_GIVEREF(__pyx_builtin_object);
-  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_MA_Type, __pyx_n_s_MA_Type, (PyObject *) NULL, __pyx_n_s_talib_common, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_MA_Type, __pyx_n_s_MA_Type, (PyObject *) NULL, __pyx_n_s_talib_common, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
 
-  /* "talib/common.pyx":47
+  /* "talib/common.pyx":45
  * 
  * class MA_Type(object):
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)             # <<<<<<<<<<<<<<
  * 
  *     def __init__(self):
  */
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   if ((likely(PyTuple_CheckExact(__pyx_t_4))) || (PyList_CheckExact(__pyx_t_4))) {
     PyObject* sequence = __pyx_t_4;
@@ -1975,7 +2316,7 @@ PyMODINIT_FUNC PyInit_common(void)
     if (unlikely(size != 9)) {
       if (size > 9) __Pyx_RaiseTooManyValuesError(9);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -2013,7 +2354,7 @@ PyMODINIT_FUNC PyInit_common(void)
       Py_ssize_t i;
       PyObject** temps[9] = {&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13};
       for (i=0; i < 9; i++) {
-        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(item);
         *(temps[i]) = item;
       }
@@ -2023,7 +2364,7 @@ PyMODINIT_FUNC PyInit_common(void)
   } else {
     Py_ssize_t index = -1;
     PyObject** temps[9] = {&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13};
-    __pyx_t_14 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_14 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext;
@@ -2032,7 +2373,7 @@ PyMODINIT_FUNC PyInit_common(void)
       __Pyx_GOTREF(item);
       *(temps[index]) = item;
     }
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_15 = NULL;
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     goto __pyx_L3_unpacking_done;
@@ -2040,73 +2381,75 @@ PyMODINIT_FUNC PyInit_common(void)
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __pyx_t_15 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L3_unpacking_done:;
   }
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_SMA, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_SMA, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_EMA, __pyx_t_6) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_EMA, __pyx_t_6) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_WMA, __pyx_t_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_WMA, __pyx_t_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_DEMA, __pyx_t_8) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_DEMA, __pyx_t_8) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_TEMA, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_TEMA, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_TRIMA, __pyx_t_10) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_TRIMA, __pyx_t_10) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_KAMA, __pyx_t_11) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_KAMA, __pyx_t_11) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_MAMA, __pyx_t_12) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_MAMA, __pyx_t_12) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_T3, __pyx_t_13) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_T3, __pyx_t_13) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-  /* "talib/common.pyx":49
+  /* "talib/common.pyx":47
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self._lookup = {
  *             MA_Type.SMA: 'Simple Moving Average',
  */
-  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5talib_6common_7MA_Type_1__init__, 0, __pyx_n_s_MA_Type___init, NULL, __pyx_n_s_talib_common, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5talib_6common_7MA_Type_1__init__, 0, __pyx_n_s_MA_Type___init, NULL, __pyx_n_s_talib_common, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "talib/common.pyx":62
+  /* "talib/common.pyx":60
  *             }
  * 
  *     def __getitem__(self, type_):             # <<<<<<<<<<<<<<
  *         return self._lookup[type_]
  * 
  */
-  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5talib_6common_7MA_Type_3__getitem__, 0, __pyx_n_s_MA_Type___getitem, NULL, __pyx_n_s_talib_common, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5talib_6common_7MA_Type_3__getitem__, 0, __pyx_n_s_MA_Type___getitem, NULL, __pyx_n_s_talib_common, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_getitem, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyObject_SetItem(__pyx_t_3, __pyx_n_s_getitem, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "talib/common.pyx":46
- *     return ret_code
+  /* "talib/common.pyx":44
+ *     _ta_check_success('TA_Shutdown', ret_code)
  * 
  * class MA_Type(object):             # <<<<<<<<<<<<<<
  *     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
  * 
  */
-  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_MA_Type, __pyx_t_1, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_MA_Type, __pyx_t_1, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MA_Type, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MA_Type, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "talib/common.pyx":65
+  /* "talib/common.pyx":63
  *         return self._lookup[type_]
  * 
  * MA_Type = MA_Type()             # <<<<<<<<<<<<<<
+ * 
+ * _ta_func_unst_ids = {'NONE': -1}
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_MA_Type); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2119,20 +2462,187 @@ PyMODINIT_FUNC PyInit_common(void)
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MA_Type, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MA_Type, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "talib/common.pyx":65
+ * MA_Type = MA_Type()
+ * 
+ * _ta_func_unst_ids = {'NONE': -1}             # <<<<<<<<<<<<<<
+ * for i, name in enumerate([
+ *             'ADX', 'ADXR', 'ATR', 'CMO', 'DX', 'EMA', 'HT_DCPERIOD',
+ */
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_NONE, __pyx_int_neg_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_func_unst_ids, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "talib/common.pyx":66
+ * 
+ * _ta_func_unst_ids = {'NONE': -1}
+ * for i, name in enumerate([             # <<<<<<<<<<<<<<
+ *             'ADX', 'ADXR', 'ATR', 'CMO', 'DX', 'EMA', 'HT_DCPERIOD',
+ *             'HT_DCPHASE', 'HT_PHASOR', 'HT_SINE', 'HT_TRENDLINE',
+ */
+  __Pyx_INCREF(__pyx_int_0);
+  __pyx_t_1 = __pyx_int_0;
+  __pyx_t_2 = PyList_New(24); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_n_s_ADX);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_ADX);
+  __Pyx_GIVEREF(__pyx_n_s_ADX);
+  __Pyx_INCREF(__pyx_n_s_ADXR);
+  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_n_s_ADXR);
+  __Pyx_GIVEREF(__pyx_n_s_ADXR);
+  __Pyx_INCREF(__pyx_n_s_ATR);
+  PyList_SET_ITEM(__pyx_t_2, 2, __pyx_n_s_ATR);
+  __Pyx_GIVEREF(__pyx_n_s_ATR);
+  __Pyx_INCREF(__pyx_n_s_CMO);
+  PyList_SET_ITEM(__pyx_t_2, 3, __pyx_n_s_CMO);
+  __Pyx_GIVEREF(__pyx_n_s_CMO);
+  __Pyx_INCREF(__pyx_n_s_DX);
+  PyList_SET_ITEM(__pyx_t_2, 4, __pyx_n_s_DX);
+  __Pyx_GIVEREF(__pyx_n_s_DX);
+  __Pyx_INCREF(__pyx_n_s_EMA);
+  PyList_SET_ITEM(__pyx_t_2, 5, __pyx_n_s_EMA);
+  __Pyx_GIVEREF(__pyx_n_s_EMA);
+  __Pyx_INCREF(__pyx_n_s_HT_DCPERIOD);
+  PyList_SET_ITEM(__pyx_t_2, 6, __pyx_n_s_HT_DCPERIOD);
+  __Pyx_GIVEREF(__pyx_n_s_HT_DCPERIOD);
+  __Pyx_INCREF(__pyx_n_s_HT_DCPHASE);
+  PyList_SET_ITEM(__pyx_t_2, 7, __pyx_n_s_HT_DCPHASE);
+  __Pyx_GIVEREF(__pyx_n_s_HT_DCPHASE);
+  __Pyx_INCREF(__pyx_n_s_HT_PHASOR);
+  PyList_SET_ITEM(__pyx_t_2, 8, __pyx_n_s_HT_PHASOR);
+  __Pyx_GIVEREF(__pyx_n_s_HT_PHASOR);
+  __Pyx_INCREF(__pyx_n_s_HT_SINE);
+  PyList_SET_ITEM(__pyx_t_2, 9, __pyx_n_s_HT_SINE);
+  __Pyx_GIVEREF(__pyx_n_s_HT_SINE);
+  __Pyx_INCREF(__pyx_n_s_HT_TRENDLINE);
+  PyList_SET_ITEM(__pyx_t_2, 10, __pyx_n_s_HT_TRENDLINE);
+  __Pyx_GIVEREF(__pyx_n_s_HT_TRENDLINE);
+  __Pyx_INCREF(__pyx_n_s_HT_TRENDMODE);
+  PyList_SET_ITEM(__pyx_t_2, 11, __pyx_n_s_HT_TRENDMODE);
+  __Pyx_GIVEREF(__pyx_n_s_HT_TRENDMODE);
+  __Pyx_INCREF(__pyx_n_s_KAMA);
+  PyList_SET_ITEM(__pyx_t_2, 12, __pyx_n_s_KAMA);
+  __Pyx_GIVEREF(__pyx_n_s_KAMA);
+  __Pyx_INCREF(__pyx_n_s_MAMA);
+  PyList_SET_ITEM(__pyx_t_2, 13, __pyx_n_s_MAMA);
+  __Pyx_GIVEREF(__pyx_n_s_MAMA);
+  __Pyx_INCREF(__pyx_n_s_MFI);
+  PyList_SET_ITEM(__pyx_t_2, 14, __pyx_n_s_MFI);
+  __Pyx_GIVEREF(__pyx_n_s_MFI);
+  __Pyx_INCREF(__pyx_n_s_MINUS_DI);
+  PyList_SET_ITEM(__pyx_t_2, 15, __pyx_n_s_MINUS_DI);
+  __Pyx_GIVEREF(__pyx_n_s_MINUS_DI);
+  __Pyx_INCREF(__pyx_n_s_MINUS_DM);
+  PyList_SET_ITEM(__pyx_t_2, 16, __pyx_n_s_MINUS_DM);
+  __Pyx_GIVEREF(__pyx_n_s_MINUS_DM);
+  __Pyx_INCREF(__pyx_n_s_NATR);
+  PyList_SET_ITEM(__pyx_t_2, 17, __pyx_n_s_NATR);
+  __Pyx_GIVEREF(__pyx_n_s_NATR);
+  __Pyx_INCREF(__pyx_n_s_PLUS_DI);
+  PyList_SET_ITEM(__pyx_t_2, 18, __pyx_n_s_PLUS_DI);
+  __Pyx_GIVEREF(__pyx_n_s_PLUS_DI);
+  __Pyx_INCREF(__pyx_n_s_PLUS_DM);
+  PyList_SET_ITEM(__pyx_t_2, 19, __pyx_n_s_PLUS_DM);
+  __Pyx_GIVEREF(__pyx_n_s_PLUS_DM);
+  __Pyx_INCREF(__pyx_n_s_RSI);
+  PyList_SET_ITEM(__pyx_t_2, 20, __pyx_n_s_RSI);
+  __Pyx_GIVEREF(__pyx_n_s_RSI);
+  __Pyx_INCREF(__pyx_n_s_STOCHRSI);
+  PyList_SET_ITEM(__pyx_t_2, 21, __pyx_n_s_STOCHRSI);
+  __Pyx_GIVEREF(__pyx_n_s_STOCHRSI);
+  __Pyx_INCREF(__pyx_n_s_T3);
+  PyList_SET_ITEM(__pyx_t_2, 22, __pyx_n_s_T3);
+  __Pyx_GIVEREF(__pyx_n_s_T3);
+  __Pyx_INCREF(__pyx_n_s_ALL);
+  PyList_SET_ITEM(__pyx_t_2, 23, __pyx_n_s_ALL);
+  __Pyx_GIVEREF(__pyx_n_s_ALL);
+  __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  for (;;) {
+    if (__pyx_t_16 >= 24) break;
+    #if CYTHON_COMPILING_IN_CPYTHON
+    __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_16); __Pyx_INCREF(__pyx_t_2); __pyx_t_16++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    #else
+    __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_16); __pyx_t_16++; if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    #endif
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_name, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_i, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyNumber_Add(__pyx_t_1, __pyx_int_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_t_2 = 0;
+
+    /* "talib/common.pyx":72
+ *             'NATR', 'PLUS_DI', 'PLUS_DM', 'RSI', 'STOCHRSI', 'T3', 'ALL'
+ *         ]):
+ *     _ta_func_unst_ids[name] = i             # <<<<<<<<<<<<<<
+ * 
+ * def _ta_set_unstable_period(name, period):
+ */
+    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_i); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_ta_func_unst_ids); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_name); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_13);
+    if (unlikely(PyObject_SetItem(__pyx_t_4, __pyx_t_13, __pyx_t_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+    /* "talib/common.pyx":66
+ * 
+ * _ta_func_unst_ids = {'NONE': -1}
+ * for i, name in enumerate([             # <<<<<<<<<<<<<<
+ *             'ADX', 'ADXR', 'ATR', 'CMO', 'DX', 'EMA', 'HT_DCPERIOD',
+ *             'HT_DCPHASE', 'HT_PHASOR', 'HT_SINE', 'HT_TRENDLINE',
+ */
+  }
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "talib/common.pyx":74
+ *     _ta_func_unst_ids[name] = i
+ * 
+ * def _ta_set_unstable_period(name, period):             # <<<<<<<<<<<<<<
+ *     cdef TA_RetCode ret_code
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_5talib_6common_7_ta_set_unstable_period, NULL, __pyx_n_s_talib_common); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_set_unstable_period, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "talib/common.pyx":80
+ *     _ta_check_success('TA_SetUnstablePeriod', ret_code)
+ * 
+ * def _ta_get_unstable_period(name):             # <<<<<<<<<<<<<<
+ *     cdef unsigned int period
+ *     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+ */
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_5talib_6common_9_ta_get_unstable_period, NULL, __pyx_n_s_talib_common); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ta_get_unstable_period, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "talib/common.pyx":2
  * 
  * cimport libc as lib             # <<<<<<<<<<<<<<
- * from libc cimport TA_RetCode
+ * from libc cimport TA_RetCode, TA_FuncUnstId
  * 
  */
   __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -3704,6 +4214,222 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_TA_RetCode(TA_RetCode value) {
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(TA_RetCode),
+                                     little, !is_unsigned);
+    }
+}
+
+static CYTHON_INLINE TA_FuncUnstId __Pyx_PyInt_As_TA_FuncUnstId(PyObject *x) {
+    const TA_FuncUnstId neg_one = (TA_FuncUnstId) -1, const_zero = 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(TA_FuncUnstId) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (TA_FuncUnstId) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
+ #if CYTHON_USE_PYLONG_INTERNALS
+            switch (Py_SIZE(x)) {
+                case  0: return 0;
+                case  1: __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, digit, ((PyLongObject*)x)->ob_digit[0]);
+            }
+ #endif
+#endif
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+            if (sizeof(TA_FuncUnstId) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, unsigned long, PyLong_AsUnsignedLong(x))
+            } else if (sizeof(TA_FuncUnstId) <= sizeof(unsigned long long)) {
+                __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, unsigned long long, PyLong_AsUnsignedLongLong(x))
+            }
+        } else {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
+ #if CYTHON_USE_PYLONG_INTERNALS
+            switch (Py_SIZE(x)) {
+                case  0: return 0;
+                case  1: __PYX_VERIFY_RETURN_INT(TA_FuncUnstId,  digit, +(((PyLongObject*)x)->ob_digit[0]));
+                case -1: __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, sdigit, -(sdigit) ((PyLongObject*)x)->ob_digit[0]);
+            }
+ #endif
+#endif
+            if (sizeof(TA_FuncUnstId) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, long, PyLong_AsLong(x))
+            } else if (sizeof(TA_FuncUnstId) <= sizeof(long long)) {
+                __PYX_VERIFY_RETURN_INT(TA_FuncUnstId, long long, PyLong_AsLongLong(x))
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            TA_FuncUnstId val;
+            PyObject *v = __Pyx_PyNumber_Int(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (TA_FuncUnstId) -1;
+        }
+    } else {
+        TA_FuncUnstId val;
+        PyObject *tmp = __Pyx_PyNumber_Int(x);
+        if (!tmp) return (TA_FuncUnstId) -1;
+        val = __Pyx_PyInt_As_TA_FuncUnstId(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to TA_FuncUnstId");
+    return (TA_FuncUnstId) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to TA_FuncUnstId");
+    return (TA_FuncUnstId) -1;
+}
+
+static CYTHON_INLINE unsigned int __Pyx_PyInt_As_unsigned_int(PyObject *x) {
+    const unsigned int neg_one = (unsigned int) -1, const_zero = 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(unsigned int) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(unsigned int, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (unsigned int) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
+ #if CYTHON_USE_PYLONG_INTERNALS
+            switch (Py_SIZE(x)) {
+                case  0: return 0;
+                case  1: __PYX_VERIFY_RETURN_INT(unsigned int, digit, ((PyLongObject*)x)->ob_digit[0]);
+            }
+ #endif
+#endif
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+            if (sizeof(unsigned int) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT(unsigned int, unsigned long, PyLong_AsUnsignedLong(x))
+            } else if (sizeof(unsigned int) <= sizeof(unsigned long long)) {
+                __PYX_VERIFY_RETURN_INT(unsigned int, unsigned long long, PyLong_AsUnsignedLongLong(x))
+            }
+        } else {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_MAJOR_VERSION >= 3
+ #if CYTHON_USE_PYLONG_INTERNALS
+            switch (Py_SIZE(x)) {
+                case  0: return 0;
+                case  1: __PYX_VERIFY_RETURN_INT(unsigned int,  digit, +(((PyLongObject*)x)->ob_digit[0]));
+                case -1: __PYX_VERIFY_RETURN_INT(unsigned int, sdigit, -(sdigit) ((PyLongObject*)x)->ob_digit[0]);
+            }
+ #endif
+#endif
+            if (sizeof(unsigned int) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT(unsigned int, long, PyLong_AsLong(x))
+            } else if (sizeof(unsigned int) <= sizeof(long long)) {
+                __PYX_VERIFY_RETURN_INT(unsigned int, long long, PyLong_AsLongLong(x))
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            unsigned int val;
+            PyObject *v = __Pyx_PyNumber_Int(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (unsigned int) -1;
+        }
+    } else {
+        unsigned int val;
+        PyObject *tmp = __Pyx_PyNumber_Int(x);
+        if (!tmp) return (unsigned int) -1;
+        val = __Pyx_PyInt_As_unsigned_int(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to unsigned int");
+    return (unsigned int) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to unsigned int");
+    return (unsigned int) -1;
+}
+
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value) {
+    const unsigned int neg_one = (unsigned int) -1, const_zero = 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(unsigned int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+        } else if (sizeof(unsigned int) <= sizeof(unsigned long long)) {
+            return PyLong_FromUnsignedLongLong((unsigned long long) value);
+        }
+    } else {
+        if (sizeof(unsigned int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned int) <= sizeof(long long)) {
+            return PyLong_FromLongLong((long long) value);
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(unsigned int),
                                      little, !is_unsigned);
     }
 }

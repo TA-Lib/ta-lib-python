@@ -29,6 +29,15 @@ def test_input_nans():
     assert_np_arrays_equal(r1, [np.nan, np.nan, np.nan, np.nan, 0, 0, 0, 0, 0, 0])
     assert_np_arrays_equal(r2, [np.nan, np.nan, np.nan, np.nan, 100, 100, 100, 100, 100, 100])
 
+def test_unstable_period():
+    a = np.arange(10, dtype=float)
+    r = func.EMA(a, 3)
+    assert_np_arrays_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
+    talib.set_unstable_period('EMA', 5)
+    r = func.EMA(a, 3)
+    assert_np_arrays_equal(r, [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 6, 7, 8])
+    talib.set_unstable_period('EMA', 0)
+
 def test_MIN():
     result = func.MIN(series, timeperiod=4)
     i = np.where(~np.isnan(result))[0][0]

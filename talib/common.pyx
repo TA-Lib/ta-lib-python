@@ -1,6 +1,6 @@
 
 cimport libc as lib
-from libc cimport TA_RetCode
+from libc cimport TA_RetCode, TA_FuncUnstId
 
 __ta_version__ = lib.TA_GetVersionString()
 
@@ -35,13 +35,11 @@ def _ta_initialize():
     cdef TA_RetCode ret_code
     ret_code = lib.TA_Initialize()
     _ta_check_success('TA_Initialize', ret_code)
-    return ret_code
 
 def _ta_shutdown():
     cdef TA_RetCode ret_code
     ret_code = lib.TA_Shutdown()
     _ta_check_success('TA_Shutdown', ret_code)
-    return ret_code
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
@@ -63,3 +61,24 @@ class MA_Type(object):
         return self._lookup[type_]
 
 MA_Type = MA_Type()
+
+_ta_func_unst_ids = {'NONE': -1}
+for i, name in enumerate([
+            'ADX', 'ADXR', 'ATR', 'CMO', 'DX', 'EMA', 'HT_DCPERIOD',
+            'HT_DCPHASE', 'HT_PHASOR', 'HT_SINE', 'HT_TRENDLINE',
+            'HT_TRENDMODE', 'KAMA', 'MAMA', 'MFI', 'MINUS_DI', 'MINUS_DM',
+            'NATR', 'PLUS_DI', 'PLUS_DM', 'RSI', 'STOCHRSI', 'T3', 'ALL'
+        ]):
+    _ta_func_unst_ids[name] = i
+
+def _ta_set_unstable_period(name, period):
+    cdef TA_RetCode ret_code
+    cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+    ret_code = lib.TA_SetUnstablePeriod(id, period)
+    _ta_check_success('TA_SetUnstablePeriod', ret_code)
+
+def _ta_get_unstable_period(name):
+    cdef unsigned int period
+    cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
+    period = lib.TA_GetUnstablePeriod(id)
+    return period
