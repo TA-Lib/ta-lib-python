@@ -17,3 +17,6 @@ perf:
 
 test:
 	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests-$(VERSION)
+
+sdist:
+	python$(VERSION) setup.py sdist --formats=gztar,zip
