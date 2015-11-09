@@ -23,11 +23,11 @@ cdef extern from "ta-lib/ta_defs.h":
         TA_INTERNAL_ERROR = 5000
         TA_UNKNOWN_ERR = 0xffff
 
-    cdef enum TA_Compatibility
+    cdef enum TA_Compatibility:
         TA_COMPATIBILITY_DEFAULT
         TA_COMPATIBILITY_METASTOCK
 
-    cdef enum TA_MAType
+    cdef enum TA_MAType:
         TA_MAType_SMA
         TA_MAType_EMA
         TA_MAType_WMA
@@ -38,7 +38,7 @@ cdef extern from "ta-lib/ta_defs.h":
         TA_MAType_MAMA
         TA_MAType_T3
 
-    cdef enum TA_FuncUnstId
+    cdef enum TA_FuncUnstId:
         TA_FUNC_UNST_ADX
         TA_FUNC_UNST_ADXR
         TA_FUNC_UNST_ATR
@@ -66,12 +66,12 @@ cdef extern from "ta-lib/ta_defs.h":
         TA_FUNC_UNST_ALL
         TA_FUNC_UNST_NONE = -1
 
-    cdef enum TA_RangeType
+    cdef enum TA_RangeType:
         TA_RangeType_RealBody
         TA_RangeType_HighLow
         TA_RangeType_Shadows
 
-    cdef enum TA_CandleSettingType
+    cdef enum TA_CandleSettingType:
         TA_BodyLong
         TA_BodyVeryLong
         TA_BodyShort
@@ -96,12 +96,12 @@ cdef extern from "ta-lib/ta_common.h":
     ctypedef double TA_Real
     ctypedef int TA_Integer
 
-    cdef struct TA_StringTable:
+    ctypedef struct TA_StringTable:
         unsigned int size
         char **string
         void *hiddenData
 
-    cdef struct TA_RetCodeInfo:
+    ctypedef struct TA_RetCodeInfo:
         char* enumStr
         char* infoStr
 
@@ -122,7 +122,7 @@ cdef extern from "ta-lib/ta_abstract.h":
     TA_RetCode TA_GetFuncHandle(char *name, TA_FuncHandle **handle)
 
     ctypedef int TA_FuncFlags
-    cdef struct TA_FuncInfo:
+    ctypedef struct TA_FuncInfo:
         char *name
         char *group
         char *hint
@@ -154,12 +154,12 @@ cdef extern from "ta-lib/ta_abstract.h":
     ctypedef int TA_OptInputFlags
     ctypedef int TA_OutputFlags
 
-    cdef struct TA_InputParameterInfo:
+    ctypedef struct TA_InputParameterInfo:
         TA_InputParameterType type
         char *paramName
         TA_InputFlags flags
 
-    cdef struct TA_OptInputParameterInfo:
+    ctypedef struct TA_OptInputParameterInfo:
         TA_OptInputParameterType type
         char *paramName
         TA_OptInputFlags flags
@@ -169,7 +169,7 @@ cdef extern from "ta-lib/ta_abstract.h":
         char *hint
         char *helpFile
 
-    cdef struct TA_OutputParameterInfo:
+    ctypedef struct TA_OutputParameterInfo:
         TA_OutputParameterType type
         char *paramName
         TA_OutputFlags flags
@@ -178,7 +178,7 @@ cdef extern from "ta-lib/ta_abstract.h":
     TA_RetCode TA_GetOptInputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OptInputParameterInfo **info)
     TA_RetCode TA_GetOutputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OutputParameterInfo **info)
 
-    cdef struct TA_ParamHolder:
+    ctypedef struct TA_ParamHolder:
         void *hiddenData
 
     TA_RetCode TA_ParamHolderAlloc(TA_FuncHandle *handle, TA_ParamHolder **allocatedParams) # get_lookback()
