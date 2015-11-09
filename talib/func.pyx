@@ -17,6 +17,8 @@ np.import_array() # Initialize the NumPy C API
 cimport libc as lib
 from libc cimport TA_RetCode
 
+lib.TA_Initialize()
+
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACOS( np.ndarray real not None ):
