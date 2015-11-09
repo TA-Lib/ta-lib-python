@@ -16,6 +16,8 @@ import sys
 cimport numpy as np
 cimport libc as lib
 
+lib.TA_Initialize()
+
 __FUNCTION_NAMES = set(func_c.__all__)
 
 __INPUT_ARRAYS_DEFAULTS = {'open':   None,
