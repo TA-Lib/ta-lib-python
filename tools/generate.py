@@ -63,8 +63,10 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-cimport libc as lib
-from libc cimport TA_RetCode
+cimport libta_lib as lib
+from libta_lib cimport TA_RetCode
+
+lib.TA_Initialize()
 """)
 
 # cleanup variable names to make them more pythonic

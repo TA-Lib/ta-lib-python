@@ -14,7 +14,7 @@ import numpy
 import sys
 
 cimport numpy as np
-cimport libc as lib
+cimport libta_lib as lib
 
 lib.TA_Initialize()
 
