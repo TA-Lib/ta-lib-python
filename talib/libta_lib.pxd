@@ -51,19 +51,18 @@ cdef extern from "ta-lib/ta_defs.h":
     TA_FuncUnstId TA_FUNC_UNST_HT_SINE = 9
     TA_FuncUnstId TA_FUNC_UNST_HT_TRENDLINE = 10
     TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE = 11
-    TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE = 12
-    TA_FuncUnstId TA_FUNC_UNST_KAMA = 13
-    TA_FuncUnstId TA_FUNC_UNST_MAMA = 14
-    TA_FuncUnstId TA_FUNC_UNST_MFI = 15
-    TA_FuncUnstId TA_FUNC_UNST_MINUS_DI = 16
-    TA_FuncUnstId TA_FUNC_UNST_MINUS_DM = 17
-    TA_FuncUnstId TA_FUNC_UNST_NATR = 18
-    TA_FuncUnstId TA_FUNC_UNST_PLUS_DI = 19
-    TA_FuncUnstId TA_FUNC_UNST_PLUS_DM = 20
-    TA_FuncUnstId TA_FUNC_UNST_RSI = 21
-    TA_FuncUnstId TA_FUNC_UNST_STOCHRSI = 22
-    TA_FuncUnstId TA_FUNC_UNST_T3 = 23
-    TA_FuncUnstId TA_FUNC_UNST_ALL = 24
+    TA_FuncUnstId TA_FUNC_UNST_KAMA = 12
+    TA_FuncUnstId TA_FUNC_UNST_MAMA = 13
+    TA_FuncUnstId TA_FUNC_UNST_MFI = 14
+    TA_FuncUnstId TA_FUNC_UNST_MINUS_DI = 15
+    TA_FuncUnstId TA_FUNC_UNST_MINUS_DM = 16
+    TA_FuncUnstId TA_FUNC_UNST_NATR = 17
+    TA_FuncUnstId TA_FUNC_UNST_PLUS_DI = 18
+    TA_FuncUnstId TA_FUNC_UNST_PLUS_DM = 19
+    TA_FuncUnstId TA_FUNC_UNST_RSI = 20
+    TA_FuncUnstId TA_FUNC_UNST_STOCHRSI = 21
+    TA_FuncUnstId TA_FUNC_UNST_T3 = 21
+    TA_FuncUnstId TA_FUNC_UNST_ALL = 22
     TA_FuncUnstId TA_FUNC_UNST_NONE = -1
 
     ctypedef int TA_RangeType
