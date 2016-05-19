@@ -23,7 +23,7 @@ from distutils.extension import Extension
 lib_talib_name = 'ta_lib'  # the underlying C library's name
 
 platform_supported = False
-for prefix in ['darwin', 'linux', 'bsd']:
+for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
     if prefix in sys.platform:
         platform_supported = True
         include_dirs = [
