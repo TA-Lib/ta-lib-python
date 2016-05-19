@@ -52,6 +52,9 @@ if sys.platform == "win32":
     include_dirs = [r"c:\ta-lib\c\include"]
     lib_talib_dirs = [r"c:\ta-lib\c\lib"]
 
+if not platform_supported:
+    raise NotImplementedError(sys.platform)
+
 # Do not require numpy or cython for just querying the package
 if not query_only:
     import numpy
@@ -62,9 +65,6 @@ try:
     has_cython = True
 except ImportError:
     has_cython = False
-
-if not platform_supported:
-    raise NotImplementedError(sys.platform)
 
 for lib_talib_dir in lib_talib_dirs:
     try:
