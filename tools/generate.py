@@ -209,8 +209,10 @@ for f in functions:
                 cast = '<int*>'
             else:
                 assert False, arg
-            print('    assert PyArray_TYPE(%s) == np.NPY_DOUBLE, "%s is not double"' % (var, var))
-            print('    assert %s.ndim == 1, "%s has wrong dimensions"' % (var, var))
+            print('    if PyArray_TYPE(%s) != np.NPY_DOUBLE:' % var)
+            print('        raise Exception("%s is not double")' % var)
+            print('    if %s.ndim != 1:' % var)
+            print('        raise Exception("%s has wrong dimensions")' % var)
             print('    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var)
             print('        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var))
             print('    %s_data = %s%s.data' % (var, cast, var))
