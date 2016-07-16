@@ -10,7 +10,7 @@ generate:
 	python$(VERSION) tools/generate.py > talib/func.pyx
 
 clean:
-	rm -rf build talib/func*.so talib/abstract*.so talib/common*.so talib/*.pyc
+	rm -rf build talib/func*.so talib/abstract*.so talib/common*.so talib/stream*.so talib/*.pyc
 
 perf:
 	python$(VERSION) tools/perf_talib.py

@@ -81,7 +81,7 @@ if has_cython:
     cmdclass['build_ext'] = build_ext
 
 ext_modules = []
-for name in ['common', 'func', 'abstract']:
+for name in ['common', 'func', 'abstract', 'stream']:
     ext = Extension(
         'talib.%s' % name,
         [('talib/%s.pyx' if has_cython else 'talib/%s.c') % name],
