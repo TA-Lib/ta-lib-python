@@ -42,6 +42,23 @@ compilation terminated.
 This typically means that it can't find the underlying ``TA-Lib`` library,
 a dependency which needs to be installed.
 
+Sometimes installation will fail with errors like this:
+
+```
+talib/common.c:8:22: fatal error: pyconfig.h: No such file or directory
+ #include "pyconfig.h"
+                      ^
+compilation terminated.
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+```
+
+This typically means that you need the Python headers, and should run
+something like:
+
+```
+$ sudo apt-get install python3-dev
+```
+
 ### Dependencies
 
 To use TA-Lib for python, you need to have the
