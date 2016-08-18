@@ -8,7 +8,7 @@ from .common import _ta_set_unstable_period as set_unstable_period
 from .common import _ta_get_unstable_period as get_unstable_period
 from .func import *
 
-__version__ = '0.4.9'
+__version__ = '0.4.10'
 
 # In order to use this python library, talib (i.e. this __file__) will be
 # imported at some point, either explicitly or indirectly via talib.func

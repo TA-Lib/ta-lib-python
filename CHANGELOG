@@ -1,6 +1,14 @@
 0.4.10
 ======
 
+- [NEW]: Upgrade to Cython 0.23.4.
+
+- [NEW]: Adding an experimental Streaming API (talib.stream).
+
+- [NEW]: Support for "sunos"
+
+- [FIX]: Fix issue initializing library for use with candlestick functions.
+
 - [NEW]: Support for TA_SetUnstablePeriod and TA_GetUnstablePeriod
 
 0.4.9
