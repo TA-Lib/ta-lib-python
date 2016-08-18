@@ -31,9 +31,12 @@ talib/abstract.pyx
   This file contains the code for interfacing with the TA-Lib abstract interface
   and wrapping it into a pythonic Function class.
 
-talib/libc.pxd
+talib/libta_lib.pxd
   This "Cython header file" defines the C-level functions, variables and types we
   need to use in the above pyx files.
+
+talib/stream.pyx
+  This file contains code for interfacing a "streaming" interface to TA-Lib.
 
 tools/generate.py
   A script that generates and prints func.pyx to stdout. Gets information
