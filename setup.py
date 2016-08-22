@@ -5,6 +5,27 @@ import os
 import warnings
 
 from distutils.dist import Distribution
+from setuptools.command.test import test as TestCommand
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = ['tests']
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
+
 
 display_option_names = Distribution.display_option_names + ['help', 'help-commands']
 query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
@@ -76,7 +97,7 @@ for lib_talib_dir in lib_talib_dirs:
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
-cmdclass = {}
+cmdclass = {"test": PyTest}
 if has_cython:
     cmdclass['build_ext'] = build_ext
 
@@ -90,6 +111,7 @@ for name in ['common', 'func', 'abstract', 'stream']:
         libraries = [lib_talib_name]
     )
     ext_modules.append(ext)
+
 
 setup(
     name = 'TA-Lib',
