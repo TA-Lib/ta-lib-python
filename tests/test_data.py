@@ -3,7 +3,6 @@ from __future__ import print_function
 
 import numpy as np
 
-from nose.tools import assert_equal, assert_not_equal, assert_true
 
 ford_2012_dates = np.asarray([ 20120103, 20120104, 20120105, 20120106, 20120109,
     20120110, 20120111, 20120112, 20120113, 20120117, 20120118, 20120119,
@@ -217,9 +216,9 @@ series = np.array([ 91.50, 94.81, 94.38, 95.09, 93.78, 94.62, 92.53, 92.75,
 def assert_np_arrays_equal(expected, got):
     for i, value in enumerate(expected):
         if np.isnan(value):
-            assert_true(np.isnan(got[i]))
+            assert np.isnan(got[i])
         else:
-            assert_equal(value, got[i])
+            assert value == got[i]
 
 def assert_np_arrays_not_equal(expected, got):
     ''' Verifies expected and got have the same number of leading nan fields,
@@ -229,11 +228,11 @@ def assert_np_arrays_not_equal(expected, got):
     equals = []
     for i, value in enumerate(expected):
         if np.isnan(value):
-            assert_true(np.isnan(got[i]))
+            assert np.isnan(got[i])
             nans.append(value)
         else:
             try:
-                assert_not_equal(value, got[i])
+                assert value != got[i]
             except AssertionError:
                 equals.append(got[i])
     if len(equals) == len(expected[len(nans):]):
