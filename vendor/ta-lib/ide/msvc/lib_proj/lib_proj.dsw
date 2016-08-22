@@ -1,0 +1,113 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "gen_code"=".\gen_code\gen_code.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ta_common
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ta_abstract"=".\ta_abstract\ta_abstract.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ta_common"=".\ta_common\ta_common.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ta_func"=".\ta_func\ta_func.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ta_libc"=".\ta_libc\ta_libc.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ta_abstract
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ta_common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ta_func
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ta_regtest"=".\ta_regtest\ta_regtest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ta_libc
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ta_abstract
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ta_common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ta_func
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

@@ -32,16 +32,6 @@ $ python setup.py install
 
 ### Troubleshooting
 
-Sometimes installation will produce build errors like this:
-
-```
-func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
-compilation terminated.
-```
-
-This typically means that it can't find the underlying ``TA-Lib`` library,
-a dependency which needs to be installed.
-
 Sometimes installation will fail with errors like this:
 
 ```
@@ -61,8 +51,9 @@ $ sudo apt-get install python3-dev
 
 ### Dependencies
 
-To use TA-Lib for python, you need to have the
-[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed:
+To use TA-Lib for python, you'd better have the
+[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed.
+If not so, it'll be built from source.
 
 ##### Mac OS X
 

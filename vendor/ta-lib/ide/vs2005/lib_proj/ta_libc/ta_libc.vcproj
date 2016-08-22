@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="ta_libc"
+	ProjectGUID="{B7BA9CEF-8430-4BCB-8EEE-5C351800A021}"
+	RootNamespace="ta_libc"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="cmd|Win32"
+			OutputDirectory=".\..\..\..\..\lib"
+			IntermediateDirectory=".\..\..\..\..\temp\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				ReBuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				CleanCommandLine="del $(OutDir)\ta_libc_$(ConfigurationName).lib"
+				Output="$(OutDir)\ta_libc_$(ConfigurationName).lib"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="cdd|Win32"
+			OutputDirectory=".\..\..\..\..\lib"
+			IntermediateDirectory=".\..\..\..\..\temp\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				ReBuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				CleanCommandLine="del $(OutDir)\ta_libc_$(ConfigurationName).lib"
+				Output="$(OutDir)\ta_libc_$(ConfigurationName).lib"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="cmr|Win32"
+			OutputDirectory=".\..\..\..\..\lib"
+			IntermediateDirectory=".\..\..\..\..\temp\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				ReBuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				CleanCommandLine="del $(OutDir)\ta_libc_$(ConfigurationName).lib"
+				Output="$(OutDir)\ta_libc_$(ConfigurationName).lib"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="cdr|Win32"
+			OutputDirectory=".\..\..\..\..\lib"
+			IntermediateDirectory=".\..\..\..\..\temp\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				ReBuildCommandLine="lib /OUT:$(OutDir)\ta_libc_$(ConfigurationName).lib $(OutDir)\ta_abstract_$(ConfigurationName).lib $(OutDir)\ta_common_$(ConfigurationName).lib $(OutDir)\ta_func_$(ConfigurationName).lib"
+				CleanCommandLine="del $(OutDir)\ta_libc_$(ConfigurationName).lib"
+				Output="$(OutDir)\ta_libc_$(ConfigurationName).lib"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="include"
+			Filter="h;hpp;hxx;hm;inl"
+			>
+			<File
+				RelativePath="..\..\..\..\include\ta_abstract.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\include\ta_common.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\include\ta_defs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\include\ta_func.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\include\ta_libc.h"
+				>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
