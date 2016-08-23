@@ -1,7 +1,10 @@
 cimport libta_lib as lib
+from numpy import nan
 from libta_lib cimport TA_RetCode, TA_FuncUnstId
 
+cdef double NaN = nan
 __ta_version__ = lib.TA_GetVersionString()
+
 
 cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
     if ret_code == lib.TA_SUCCESS:

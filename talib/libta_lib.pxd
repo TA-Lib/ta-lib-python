@@ -517,3 +517,11 @@ cdef extern from "ta-lib/ta_func.h":
     # TALIB functions for TA_SetCandleSettings
     TA_RetCode TA_SetCandleSettings(TA_CandleSettingType settingType, TA_RangeType rangeType, int avgPeriod, double factor)
     TA_RetCode TA_RestoreCandleSettings(TA_CandleSettingType)
+
+
+cimport numpy as np
+cdef extern from "numpy/arrayobject.h":
+    int PyArray_TYPE(np.ndarray)
+    object PyArray_EMPTY(int, np.npy_intp*, int, int)
+    int PyArray_FLAGS(np.ndarray)
+    object PyArray_GETCONTIGUOUS(np.ndarray)
