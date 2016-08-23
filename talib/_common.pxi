@@ -1,4 +1,3 @@
-
 cimport libta_lib as lib
 from libta_lib cimport TA_RetCode, TA_FuncUnstId
 
