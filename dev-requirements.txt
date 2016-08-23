@@ -1,0 +1,4 @@
+Cython==0.24.1
+numpy
+pandas
+pytest

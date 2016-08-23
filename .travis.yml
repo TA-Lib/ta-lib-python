@@ -1,0 +1,14 @@
+---
+
+language: python
+python:
+- 2.7
+
+cache: pip
+
+install:
+- pip install wheel
+- pip install -r dev-requirements.txt
+
+script:
+- python setup.py test

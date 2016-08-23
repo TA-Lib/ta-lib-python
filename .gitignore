@@ -1,7 +1,8 @@
 *.pyc
 build
 *.so
-.*
 *~
+*.sw[op]
+.cache/
 *.o
 *.egg-info/

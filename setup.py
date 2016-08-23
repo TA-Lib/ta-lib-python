@@ -189,4 +189,5 @@ setup(
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     requires=['numpy'],
+    tests_require=["pytest"],
 )
