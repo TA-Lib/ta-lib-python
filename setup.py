@@ -152,7 +152,7 @@ if has_cython:
 ext_modules = [
     Extension(
         'talib.c_ta_lib',
-        ["talib/c_ta_lib.pyx"] + sources,
+        ["talib/c_ta_lib.pyx" if has_cython else "talib/c_ta_lib.c"] + sources,
         include_dirs=include_dirs,
         library_dirs=lib_talib_dirs,
         libraries=libraries
