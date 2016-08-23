@@ -1,7 +1,7 @@
 cimport numpy as np
 from cython import boundscheck, wraparound
-cimport libta_lib as lib
-from libta_lib cimport TA_RetCode
+cimport c_ta_lib as lib
+from c_ta_lib cimport TA_RetCode
 # NOTE: _ta_check_success, NaN is defined in _common.pxi
 
 

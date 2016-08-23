@@ -11,7 +11,7 @@ import numpy
 import sys
 
 cimport numpy as np
-cimport libta_lib as lib
+cimport c_ta_lib as lib
 # NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
 

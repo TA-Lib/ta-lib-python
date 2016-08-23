@@ -1,6 +1,6 @@
-cimport libta_lib as lib
+cimport c_ta_lib as lib
 from numpy import nan
-from libta_lib cimport TA_RetCode, TA_FuncUnstId
+from c_ta_lib cimport TA_RetCode, TA_FuncUnstId
 
 cdef double NaN = nan
 __ta_version__ = lib.TA_GetVersionString()

@@ -1,17 +1,13 @@
 
 import atexit
 
-from .libta_lib import (
+from .c_ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
     _ta_set_unstable_period as set_unstable_period,
     _ta_get_unstable_period as get_unstable_period,
     __TA_FUNCTION_NAMES__
 )
-
-func = __import__("libta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
-for func_name in __TA_FUNCTION_NAMES__:
-    globals()[func_name] = getattr(func, func_name)
-
+from func import *
 from . import abstract
 
 __version__ = '0.4.10'

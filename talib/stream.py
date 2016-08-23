@@ -1,8 +1,8 @@
-from .libta_lib import __TA_FUNCTION_NAMES__
+from .c_ta_lib import __TA_FUNCTION_NAMES__
 
 
 _ta_stream_func = __import__(
-    "libta_lib", globals(), locals(),
+    "c_ta_lib", globals(), locals(),
     __TA_FUNCTION_NAMES__, level=1
 )
 

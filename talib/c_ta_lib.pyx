@@ -1,4 +1,4 @@
-cimport libta_lib as lib
+cimport c_ta_lib as lib
 cimport numpy as np
 
 np.import_array() # Initialize the NumPy C API
