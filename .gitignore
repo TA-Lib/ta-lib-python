@@ -3,4 +3,5 @@ build
 *.so
 .*
 *~
-
+*.o
+*.egg-info/
