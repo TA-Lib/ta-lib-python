@@ -80,16 +80,15 @@ cmdclass = {}
 if has_cython:
     cmdclass['build_ext'] = build_ext
 
-ext_modules = []
-for name in ['common', 'func', 'abstract', 'stream']:
-    ext = Extension(
-        'talib.%s' % name,
-        [('talib/%s.pyx' if has_cython else 'talib/%s.c') % name],
-        include_dirs = include_dirs,
-        library_dirs = lib_talib_dirs,
-        libraries = [lib_talib_name]
+ext_modules = [
+    Extension(
+        'talib._ta_lib',
+        ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
+        include_dirs=include_dirs,
+        library_dirs=lib_talib_dirs,
+        libraries=[lib_talib_name]
     )
-    ext_modules.append(ext)
+]
 
 setup(
     name = 'TA-Lib',

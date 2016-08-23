@@ -1,6 +1,5 @@
-
-cimport libta_lib as lib
-from libta_lib cimport TA_RetCode, TA_FuncUnstId
+cimport _ta_lib as lib
+from _ta_lib cimport TA_RetCode, TA_FuncUnstId
 
 __ta_version__ = lib.TA_GetVersionString()
 
