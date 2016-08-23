@@ -2,9 +2,6 @@
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
 import math
-
-from . import func as func_c
-from .common import _ta_check_success, MA_Type
 try:
     from collections import OrderedDict
 except ImportError: # handle python 2.6 and earlier
@@ -15,10 +12,10 @@ import sys
 
 cimport numpy as np
 cimport libta_lib as lib
+# NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
 lib.TA_Initialize()
 
-__FUNCTION_NAMES = set(func_c.__all__)
 
 __INPUT_ARRAYS_DEFAULTS = {'open':   None,
                            'high':   None,
@@ -90,11 +87,9 @@ class Function(object):
     - FunctionInstance([input_arrays,] [param_args_andor_kwargs]) # calls set_function_args and returns self.outputs
     """
 
-    def __init__(self, function_name, *args, **kwargs):
+    def __init__(self, function_name, func_object, *args, **kwargs):
         # make sure the function_name is valid and define all of our variables
         self.__name = function_name.upper()
-        if self.__name not in __FUNCTION_NAMES:
-            raise Exception('%s not supported by TA-LIB.' % self.__name)
         self.__namestr = self.__name
         self.__name = str2bytes(self.__name)
         self.__info = None
@@ -109,6 +104,7 @@ class Function(object):
         # finish initializing: query the TALIB abstract interface and set arguments
         self.__initialize_function_info()
         self.set_function_args(*args, **kwargs)
+        self.func_object = func_object
 
     def __initialize_function_info(self):
         # function info
@@ -386,7 +382,7 @@ class Function(object):
             args.append(value)
 
         # Use the func module to actually call the function.
-        results = func_c.__getattribute__(self.__namestr)(*args)
+        results = self.func_object(*args)
         if isinstance(results, np.ndarray):
             keys = self.__outputs.keys()
             if not isinstance(keys, list):
@@ -682,10 +678,3 @@ cdef int __ta_getLookback(lib.TA_ParamHolder *holder):
     retCode = lib.TA_GetLookback(holder, &lookback)
     _ta_check_success('TA_GetLookback', retCode)
     return lookback
-
-# Configure all the available TA-Lib functions to be exported as
-# an abstract function wrapper for convenient import.
-for name in __FUNCTION_NAMES:
-    exec "%s = Function('%s')" % (name, name)
-
-__all__ = ['Function'] + list(__FUNCTION_NAMES)
