@@ -1,0 +1,11 @@
+include README.md
+include AUTHORS
+include CHANGELOG
+include COPYRIGHT
+include DEVELOPMENT
+include LICENSE
+include requirements.txt
+recursive-include vendor *
+recursive-include talib *.py *.pyx *.pxi *.pxd *.c
+global-exclude *.o *.so *.pyc
+prune .git
