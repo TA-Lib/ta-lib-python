@@ -1,12 +1,14 @@
 
 import atexit
 
-from . import common
+from .c_ta_lib import (
+    _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
+    _ta_set_unstable_period as set_unstable_period,
+    _ta_get_unstable_period as get_unstable_period,
+    __TA_FUNCTION_NAMES__
+)
+from func import *
 from . import abstract
-from .common import MA_Type, __ta_version__
-from .common import _ta_set_unstable_period as set_unstable_period
-from .common import _ta_get_unstable_period as get_unstable_period
-from .func import *
 
 __version__ = '0.4.10'
 
@@ -17,8 +19,8 @@ __version__ = '0.4.10'
 # functions are called. Finally, when the python process exits, we shutdown
 # the underlying TA-Lib.
 
-common._ta_initialize()
-atexit.register(common._ta_shutdown)
+_ta_initialize()
+atexit.register(_ta_shutdown)
 
 __function_groups__ = {
     'Cycle Indicators': [
