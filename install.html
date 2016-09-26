@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,72 +32,48 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
-
+<h1>Installation</h1>
 <p>You can install from PyPI:</p>
 
-<pre>$ pip install TA-Lib
-</pre>
-
+<pre><code>$ pip install TA-Lib</code></pre>
 <p>Or checkout the sources and run <code>setup.py</code> yourself:</p>
 
-<pre>$ python setup.py install
-</pre>
+<pre><code>$ python setup.py install</code></pre>
+<h3>Troubleshooting Install Errors</h3>
 
-<h3>
-<a id="user-content-troubleshooting-install-errors" class="anchor" href="#troubleshooting-install-errors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Troubleshooting Install Errors</h3>
-
-<pre>func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
-compilation terminated.
-</pre>
-
+<pre><code>func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
+compilation terminated.</code></pre>
 <p>If you get build errors like this, it typically means that it can't find the
 underlying <code>TA-Lib</code> library and needs to be installed:</p>
-
-<h1>
-<a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h1>
-
+<h1>Dependencies</h1>
 <p>To use TA-Lib for python, you need to have the <a href="http://ta-lib.org/hdr_dw.html">TA-Lib</a>
 already installed:</p>
+<h4>Mac OS X</h4>
 
-<h4>
-<a id="user-content-mac-os-x" class="anchor" href="#mac-os-x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mac OS X</h4>
-
-<pre>$ brew install ta-lib
-</pre>
-
-<h4>
-<a id="user-content-windows" class="anchor" href="#windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Windows</h4>
-
+<pre><code>$ brew install ta-lib</code></pre>
+<h4>Windows</h4>
 <p>Download <a href="http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip">ta-lib-0.4.0-msvc.zip</a>
 and unzip to <code>C:\ta-lib</code></p>
-
-<h4>
-<a id="user-content-linux" class="anchor" href="#linux" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linux</h4>
-
+<h4>Linux</h4>
 <p>Download <a href="http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz">ta-lib-0.4.0-src.tar.gz</a> and:</p>
 
-<pre>$ untar and cd
+<pre><code>$ untar and cd
 $ ./configure --prefix=/usr
 $ make
-$ sudo make install
-</pre>
-
-<blockquote>
-<p>If you build <code>TA-Lib</code> using <code>make -jX</code> it will fail but that's OK!
+$ sudo make install</code></pre>
+<blockquote><p>If you build <code>TA-Lib</code> using <code>make -jX</code> it will fail but that's OK!
 Simply rerun <code>make -jX</code> followed by <code>[sudo] make install</code>.</p>
 </blockquote>
-
 <p><a href="doc_index.html">Documentation Index</a>
-<a class="float-right" href="func.html">Next: Using the Function API</a></p>        </section>
+<a class="float-right" href="func.html">Next: Using the Function API</a></p>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>

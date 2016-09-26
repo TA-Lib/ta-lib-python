@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,107 +32,94 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-abstract-api-quick-start" class="anchor" href="#abstract-api-quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Abstract API Quick Start</h1>
-
+<h1>Abstract API Quick Start</h1>
 <p>If you're already familiar with using the function API, you should feel right
 at home using the abstract API. Every function takes the same input, passed
 as a dictionary of Numpy arrays:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">import</span> numpy <span class="pl-k">as</span> np
-<span class="pl-c"># note that all ndarrays must be the same length!</span>
-inputs <span class="pl-k">=</span> {
-    <span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>high<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>low<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>close<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>volume<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>)
-}</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span> <span class="highlight kn">as</span> <span class="highlight nn">np</span>
+<span class="highlight c1"># note that all ndarrays must be the same length!</span>
+<span class="highlight n">inputs</span> <span class="highlight o">=</span> <span class="highlight p">{</span>
+    <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;high&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;close&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;volume&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
+<span class="highlight p">}</span>
+</pre></div>
 <p>Functions can either be imported directly or instantiated by name:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib <span class="pl-k">import</span> abstract
-sma <span class="pl-k">=</span> abstract.SMA
-sma <span class="pl-k">=</span> abstract.Function(<span class="pl-s"><span class="pl-pds">'</span>sma<span class="pl-pds">'</span></span>)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">abstract</span>
+<span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">SMA</span>
+<span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;sma&#39;</span><span class="highlight p">)</span>
+</pre></div>
 <p>From there, calling functions is basically the same as the function API:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib.abstract <span class="pl-k">import</span> <span class="pl-k">*</span>
-output <span class="pl-k">=</span> SMA(input_arrays, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">25</span>) <span class="pl-c"># calculate on close prices by default</span>
-output <span class="pl-k">=</span> SMA(input_arrays, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">25</span>, <span class="pl-smi">price</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>) <span class="pl-c"># calculate on opens</span>
-upper, middle, lower <span class="pl-k">=</span> BBANDS(input_arrays, <span class="pl-c1">20</span>, <span class="pl-c1">2</span>, <span class="pl-c1">2</span>)
-slowk, slowd <span class="pl-k">=</span> STOCH(input_arrays, <span class="pl-c1">5</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>) <span class="pl-c"># uses high, low, close by default</span>
-slowk, slowd <span class="pl-k">=</span> STOCH(input_arrays, <span class="pl-c1">5</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-smi">prices</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>high<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>low<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>])</pre></div>
-
-<h2>
-<a id="user-content-advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage</h2>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib.abstract</span> <span class="highlight kn">import</span> <span class="highlight o">*</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on close prices by default</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">,</span> <span class="highlight n">price</span><span class="highlight o">=</span><span class="highlight s1">&#39;open&#39;</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on opens</span>
+<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">)</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">)</span> <span class="highlight c1"># uses high, low, close by default</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">prices</span><span class="highlight o">=</span><span class="highlight p">[</span><span class="highlight s1">&#39;high&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">])</span>
+</pre></div>
+<h2>Advanced Usage</h2>
 <p>For more advanced use cases of TA-Lib, the Abstract API also offers much more
 flexibility. You can even subclass <code>abstract.Function</code> and override
 <code>set_input_arrays</code> to customize the type of input data Function accepts
 (e.g. a pandas DataFrame).</p>
-
 <p>Details about every function can be accessed via the info property:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">print</span> Function(<span class="pl-s"><span class="pl-pds">'</span>stoch<span class="pl-pds">'</span></span>).info
-{
-  <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>STOCH<span class="pl-pds">'</span></span>,
-  <span class="pl-s"><span class="pl-pds">'</span>display_name<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>Stochastic<span class="pl-pds">'</span></span>,
-  <span class="pl-s"><span class="pl-pds">'</span>group<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>Momentum Indicators<span class="pl-pds">'</span></span>,
-  <span class="pl-s"><span class="pl-pds">'</span>input_names<span class="pl-pds">'</span></span>: OrderedDict([
-    (<span class="pl-s"><span class="pl-pds">'</span>prices<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>high<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>low<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>close<span class="pl-pds">'</span></span>]),
-  ]),
-  <span class="pl-s"><span class="pl-pds">'</span>parameters<span class="pl-pds">'</span></span>: OrderedDict([
-    (<span class="pl-s"><span class="pl-pds">'</span>fastk_period<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
-    (<span class="pl-s"><span class="pl-pds">'</span>slowk_period<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>),
-    (<span class="pl-s"><span class="pl-pds">'</span>slowk_matype<span class="pl-pds">'</span></span>, <span class="pl-c1">0</span>),
-    (<span class="pl-s"><span class="pl-pds">'</span>slowd_period<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>),
-    (<span class="pl-s"><span class="pl-pds">'</span>slowd_matype<span class="pl-pds">'</span></span>, <span class="pl-c1">0</span>),
-  ]),
-  <span class="pl-s"><span class="pl-pds">'</span>output_names<span class="pl-pds">'</span></span>: [<span class="pl-s"><span class="pl-pds">'</span>slowk<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>slowd<span class="pl-pds">'</span></span>],
-}
+<div class="highlight"><pre><span></span><span class="highlight k">print</span> <span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;stoch&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">info</span>
+<span class="highlight p">{</span>
+  <span class="highlight s1">&#39;name&#39;</span><span class="highlight p">:</span> <span class="highlight s1">&#39;STOCH&#39;</span><span class="highlight p">,</span>
+  <span class="highlight s1">&#39;display_name&#39;</span><span class="highlight p">:</span> <span class="highlight s1">&#39;Stochastic&#39;</span><span class="highlight p">,</span>
+  <span class="highlight s1">&#39;group&#39;</span><span class="highlight p">:</span> <span class="highlight s1">&#39;Momentum Indicators&#39;</span><span class="highlight p">,</span>
+  <span class="highlight s1">&#39;input_names&#39;</span><span class="highlight p">:</span> <span class="highlight n">OrderedDict</span><span class="highlight p">([</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;prices&#39;</span><span class="highlight p">,</span> <span class="highlight p">[</span><span class="highlight s1">&#39;high&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;close&#39;</span><span class="highlight p">]),</span>
+  <span class="highlight p">]),</span>
+  <span class="highlight s1">&#39;parameters&#39;</span><span class="highlight p">:</span> <span class="highlight n">OrderedDict</span><span class="highlight p">([</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;fastk_period&#39;</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">),</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;slowk_period&#39;</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">),</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;slowk_matype&#39;</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">),</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;slowd_period&#39;</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">),</span>
+    <span class="highlight p">(</span><span class="highlight s1">&#39;slowd_matype&#39;</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">),</span>
+  <span class="highlight p">]),</span>
+  <span class="highlight s1">&#39;output_names&#39;</span><span class="highlight p">:</span> <span class="highlight p">[</span><span class="highlight s1">&#39;slowk&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;slowd&#39;</span><span class="highlight p">],</span>
+<span class="highlight p">}</span>
 </pre></div>
-
 <p>Or in human-readable format:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-c1">help</span>(STOCH)
-<span class="pl-c1">str</span>(STOCH)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight n">help</span><span class="highlight p">(</span><span class="highlight n">STOCH</span><span class="highlight p">)</span>
+<span class="highlight nb">str</span><span class="highlight p">(</span><span class="highlight n">STOCH</span><span class="highlight p">)</span>
+</pre></div>
 <p>Other useful properties of <code>Function</code>:</p>
-
-<div class="highlight highlight-python"><pre>Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).function_flags
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).input_names
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).input_arrays
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).parameters
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).lookback
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).output_names
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).output_flags
-Function(<span class="pl-s"><span class="pl-pds">'</span>x<span class="pl-pds">'</span></span>).outputs</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">function_flags</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">input_names</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">input_arrays</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">parameters</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">lookback</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">output_names</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">output_flags</span>
+<span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;x&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">outputs</span>
+</pre></div>
 <p>Aside from calling the function directly, Functions maintain state and will
 remember their parameters/input_arrays after they've been set. You can set
 parameters and recalculate with new input data using run():</p>
+<div class="highlight"><pre><span></span><span class="highlight n">SMA</span><span class="highlight o">.</span><span class="highlight n">parameters</span> <span class="highlight o">=</span> <span class="highlight p">{</span><span class="highlight s1">&#39;timeperiod&#39;</span><span class="highlight p">:</span> <span class="highlight mi">15</span><span class="highlight p">}</span>
+<span class="highlight n">result1</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight o">.</span><span class="highlight n">run</span><span class="highlight p">(</span><span class="highlight n">input_arrays1</span><span class="highlight p">)</span>
+<span class="highlight n">result2</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight o">.</span><span class="highlight n">run</span><span class="highlight p">(</span><span class="highlight n">input_arrays2</span><span class="highlight p">)</span>
 
-<div class="highlight highlight-python"><pre>SMA.parameters <span class="pl-k">=</span> {<span class="pl-s"><span class="pl-pds">'</span>timeperiod<span class="pl-pds">'</span></span>: <span class="pl-c1">15</span>}
-result1 <span class="pl-k">=</span> SMA.run(input_arrays1)
-result2 <span class="pl-k">=</span> SMA.run(input_arrays2)
-
-<span class="pl-c"># Or set input_arrays and change the parameters:</span>
-SMA.input_arrays <span class="pl-k">=</span> input_arrays1
-ma10 <span class="pl-k">=</span> SMA(<span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">10</span>)
-ma20 <span class="pl-k">=</span> SMA(<span class="pl-c1">20</span>)</pre></div>
-
+<span class="highlight c1"># Or set input_arrays and change the parameters:</span>
+<span class="highlight n">SMA</span><span class="highlight o">.</span><span class="highlight n">input_arrays</span> <span class="highlight o">=</span> <span class="highlight n">input_arrays1</span>
+<span class="highlight n">ma10</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
+<span class="highlight n">ma20</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight mi">20</span><span class="highlight p">)</span>
+</pre></div>
 <p>For more details, take a look at the
 <a href="https://github.com/mrjbq7/ta-lib/blob/master/talib/abstract.pyx#L46">code</a>.</p>
-
-<p><a href="doc_index.html">Documentation Index</a></p>        </section>
+<p><a href="doc_index.html">Documentation Index</a></p>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>

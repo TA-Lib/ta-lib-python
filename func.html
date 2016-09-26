@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,39 +32,31 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-function-api-examples" class="anchor" href="#function-api-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Function API Examples</h1>
-
+<h1>Function API Examples</h1>
 <p>Similar to TA-Lib, the function interface provides a lightweight wrapper of
 the exposed TA-Lib indicators.</p>
-
 <p>Each function returns an output array and have default values for their
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to <code>NaN</code>.</p>
-
 <p>All of the following examples use the function API:</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span>
+<span class="highlight kn">import</span> <span class="highlight nn">talib</span>
 
-<div class="highlight highlight-python"><pre><span class="pl-k">import</span> numpy
-<span class="pl-k">import</span> talib
-
-close <span class="pl-k">=</span> numpy.random.random(<span class="pl-c1">100</span>)</pre></div>
-
+<span class="highlight n">close</span> <span class="highlight o">=</span> <span class="highlight n">numpy</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculate a simple moving average of the close prices:</p>
-
-<div class="highlight highlight-python"><pre>output <span class="pl-k">=</span> talib.SMA(close)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculating bollinger bands, with triple exponential moving average:</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
 
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib <span class="pl-k">import</span> MA_Type
-
-upper, middle, lower <span class="pl-k">=</span> talib.BBANDS(close, <span class="pl-smi">matype</span><span class="pl-k">=</span>MA_Type.T3)</pre></div>
-
+<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight n">MA_Type</span><span class="highlight o">.</span><span class="highlight n">T3</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculating momentum of the close prices, with a time period of 5:</p>
-
-<div class="highlight highlight-python"><pre>output <span class="pl-k">=</span> talib.MOM(close, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">5</span>)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">MOM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">)</span>
+</pre></div>
 <p>Documentation for all functions:</p>
-
 <ul>
 <li><a href="func_groups/overlap_studies.html">Overlap Studies</a></li>
 <li><a href="func_groups/momentum_indicators.html">Momentum Indicators</a></li>
@@ -77,17 +69,16 @@ upper, middle, lower <span class="pl-k">=</span> talib.BBANDS(close, <span class
 <li><a href="func_groups/math_transform.html">Math Transform</a></li>
 <li><a href="func_groups/math_operators.html">Math Operators</a></li>
 </ul>
-
 <p><a href="doc_index.html">Documentation Index</a>
-<a class="float-right" href="abstract.html">Next: Using the Abstract API</a></p>        </section>
+<a class="float-right" href="abstract.html">Next: Using the Abstract API</a></p>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>

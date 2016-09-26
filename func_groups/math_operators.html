@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="../index.html">Home</a></li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,84 +32,50 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-math-operator-functions" class="anchor" href="#math-operator-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Math Operator Functions</h1>
-
-<h3>
-<a id="user-content-add---vector-arithmetic-add" class="anchor" href="#add---vector-arithmetic-add" aria-hidden="true"><span class="octicon octicon-link"></span></a>ADD - Vector Arithmetic Add</h3>
-
-<pre>real = ADD(high, low)
-</pre>
-
-<h3>
-<a id="user-content-div---vector-arithmetic-div" class="anchor" href="#div---vector-arithmetic-div" aria-hidden="true"><span class="octicon octicon-link"></span></a>DIV - Vector Arithmetic Div</h3>
-
-<pre>real = DIV(high, low)
-</pre>
-
-<h3>
-<a id="user-content-max---highest-value-over-a-specified-period" class="anchor" href="#max---highest-value-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MAX - Highest value over a specified period</h3>
-
-<pre>real = MAX(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-maxindex---index-of-highest-value-over-a-specified-period" class="anchor" href="#maxindex---index-of-highest-value-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MAXINDEX - Index of highest value over a specified period</h3>
-
-<pre>integer = MAXINDEX(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-min---lowest-value-over-a-specified-period" class="anchor" href="#min---lowest-value-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MIN - Lowest value over a specified period</h3>
-
-<pre>real = MIN(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-minindex---index-of-lowest-value-over-a-specified-period" class="anchor" href="#minindex---index-of-lowest-value-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MININDEX - Index of lowest value over a specified period</h3>
-
-<pre>integer = MININDEX(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-minmax---lowest-and-highest-values-over-a-specified-period" class="anchor" href="#minmax---lowest-and-highest-values-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MINMAX - Lowest and highest values over a specified period</h3>
-
-<pre>min, max = MINMAX(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-minmaxindex---indexes-of-lowest-and-highest-values-over-a-specified-period" class="anchor" href="#minmaxindex---indexes-of-lowest-and-highest-values-over-a-specified-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>MINMAXINDEX - Indexes of lowest and highest values over a specified period</h3>
-
-<pre>minidx, maxidx = MINMAXINDEX(close, timeperiod=30)
-</pre>
-
-<h3>
-<a id="user-content-mult---vector-arithmetic-mult" class="anchor" href="#mult---vector-arithmetic-mult" aria-hidden="true"><span class="octicon octicon-link"></span></a>MULT - Vector Arithmetic Mult</h3>
-
-<pre>real = MULT(high, low)
-</pre>
-
-<h3>
-<a id="user-content-sub---vector-arithmetic-substraction" class="anchor" href="#sub---vector-arithmetic-substraction" aria-hidden="true"><span class="octicon octicon-link"></span></a>SUB - Vector Arithmetic Substraction</h3>
-
-<pre>real = SUB(high, low)
-</pre>
-
-<h3>
-<a id="user-content-sum---summation" class="anchor" href="#sum---summation" aria-hidden="true"><span class="octicon octicon-link"></span></a>SUM - Summation</h3>
-
-<pre>real = SUM(close, timeperiod=30)
-</pre>
-
+<h1>Math Operator Functions</h1>
+<h3>ADD - Vector Arithmetic Add</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADD</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
+</pre></div>
+<h3>DIV - Vector Arithmetic Div</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DIV</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MAX - Highest value over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MAX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MAXINDEX - Index of highest value over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MAXINDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MIN - Lowest value over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIN</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MININDEX - Index of lowest value over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MININDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MINMAX - Lowest and highest values over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight nb">min</span><span class="highlight p">,</span> <span class="highlight nb">max</span> <span class="highlight o">=</span> <span class="highlight n">MINMAX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MINMAXINDEX - Indexes of lowest and highest values over a specified period</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">minidx</span><span class="highlight p">,</span> <span class="highlight n">maxidx</span> <span class="highlight o">=</span> <span class="highlight n">MINMAXINDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MULT - Vector Arithmetic Mult</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MULT</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
+</pre></div>
+<h3>SUB - Vector Arithmetic Substraction</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUB</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
+</pre></div>
+<h3>SUM - Summation</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
 <p><a href="../doc_index.html">Documentation Index</a>
-<a class="float-right" href="../funcs.html">All Function Groups</a></p>        </section>
+<a class="float-right" href="../funcs.html">All Function Groups</a></p>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
