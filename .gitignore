@@ -1,3 +1,6 @@
+docs/html
+docs/.tadoc.org.html
+
 *.pyc
 build
 *.so

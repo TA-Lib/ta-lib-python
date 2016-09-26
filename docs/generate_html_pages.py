@@ -1,16 +1,40 @@
+"""
+USAGE:
+
+To convert markdown docs into html docs:
+$ python generate_html_pages.py /path/to/gh-pages/dir
+
+To generate pygments code highlighting stylesheet:
+$ pygmentize -f html -S [STYLE_NAME] -a .highlight > /path/to/gh-pages/stylesheets/dir/pygments_style.css
+
+To list available style names (at python prompt)
+>>> from pygments import styles
+>>> sorted(styles.get_all_styles())
+# default, lovelace and xcode are "normal" styles
+"""
+
+from __future__ import print_function
+
 import os
 import sys
 import talib
 
-from grip import render_content
+import mistune
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
+
 from bs4 import BeautifulSoup
 
 from talib.abstract import Function
 
 
-DIR = os.path.dirname(os.path.realpath(__file__))
+INPUT_DIR = os.path.dirname(os.path.realpath(__file__))
+FUNCTION_GROUPS_DIR = os.path.join(INPUT_DIR, 'func_groups')
+OUTPUT_DIR = os.path.join(INPUT_DIR, 'html')
 
-header = '''\
+
+HEADER = '''\
 <!DOCTYPE html>
 <html>
 
@@ -33,7 +57,7 @@ header = '''\
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -47,7 +71,7 @@ header = '''\
         <section id="main_content" class="inner">
 '''
 
-footer = '''\
+FOOTER = '''\
         </section>
     </div>
 
@@ -55,8 +79,7 @@ footer = '''\
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
@@ -67,22 +90,29 @@ footer = '''\
 '''
 
 
-def get_doc_links(update=False):
-    tadoc_homepage = 'http://www.tadoc.org/'
+def slugify(string):
+    return string.lower().replace(' ', '_')
 
-    # if not update load a cached copy if we can, otherwise download new html
-    html_file_path = os.path.join(DIR, 'tadoc.org.html')
-    if not update and os.path.exists(html_file_path):
+
+def get_doc_links():
+    """Returns a dictionary of function names -> upstream documentation link"""
+    tadoc_homepage = 'http://www.tadoc.org/'
+    html_file_path = os.path.join(INPUT_DIR, '.tadoc.org.html')
+    if os.path.exists(html_file_path):
         with open(html_file_path, 'r') as f:
             html = f.read()
     else:
-        import urllib2
-        html = urllib2.urlopen(tadoc_homepage).read()
+        if sys.version_info < (2, 8):
+            from urllib2 import urlopen
+        else:
+            from urllib.request import urlopen
+
+        html = urlopen(tadoc_homepage).read()
         with open(html_file_path, 'w') as f:
             f.write(html)
 
     # find every link that's for an indicator and convert to absolute urls
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html.parser')
     links = [a for a in soup.findAll('a') if 'indicator' in a['href']]
     ret = {}
     for a in links:
@@ -91,25 +121,41 @@ def get_doc_links(update=False):
         ret[func] = url
     return ret
 
-def get_groups_markdown(update=False):
 
+def generate_groups_markdown():
+    """Generate and save markdown files for function group documentation"""
+    for group, group_docs in get_groups_markdown().items():
+        file_path = os.path.join(FUNCTION_GROUPS_DIR, '%s.md' % group)
+        with open(file_path, 'w') as f:
+            f.write(group_docs)
+
+
+def get_groups_markdown():
+    """Generate markdown for function groups using the Abstract API
+
+    Returns a dictionary of group_name -> documentation for group functions
+    """
     def unpluralize(noun):
         if noun.endswith('s'):
             if len(noun) > 2 and noun[-2] not in ["'", 'e']:
                 return noun[:-1]
         return noun
 
-    doc_links = get_doc_links(update)
+    doc_links = get_doc_links()
     ret = {}
     for group, funcs in talib.get_function_groups().items():
         h1 = '# %s' % unpluralize(group)
         h1 = h1 + ' Functions' if 'Function' not in h1 else h1 + 's'
-        ret[group] = [h1]
+        group_docs = [h1]
         for func in funcs:
             # figure out this function's options
             f = Function(func)
             inputs = f.info['input_names']
-            if 'prices' in inputs:
+            if 'price' in inputs and 'prices' in inputs:
+                names = [inputs['price']]
+                names.extend(inputs['prices'])
+                input_names = ', '.join(names)
+            elif 'prices' in inputs:
                 input_names = ', '.join(inputs['prices'])
             else:
                 input_names = ', '.join([x for x in inputs.values() if x])
@@ -120,55 +166,35 @@ def get_groups_markdown(update=False):
             outputs = ', '.join(f.info['output_names'])
 
             # print the header
-            ret[group].append('### %s - %s' % (func, f.info['display_name']))
+            group_docs.append('### %s - %s' % (func, f.info['display_name']))
+
+            if f.function_flags and 'Function has an unstable period' in f.function_flags:
+                group_docs.append('NOTE: The ``%s`` function has an unstable period.  ' % func)
 
             # print the code definition block
-            ret[group].append("```")
+            group_docs.append("```python")
             if params:
-                ret[group].append('%s = %s(%s, %s)' % (
+                group_docs.append('%s = %s(%s, %s)' % (
                     outputs, func.upper(), input_names, params))
             else:
-                ret[group].append('%s = %s(%s)' % (
+                group_docs.append('%s = %s(%s)' % (
                     outputs, func.upper(), input_names))
-            ret[group].append("```\n")
+            group_docs.append("```\n")
+
 
             # print extra info if we can
             if func in doc_links:
-                ret[group].append(
-                    'Learn more about the %s at [tadoc.org](%s).  ' % (
-                        f.info['display_name'], doc_links[func]))
-        ret[group].append('\n[Documentation Index](../doc_index.html)')
-        ret[group].append('[FLOAT_RIGHTAll Function Groups](../funcs.html)')
-        ret[group] = '\n'.join(ret[group]) + '\n'
+                group_docs.append('Learn more about the %s at [tadoc.org](%s).  ' % (
+                    f.info['display_name'], doc_links[func]))
+
+        group_docs.append('\n[Documentation Index](../doc_index.html)')
+        group_docs.append('[FLOAT_RIGHTAll Function Groups](../funcs.html)')
+
+        ret[slugify(group)] = '\n'.join(group_docs) + '\n'
     return ret
 
-def save_group_files(markdown_groups):
-    group_order = [
-        'Overlap Studies',
-        'Momentum Indicators',
-        'Volume Indicators',
-        'Volatility Indicators',
-        'Pattern Recognition',
-        'Cycle Indicators',
-        'Statistic Functions',
-        'Price Transform',
-        'Math Transform',
-        'Math Operators',
-        ]
 
-    def slug(name):
-        return name.lower().replace(' ', '_')
-
-    for group in group_order:
-        file_path = os.path.join(DIR, 'func_groups', '%s.md' % slug(group))
-        with open(file_path, 'w') as f:
-            f.write(markdown_groups[group])
-
-def generate_function_groups_md(update=False):
-    save_group_files(get_groups_markdown(update))
-
-def get_open_save_file_paths():
-    ret = []
+def get_markdown_file_paths():
     file_names = [
         'index.md',
         'doc_index.md',
@@ -176,28 +202,34 @@ def get_open_save_file_paths():
         'func.md',
         'funcs.md',
         'abstract.md',
-        ]
-    groups = ['func_groups/%s' % x
-              for x in os.listdir(os.path.join(DIR, 'func_groups'))]
-    file_names.extend(groups)
-    for file_name in file_names:
-        open_file_path = os.path.join(DIR, file_name)
-        save_file_path = os.path.join(DIR, 'html', file_name.replace('.md', '.html'))
-        ret.append((open_file_path, save_file_path))
-    return ret
+    ]
+    file_names.extend(
+        ['func_groups/%s' % x for x in os.listdir(FUNCTION_GROUPS_DIR) if x.endswith('.md')]
+    )
+    return [os.path.join(INPUT_DIR, fn) for fn in file_names]
 
-def run_convert_to_html():
-    for md_file_path, save_file_path in get_open_save_file_paths():
+
+def _get_markdown_renderer():
+    """Returns a function to convert a Markdown string into pygments-highlighted HTML"""
+    class PygmentsHighlighter(mistune.Renderer):
+        def block_code(self, code, lang=None):
+            if not lang:
+                return '\n<pre><code>%s</code></pre>\n' % mistune.escape(code)
+            lexer = get_lexer_by_name(lang, stripall=True)
+            formatter = HtmlFormatter(classprefix='highlight ')
+            return highlight(code, lexer, formatter)
+    return mistune.Markdown(renderer=PygmentsHighlighter())
+
+
+def run_convert_to_html(output_dir):
+    """Converts markdown files into their respective html files"""
+    markdown_to_html = _get_markdown_renderer()
+    for md_file_path in get_markdown_file_paths():
         with open(md_file_path, 'r') as f:
-            html = render_content(f.read())
+            html = markdown_to_html(f.read())
 
-        html = html.replace('<pre><code>', '<pre>')
-        html = html.replace('</code></pre>', '</pre>')
-        html = html[html.find('<body>')+len('<body>'):] # chop off the generated header
-        html = html[:html.rfind('</body>')] # chop off </body></html>
-
-        head = header
-        if 'func_groups' in save_file_path:
+        head = HEADER
+        if 'func_groups' in md_file_path:
             head = head.replace('"index.html"', '"../index.html"')
             head = head.replace('"doc_index.html"', '"../doc_index.html"')
             head = head.replace('"stylesheets/', '"../stylesheets/')
@@ -207,11 +239,20 @@ def run_convert_to_html():
             if 'FLOAT_RIGHT' in line:
                 line = line.replace('FLOAT_RIGHT', '')
                 lines[i] = line.replace('<a ', '<a class="float-right" ')
-        html = ''.join([head, '\n'.join(lines), footer])
+        html = ''.join([head, '\n'.join(lines), FOOTER])
 
+        save_file_path = os.path.abspath(
+            md_file_path.replace(INPUT_DIR, output_dir).replace('.md', '.html')
+        )
+        if not os.path.exists(os.path.dirname(save_file_path)):
+            os.mkdir(os.path.dirname(save_file_path))
         with open(save_file_path, 'w') as f:
             f.write(html)
+            print('Wrote %s' % save_file_path)
+
 
 if __name__ == '__main__':
-    generate_function_groups_md(update=False)
-    run_convert_to_html()
+    generate_groups_markdown()
+    run_convert_to_html(
+        OUTPUT_DIR if len(sys.argv) == 1 else sys.argv[1]
+    )

@@ -3,6 +3,7 @@ import atexit
 
 from . import common
 from . import abstract
+from . import stream
 from .common import MA_Type, __ta_version__
 from .common import _ta_set_unstable_period as set_unstable_period
 from .common import _ta_get_unstable_period as get_unstable_period
