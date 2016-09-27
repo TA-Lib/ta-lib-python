@@ -12,4 +12,5 @@ os:
 install:
   - pip install -r requirements.txt
 script:
+  - make
   - make test
