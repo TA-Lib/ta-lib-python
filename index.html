@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,15 +32,11 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h1>
-
+<h1>About</h1>
 <p>This is a Python wrapper for <a href="http://ta-lib.org">TA-LIB</a> based on Cython
 instead of SWIG. From the homepage:</p>
-
-<blockquote>
-<p>TA-Lib is widely used by trading software developers requiring to perform
+<blockquote><p>TA-Lib is widely used by trading software developers requiring to perform
 technical analysis of financial market data.</p>
-
 <ul>
 <li>Includes 150+ indicators such as ADX, MACD, RSI, Stochastic, Bollinger
 Bands, etc.</li>
@@ -48,98 +44,73 @@ Bands, etc.</li>
 <li>Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET</li>
 </ul>
 </blockquote>
-
 <p>The original Python bindings use <a href="http://swig.org">SWIG</a> which unfortunately
 are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.</p>
-
-<h4>
-<a id="user-content-install-ta-lib-or-read-the-docs" class="anchor" href="#install-ta-lib-or-read-the-docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<a href="install.html">Install TA-Lib</a> or <a href="doc_index.html">Read the Docs</a>
-</h4>
-
-<h2>
-<a id="user-content-examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
-
+<h4><a href="install.html">Install TA-Lib</a> or <a href="doc_index.html">Read the Docs</a></h4>
+<h2>Examples</h2>
 <p>Similar to TA-Lib, the function interface provides a lightweight wrapper of
 the exposed TA-Lib indicators.</p>
-
 <p>Each function returns an output array and have default values for their
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to <code>NaN</code>.</p>
-
 <p>All of the following examples use the function API:</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span>
+<span class="highlight kn">import</span> <span class="highlight nn">talib</span>
 
-<div class="highlight highlight-python"><pre><span class="pl-k">import</span> numpy
-<span class="pl-k">import</span> talib
-
-close <span class="pl-k">=</span> numpy.random.random(<span class="pl-c1">100</span>)</pre></div>
-
+<span class="highlight n">close</span> <span class="highlight o">=</span> <span class="highlight n">numpy</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculate a simple moving average of the close prices:</p>
-
-<div class="highlight highlight-python"><pre>output <span class="pl-k">=</span> talib.SMA(close)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculating bollinger bands, with triple exponential moving average:</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
 
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib <span class="pl-k">import</span> MA_Type
-
-upper, middle, lower <span class="pl-k">=</span> talib.BBANDS(close, <span class="pl-smi">matype</span><span class="pl-k">=</span>MA_Type.T3)</pre></div>
-
+<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight n">MA_Type</span><span class="highlight o">.</span><span class="highlight n">T3</span><span class="highlight p">)</span>
+</pre></div>
 <p>Calculating momentum of the close prices, with a time period of 5:</p>
-
-<div class="highlight highlight-python"><pre>output <span class="pl-k">=</span> talib.MOM(close, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">5</span>)</pre></div>
-
-<h2>
-<a id="user-content-abstract-api-quick-start" class="anchor" href="#abstract-api-quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Abstract API Quick Start</h2>
-
+<div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">MOM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">)</span>
+</pre></div>
+<h2>Abstract API Quick Start</h2>
 <p>If you're already familiar with using the function API, you should feel right
 at home using the abstract API. Every function takes the same input, passed
 as a dictionary of Numpy arrays:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">import</span> numpy <span class="pl-k">as</span> np
-<span class="pl-c"># note that all ndarrays must be the same length!</span>
-inputs <span class="pl-k">=</span> {
-    <span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>high<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>low<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>close<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>),
-    <span class="pl-s"><span class="pl-pds">'</span>volume<span class="pl-pds">'</span></span>: np.random.random(<span class="pl-c1">100</span>)
-}</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span> <span class="highlight kn">as</span> <span class="highlight nn">np</span>
+<span class="highlight c1"># note that all ndarrays must be the same length!</span>
+<span class="highlight n">inputs</span> <span class="highlight o">=</span> <span class="highlight p">{</span>
+    <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;high&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;close&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
+    <span class="highlight s1">&#39;volume&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
+<span class="highlight p">}</span>
+</pre></div>
 <p>Functions can either be imported directly or instantiated by name:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib <span class="pl-k">import</span> abstract
-sma <span class="pl-k">=</span> abstract.SMA
-sma <span class="pl-k">=</span> abstract.Function(<span class="pl-s"><span class="pl-pds">'</span>sma<span class="pl-pds">'</span></span>)</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">abstract</span>
+<span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">SMA</span>
+<span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;sma&#39;</span><span class="highlight p">)</span>
+</pre></div>
 <p>From there, calling functions is basically the same as the function API:</p>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">from</span> talib.abstract <span class="pl-k">import</span> <span class="pl-k">*</span>
-output <span class="pl-k">=</span> SMA(input_arrays, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">25</span>) <span class="pl-c"># calculate on close prices by default</span>
-output <span class="pl-k">=</span> SMA(input_arrays, <span class="pl-smi">timeperiod</span><span class="pl-k">=</span><span class="pl-c1">25</span>, <span class="pl-smi">price</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>) <span class="pl-c"># calculate on opens</span>
-upper, middle, lower <span class="pl-k">=</span> BBANDS(input_arrays, <span class="pl-c1">20</span>, <span class="pl-c1">2</span>, <span class="pl-c1">2</span>)
-slowk, slowd <span class="pl-k">=</span> STOCH(input_arrays, <span class="pl-c1">5</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>) <span class="pl-c"># uses high, low, close by default</span>
-slowk, slowd <span class="pl-k">=</span> STOCH(input_arrays, <span class="pl-c1">5</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-smi">prices</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>high<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>low<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>open<span class="pl-pds">'</span></span>])</pre></div>
-
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib.abstract</span> <span class="highlight kn">import</span> <span class="highlight o">*</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on close prices by default</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">,</span> <span class="highlight n">price</span><span class="highlight o">=</span><span class="highlight s1">&#39;open&#39;</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on opens</span>
+<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">)</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">)</span> <span class="highlight c1"># uses high, low, close by default</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">prices</span><span class="highlight o">=</span><span class="highlight p">[</span><span class="highlight s1">&#39;high&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">])</span>
+</pre></div>
 <p>Learn about more advanced usage of TA-Lib <a href="abstract.html">here</a>.</p>
-
-<h2>
-<a id="user-content-supported-indicators" class="anchor" href="#supported-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Indicators</h2>
-
+<h2>Supported Indicators</h2>
 <p>We can show all the TA functions supported by TA-Lib, either as a <code>list</code> or
 as a <code>dict</code> sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
 etc):</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">talib</span>
 
-<div class="highlight highlight-python"><pre><span class="pl-k">import</span> talib
-
-<span class="pl-k">print</span> talib.get_functions()
-<span class="pl-k">print</span> talib.get_function_groups()</pre></div>
-
-<h3>
-<a id="user-content-function-groups" class="anchor" href="#function-groups" aria-hidden="true"><span class="octicon octicon-link"></span></a>Function Groups</h3>
-
+<span class="highlight k">print</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">get_functions</span><span class="highlight p">()</span>
+<span class="highlight k">print</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">get_function_groups</span><span class="highlight p">()</span>
+</pre></div>
+<h3>Function Groups</h3>
 <ul>
 <li><a href="func_groups/overlap_studies.html">Overlap Studies</a></li>
 <li><a href="func_groups/momentum_indicators.html">Momentum Indicators</a></li>
@@ -152,12 +123,9 @@ etc):</p>
 <li><a href="func_groups/math_transform.html">Math Transform</a></li>
 <li><a href="func_groups/math_operators.html">Math Operators</a></li>
 </ul>
+<h4><a href="func_groups/overlap_studies.html">Overlap Studies</a></h4>
 
-<h4>
-<a id="user-content-overlap-studies" class="anchor" href="#overlap-studies" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/overlap_studies.html">Overlap Studies</a>
-</h4>
-
-<pre>BBANDS               Bollinger Bands
+<pre><code>BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
 EMA                  Exponential Moving Average
 HT_TRENDLINE         Hilbert Transform - Instantaneous Trendline
@@ -173,14 +141,10 @@ SMA                  Simple Moving Average
 T3                   Triple Exponential Moving Average (T3)
 TEMA                 Triple Exponential Moving Average
 TRIMA                Triangular Moving Average
-WMA                  Weighted Moving Average
-</pre>
+WMA                  Weighted Moving Average</code></pre>
+<h4><a href="func_groups/momentum_indicators.html">Momentum Indicators</a></h4>
 
-<h4>
-<a id="user-content-momentum-indicators" class="anchor" href="#momentum-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/momentum_indicators.html">Momentum Indicators</a>
-</h4>
-
-<pre>ADX                  Average Directional Movement Index
+<pre><code>ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
 APO                  Absolute Price Oscillator
 AROON                Aroon
@@ -209,53 +173,33 @@ STOCHF               Stochastic Fast
 STOCHRSI             Stochastic Relative Strength Index
 TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
 ULTOSC               Ultimate Oscillator
-WILLR                Williams' %R
-</pre>
+WILLR                Williams' %R</code></pre>
+<h4><a href="func_groups/volume_indicators.html">Volume Indicators</a></h4>
 
-<h4>
-<a id="user-content-volume-indicators" class="anchor" href="#volume-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/volume_indicators.html">Volume Indicators</a>
-</h4>
-
-<pre>AD                   Chaikin A/D Line
+<pre><code>AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
-OBV                  On Balance Volume
-</pre>
+OBV                  On Balance Volume</code></pre>
+<h4><a href="func_groups/volatility_indicators.html">Volatility Indicators</a></h4>
 
-<h4>
-<a id="user-content-volatility-indicators" class="anchor" href="#volatility-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/volatility_indicators.html">Volatility Indicators</a>
-</h4>
-
-<pre>ATR                  Average True Range
+<pre><code>ATR                  Average True Range
 NATR                 Normalized Average True Range
-TRANGE               True Range
-</pre>
+TRANGE               True Range</code></pre>
+<h4><a href="func_groups/price_transform.html">Price Transform</a></h4>
 
-<h4>
-<a id="user-content-price-transform" class="anchor" href="#price-transform" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/price_transform.html">Price Transform</a>
-</h4>
-
-<pre>AVGPRICE             Average Price
+<pre><code>AVGPRICE             Average Price
 MEDPRICE             Median Price
 TYPPRICE             Typical Price
-WCLPRICE             Weighted Close Price
-</pre>
+WCLPRICE             Weighted Close Price</code></pre>
+<h4><a href="func_groups/cycle_indicators.html">Cycle Indicators</a></h4>
 
-<h4>
-<a id="user-content-cycle-indicators" class="anchor" href="#cycle-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/cycle_indicators.html">Cycle Indicators</a>
-</h4>
-
-<pre>HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
+<pre><code>HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
 HT_PHASOR            Hilbert Transform - Phasor Components
 HT_SINE              Hilbert Transform - SineWave
-HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
-</pre>
+HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode</code></pre>
+<h4><a href="func_groups/pattern_recognition.html">Pattern Recognition</a></h4>
 
-<h4>
-<a id="user-content-pattern-recognition" class="anchor" href="#pattern-recognition" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/pattern_recognition.html">Pattern Recognition</a>
-</h4>
-
-<pre>CDL2CROWS            Two Crows
+<pre><code>CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
 CDL3INSIDE           Three Inside Up/Down
 CDL3LINESTRIKE       Three-Line Strike
@@ -315,14 +259,10 @@ CDLTHRUSTING         Thrusting Pattern
 CDLTRISTAR           Tristar Pattern
 CDLUNIQUE3RIVER      Unique 3 River
 CDLUPSIDEGAP2CROWS   Upside Gap Two Crows
-CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
-</pre>
+CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods</code></pre>
+<h4><a href="func_groups/statistic_functions.html">Statistic Functions</a></h4>
 
-<h4>
-<a id="user-content-statistic-functions" class="anchor" href="#statistic-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="func_groups/statistic_functions.html">Statistic Functions</a>
-</h4>
-
-<pre>BETA                 Beta
+<pre><code>BETA                 Beta
 CORREL               Pearson's Correlation Coefficient (r)
 LINEARREG            Linear Regression
 LINEARREG_ANGLE      Linear Regression Angle
@@ -330,16 +270,15 @@ LINEARREG_INTERCEPT  Linear Regression Intercept
 LINEARREG_SLOPE      Linear Regression Slope
 STDDEV               Standard Deviation
 TSF                  Time Series Forecast
-VAR                  Variance
-</pre>        </section>
+VAR                  Variance</code></pre>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>

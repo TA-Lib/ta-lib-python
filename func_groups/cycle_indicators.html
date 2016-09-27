@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">Browse TA-Lib on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="../index.html">Home</a></li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title">TA-Lib</h1>
+            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
             <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
             <section id="downloads">
                 <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
@@ -32,58 +32,42 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
-<a id="user-content-cycle-indicator-functions" class="anchor" href="#cycle-indicator-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cycle Indicator Functions</h1>
-
-<h3>
-<a id="user-content-ht_dcperiod---hilbert-transform---dominant-cycle-period" class="anchor" href="#ht_dcperiod---hilbert-transform---dominant-cycle-period" aria-hidden="true"><span class="octicon octicon-link"></span></a>HT_DCPERIOD - Hilbert Transform - Dominant Cycle Period</h3>
-
-<pre>real = HT_DCPERIOD(close)
-</pre>
-
-<p>Learn more about the Hilbert Transform - Dominant Cycle Period at <a href="http://www.tadoc.org/indicator/HT_DCPERIOD.htm">tadoc.org</a>.  </p>
-
-<h3>
-<a id="user-content-ht_dcphase---hilbert-transform---dominant-cycle-phase" class="anchor" href="#ht_dcphase---hilbert-transform---dominant-cycle-phase" aria-hidden="true"><span class="octicon octicon-link"></span></a>HT_DCPHASE - Hilbert Transform - Dominant Cycle Phase</h3>
-
-<pre>real = HT_DCPHASE(close)
-</pre>
-
-<p>Learn more about the Hilbert Transform - Dominant Cycle Phase at <a href="http://www.tadoc.org/indicator/HT_DCPHASE.htm">tadoc.org</a>.  </p>
-
-<h3>
-<a id="user-content-ht_phasor---hilbert-transform---phasor-components" class="anchor" href="#ht_phasor---hilbert-transform---phasor-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>HT_PHASOR - Hilbert Transform - Phasor Components</h3>
-
-<pre>inphase, quadrature = HT_PHASOR(close)
-</pre>
-
-<p>Learn more about the Hilbert Transform - Phasor Components at <a href="http://www.tadoc.org/indicator/HT_PHASOR.htm">tadoc.org</a>.  </p>
-
-<h3>
-<a id="user-content-ht_sine---hilbert-transform---sinewave" class="anchor" href="#ht_sine---hilbert-transform---sinewave" aria-hidden="true"><span class="octicon octicon-link"></span></a>HT_SINE - Hilbert Transform - SineWave</h3>
-
-<pre>sine, leadsine = HT_SINE(close)
-</pre>
-
-<p>Learn more about the Hilbert Transform - SineWave at <a href="http://www.tadoc.org/indicator/HT_SINE.htm">tadoc.org</a>.  </p>
-
-<h3>
-<a id="user-content-ht_trendmode---hilbert-transform---trend-vs-cycle-mode" class="anchor" href="#ht_trendmode---hilbert-transform---trend-vs-cycle-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>HT_TRENDMODE - Hilbert Transform - Trend vs Cycle Mode</h3>
-
-<pre>integer = HT_TRENDMODE(close)
-</pre>
-
-<p>Learn more about the Hilbert Transform - Trend vs Cycle Mode at <a href="http://www.tadoc.org/indicator/HT_TRENDMODE.htm">tadoc.org</a>.  </p>
-
+<h1>Cycle Indicator Functions</h1>
+<h3>HT_DCPERIOD - Hilbert Transform - Dominant Cycle Period</h3>
+<p>NOTE: The <code>HT_DCPERIOD</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">HT_DCPERIOD</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Hilbert Transform - Dominant Cycle Period at <a href="http://www.tadoc.org/indicator/HT_DCPERIOD.htm">tadoc.org</a>.</p>
+<h3>HT_DCPHASE - Hilbert Transform - Dominant Cycle Phase</h3>
+<p>NOTE: The <code>HT_DCPHASE</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">HT_DCPHASE</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Hilbert Transform - Dominant Cycle Phase at <a href="http://www.tadoc.org/indicator/HT_DCPHASE.htm">tadoc.org</a>.</p>
+<h3>HT_PHASOR - Hilbert Transform - Phasor Components</h3>
+<p>NOTE: The <code>HT_PHASOR</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">inphase</span><span class="highlight p">,</span> <span class="highlight n">quadrature</span> <span class="highlight o">=</span> <span class="highlight n">HT_PHASOR</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Hilbert Transform - Phasor Components at <a href="http://www.tadoc.org/indicator/HT_PHASOR.htm">tadoc.org</a>.</p>
+<h3>HT_SINE - Hilbert Transform - SineWave</h3>
+<p>NOTE: The <code>HT_SINE</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">sine</span><span class="highlight p">,</span> <span class="highlight n">leadsine</span> <span class="highlight o">=</span> <span class="highlight n">HT_SINE</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Hilbert Transform - SineWave at <a href="http://www.tadoc.org/indicator/HT_SINE.htm">tadoc.org</a>.</p>
+<h3>HT_TRENDMODE - Hilbert Transform - Trend vs Cycle Mode</h3>
+<p>NOTE: The <code>HT_TRENDMODE</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">HT_TRENDMODE</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Hilbert Transform - Trend vs Cycle Mode at <a href="http://www.tadoc.org/indicator/HT_TRENDMODE.htm">tadoc.org</a>.</p>
 <p><a href="../doc_index.html">Documentation Index</a>
-<a class="float-right" href="../funcs.html">All Function Groups</a></p>        </section>
+<a class="float-right" href="../funcs.html">All Function Groups</a></p>
+        </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        with contributions by <a href="https://github.com/briancappello">briancappello</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">others</a></p>
+        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
         
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>

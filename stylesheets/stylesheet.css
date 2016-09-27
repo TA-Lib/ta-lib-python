@@ -3,8 +3,7 @@ Slate Theme for Github Pages
 by Jason Costello, @jsncostello
 *******************************************************************************/
 
-@import url(pygment_trac.css);
-@import url(github-light.css);
+@import url(pygments_style.css);
 
 /*******************************************************************************
 MeyerWeb Reset
@@ -28,6 +27,7 @@ time, mark, audio, video {
   border: 0;
   font: inherit;
   vertical-align: baseline;
+  box-sizing: border-box;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -67,7 +67,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 10px 0;
+  margin: 20px 0;
   font-weight: 700;
   color:#222222;
   font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
@@ -80,7 +80,6 @@ h1 {
 }
 
 h2 {
-  padding-bottom: 10px;
   font-size: 32px;
   background: url('../images/bg_hr.png') repeat-x bottom;
 }
@@ -122,6 +121,9 @@ a {
   -o-transition: text-shadow 0.5s ease;
   -ms-transition: color 0.5s ease;
   -ms-transition: text-shadow 0.5s ease;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 #main_content a:hover {
@@ -271,7 +273,7 @@ Full-Width Styles
 
 .inner {
   position: relative;
-  max-width: 640px;
+  max-width: 800px;
   padding: 20px 10px;
   margin: 0 auto;
 }
@@ -289,6 +291,10 @@ Full-Width Styles
   box-shadow: 0 0 10px rgba(0,0,0,.5);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
+}
+#menu li {
+  list-style: none;
+  padding-left: 0;
 }
 
 #header_wrap {
@@ -310,6 +316,9 @@ Full-Width Styles
   font-size: 42px;
   font-weight: 700;
   text-shadow: #111 0px 0px 10px;
+}
+#project_title a {
+  color: #fff;
 }
 
 #project_tagline {
@@ -373,6 +382,9 @@ Full-Width Styles
   background: #212121;
 }
 
+.float-right {
+    float: right;
+}
 
 
 /*******************************************************************************
