@@ -1,0 +1,2 @@
+-r requirements.txt
+pandas==0.18.1
