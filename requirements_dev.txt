@@ -1,5 +1,4 @@
-numpy==1.11.1
+-r requirements.txt
 beautifulsoup4==4.5.1
 mistune==0.7.3
-Cython==0.24.1
 Pygments==2.1.3
