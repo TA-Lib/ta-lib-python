@@ -8,9 +8,17 @@ python:
   - "3.5"
 os:
   - linux
-  - osx
+env:
+  global:
+    - TA_INCLUDE_PATH=$HOME/dependencies/include
+    - TA_LIBRARY_PATH=$HOME/dependencies/lib
+    - LD_LIBRARY_PATH=$HOME/dependencies/lib
 install:
   - pip install -r requirements.txt
+  - mkdir $HOME/dependencies
+  - wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+  - tar -xvzf ta-lib-0.4.0-src.tar.gz
+  - pushd ta-lib && ./configure --prefix=$HOME/dependencies && make install && popd
 script:
   - make
   - make test
