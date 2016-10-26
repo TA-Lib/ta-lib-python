@@ -1,2 +1,3 @@
 -r requirements.txt
+nose==1.3.7
 pandas==0.18.1

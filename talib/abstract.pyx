@@ -610,7 +610,7 @@ def _get_defaults_and_docs(func_info):
     for input_name in input_names:
         value = input_names[input_name]
         if not isinstance(value, list):
-            value = '(any ndarray)'
+            value = '(np.ndarray or pd.Series)'
         docs.append('    %s: %s' % (input_name, value))
 
     params = func_info['parameters']
