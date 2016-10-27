@@ -5,6 +5,7 @@ import os
 import warnings
 
 from distutils.dist import Distribution
+from distutils.version import LooseVersion
 
 display_option_names = Distribution.display_option_names + ['help', 'help-commands']
 query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
@@ -61,7 +62,11 @@ if not query_only:
     include_dirs.insert(0, numpy.get_include())
 
 try:
-    from Cython.Distutils import build_ext
+    import Cython
+    if LooseVersion(Cython.__version__) >= LooseVersion('0.25'):
+        from Cython.Distutils.old_build_ext import old_build_ext as build_ext
+    else:
+        from Cython.Distutils import build_ext
     has_cython = True
 except ImportError:
     has_cython = False
