@@ -5,6 +5,12 @@ import talib
 from talib import func
 from talib.test_data import series, assert_np_arrays_equal, assert_np_arrays_not_equal
 
+def test_talib_version():
+    assert_equals(talib.__ta_version__[:5], '0.4.0')
+
+def test_num_functions():
+    assert_equals(len(talib.get_functions()), 158)
+
 def test_input_lengths():
     a1 = np.arange(10, dtype=float)
     a2 = np.arange(11, dtype=float)
