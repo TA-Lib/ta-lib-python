@@ -6,7 +6,7 @@ from talib import func
 from talib.test_data import series, assert_np_arrays_equal, assert_np_arrays_not_equal
 
 def test_talib_version():
-    assert_equals(talib.__ta_version__[:5], '0.4.0')
+    assert_equals(talib.__ta_version__[:5], b'0.4.0')
 
 def test_num_functions():
     assert_equals(len(talib.get_functions()), 158)
