@@ -12,6 +12,7 @@ env:
     - TA_LIBRARY_PATH=$HOME/dependencies/lib
     - LD_LIBRARY_PATH=$HOME/dependencies/lib
 install:
+  - pip install -U setuptools pip
   - pip install -r requirements_test.txt
   - mkdir $HOME/dependencies
   - wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz

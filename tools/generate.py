@@ -48,6 +48,13 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 # print headers
 print("""\
 cimport numpy as np
+
+try:
+    import pandas
+    __PANDAS_SERIES = pandas.Series
+except ImportError:
+    __PANDAS_SERIES = None
+
 from numpy import nan
 from cython import boundscheck, wraparound
 
@@ -94,8 +101,9 @@ for f in functions:
     func_info = abstract.Function(shortname).info
     defaults, documentation = abstract._get_defaults_and_docs(func_info)
 
-    print('@wraparound(False)  # turn off relative indexing from end of lists')
-    print('@boundscheck(False) # turn off bounds-checking for entire function')
+    array_arguments = []
+    extra_arguments = []
+
     print('def %s(' % shortname, end=' ')
     docs = [' %s(' % shortname]
     i = 0
@@ -114,32 +122,26 @@ for f in functions:
 
         if var.endswith('[]'):
             var = cleanup(var[:-2])
+            array_arguments.append(var)
             assert arg.startswith('const double'), arg
-            print('np.ndarray %s not None' % var, end=' ')
+            print('%s not None' % var, end='')
             docs.append(var)
             docs.append(', ')
 
         elif var.startswith('opt'):
             var = cleanup(var)
-            default_arg = arg.split()[-1][len('optIn'):] # chop off typedef and 'optIn'
-            default_arg = default_arg[0].lower() + default_arg[1:] # lowercase first letter
+            extra_arguments.append(var)
 
             if arg.startswith('double'):
-                if default_arg in defaults:
-                    print('double %s=%s' % (var, defaults[default_arg]), end=' ')
-                else:
-                    print('double %s=-4e37' % var, end=' ') # TA_REAL_DEFAULT
+                print('%s=%s' % (var, float(defaults[var])), end='')
             elif arg.startswith('int'):
-                if default_arg in defaults:
-                    print('int %s=%s' % (var, defaults[default_arg]), end=' ')
-                else:
-                    print('int %s=-2**31' % var, end=' ')   # TA_INTEGER_DEFAULT
+                print('%s=%s' % (var, defaults[var]), end='')
             elif arg.startswith('TA_MAType'):
-                print('int %s=0' % var, end=' ')            # TA_MAType_SMA
+                print('%s=0' % var, end='')  # TA_MAType_SMA
             else:
                 assert False, arg
             if '[, ' not in docs:
-                docs[-1] = ('[, ')
+                docs[-1] = '[, '
             docs.append('%s=?' % var)
             docs.append(', ')
 
@@ -158,8 +160,51 @@ for f in functions:
         docs.append('\n\n')
         docs.append('\n'.join(tmp_docs))
         docs.append('\n    ')
-    print('):')
+    print(' ):')
     print('    """%s"""' % ''.join(docs))
+    print('    return _%s(' % shortname)
+    print('        ', end='')
+    print(',\n        '.join([
+        '%s.values if isinstance(%s, __PANDAS_SERIES) else %s' % (arg, arg, arg) for arg in array_arguments
+    ] + extra_arguments))
+    print('    )')
+    print('')
+
+    print('@wraparound(False)  # turn off relative indexing from end of lists')
+    print('@boundscheck(False) # turn off bounds-checking for entire function')
+    print('cdef _%s(' % shortname, end=' ')
+    i = 0
+    for arg in args:
+        var = arg.split()[-1]
+
+        if var in ('startIdx', 'endIdx'):
+            continue
+
+        elif 'out' in var:
+            break
+
+        if i > 0:
+            print(',', end=' ')
+        i += 1
+
+        if var.endswith('[]'):
+            var = cleanup(var[:-2])
+            assert arg.startswith('const double'), arg
+            print('np.ndarray %s' % var, end='')
+
+        elif var.startswith('opt'):
+            var = cleanup(var)
+
+            if arg.startswith('double'):
+                print('double %s=%s' % (var, defaults[var]), end='')
+            elif arg.startswith('int'):
+                print('int %s=%s' % (var, defaults[var]), end='')
+            elif arg.startswith('TA_MAType'):
+                print('int %s=0' % var, end='')            # TA_MAType_SMA
+            else:
+                assert False, arg
+
+    print(' ):')
     print('    cdef:')
     print('        np.npy_intp length')
     print('        double val')

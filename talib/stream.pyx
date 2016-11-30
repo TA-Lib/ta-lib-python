@@ -1,4 +1,11 @@
 cimport numpy as np
+
+try:
+    import pandas
+    __PANDAS_SERIES = pandas.Series
+except ImportError:
+    __PANDAS_SERIES = None
+
 from numpy import nan
 from cython import boundscheck, wraparound
 
@@ -19,18 +26,23 @@ from libta_lib cimport TA_RetCode
 
 lib.TA_Initialize()
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ACOS( np.ndarray real not None ):
+def ACOS( real not None ):
     """ ACOS(real)
 
     Vector Trigonometric ACos (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _ACOS(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ACOS( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -53,9 +65,7 @@ def ACOS( np.ndarray real not None ):
     _ta_check_success("TA_ACOS", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None ):
+def AD( high not None, low not None, close not None, volume not None ):
     """ AD(high, low, close, volume)
 
     Chaikin A/D Line (Volume Indicators)
@@ -65,6 +75,16 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     Outputs:
         real
     """
+    return _AD(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        volume.values if isinstance(volume, __PANDAS_SERIES) else volume
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _AD( np.ndarray high, np.ndarray low, np.ndarray close, np.ndarray volume ):
     cdef:
         np.npy_intp length
         double val
@@ -117,19 +137,25 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     _ta_check_success("TA_AD", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
+def ADD( real0 not None, real1 not None ):
     """ ADD(real0, real1)
 
     Vector Arithmetic Add (Math Operators)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _ADD(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ADD( np.ndarray real0, np.ndarray real1 ):
     cdef:
         np.npy_intp length
         double val
@@ -162,9 +188,7 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     _ta_check_success("TA_ADD", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
+def ADOSC( high not None, low not None, close not None, volume not None, fastperiod=3, slowperiod=10 ):
     """ ADOSC(high, low, close, volume[, fastperiod=?, slowperiod=?])
 
     Chaikin A/D Oscillator (Volume Indicators)
@@ -177,6 +201,18 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Outputs:
         real
     """
+    return _ADOSC(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        volume.values if isinstance(volume, __PANDAS_SERIES) else volume,
+        fastperiod,
+        slowperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ADOSC( np.ndarray high, np.ndarray low, np.ndarray close, np.ndarray volume, int fastperiod=3, int slowperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -229,9 +265,7 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     _ta_check_success("TA_ADOSC", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def ADX( high not None, low not None, close not None, timeperiod=14 ):
     """ ADX(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index (Momentum Indicators)
@@ -243,6 +277,16 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Outputs:
         real
     """
+    return _ADX(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ADX( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -285,9 +329,7 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     _ta_check_success("TA_ADX", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def ADXR( high not None, low not None, close not None, timeperiod=14 ):
     """ ADXR(high, low, close[, timeperiod=?])
 
     Average Directional Movement Index Rating (Momentum Indicators)
@@ -299,6 +341,16 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     Outputs:
         real
     """
+    return _ADXR(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ADXR( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -341,15 +393,13 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     _ta_check_success("TA_ADXR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def APO( real not None, fastperiod=12, slowperiod=26, matype=0 ):
     """ APO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Absolute Price Oscillator (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -357,6 +407,16 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     Outputs:
         real
     """
+    return _APO(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        fastperiod,
+        slowperiod,
+        matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _APO( np.ndarray real, int fastperiod=12, int slowperiod=26, int matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -379,9 +439,7 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     _ta_check_success("TA_APO", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+def AROON( high not None, low not None, timeperiod=14 ):
     """ AROON(high, low[, timeperiod=?])
 
     Aroon (Momentum Indicators)
@@ -394,6 +452,15 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
         aroondown
         aroonup
     """
+    return _AROON(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _AROON( np.ndarray high, np.ndarray low, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -428,9 +495,7 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     _ta_check_success("TA_AROON", retCode)
     return outaroondown , outaroonup 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+def AROONOSC( high not None, low not None, timeperiod=14 ):
     """ AROONOSC(high, low[, timeperiod=?])
 
     Aroon Oscillator (Momentum Indicators)
@@ -442,6 +507,15 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     Outputs:
         real
     """
+    return _AROONOSC(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _AROONOSC( np.ndarray high, np.ndarray low, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -474,18 +548,23 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     _ta_check_success("TA_AROONOSC", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ASIN( np.ndarray real not None ):
+def ASIN( real not None ):
     """ ASIN(real)
 
     Vector Trigonometric ASin (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _ASIN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ASIN( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -508,18 +587,23 @@ def ASIN( np.ndarray real not None ):
     _ta_check_success("TA_ASIN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ATAN( np.ndarray real not None ):
+def ATAN( real not None ):
     """ ATAN(real)
 
     Vector Trigonometric ATan (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _ATAN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ATAN( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -542,9 +626,7 @@ def ATAN( np.ndarray real not None ):
     _ta_check_success("TA_ATAN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def ATR( high not None, low not None, close not None, timeperiod=14 ):
     """ ATR(high, low, close[, timeperiod=?])
 
     Average True Range (Volatility Indicators)
@@ -556,6 +638,16 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Outputs:
         real
     """
+    return _ATR(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ATR( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -598,9 +690,7 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     _ta_check_success("TA_ATR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def AVGPRICE( open not None, high not None, low not None, close not None ):
     """ AVGPRICE(open, high, low, close)
 
     Average Price (Price Transform)
@@ -610,6 +700,16 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     Outputs:
         real
     """
+    return _AVGPRICE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _AVGPRICE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -662,15 +762,13 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     _ta_check_success("TA_AVGPRICE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+def BBANDS( real not None, timeperiod=5, nbdevup=2.0, nbdevdn=2.0, matype=0 ):
     """ BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
     Bollinger Bands (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 5
         nbdevup: 2
@@ -681,6 +779,17 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
         middleband
         lowerband
     """
+    return _BBANDS(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        nbdevup,
+        nbdevdn,
+        matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _BBANDS( np.ndarray real, int timeperiod=5, double nbdevup=2, double nbdevdn=2, int matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -707,21 +816,28 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     _ta_check_success("TA_BBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
+def BETA( real0 not None, real1 not None, timeperiod=5 ):
     """ BETA(real0, real1[, timeperiod=?])
 
     Beta (Statistic Functions)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 5
     Outputs:
         real
     """
+    return _BETA(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _BETA( np.ndarray real0, np.ndarray real1, int timeperiod=5 ):
     cdef:
         np.npy_intp length
         double val
@@ -754,9 +870,7 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     _ta_check_success("TA_BETA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def BOP( open not None, high not None, low not None, close not None ):
     """ BOP(open, high, low, close)
 
     Balance Of Power (Momentum Indicators)
@@ -766,6 +880,16 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     Outputs:
         real
     """
+    return _BOP(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _BOP( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -818,9 +942,7 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     _ta_check_success("TA_BOP", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def CCI( high not None, low not None, close not None, timeperiod=14 ):
     """ CCI(high, low, close[, timeperiod=?])
 
     Commodity Channel Index (Momentum Indicators)
@@ -832,6 +954,16 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Outputs:
         real
     """
+    return _CCI(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CCI( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -874,9 +1006,7 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     _ta_check_success("TA_CCI", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL2CROWS( open not None, high not None, low not None, close not None ):
     """ CDL2CROWS(open, high, low, close)
 
     Two Crows (Pattern Recognition)
@@ -886,6 +1016,16 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL2CROWS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL2CROWS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -938,9 +1078,7 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDL2CROWS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3BLACKCROWS( open not None, high not None, low not None, close not None ):
     """ CDL3BLACKCROWS(open, high, low, close)
 
     Three Black Crows (Pattern Recognition)
@@ -950,6 +1088,16 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3BLACKCROWS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3BLACKCROWS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1002,9 +1150,7 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDL3BLACKCROWS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3INSIDE( open not None, high not None, low not None, close not None ):
     """ CDL3INSIDE(open, high, low, close)
 
     Three Inside Up/Down (Pattern Recognition)
@@ -1014,6 +1160,16 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3INSIDE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3INSIDE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1066,9 +1222,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     _ta_check_success("TA_CDL3INSIDE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3LINESTRIKE( open not None, high not None, low not None, close not None ):
     """ CDL3LINESTRIKE(open, high, low, close)
 
     Three-Line Strike  (Pattern Recognition)
@@ -1078,6 +1232,16 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3LINESTRIKE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3LINESTRIKE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1130,9 +1294,7 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDL3LINESTRIKE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3OUTSIDE( open not None, high not None, low not None, close not None ):
     """ CDL3OUTSIDE(open, high, low, close)
 
     Three Outside Up/Down (Pattern Recognition)
@@ -1142,6 +1304,16 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3OUTSIDE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3OUTSIDE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1194,9 +1366,7 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDL3OUTSIDE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3STARSINSOUTH( open not None, high not None, low not None, close not None ):
     """ CDL3STARSINSOUTH(open, high, low, close)
 
     Three Stars In The South (Pattern Recognition)
@@ -1206,6 +1376,16 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3STARSINSOUTH(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3STARSINSOUTH( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1258,9 +1438,7 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDL3WHITESOLDIERS( open not None, high not None, low not None, close not None ):
     """ CDL3WHITESOLDIERS(open, high, low, close)
 
     Three Advancing White Soldiers (Pattern Recognition)
@@ -1270,6 +1448,16 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDL3WHITESOLDIERS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDL3WHITESOLDIERS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1322,9 +1510,7 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
+def CDLABANDONEDBABY( open not None, high not None, low not None, close not None, penetration=0.3 ):
     """ CDLABANDONEDBABY(open, high, low, close[, penetration=?])
 
     Abandoned Baby (Pattern Recognition)
@@ -1336,6 +1522,17 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLABANDONEDBABY(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLABANDONEDBABY( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.3 ):
     cdef:
         np.npy_intp length
         double val
@@ -1388,9 +1585,7 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     _ta_check_success("TA_CDLABANDONEDBABY", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLADVANCEBLOCK( open not None, high not None, low not None, close not None ):
     """ CDLADVANCEBLOCK(open, high, low, close)
 
     Advance Block (Pattern Recognition)
@@ -1400,6 +1595,16 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLADVANCEBLOCK(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLADVANCEBLOCK( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1452,9 +1657,7 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLBELTHOLD( open not None, high not None, low not None, close not None ):
     """ CDLBELTHOLD(open, high, low, close)
 
     Belt-hold (Pattern Recognition)
@@ -1464,6 +1667,16 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLBELTHOLD(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLBELTHOLD( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1516,9 +1729,7 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLBELTHOLD", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLBREAKAWAY( open not None, high not None, low not None, close not None ):
     """ CDLBREAKAWAY(open, high, low, close)
 
     Breakaway (Pattern Recognition)
@@ -1528,6 +1739,16 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLBREAKAWAY(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLBREAKAWAY( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1580,9 +1801,7 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     _ta_check_success("TA_CDLBREAKAWAY", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLCLOSINGMARUBOZU( open not None, high not None, low not None, close not None ):
     """ CDLCLOSINGMARUBOZU(open, high, low, close)
 
     Closing Marubozu (Pattern Recognition)
@@ -1592,6 +1811,16 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLCLOSINGMARUBOZU(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLCLOSINGMARUBOZU( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1644,9 +1873,7 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLCONCEALBABYSWALL( open not None, high not None, low not None, close not None ):
     """ CDLCONCEALBABYSWALL(open, high, low, close)
 
     Concealing Baby Swallow (Pattern Recognition)
@@ -1656,6 +1883,16 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLCONCEALBABYSWALL(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLCONCEALBABYSWALL( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1708,9 +1945,7 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLCOUNTERATTACK( open not None, high not None, low not None, close not None ):
     """ CDLCOUNTERATTACK(open, high, low, close)
 
     Counterattack (Pattern Recognition)
@@ -1720,6 +1955,16 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLCOUNTERATTACK(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLCOUNTERATTACK( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1772,9 +2017,7 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.5 ):
+def CDLDARKCLOUDCOVER( open not None, high not None, low not None, close not None, penetration=0.5 ):
     """ CDLDARKCLOUDCOVER(open, high, low, close[, penetration=?])
 
     Dark Cloud Cover (Pattern Recognition)
@@ -1786,6 +2029,17 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLDARKCLOUDCOVER(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLDARKCLOUDCOVER( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.5 ):
     cdef:
         np.npy_intp length
         double val
@@ -1838,9 +2092,7 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLDOJI( open not None, high not None, low not None, close not None ):
     """ CDLDOJI(open, high, low, close)
 
     Doji (Pattern Recognition)
@@ -1850,6 +2102,16 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLDOJI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLDOJI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1902,9 +2164,7 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     _ta_check_success("TA_CDLDOJI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLDOJISTAR( open not None, high not None, low not None, close not None ):
     """ CDLDOJISTAR(open, high, low, close)
 
     Doji Star (Pattern Recognition)
@@ -1914,6 +2174,16 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLDOJISTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLDOJISTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -1966,9 +2236,7 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLDOJISTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLDRAGONFLYDOJI( open not None, high not None, low not None, close not None ):
     """ CDLDRAGONFLYDOJI(open, high, low, close)
 
     Dragonfly Doji (Pattern Recognition)
@@ -1978,6 +2246,16 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLDRAGONFLYDOJI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLDRAGONFLYDOJI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2030,9 +2308,7 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLENGULFING( open not None, high not None, low not None, close not None ):
     """ CDLENGULFING(open, high, low, close)
 
     Engulfing Pattern (Pattern Recognition)
@@ -2042,6 +2318,16 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLENGULFING(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLENGULFING( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2094,9 +2380,7 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     _ta_check_success("TA_CDLENGULFING", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
+def CDLEVENINGDOJISTAR( open not None, high not None, low not None, close not None, penetration=0.3 ):
     """ CDLEVENINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Evening Doji Star (Pattern Recognition)
@@ -2108,6 +2392,17 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLEVENINGDOJISTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLEVENINGDOJISTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.3 ):
     cdef:
         np.npy_intp length
         double val
@@ -2160,9 +2455,7 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
+def CDLEVENINGSTAR( open not None, high not None, low not None, close not None, penetration=0.3 ):
     """ CDLEVENINGSTAR(open, high, low, close[, penetration=?])
 
     Evening Star (Pattern Recognition)
@@ -2174,6 +2467,17 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLEVENINGSTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLEVENINGSTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.3 ):
     cdef:
         np.npy_intp length
         double val
@@ -2226,9 +2530,7 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLEVENINGSTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLGAPSIDESIDEWHITE( open not None, high not None, low not None, close not None ):
     """ CDLGAPSIDESIDEWHITE(open, high, low, close)
 
     Up/Down-gap side-by-side white lines (Pattern Recognition)
@@ -2238,6 +2540,16 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLGAPSIDESIDEWHITE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLGAPSIDESIDEWHITE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2290,9 +2602,7 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLGRAVESTONEDOJI( open not None, high not None, low not None, close not None ):
     """ CDLGRAVESTONEDOJI(open, high, low, close)
 
     Gravestone Doji (Pattern Recognition)
@@ -2302,6 +2612,16 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLGRAVESTONEDOJI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLGRAVESTONEDOJI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2354,9 +2674,7 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHAMMER( open not None, high not None, low not None, close not None ):
     """ CDLHAMMER(open, high, low, close)
 
     Hammer (Pattern Recognition)
@@ -2366,6 +2684,16 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHAMMER(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHAMMER( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2418,9 +2746,7 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDLHAMMER", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHANGINGMAN( open not None, high not None, low not None, close not None ):
     """ CDLHANGINGMAN(open, high, low, close)
 
     Hanging Man (Pattern Recognition)
@@ -2430,6 +2756,16 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHANGINGMAN(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHANGINGMAN( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2482,9 +2818,7 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     _ta_check_success("TA_CDLHANGINGMAN", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHARAMI( open not None, high not None, low not None, close not None ):
     """ CDLHARAMI(open, high, low, close)
 
     Harami Pattern (Pattern Recognition)
@@ -2494,6 +2828,16 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHARAMI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHARAMI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2546,9 +2890,7 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDLHARAMI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHARAMICROSS( open not None, high not None, low not None, close not None ):
     """ CDLHARAMICROSS(open, high, low, close)
 
     Harami Cross Pattern (Pattern Recognition)
@@ -2558,6 +2900,16 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHARAMICROSS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHARAMICROSS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2610,9 +2962,7 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLHARAMICROSS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHIGHWAVE( open not None, high not None, low not None, close not None ):
     """ CDLHIGHWAVE(open, high, low, close)
 
     High-Wave Candle (Pattern Recognition)
@@ -2622,6 +2972,16 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHIGHWAVE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHIGHWAVE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2674,9 +3034,7 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLHIGHWAVE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHIKKAKE( open not None, high not None, low not None, close not None ):
     """ CDLHIKKAKE(open, high, low, close)
 
     Hikkake Pattern (Pattern Recognition)
@@ -2686,6 +3044,16 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHIKKAKE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHIKKAKE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2738,9 +3106,7 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     _ta_check_success("TA_CDLHIKKAKE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHIKKAKEMOD( open not None, high not None, low not None, close not None ):
     """ CDLHIKKAKEMOD(open, high, low, close)
 
     Modified Hikkake Pattern (Pattern Recognition)
@@ -2750,6 +3116,16 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHIKKAKEMOD(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHIKKAKEMOD( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2802,9 +3178,7 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLHOMINGPIGEON( open not None, high not None, low not None, close not None ):
     """ CDLHOMINGPIGEON(open, high, low, close)
 
     Homing Pigeon (Pattern Recognition)
@@ -2814,6 +3188,16 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLHOMINGPIGEON(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLHOMINGPIGEON( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2866,9 +3250,7 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLIDENTICAL3CROWS( open not None, high not None, low not None, close not None ):
     """ CDLIDENTICAL3CROWS(open, high, low, close)
 
     Identical Three Crows (Pattern Recognition)
@@ -2878,6 +3260,16 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLIDENTICAL3CROWS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLIDENTICAL3CROWS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2930,9 +3322,7 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLINNECK( open not None, high not None, low not None, close not None ):
     """ CDLINNECK(open, high, low, close)
 
     In-Neck Pattern (Pattern Recognition)
@@ -2942,6 +3332,16 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLINNECK(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLINNECK( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -2994,9 +3394,7 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDLINNECK", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLINVERTEDHAMMER( open not None, high not None, low not None, close not None ):
     """ CDLINVERTEDHAMMER(open, high, low, close)
 
     Inverted Hammer (Pattern Recognition)
@@ -3006,6 +3404,16 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLINVERTEDHAMMER(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLINVERTEDHAMMER( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3058,9 +3466,7 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLKICKING( open not None, high not None, low not None, close not None ):
     """ CDLKICKING(open, high, low, close)
 
     Kicking (Pattern Recognition)
@@ -3070,6 +3476,16 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLKICKING(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLKICKING( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3122,9 +3538,7 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     _ta_check_success("TA_CDLKICKING", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLKICKINGBYLENGTH( open not None, high not None, low not None, close not None ):
     """ CDLKICKINGBYLENGTH(open, high, low, close)
 
     Kicking - bull/bear determined by the longer marubozu (Pattern Recognition)
@@ -3134,6 +3548,16 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLKICKINGBYLENGTH(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLKICKINGBYLENGTH( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3186,9 +3610,7 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLLADDERBOTTOM( open not None, high not None, low not None, close not None ):
     """ CDLLADDERBOTTOM(open, high, low, close)
 
     Ladder Bottom (Pattern Recognition)
@@ -3198,6 +3620,16 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLLADDERBOTTOM(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLLADDERBOTTOM( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3250,9 +3682,7 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLLONGLEGGEDDOJI( open not None, high not None, low not None, close not None ):
     """ CDLLONGLEGGEDDOJI(open, high, low, close)
 
     Long Legged Doji (Pattern Recognition)
@@ -3262,6 +3692,16 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLLONGLEGGEDDOJI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLLONGLEGGEDDOJI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3314,9 +3754,7 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLLONGLINE( open not None, high not None, low not None, close not None ):
     """ CDLLONGLINE(open, high, low, close)
 
     Long Line Candle (Pattern Recognition)
@@ -3326,6 +3764,16 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLLONGLINE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLLONGLINE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3378,9 +3826,7 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLLONGLINE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLMARUBOZU( open not None, high not None, low not None, close not None ):
     """ CDLMARUBOZU(open, high, low, close)
 
     Marubozu (Pattern Recognition)
@@ -3390,6 +3836,16 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLMARUBOZU(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLMARUBOZU( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3442,9 +3898,7 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLMARUBOZU", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLMATCHINGLOW( open not None, high not None, low not None, close not None ):
     """ CDLMATCHINGLOW(open, high, low, close)
 
     Matching Low (Pattern Recognition)
@@ -3454,6 +3908,16 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLMATCHINGLOW(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLMATCHINGLOW( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3506,9 +3970,7 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLMATCHINGLOW", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.5 ):
+def CDLMATHOLD( open not None, high not None, low not None, close not None, penetration=0.5 ):
     """ CDLMATHOLD(open, high, low, close[, penetration=?])
 
     Mat Hold (Pattern Recognition)
@@ -3520,6 +3982,17 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLMATHOLD(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLMATHOLD( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.5 ):
     cdef:
         np.npy_intp length
         double val
@@ -3572,9 +4045,7 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     _ta_check_success("TA_CDLMATHOLD", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
+def CDLMORNINGDOJISTAR( open not None, high not None, low not None, close not None, penetration=0.3 ):
     """ CDLMORNINGDOJISTAR(open, high, low, close[, penetration=?])
 
     Morning Doji Star (Pattern Recognition)
@@ -3586,6 +4057,17 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLMORNINGDOJISTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLMORNINGDOJISTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.3 ):
     cdef:
         np.npy_intp length
         double val
@@ -3638,9 +4120,7 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double penetration=0.3 ):
+def CDLMORNINGSTAR( open not None, high not None, low not None, close not None, penetration=0.3 ):
     """ CDLMORNINGSTAR(open, high, low, close[, penetration=?])
 
     Morning Star (Pattern Recognition)
@@ -3652,6 +4132,17 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLMORNINGSTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        penetration
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLMORNINGSTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close, double penetration=0.3 ):
     cdef:
         np.npy_intp length
         double val
@@ -3704,9 +4195,7 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLMORNINGSTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLONNECK( open not None, high not None, low not None, close not None ):
     """ CDLONNECK(open, high, low, close)
 
     On-Neck Pattern (Pattern Recognition)
@@ -3716,6 +4205,16 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLONNECK(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLONNECK( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3768,9 +4267,7 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDLONNECK", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLPIERCING( open not None, high not None, low not None, close not None ):
     """ CDLPIERCING(open, high, low, close)
 
     Piercing Pattern (Pattern Recognition)
@@ -3780,6 +4277,16 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLPIERCING(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLPIERCING( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3832,9 +4339,7 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     _ta_check_success("TA_CDLPIERCING", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLRICKSHAWMAN( open not None, high not None, low not None, close not None ):
     """ CDLRICKSHAWMAN(open, high, low, close)
 
     Rickshaw Man (Pattern Recognition)
@@ -3844,6 +4349,16 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLRICKSHAWMAN(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLRICKSHAWMAN( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3896,9 +4411,7 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLRISEFALL3METHODS( open not None, high not None, low not None, close not None ):
     """ CDLRISEFALL3METHODS(open, high, low, close)
 
     Rising/Falling Three Methods (Pattern Recognition)
@@ -3908,6 +4421,16 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLRISEFALL3METHODS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLRISEFALL3METHODS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -3960,9 +4483,7 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSEPARATINGLINES( open not None, high not None, low not None, close not None ):
     """ CDLSEPARATINGLINES(open, high, low, close)
 
     Separating Lines (Pattern Recognition)
@@ -3972,6 +4493,16 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSEPARATINGLINES(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSEPARATINGLINES( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4024,9 +4555,7 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSHOOTINGSTAR( open not None, high not None, low not None, close not None ):
     """ CDLSHOOTINGSTAR(open, high, low, close)
 
     Shooting Star (Pattern Recognition)
@@ -4036,6 +4565,16 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSHOOTINGSTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSHOOTINGSTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4088,9 +4627,7 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSHORTLINE( open not None, high not None, low not None, close not None ):
     """ CDLSHORTLINE(open, high, low, close)
 
     Short Line Candle (Pattern Recognition)
@@ -4100,6 +4637,16 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSHORTLINE(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSHORTLINE( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4152,9 +4699,7 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     _ta_check_success("TA_CDLSHORTLINE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSPINNINGTOP( open not None, high not None, low not None, close not None ):
     """ CDLSPINNINGTOP(open, high, low, close)
 
     Spinning Top (Pattern Recognition)
@@ -4164,6 +4709,16 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSPINNINGTOP(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSPINNINGTOP( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4216,9 +4771,7 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     _ta_check_success("TA_CDLSPINNINGTOP", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSTALLEDPATTERN( open not None, high not None, low not None, close not None ):
     """ CDLSTALLEDPATTERN(open, high, low, close)
 
     Stalled Pattern (Pattern Recognition)
@@ -4228,6 +4781,16 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSTALLEDPATTERN(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSTALLEDPATTERN( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4280,9 +4843,7 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLSTICKSANDWICH( open not None, high not None, low not None, close not None ):
     """ CDLSTICKSANDWICH(open, high, low, close)
 
     Stick Sandwich (Pattern Recognition)
@@ -4292,6 +4853,16 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLSTICKSANDWICH(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLSTICKSANDWICH( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4344,9 +4915,7 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLTAKURI( open not None, high not None, low not None, close not None ):
     """ CDLTAKURI(open, high, low, close)
 
     Takuri (Dragonfly Doji with very long lower shadow) (Pattern Recognition)
@@ -4356,6 +4925,16 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLTAKURI(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLTAKURI( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4408,9 +4987,7 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     _ta_check_success("TA_CDLTAKURI", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLTASUKIGAP( open not None, high not None, low not None, close not None ):
     """ CDLTASUKIGAP(open, high, low, close)
 
     Tasuki Gap (Pattern Recognition)
@@ -4420,6 +4997,16 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLTASUKIGAP(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLTASUKIGAP( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4472,9 +5059,7 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     _ta_check_success("TA_CDLTASUKIGAP", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLTHRUSTING( open not None, high not None, low not None, close not None ):
     """ CDLTHRUSTING(open, high, low, close)
 
     Thrusting Pattern (Pattern Recognition)
@@ -4484,6 +5069,16 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLTHRUSTING(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLTHRUSTING( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4536,9 +5131,7 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     _ta_check_success("TA_CDLTHRUSTING", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLTRISTAR( open not None, high not None, low not None, close not None ):
     """ CDLTRISTAR(open, high, low, close)
 
     Tristar Pattern (Pattern Recognition)
@@ -4548,6 +5141,16 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLTRISTAR(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLTRISTAR( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4600,9 +5203,7 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     _ta_check_success("TA_CDLTRISTAR", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLUNIQUE3RIVER( open not None, high not None, low not None, close not None ):
     """ CDLUNIQUE3RIVER(open, high, low, close)
 
     Unique 3 River (Pattern Recognition)
@@ -4612,6 +5213,16 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLUNIQUE3RIVER(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLUNIQUE3RIVER( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4664,9 +5275,7 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLUPSIDEGAP2CROWS( open not None, high not None, low not None, close not None ):
     """ CDLUPSIDEGAP2CROWS(open, high, low, close)
 
     Upside Gap Two Crows (Pattern Recognition)
@@ -4676,6 +5285,16 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLUPSIDEGAP2CROWS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLUPSIDEGAP2CROWS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4728,9 +5347,7 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def CDLXSIDEGAP3METHODS( open not None, high not None, low not None, close not None ):
     """ CDLXSIDEGAP3METHODS(open, high, low, close)
 
     Upside/Downside Gap Three Methods (Pattern Recognition)
@@ -4740,6 +5357,16 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _CDLXSIDEGAP3METHODS(
+        open.values if isinstance(open, __PANDAS_SERIES) else open,
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CDLXSIDEGAP3METHODS( np.ndarray open, np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -4792,18 +5419,23 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CEIL( np.ndarray real not None ):
+def CEIL( real not None ):
     """ CEIL(real)
 
     Vector Ceil (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _CEIL(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CEIL( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -4826,20 +5458,26 @@ def CEIL( np.ndarray real not None ):
     _ta_check_success("TA_CEIL", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
+def CMO( real not None, timeperiod=14 ):
     """ CMO(real[, timeperiod=?])
 
     Chande Momentum Oscillator (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _CMO(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CMO( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -4862,21 +5500,28 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_CMO", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod=-2**31 ):
+def CORREL( real0 not None, real1 not None, timeperiod=30 ):
     """ CORREL(real0, real1[, timeperiod=?])
 
     Pearson's Correlation Coefficient (r) (Statistic Functions)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _CORREL(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _CORREL( np.ndarray real0, np.ndarray real1, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -4909,18 +5554,23 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     _ta_check_success("TA_CORREL", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def COS( np.ndarray real not None ):
+def COS( real not None ):
     """ COS(real)
 
     Vector Trigonometric Cos (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _COS(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _COS( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -4943,18 +5593,23 @@ def COS( np.ndarray real not None ):
     _ta_check_success("TA_COS", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def COSH( np.ndarray real not None ):
+def COSH( real not None ):
     """ COSH(real)
 
     Vector Trigonometric Cosh (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _COSH(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _COSH( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -4977,20 +5632,26 @@ def COSH( np.ndarray real not None ):
     _ta_check_success("TA_COSH", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def DEMA( real not None, timeperiod=30 ):
     """ DEMA(real[, timeperiod=?])
 
     Double Exponential Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _DEMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _DEMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -5013,19 +5674,25 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_DEMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
+def DIV( real0 not None, real1 not None ):
     """ DIV(real0, real1)
 
     Vector Arithmetic Div (Math Operators)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _DIV(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _DIV( np.ndarray real0, np.ndarray real1 ):
     cdef:
         np.npy_intp length
         double val
@@ -5058,9 +5725,7 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     _ta_check_success("TA_DIV", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def DX( high not None, low not None, close not None, timeperiod=14 ):
     """ DX(high, low, close[, timeperiod=?])
 
     Directional Movement Index (Momentum Indicators)
@@ -5072,6 +5737,16 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     Outputs:
         real
     """
+    return _DX(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _DX( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -5114,20 +5789,26 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     _ta_check_success("TA_DX", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def EMA( real not None, timeperiod=30 ):
     """ EMA(real[, timeperiod=?])
 
     Exponential Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _EMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _EMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -5150,18 +5831,23 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_EMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def EXP( np.ndarray real not None ):
+def EXP( real not None ):
     """ EXP(real)
 
     Vector Arithmetic Exp (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _EXP(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _EXP( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5184,18 +5870,23 @@ def EXP( np.ndarray real not None ):
     _ta_check_success("TA_EXP", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def FLOOR( np.ndarray real not None ):
+def FLOOR( real not None ):
     """ FLOOR(real)
 
     Vector Floor (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _FLOOR(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _FLOOR( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5218,18 +5909,23 @@ def FLOOR( np.ndarray real not None ):
     _ta_check_success("TA_FLOOR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_DCPERIOD( np.ndarray real not None ):
+def HT_DCPERIOD( real not None ):
     """ HT_DCPERIOD(real)
 
     Hilbert Transform - Dominant Cycle Period (Cycle Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _HT_DCPERIOD(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_DCPERIOD( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5252,18 +5948,23 @@ def HT_DCPERIOD( np.ndarray real not None ):
     _ta_check_success("TA_HT_DCPERIOD", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_DCPHASE( np.ndarray real not None ):
+def HT_DCPHASE( real not None ):
     """ HT_DCPHASE(real)
 
     Hilbert Transform - Dominant Cycle Phase (Cycle Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _HT_DCPHASE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_DCPHASE( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5286,19 +5987,24 @@ def HT_DCPHASE( np.ndarray real not None ):
     _ta_check_success("TA_HT_DCPHASE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_PHASOR( np.ndarray real not None ):
+def HT_PHASOR( real not None ):
     """ HT_PHASOR(real)
 
     Hilbert Transform - Phasor Components (Cycle Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         inphase
         quadrature
     """
+    return _HT_PHASOR(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_PHASOR( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5323,19 +6029,24 @@ def HT_PHASOR( np.ndarray real not None ):
     _ta_check_success("TA_HT_PHASOR", retCode)
     return outinphase , outquadrature 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_SINE( np.ndarray real not None ):
+def HT_SINE( real not None ):
     """ HT_SINE(real)
 
     Hilbert Transform - SineWave (Cycle Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         sine
         leadsine
     """
+    return _HT_SINE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_SINE( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5360,18 +6071,23 @@ def HT_SINE( np.ndarray real not None ):
     _ta_check_success("TA_HT_SINE", retCode)
     return outsine , outleadsine 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_TRENDLINE( np.ndarray real not None ):
+def HT_TRENDLINE( real not None ):
     """ HT_TRENDLINE(real)
 
     Hilbert Transform - Instantaneous Trendline (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _HT_TRENDLINE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_TRENDLINE( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5394,18 +6110,23 @@ def HT_TRENDLINE( np.ndarray real not None ):
     _ta_check_success("TA_HT_TRENDLINE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def HT_TRENDMODE( np.ndarray real not None ):
+def HT_TRENDMODE( real not None ):
     """ HT_TRENDMODE(real)
 
     Hilbert Transform - Trend vs Cycle Mode (Cycle Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _HT_TRENDMODE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _HT_TRENDMODE( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5428,20 +6149,26 @@ def HT_TRENDMODE( np.ndarray real not None ):
     _ta_check_success("TA_HT_TRENDMODE", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def KAMA( real not None, timeperiod=30 ):
     """ KAMA(real[, timeperiod=?])
 
     Kaufman Adaptive Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _KAMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _KAMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -5464,20 +6191,26 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_KAMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
+def LINEARREG( real not None, timeperiod=14 ):
     """ LINEARREG(real[, timeperiod=?])
 
     Linear Regression (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _LINEARREG(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LINEARREG( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -5500,20 +6233,26 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_LINEARREG", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
+def LINEARREG_ANGLE( real not None, timeperiod=14 ):
     """ LINEARREG_ANGLE(real[, timeperiod=?])
 
     Linear Regression Angle (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _LINEARREG_ANGLE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LINEARREG_ANGLE( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -5536,20 +6275,26 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_LINEARREG_ANGLE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
+def LINEARREG_INTERCEPT( real not None, timeperiod=14 ):
     """ LINEARREG_INTERCEPT(real[, timeperiod=?])
 
     Linear Regression Intercept (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _LINEARREG_INTERCEPT(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LINEARREG_INTERCEPT( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -5572,20 +6317,26 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
+def LINEARREG_SLOPE( real not None, timeperiod=14 ):
     """ LINEARREG_SLOPE(real[, timeperiod=?])
 
     Linear Regression Slope (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _LINEARREG_SLOPE(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LINEARREG_SLOPE( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -5608,18 +6359,23 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_LINEARREG_SLOPE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LN( np.ndarray real not None ):
+def LN( real not None ):
     """ LN(real)
 
     Vector Log Natural (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _LN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LN( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5642,18 +6398,23 @@ def LN( np.ndarray real not None ):
     _ta_check_success("TA_LN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def LOG10( np.ndarray real not None ):
+def LOG10( real not None ):
     """ LOG10(real)
 
     Vector Log10 (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _LOG10(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _LOG10( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -5676,21 +6437,28 @@ def LOG10( np.ndarray real not None ):
     _ta_check_success("TA_LOG10", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
+def MA( real not None, timeperiod=30, matype=0 ):
     """ MA(real[, timeperiod=?, matype=?])
 
     Moving average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
         matype: 0 (Simple Moving Average)
     Outputs:
         real
     """
+    return _MA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MA( np.ndarray real, int timeperiod=30, int matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -5713,15 +6481,13 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     _ta_check_success("TA_MA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
+def MACD( real not None, fastperiod=12, slowperiod=26, signalperiod=9 ):
     """ MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
     Moving Average Convergence/Divergence (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -5731,6 +6497,16 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
         macdsignal
         macdhist
     """
+    return _MACD(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        fastperiod,
+        slowperiod,
+        signalperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MACD( np.ndarray real, int fastperiod=12, int slowperiod=26, int signalperiod=9 ):
     cdef:
         np.npy_intp length
         double val
@@ -5757,15 +6533,13 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     _ta_check_success("TA_MACD", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0 , int slowperiod=-2**31 , int slowmatype=0 , int signalperiod=-2**31 , int signalmatype=0 ):
+def MACDEXT( real not None, fastperiod=12, fastmatype=0, slowperiod=26, slowmatype=0, signalperiod=9, signalmatype=0 ):
     """ MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
 
     MACD with controllable MA type (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         fastperiod: 12
         fastmatype: 0
@@ -5778,6 +6552,19 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
         macdsignal
         macdhist
     """
+    return _MACDEXT(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        fastperiod,
+        fastmatype,
+        slowperiod,
+        slowmatype,
+        signalperiod,
+        signalmatype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MACDEXT( np.ndarray real, int fastperiod=12, int fastmatype=0, int slowperiod=26, int slowmatype=0, int signalperiod=9, int signalmatype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -5804,15 +6591,13 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     _ta_check_success("TA_MACDEXT", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
+def MACDFIX( real not None, signalperiod=9 ):
     """ MACDFIX(real[, signalperiod=?])
 
     Moving Average Convergence/Divergence Fix 12/26 (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         signalperiod: 9
     Outputs:
@@ -5820,6 +6605,14 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
         macdsignal
         macdhist
     """
+    return _MACDFIX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        signalperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MACDFIX( np.ndarray real, int signalperiod=9 ):
     cdef:
         np.npy_intp length
         double val
@@ -5846,15 +6639,13 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     _ta_check_success("TA_MACDFIX", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-4e37 ):
+def MAMA( real not None, fastlimit=0.5, slowlimit=0.05 ):
     """ MAMA(real[, fastlimit=?, slowlimit=?])
 
     MESA Adaptive Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         fastlimit: 0.5
         slowlimit: 0.05
@@ -5862,6 +6653,15 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
         mama
         fama
     """
+    return _MAMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        fastlimit,
+        slowlimit
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MAMA( np.ndarray real, double fastlimit=0.5, double slowlimit=0.05 ):
     cdef:
         np.npy_intp length
         double val
@@ -5886,16 +6686,14 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     _ta_check_success("TA_MAMA", retCode)
     return outmama , outfama 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod=-2**31 , int maxperiod=-2**31 , int matype=0 ):
+def MAVP( real not None, periods not None, minperiod=2, maxperiod=30, matype=0 ):
     """ MAVP(real, periods[, minperiod=?, maxperiod=?, matype=?])
 
     Moving average with variable period (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
-        periods: (any ndarray)
+        real: (np.ndarray or pd.Series)
+        periods: (np.ndarray or pd.Series)
     Parameters:
         minperiod: 2
         maxperiod: 30
@@ -5903,6 +6701,17 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     Outputs:
         real
     """
+    return _MAVP(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        periods.values if isinstance(periods, __PANDAS_SERIES) else periods,
+        minperiod,
+        maxperiod,
+        matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MAVP( np.ndarray real, np.ndarray periods, int minperiod=2, int maxperiod=30, int matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -5935,20 +6744,26 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     _ta_check_success("TA_MAVP", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
+def MAX( real not None, timeperiod=30 ):
     """ MAX(real[, timeperiod=?])
 
     Highest value over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _MAX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MAX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -5971,20 +6786,26 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MAX", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+def MAXINDEX( real not None, timeperiod=30 ):
     """ MAXINDEX(real[, timeperiod=?])
 
     Index of highest value over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _MAXINDEX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MAXINDEX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -6007,9 +6828,7 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MAXINDEX", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
+def MEDPRICE( high not None, low not None ):
     """ MEDPRICE(high, low)
 
     Median Price (Price Transform)
@@ -6019,6 +6838,14 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     Outputs:
         real
     """
+    return _MEDPRICE(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MEDPRICE( np.ndarray high, np.ndarray low ):
     cdef:
         np.npy_intp length
         double val
@@ -6051,9 +6878,7 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     _ta_check_success("TA_MEDPRICE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=-2**31 ):
+def MFI( high not None, low not None, close not None, volume not None, timeperiod=14 ):
     """ MFI(high, low, close, volume[, timeperiod=?])
 
     Money Flow Index (Momentum Indicators)
@@ -6065,6 +6890,17 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     Outputs:
         real
     """
+    return _MFI(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        volume.values if isinstance(volume, __PANDAS_SERIES) else volume,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MFI( np.ndarray high, np.ndarray low, np.ndarray close, np.ndarray volume, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6117,20 +6953,26 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     _ta_check_success("TA_MFI", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
+def MIDPOINT( real not None, timeperiod=14 ):
     """ MIDPOINT(real[, timeperiod=?])
 
     MidPoint over period (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _MIDPOINT(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MIDPOINT( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6153,9 +6995,7 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MIDPOINT", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+def MIDPRICE( high not None, low not None, timeperiod=14 ):
     """ MIDPRICE(high, low[, timeperiod=?])
 
     Midpoint Price over period (Overlap Studies)
@@ -6167,6 +7007,15 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     Outputs:
         real
     """
+    return _MIDPRICE(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MIDPRICE( np.ndarray high, np.ndarray low, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6199,20 +7048,26 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     _ta_check_success("TA_MIDPRICE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
+def MIN( real not None, timeperiod=30 ):
     """ MIN(real[, timeperiod=?])
 
     Lowest value over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _MIN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MIN( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -6235,20 +7090,26 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MIN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+def MININDEX( real not None, timeperiod=30 ):
     """ MININDEX(real[, timeperiod=?])
 
     Index of lowest value over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         integer (values are -100, 0 or 100)
     """
+    return _MININDEX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MININDEX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -6271,21 +7132,27 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MININDEX", retCode)
     return outinteger 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
+def MINMAX( real not None, timeperiod=30 ):
     """ MINMAX(real[, timeperiod=?])
 
     Lowest and highest values over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         min
         max
     """
+    return _MINMAX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MINMAX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -6310,21 +7177,27 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MINMAX", retCode)
     return outmin , outmax 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
+def MINMAXINDEX( real not None, timeperiod=30 ):
     """ MINMAXINDEX(real[, timeperiod=?])
 
     Indexes of lowest and highest values over a specified period (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         minidx
         maxidx
     """
+    return _MINMAXINDEX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MINMAXINDEX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -6349,9 +7222,7 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MINMAXINDEX", retCode)
     return outminidx , outmaxidx 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def MINUS_DI( high not None, low not None, close not None, timeperiod=14 ):
     """ MINUS_DI(high, low, close[, timeperiod=?])
 
     Minus Directional Indicator (Momentum Indicators)
@@ -6363,6 +7234,16 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Outputs:
         real
     """
+    return _MINUS_DI(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MINUS_DI( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6405,9 +7286,7 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     _ta_check_success("TA_MINUS_DI", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+def MINUS_DM( high not None, low not None, timeperiod=14 ):
     """ MINUS_DM(high, low[, timeperiod=?])
 
     Minus Directional Movement (Momentum Indicators)
@@ -6419,6 +7298,15 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     Outputs:
         real
     """
+    return _MINUS_DM(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MINUS_DM( np.ndarray high, np.ndarray low, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6451,20 +7339,26 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     _ta_check_success("TA_MINUS_DM", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
+def MOM( real not None, timeperiod=10 ):
     """ MOM(real[, timeperiod=?])
 
     Momentum (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 10
     Outputs:
         real
     """
+    return _MOM(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MOM( np.ndarray real, int timeperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -6487,19 +7381,25 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_MOM", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
+def MULT( real0 not None, real1 not None ):
     """ MULT(real0, real1)
 
     Vector Arithmetic Mult (Math Operators)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _MULT(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _MULT( np.ndarray real0, np.ndarray real1 ):
     cdef:
         np.npy_intp length
         double val
@@ -6532,9 +7432,7 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     _ta_check_success("TA_MULT", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def NATR( high not None, low not None, close not None, timeperiod=14 ):
     """ NATR(high, low, close[, timeperiod=?])
 
     Normalized Average True Range (Volatility Indicators)
@@ -6546,6 +7444,16 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     Outputs:
         real
     """
+    return _NATR(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _NATR( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6588,19 +7496,25 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     _ta_check_success("TA_NATR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def OBV( np.ndarray real not None , np.ndarray volume not None ):
+def OBV( real not None, volume not None ):
     """ OBV(real, volume)
 
     On Balance Volume (Volume Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
         prices: ['volume']
     Outputs:
         real
     """
+    return _OBV(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        volume.values if isinstance(volume, __PANDAS_SERIES) else volume
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _OBV( np.ndarray real, np.ndarray volume ):
     cdef:
         np.npy_intp length
         double val
@@ -6633,9 +7547,7 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     _ta_check_success("TA_OBV", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def PLUS_DI( high not None, low not None, close not None, timeperiod=14 ):
     """ PLUS_DI(high, low, close[, timeperiod=?])
 
     Plus Directional Indicator (Momentum Indicators)
@@ -6647,6 +7559,16 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     Outputs:
         real
     """
+    return _PLUS_DI(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _PLUS_DI( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6689,9 +7611,7 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     _ta_check_success("TA_PLUS_DI", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+def PLUS_DM( high not None, low not None, timeperiod=14 ):
     """ PLUS_DM(high, low[, timeperiod=?])
 
     Plus Directional Movement (Momentum Indicators)
@@ -6703,6 +7623,15 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     Outputs:
         real
     """
+    return _PLUS_DM(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _PLUS_DM( np.ndarray high, np.ndarray low, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6735,15 +7664,13 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     _ta_check_success("TA_PLUS_DM", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def PPO( real not None, fastperiod=12, slowperiod=26, matype=0 ):
     """ PPO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Percentage Price Oscillator (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         fastperiod: 12
         slowperiod: 26
@@ -6751,6 +7678,16 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     Outputs:
         real
     """
+    return _PPO(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        fastperiod,
+        slowperiod,
+        matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _PPO( np.ndarray real, int fastperiod=12, int slowperiod=26, int matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -6773,20 +7710,26 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     _ta_check_success("TA_PPO", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
+def ROC( real not None, timeperiod=10 ):
     """ ROC(real[, timeperiod=?])
 
     Rate of change : ((real/prevPrice)-1)*100 (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 10
     Outputs:
         real
     """
+    return _ROC(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ROC( np.ndarray real, int timeperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -6809,20 +7752,26 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_ROC", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
+def ROCP( real not None, timeperiod=10 ):
     """ ROCP(real[, timeperiod=?])
 
     Rate of change Percentage: (real-prevPrice)/prevPrice (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 10
     Outputs:
         real
     """
+    return _ROCP(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ROCP( np.ndarray real, int timeperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -6845,20 +7794,26 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_ROCP", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
+def ROCR( real not None, timeperiod=10 ):
     """ ROCR(real[, timeperiod=?])
 
     Rate of change ratio: (real/prevPrice) (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 10
     Outputs:
         real
     """
+    return _ROCR(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ROCR( np.ndarray real, int timeperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -6881,20 +7836,26 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_ROCR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
+def ROCR100( real not None, timeperiod=10 ):
     """ ROCR100(real[, timeperiod=?])
 
     Rate of change ratio 100 scale: (real/prevPrice)*100 (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 10
     Outputs:
         real
     """
+    return _ROCR100(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ROCR100( np.ndarray real, int timeperiod=10 ):
     cdef:
         np.npy_intp length
         double val
@@ -6917,20 +7878,26 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_ROCR100", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
+def RSI( real not None, timeperiod=14 ):
     """ RSI(real[, timeperiod=?])
 
     Relative Strength Index (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _RSI(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _RSI( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -6953,9 +7920,7 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_RSI", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SAR( np.ndarray high not None , np.ndarray low not None , double acceleration=0.02 , double maximum=0.2 ):
+def SAR( high not None, low not None, acceleration=0.02, maximum=0.2 ):
     """ SAR(high, low[, acceleration=?, maximum=?])
 
     Parabolic SAR (Overlap Studies)
@@ -6968,6 +7933,16 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     Outputs:
         real
     """
+    return _SAR(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        acceleration,
+        maximum
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SAR( np.ndarray high, np.ndarray low, double acceleration=0.02, double maximum=0.2 ):
     cdef:
         np.npy_intp length
         double val
@@ -7000,9 +7975,7 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     _ta_check_success("TA_SAR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SAREXT( np.ndarray high not None , np.ndarray low not None , double startvalue=-4e37 , double offsetonreverse=-4e37 , double accelerationinitlong=-4e37 , double accelerationlong=-4e37 , double accelerationmaxlong=-4e37 , double accelerationinitshort=-4e37 , double accelerationshort=-4e37 , double accelerationmaxshort=-4e37 ):
+def SAREXT( high not None, low not None, startvalue=0.0, offsetonreverse=0.0, accelerationinitlong=0.02, accelerationlong=0.02, accelerationmaxlong=0.2, accelerationinitshort=0.02, accelerationshort=0.02, accelerationmaxshort=0.2 ):
     """ SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])
 
     Parabolic SAR - Extended (Overlap Studies)
@@ -7021,6 +7994,22 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     Outputs:
         real
     """
+    return _SAREXT(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        startvalue,
+        offsetonreverse,
+        accelerationinitlong,
+        accelerationlong,
+        accelerationmaxlong,
+        accelerationinitshort,
+        accelerationshort,
+        accelerationmaxshort
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SAREXT( np.ndarray high, np.ndarray low, double startvalue=0, double offsetonreverse=0, double accelerationinitlong=0.02, double accelerationlong=0.02, double accelerationmaxlong=0.2, double accelerationinitshort=0.02, double accelerationshort=0.02, double accelerationmaxshort=0.2 ):
     cdef:
         np.npy_intp length
         double val
@@ -7053,18 +8042,23 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     _ta_check_success("TA_SAREXT", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SIN( np.ndarray real not None ):
+def SIN( real not None ):
     """ SIN(real)
 
     Vector Trigonometric Sin (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _SIN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SIN( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -7087,18 +8081,23 @@ def SIN( np.ndarray real not None ):
     _ta_check_success("TA_SIN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SINH( np.ndarray real not None ):
+def SINH( real not None ):
     """ SINH(real)
 
     Vector Trigonometric Sinh (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _SINH(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SINH( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -7121,20 +8120,26 @@ def SINH( np.ndarray real not None ):
     _ta_check_success("TA_SINH", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def SMA( real not None, timeperiod=30 ):
     """ SMA(real[, timeperiod=?])
 
     Simple Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _SMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -7157,18 +8162,23 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_SMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SQRT( np.ndarray real not None ):
+def SQRT( real not None ):
     """ SQRT(real)
 
     Vector Square Root (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _SQRT(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SQRT( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -7191,21 +8201,28 @@ def SQRT( np.ndarray real not None ):
     _ta_check_success("TA_SQRT", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+def STDDEV( real not None, timeperiod=5, nbdev=1.0 ):
     """ STDDEV(real[, timeperiod=?, nbdev=?])
 
     Standard Deviation (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 5
         nbdev: 1
     Outputs:
         real
     """
+    return _STDDEV(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        nbdev
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _STDDEV( np.ndarray real, int timeperiod=5, double nbdev=1 ):
     cdef:
         np.npy_intp length
         double val
@@ -7228,9 +8245,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     _ta_check_success("TA_STDDEV", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int slowk_period=-2**31 , int slowk_matype=0 , int slowd_period=-2**31 , int slowd_matype=0 ):
+def STOCH( high not None, low not None, close not None, fastk_period=5, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0 ):
     """ STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
 
     Stochastic (Momentum Indicators)
@@ -7247,6 +8262,20 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
         slowk
         slowd
     """
+    return _STOCH(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        fastk_period,
+        slowk_period,
+        slowk_matype,
+        slowd_period,
+        slowd_matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _STOCH( np.ndarray high, np.ndarray low, np.ndarray close, int fastk_period=5, int slowk_period=3, int slowk_matype=0, int slowd_period=3, int slowd_matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -7291,9 +8320,7 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     _ta_check_success("TA_STOCH", retCode)
     return outslowk , outslowd 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+def STOCHF( high not None, low not None, close not None, fastk_period=5, fastd_period=3, fastd_matype=0 ):
     """ STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Fast (Momentum Indicators)
@@ -7308,6 +8335,18 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
         fastk
         fastd
     """
+    return _STOCHF(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        fastk_period,
+        fastd_period,
+        fastd_matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _STOCHF( np.ndarray high, np.ndarray low, np.ndarray close, int fastk_period=5, int fastd_period=3, int fastd_matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -7352,15 +8391,13 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     _ta_check_success("TA_STOCHF", retCode)
     return outfastk , outfastd 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_period=-2**31 , int fastd_period=-2**31 , int fastd_matype=0 ):
+def STOCHRSI( real not None, timeperiod=14, fastk_period=5, fastd_period=3, fastd_matype=0 ):
     """ STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
 
     Stochastic Relative Strength Index (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
         fastk_period: 5
@@ -7370,6 +8407,17 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
         fastk
         fastd
     """
+    return _STOCHRSI(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        fastk_period,
+        fastd_period,
+        fastd_matype
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _STOCHRSI( np.ndarray real, int timeperiod=14, int fastk_period=5, int fastd_period=3, int fastd_matype=0 ):
     cdef:
         np.npy_intp length
         double val
@@ -7394,19 +8442,25 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     _ta_check_success("TA_STOCHRSI", retCode)
     return outfastk , outfastd 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
+def SUB( real0 not None, real1 not None ):
     """ SUB(real0, real1)
 
     Vector Arithmetic Substraction (Math Operators)
 
     Inputs:
-        real0: (any ndarray)
-        real1: (any ndarray)
+        real0: (np.ndarray or pd.Series)
+        real1: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _SUB(
+        real0.values if isinstance(real0, __PANDAS_SERIES) else real0,
+        real1.values if isinstance(real1, __PANDAS_SERIES) else real1
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SUB( np.ndarray real0, np.ndarray real1 ):
     cdef:
         np.npy_intp length
         double val
@@ -7439,20 +8493,26 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     _ta_check_success("TA_SUB", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
+def SUM( real not None, timeperiod=30 ):
     """ SUM(real[, timeperiod=?])
 
     Summation (Math Operators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _SUM(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _SUM( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -7475,21 +8535,28 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_SUM", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 ):
+def T3( real not None, timeperiod=5, vfactor=0.7 ):
     """ T3(real[, timeperiod=?, vfactor=?])
 
     Triple Exponential Moving Average (T3) (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 5
         vfactor: 0.7
     Outputs:
         real
     """
+    return _T3(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        vfactor
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _T3( np.ndarray real, int timeperiod=5, double vfactor=0.7 ):
     cdef:
         np.npy_intp length
         double val
@@ -7512,18 +8579,23 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     _ta_check_success("TA_T3", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TAN( np.ndarray real not None ):
+def TAN( real not None ):
     """ TAN(real)
 
     Vector Trigonometric Tan (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _TAN(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TAN( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -7546,18 +8618,23 @@ def TAN( np.ndarray real not None ):
     _ta_check_success("TA_TAN", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TANH( np.ndarray real not None ):
+def TANH( real not None ):
     """ TANH(real)
 
     Vector Trigonometric Tanh (Math Transform)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Outputs:
         real
     """
+    return _TANH(
+        real.values if isinstance(real, __PANDAS_SERIES) else real
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TANH( np.ndarray real ):
     cdef:
         np.npy_intp length
         double val
@@ -7580,20 +8657,26 @@ def TANH( np.ndarray real not None ):
     _ta_check_success("TA_TANH", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def TEMA( real not None, timeperiod=30 ):
     """ TEMA(real[, timeperiod=?])
 
     Triple Exponential Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _TEMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TEMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -7616,9 +8699,7 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_TEMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def TRANGE( high not None, low not None, close not None ):
     """ TRANGE(high, low, close)
 
     True Range (Volatility Indicators)
@@ -7628,6 +8709,15 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     Outputs:
         real
     """
+    return _TRANGE(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TRANGE( np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -7670,20 +8760,26 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     _ta_check_success("TA_TRANGE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def TRIMA( real not None, timeperiod=30 ):
     """ TRIMA(real[, timeperiod=?])
 
     Triangular Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _TRIMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TRIMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -7706,20 +8802,26 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_TRIMA", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
+def TRIX( real not None, timeperiod=30 ):
     """ TRIX(real[, timeperiod=?])
 
     1-day Rate-Of-Change (ROC) of a Triple Smooth EMA (Momentum Indicators)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _TRIX(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TRIX( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
@@ -7742,20 +8844,26 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_TRIX", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
+def TSF( real not None, timeperiod=14 ):
     """ TSF(real[, timeperiod=?])
 
     Time Series Forecast (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 14
     Outputs:
         real
     """
+    return _TSF(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TSF( np.ndarray real, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -7778,9 +8886,7 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_TSF", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def TYPPRICE( high not None, low not None, close not None ):
     """ TYPPRICE(high, low, close)
 
     Typical Price (Price Transform)
@@ -7790,6 +8896,15 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Outputs:
         real
     """
+    return _TYPPRICE(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _TYPPRICE( np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -7832,9 +8947,7 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     _ta_check_success("TA_TYPPRICE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod1=-2**31 , int timeperiod2=-2**31 , int timeperiod3=-2**31 ):
+def ULTOSC( high not None, low not None, close not None, timeperiod1=7, timeperiod2=14, timeperiod3=28 ):
     """ ULTOSC(high, low, close[, timeperiod1=?, timeperiod2=?, timeperiod3=?])
 
     Ultimate Oscillator (Momentum Indicators)
@@ -7848,6 +8961,18 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     Outputs:
         real
     """
+    return _ULTOSC(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod1,
+        timeperiod2,
+        timeperiod3
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _ULTOSC( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod1=7, int timeperiod2=14, int timeperiod3=28 ):
     cdef:
         np.npy_intp length
         double val
@@ -7890,21 +9015,28 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     _ta_check_success("TA_ULTOSC", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 ):
+def VAR( real not None, timeperiod=5, nbdev=1.0 ):
     """ VAR(real[, timeperiod=?, nbdev=?])
 
     Variance (Statistic Functions)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 5
         nbdev: 1
     Outputs:
         real
     """
+    return _VAR(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod,
+        nbdev
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _VAR( np.ndarray real, int timeperiod=5, double nbdev=1 ):
     cdef:
         np.npy_intp length
         double val
@@ -7927,9 +9059,7 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     _ta_check_success("TA_VAR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+def WCLPRICE( high not None, low not None, close not None ):
     """ WCLPRICE(high, low, close)
 
     Weighted Close Price (Price Transform)
@@ -7939,6 +9069,15 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     Outputs:
         real
     """
+    return _WCLPRICE(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _WCLPRICE( np.ndarray high, np.ndarray low, np.ndarray close ):
     cdef:
         np.npy_intp length
         double val
@@ -7981,9 +9120,7 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     _ta_check_success("TA_WCLPRICE", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+def WILLR( high not None, low not None, close not None, timeperiod=14 ):
     """ WILLR(high, low, close[, timeperiod=?])
 
     Williams' %R (Momentum Indicators)
@@ -7995,6 +9132,16 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     Outputs:
         real
     """
+    return _WILLR(
+        high.values if isinstance(high, __PANDAS_SERIES) else high,
+        low.values if isinstance(low, __PANDAS_SERIES) else low,
+        close.values if isinstance(close, __PANDAS_SERIES) else close,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _WILLR( np.ndarray high, np.ndarray low, np.ndarray close, int timeperiod=14 ):
     cdef:
         np.npy_intp length
         double val
@@ -8037,20 +9184,26 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     _ta_check_success("TA_WILLR", retCode)
     return outreal 
 
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
-def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
+def WMA( real not None, timeperiod=30 ):
     """ WMA(real[, timeperiod=?])
 
     Weighted Moving Average (Overlap Studies)
 
     Inputs:
-        real: (any ndarray)
+        real: (np.ndarray or pd.Series)
     Parameters:
         timeperiod: 30
     Outputs:
         real
     """
+    return _WMA(
+        real.values if isinstance(real, __PANDAS_SERIES) else real,
+        timeperiod
+    )
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+cdef _WMA( np.ndarray real, int timeperiod=30 ):
     cdef:
         np.npy_intp length
         double val
