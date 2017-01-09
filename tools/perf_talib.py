@@ -20,5 +20,6 @@ for _ in range(LOOPS):
     talib.KAMA(data)
     talib.CDLMORNINGDOJISTAR(data, data, data, data)
 t1 = time.time()
-print('%d' % TEST_LEN)
-print('%.6f' % ((t1 - t0) / 1000.0))
+print('test_len: %d, loops: %d' % (TEST_LEN, LOOPS))
+print('%.6f' % (t1 - t0))
+print('%.6f' % ((t1 - t0) / LOOPS))
