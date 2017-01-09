@@ -5,7 +5,7 @@ install:
 	python setup.py install
 
 generate:
-	python tools/generate.py > talib/func.pyx
+	python tools/generate_func.py > talib/func.pyx
 
 clean:
 	rm -rf build talib/func*.so talib/abstract*.so talib/common*.so talib/stream*.so talib/*.pyc
