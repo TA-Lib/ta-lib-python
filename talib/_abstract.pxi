@@ -14,8 +14,6 @@ cimport numpy as np
 cimport _ta_lib as lib
 # NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
-lib.TA_Initialize()
-
 
 __INPUT_ARRAYS_DEFAULTS = {'open':   None,
                            'high':   None,

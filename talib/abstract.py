@@ -22,4 +22,4 @@ for func_name in __TA_FUNCTION_NAMES__:
     globals()[func_name] = Function(func_name)
 
 
-__all__ = ["Function"] + __TA_FUNCTION_NAMES__
+__all__ = ["Function", "_get_defaults_and_docs"] + __TA_FUNCTION_NAMES__

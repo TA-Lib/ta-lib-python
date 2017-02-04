@@ -51,7 +51,7 @@ cimport numpy as np
 from numpy import nan
 from cython import boundscheck, wraparound
 
-from .common cimport _ta_check_success
+# _ta_check_success: defined in _common.pxi
 
 cdef double NaN = nan
 
@@ -63,10 +63,9 @@ cdef extern from "numpy/arrayobject.h":
 
 np.import_array() # Initialize the NumPy C API
 
-cimport libta_lib as lib
-from libta_lib cimport TA_RetCode
+cimport _ta_lib as lib
+from _ta_lib cimport TA_RetCode
 
-lib.TA_Initialize()
 """)
 
 # cleanup variable names to make them more pythonic
@@ -338,4 +337,4 @@ for f in functions:
     print('')
     print('')
 
-print('__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names]))
+print('__TA_FUNCTION_NAMES__ = [%s]' % ','.join(['\"%s\"' % name for name in names]))
