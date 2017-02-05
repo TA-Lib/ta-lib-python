@@ -17,8 +17,9 @@ env:
       TA_LIBRARY_PATH=$DEPS_DIR/lib
     - WITH_TA_LIBRARY=no
 cache:
-  directories:
-    - $DEPS_DIR
+  - pip
+  - directories:
+      - $DEPS_DIR
 install:
   - pip install --upgrade pip wheel
   - pip install -r requirements_test.txt
