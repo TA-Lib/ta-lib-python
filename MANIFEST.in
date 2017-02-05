@@ -1,0 +1,13 @@
+include README.md
+include AUTHORS
+include CHANGELOG
+include COPYRIGHT
+include DEVELOPMENT
+include LICENSE
+include requirements.txt
+recursive-include vendor *
+recursive-include talib *.py *.pyx *.pxi *.pxd *.c
+prune vendor/ta-lib/temp
+prune vendor/ta-lib/make
+prune vendor/ta-lib/ide
+prune vendor/ta-lib/src/tools

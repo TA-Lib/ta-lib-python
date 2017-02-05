@@ -15,6 +15,7 @@ env:
       TA_INCLUDE_PATH=$DEPS_DIR/include
       LD_LIBRARY_PATH=$DEPS_DIR/lib
       TA_LIBRARY_PATH=$DEPS_DIR/lib
+    - WITH_TA_LIBRARY=no
 cache:
   directories:
     - $DEPS_DIR

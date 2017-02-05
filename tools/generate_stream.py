@@ -11,17 +11,18 @@ from talib import abstract
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
-include_paths = ['/usr/include', '/usr/local/include', '/opt/include', '/opt/local/include']
+include_paths = ['/usr/include/ta-lib', '/usr/local/include/ta-lib', '/opt/include/ta-lib', '/opt/local/include/ta-lib']
 if sys.platform == 'win32':
-    include_paths = [r'c:\ta-lib\c\include']
+    include_paths = [r'c:\ta-lib\c\include\ta-lib']
+include_paths.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "vendor", "ta-lib", "include"))
 header_found = False
 for path in include_paths:
-    ta_func_header = os.path.join(path, 'ta-lib', 'ta_func.h')
+    ta_func_header = os.path.join(path, 'ta_func.h')
     if os.path.exists(ta_func_header):
         header_found = True
         break
 if not header_found:
-    print('Error: ta-lib/ta_func.h not found', file=sys.stderr)
+    print('Error: ta_func.h not found', file=sys.stderr)
     sys.exit(1)
 with open(ta_func_header) as f:
     tmp = []
