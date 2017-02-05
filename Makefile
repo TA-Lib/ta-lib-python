@@ -13,7 +13,7 @@ clean:
 perf:
 	python tools/perf_talib.py
 
-test:
+test: build
 	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests
 
 sdist:
