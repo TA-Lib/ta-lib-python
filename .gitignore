@@ -2,8 +2,10 @@ docs/html
 docs/.tadoc.org.html
 
 *.pyc
-build
+build/
+dist/
 *.so
 .*
 *~
+*.egg-info/
 

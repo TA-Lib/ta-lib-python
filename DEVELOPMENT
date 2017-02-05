@@ -12,34 +12,34 @@ Here's the full list of make commands (see the Makefile file):
 make build     # builds and places libs in the project directory; required for testing
 make clean     # cleans the local build files
 make install   # installs talib system-wide
-make generate: # generates a fresh func.pyx file. Requires talib and TA-Lib to both be installed
+make generate: # generates a fresh _func.pxi, _stream.pxi file. Requires talib and TA-Lib to both be installed
 make perf      # run performance profiling
 make test      # run tests
 
 The source code is comprised of one python package, located in the talib
-directory, which itself has three Cython modules: func, abstract, and
-common.
+directory, which itself has one Cython module (_ta_lib) which consists of
+four parts: _common, _func, _abstract and _stream.
 
-talib/common.pyx
-  An internal-use module for functionality shared between func and abstract.
+talib/_common.pxi
+  An internal-use file for functionality shared between func and abstract.
 
-talib/func.pyx
-  This file is generated automatically by tools/generate.py and any changes made
+talib/_func.pxi
+  This file is generated automatically by tools/generate_func.py and any changes made
   to it directly will get overwritten!
 
-talib/abstract.pyx
+talib/_abstract.pxi
   This file contains the code for interfacing with the TA-Lib abstract interface
   and wrapping it into a pythonic Function class.
 
-talib/libta_lib.pxd
+talib/_ta_lib.pyx
   This "Cython header file" defines the C-level functions, variables and types we
   need to use in the above pyx files.
 
-talib/stream.pyx
+talib/_stream.pxi
   This file contains code for interfacing a "streaming" interface to TA-Lib.
 
-tools/generate.py
-  A script that generates and prints func.pyx to stdout. Gets information
+tools/generate_func.py,generate_stream.py
+  Scripts that generate and print _func.pxi or _stream.pxi to stdout. Gets information
   about all functions from the C headers of the installed TA-Lib.
 
 If you are interested in developing new indicator functions or whatnot on

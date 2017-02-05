@@ -48,25 +48,12 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 # print headers
 print("""\
 cimport numpy as np
-from numpy import nan
 from cython import boundscheck, wraparound
+cimport _ta_lib as lib
+from _ta_lib cimport TA_RetCode
+# NOTE: _ta_check_success, NaN are defined in common.pxi
+#       NumPy C API is initialize in _func.pxi
 
-from .common cimport _ta_check_success
-
-cdef double NaN = nan
-
-cdef extern from "numpy/arrayobject.h":
-    int PyArray_TYPE(np.ndarray)
-    object PyArray_EMPTY(int, np.npy_intp*, int, int)
-    int PyArray_FLAGS(np.ndarray)
-    object PyArray_GETCONTIGUOUS(np.ndarray)
-
-np.import_array() # Initialize the NumPy C API
-
-cimport libta_lib as lib
-from libta_lib cimport TA_RetCode
-
-lib.TA_Initialize()
 """)
 
 # cleanup variable names to make them more pythonic
@@ -96,7 +83,7 @@ for f in functions:
 
     print('@wraparound(False)  # turn off relative indexing from end of lists')
     print('@boundscheck(False) # turn off bounds-checking for entire function')
-    print('def %s(' % shortname, end=' ')
+    print('def stream_%s(' % shortname, end=' ')
     docs = [' %s(' % shortname]
     i = 0
     for arg in args:
@@ -302,4 +289,3 @@ for f in functions:
     print('')
     print('')
 
-print('__all__ = [%s]' % ','.join(['\"%s\"' % name for name in names]))
