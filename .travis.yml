@@ -1,3 +1,4 @@
+---
 language: python
 python:
   - "2.7"
@@ -8,15 +9,20 @@ os:
   - linux
 env:
   global:
-    - TA_INCLUDE_PATH=$HOME/dependencies/include
-    - TA_LIBRARY_PATH=$HOME/dependencies/lib
-    - LD_LIBRARY_PATH=$HOME/dependencies/lib
+    - DEPS_DIR=$HOME/dependencies
+  matrix:
+    - WITH_TA_LIBRARY=yes
+      TA_INCLUDE_PATH=$DEPS_DIR/include
+      LD_LIBRARY_PATH=$DEPS_DIR/lib
+      TA_LIBRARY_PATH=$DEPS_DIR/lib
+cache:
+  directories:
+    - $DEPS_DIR
 install:
+  - pip install --upgrade pip wheel
   - pip install -r requirements_test.txt
-  - mkdir $HOME/dependencies
-  - wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-  - tar -xvzf ta-lib-0.4.0-src.tar.gz
-  - pushd ta-lib && ./configure --prefix=$HOME/dependencies && make install && popd
+  - if [ $WITH_TA_LIBRARY = "yes" ]; then
+      ./tools/build_talib_from_source.bash $DEPS_DIR;
+    fi
 script:
-  - make
   - make test
