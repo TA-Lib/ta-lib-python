@@ -15,7 +15,7 @@ talib/_stream.pxi: tools/generate_stream.py
 generate: talib/_func.pxi talib/_stream.pxi
 
 clean:
-	rm -rf build talib/func*.so talib/abstract*.so talib/common*.so talib/stream*.so talib/*.pyc
+	rm -rf build talib/_ta_lib.so talib/*.pyc
 
 perf:
 	python tools/perf_talib.py
