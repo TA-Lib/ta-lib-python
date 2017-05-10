@@ -41,8 +41,20 @@ func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
 compilation terminated.
 ```
 
-This typically means that it can't find the underlying ``TA-Lib`` library,
-a dependency which needs to be installed.
+or:
+
+```
+common.obj : error LNK2001: unresolved external symbol TA_SetUnstablePeriod
+common.obj : error LNK2001: unresolved external symbol TA_Shutdown
+common.obj : error LNK2001: unresolved external symbol TA_Initialize
+common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
+common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
+```
+
+This typically means that it can't find the underlying ``TA-Lib`` library, a
+dependency which needs to be installed.  On Windows, this could be caused by
+installing the 32-bit binary distribution of the underlying ``TA-Lib`` library,
+but trying to use it with 64-bit Python.
 
 Sometimes installation will fail with errors like this:
 
