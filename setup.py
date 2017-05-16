@@ -80,15 +80,26 @@ cmdclass = {}
 if has_cython:
     cmdclass['build_ext'] = build_ext
 
+runtime_lib_dirs =  os.environ['TA_LIBRARY_PATH']
+if runtime_lib_dirs:
+    runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
+else:
+    runtime_lib_dirs = []
+
+# warnings.warn('runtime_lib_dirs = {}'.format(runtime_lib_dirs))
+# warnings.warn('lib_talib_dirs = {}'.format(lib_talib_dirs))
+
 ext_modules = [
     Extension(
         'talib._ta_lib',
         ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
         include_dirs=include_dirs,
         library_dirs=lib_talib_dirs,
-        libraries=[lib_talib_name]
+        libraries=[lib_talib_name],
+        runtime_library_dirs=runtime_lib_dirs
     )
 ]
+
 
 setup(
     name = 'TA-Lib',
