@@ -43,7 +43,13 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             '/opt/local/lib',
         ]
         if 'TA_LIBRARY_PATH' in os.environ:
-            lib_talib_dirs.append(os.environ['TA_LIBRARY_PATH'])
+            runtime_lib_dirs = os.environ['TA_LIBRARY_PATH']
+            if runtime_lib_dirs:
+                runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
+                lib_talib_dirs.extend(runtime_lib_dirs)
+            else:
+                runtime_lib_dirs = []
+
         break
 
 if sys.platform == "win32":
@@ -79,15 +85,6 @@ else:
 cmdclass = {}
 if has_cython:
     cmdclass['build_ext'] = build_ext
-
-runtime_lib_dirs =  os.environ['TA_LIBRARY_PATH']
-if runtime_lib_dirs:
-    runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
-else:
-    runtime_lib_dirs = []
-
-# warnings.warn('runtime_lib_dirs = {}'.format(runtime_lib_dirs))
-# warnings.warn('lib_talib_dirs = {}'.format(lib_talib_dirs))
 
 ext_modules = [
     Extension(
