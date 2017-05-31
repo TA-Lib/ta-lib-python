@@ -43,7 +43,13 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             '/opt/local/lib',
         ]
         if 'TA_LIBRARY_PATH' in os.environ:
-            lib_talib_dirs.append(os.environ['TA_LIBRARY_PATH'])
+            runtime_lib_dirs = os.environ['TA_LIBRARY_PATH']
+            if runtime_lib_dirs:
+                runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
+                lib_talib_dirs.extend(runtime_lib_dirs)
+            else:
+                runtime_lib_dirs = []
+
         break
 
 if sys.platform == "win32":
@@ -86,9 +92,11 @@ ext_modules = [
         ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
         include_dirs=include_dirs,
         library_dirs=lib_talib_dirs,
-        libraries=[lib_talib_name]
+        libraries=[lib_talib_name],
+        runtime_library_dirs=runtime_lib_dirs
     )
 ]
+
 
 setup(
     name = 'TA-Lib',
