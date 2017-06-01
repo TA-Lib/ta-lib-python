@@ -81,3 +81,25 @@ def _ta_get_unstable_period(name):
     cdef TA_FuncUnstId id = _ta_func_unst_ids[name]
     period = lib.TA_GetUnstablePeriod(id)
     return period
+
+class CandleSettingType(object):
+    BodyLong, BodyVeryLong, BodyShort, BodyDoji, ShadowLong, ShadowVeryLong, \
+    ShadowShort, ShadowVeryShort, Near, Far, Equal, AllCandleSettings = \
+    range(12)
+
+CandleSettingType = CandleSettingType()
+
+class RangeType(object):
+    RealBody, HighLow, Shadows = range(3)
+
+RangeType = RangeType()
+
+def _ta_set_candle_settings(settingtype, rangetype, avgperiod, factor):
+    cdef TA_RetCode ret_code
+    ret_code = lib.TA_SetCandleSettings(settingtype, rangetype, avgperiod, factor)
+    _ta_check_success('TA_SetCandleSettings', ret_code)
+
+def _ta_restore_candle_default_settings(settingtype):
+    cdef TA_RetCode ret_code
+    ret_code = lib.TA_RestoreCandleDefaultSettings(settingtype)
+    _ta_check_success('TA_RestoreCandleDefaultSettings', ret_code)

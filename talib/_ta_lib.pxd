@@ -516,4 +516,4 @@ cdef extern from "ta-lib/ta_func.h":
 
     # TALIB functions for TA_SetCandleSettings
     TA_RetCode TA_SetCandleSettings(TA_CandleSettingType settingType, TA_RangeType rangeType, int avgPeriod, double factor)
-    TA_RetCode TA_RestoreCandleSettings(TA_CandleSettingType)
+    TA_RetCode TA_RestoreCandleDefaultSettings(TA_CandleSettingType)
