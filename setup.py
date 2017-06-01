@@ -22,6 +22,8 @@ from distutils.extension import Extension
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
 
+runtime_lib_dirs = []
+
 platform_supported = False
 for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
     if prefix in sys.platform:
@@ -47,9 +49,6 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             if runtime_lib_dirs:
                 runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
                 lib_talib_dirs.extend(runtime_lib_dirs)
-            else:
-                runtime_lib_dirs = []
-
         break
 
 if sys.platform == "win32":
