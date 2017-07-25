@@ -14,6 +14,9 @@ talib/_stream.pxi: tools/generate_stream.py
 
 generate: talib/_func.pxi talib/_stream.pxi
 
+cython:
+	cython talib/_ta_lib.pyx
+
 clean:
 	rm -rf build talib/_ta_lib.so talib/*.pyc
 
