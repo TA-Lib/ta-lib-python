@@ -41,6 +41,29 @@ def test_pandas():
     assert_np_arrays_equal(expected, output)
 
 
+def test_pandas_series():
+    import pandas
+    input_df = pandas.DataFrame(ford_2012)
+    output = talib.SMA(input_df['close'], 10)
+    expected = pandas.Series(func.SMA(ford_2012['close'], 10),
+                             index=input_df.index)
+    pandas.util.testing.assert_series_equal(output, expected)
+
+    # Test kwargs
+    output = talib.SMA(real=input_df['close'], timeperiod=10)
+    pandas.util.testing.assert_series_equal(output, expected)
+
+    # Test talib.func API
+    output = func.SMA(input_df['close'], timeperiod=10)
+    pandas.util.testing.assert_series_equal(output, expected)
+
+    # Test multiple outputs such as from BBANDS
+    _, output, _ = talib.BBANDS(input_df['close'], 10)
+    expected = pandas.Series(func.BBANDS(ford_2012['close'], 10)[1],
+                             index=input_df.index)
+    pandas.util.testing.assert_series_equal(output, expected)
+
+
 def test_SMA():
     expected = func.SMA(ford_2012['close'], 10)
     assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10).outputs)
