@@ -115,8 +115,7 @@ parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to ``NaN``.
 
-For convenience, the Function API supports both ``numpy.ndarray`` and
-``pandas.Series`` types.
+For convenience, the Function API supports ``numpy.ndarray`` inputs.
 
 All of the following examples use the Function API:
 
