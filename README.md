@@ -230,7 +230,7 @@ print talib.get_function_groups()
 * Cycle Indicators
 * Pattern Recognition
 
-#### Overlap Studies
+##### Overlap Studies
 ```
 BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
@@ -251,7 +251,7 @@ TRIMA                Triangular Moving Average
 WMA                  Weighted Moving Average
 ```
 
-#### Momentum Indicators
+##### Momentum Indicators
 ```
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
@@ -285,14 +285,14 @@ ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
 ```
 
-#### Volume Indicators
+##### Volume Indicators
 ```
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
 OBV                  On Balance Volume
 ```
 
-#### Cycle Indicators
+##### Cycle Indicators
 ```
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
@@ -301,7 +301,7 @@ HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 ```
 
-#### Price Transform
+##### Price Transform
 ```
 AVGPRICE             Average Price
 MEDPRICE             Median Price
@@ -309,14 +309,14 @@ TYPPRICE             Typical Price
 WCLPRICE             Weighted Close Price
 ```
 
-#### Volatility Indicators
+##### Volatility Indicators
 ```
 ATR                  Average True Range
 NATR                 Normalized Average True Range
 TRANGE               True Range
 ```
 
-#### Pattern Recognition
+##### Pattern Recognition
 ```
 CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
