@@ -12,7 +12,7 @@ func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1
 for func_name in __TA_FUNCTION_NAMES__:
     globals()[func_name] = getattr(func, func_name)
 
-__version__ = '0.4.10'
+__version__ = '0.4.14'
 
 # In order to use this python library, talib (i.e. this __file__) will be
 # imported at some point, either explicitly or indirectly via talib.func

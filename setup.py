@@ -10,15 +10,15 @@ display_option_names = Distribution.display_option_names + ['help', 'help-comman
 query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
 
 # Use setuptools for querying the package, normal builds use distutils
-if query_only:
+if query_only or 'sdist' in sys.argv:
     try:
-        from setuptools import setup
+        from setuptools import setup, Extension
     except ImportError:
         from distutils.core import setup
+        from distutils.extension import Extension
 else:
     from distutils.core import setup
-
-from distutils.extension import Extension
+    from distutils.extension import Extension
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
 
@@ -96,10 +96,9 @@ ext_modules = [
     )
 ]
 
-
 setup(
     name = 'TA-Lib',
-    version = '0.4.10',
+    version = '0.4.14',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
@@ -128,5 +127,5 @@ setup(
     packages = ['talib'],
     ext_modules = ext_modules,
     cmdclass = cmdclass,
-    requires = ['numpy'],
+    install_requires = ['numpy'],
 )
