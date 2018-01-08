@@ -8214,6 +8214,8 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
         periods = PyArray_GETCONTIGUOUS(periods)
     periods_data = <double*>periods.data
     length = real.shape[0]
+    if length != periods.shape[0]:
+        raise Exception("input lengths are different")
     begidx = 0
     for i from 0 <= i < length:
         val = real_data[i]
