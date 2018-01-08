@@ -5915,8 +5915,6 @@ def stream_MAVP( np.ndarray real not None , np.ndarray periods not None , int mi
         periods = PyArray_GETCONTIGUOUS(periods)
     periods_data = <double*>periods.data
     length = real.shape[0]
-    if length != periods.shape[0]:
-        raise Exception("input lengths are different")
     outreal = NaN
     retCode = lib.TA_MAVP( length - 1 , length - 1 , real_data , periods_data , minperiod , maxperiod , matype , &outbegidx , &outnbelement , &outreal )
     _ta_check_success("TA_MAVP", retCode)
