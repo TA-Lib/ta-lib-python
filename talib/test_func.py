@@ -126,3 +126,11 @@ def test_RSI():
     assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,0,0,0,0,0,0,0,0,0,0])
     result = func.RSI(a * 100000, 10)
     assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,33.333333333333329,51.351351351351347,39.491916859122398,51.84807024709005,42.25953803191981,52.101824405061215,52.101824405061215,43.043664867691085,43.043664867691085,43.043664867691085])
+
+def test_MAVP():
+    a = np.array(range(10), dtype=float)
+    b = np.array([2, 4], dtype=float)
+    result = func.MAVP(a, b)
+    assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan])
+    result = func.MAVP(a, b, minperiod=2, maxperiod=4)
+    assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,2.5,3.5,4.5,5.5,6.5,7.5,8.5])
