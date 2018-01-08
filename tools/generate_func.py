@@ -227,7 +227,7 @@ for f in functions:
             if not seen:
                 print('    length = %s.shape[0]' % var)
                 seen = True
-            else:
+            elif var != 'periods':
                 print('    if length != %s.shape[0]:' % var)
                 print('        raise Exception("input lengths are different")')
 
