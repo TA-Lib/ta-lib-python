@@ -1,3 +1,9 @@
+0.4.15
+======
+
+- [FIX]: Import TA_FUNC_FLAGS, TA_INPUT_FLAGS, TA_OUTPUT_FLAGS into
+         talib.abstract to support backwards compatibility for backtrader
+
 0.4.14
 ======
 
