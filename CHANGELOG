@@ -1,3 +1,18 @@
+0.4.14
+======
+
+- [NEW]: Upgrade to Cython 0.27.3
+
+- [NEW]: Add support for set/restore candle settings
+
+- [DOC]: Note Function API only supports numpy.ndarray (not pandas.Series)
+
+- [NEW]: Continuous integration using Travis on Python 2.7, 3.4, 3.5, 3.6
+
+- [NEW]: Merge common, func, abstract, stream as pxi to _ta_lib.pyx
+
+- [DOC]: Update documentation to warn about unstable functions
+
 0.4.10
 ======
 
