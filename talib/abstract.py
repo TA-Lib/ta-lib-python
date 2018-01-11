@@ -1,6 +1,8 @@
 import talib._ta_lib as _ta_lib
 from ._ta_lib import Function as _Function, __TA_FUNCTION_NAMES__, _get_defaults_and_docs
 
+# add some backwards compat for backtrader
+from ._ta_lib import TA_FUNC_FLAGS, TA_INPUT_FLAGS, TA_OUTPUT_FLAGS
 
 _func_obj_mapping = {
     func_name: getattr(_ta_lib, func_name)
