@@ -1,3 +1,8 @@
+0.4.16
+======
+
+- [FIX]: Fix incorrect C header include on Windows.
+
 0.4.15
 ======
 
