@@ -9,16 +9,13 @@ from distutils.dist import Distribution
 display_option_names = Distribution.display_option_names + ['help', 'help-commands']
 query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
 
-# Use setuptools for querying the package, normal builds use distutils
-if query_only or 'sdist' in sys.argv:
-    try:
-        from setuptools import setup, Extension
-    except ImportError:
-        from distutils.core import setup
-        from distutils.extension import Extension
-else:
+try:
+    from setuptools import setup, Extension
+    requires = {"install_requires": ["numpy"]}
+except:
     from distutils.core import setup
     from distutils.extension import Extension
+    requires = {"requires": ["numpy"]}
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
 
@@ -117,6 +114,7 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Cython",
         "Topic :: Office/Business :: Financial",
         "Topic :: Scientific/Engineering :: Mathematics",
@@ -127,5 +125,5 @@ setup(
     packages = ['talib'],
     ext_modules = ext_modules,
     cmdclass = cmdclass,
-    install_requires = ['numpy'],
+    **requires
 )
