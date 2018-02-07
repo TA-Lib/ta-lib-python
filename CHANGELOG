@@ -1,3 +1,8 @@
+0.4.17
+======
+
+- [NEW]: Support pandas.Series in Function API
+
 0.4.16
 ======
 
