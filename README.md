@@ -76,7 +76,9 @@ $ sudo apt-get install python3-dev
 ### Dependencies
 
 To use TA-Lib for python, you need to have the
-[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed:
+[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed. You should
+probably follow their installation directions for your platform, but some
+suggestions are included below for reference.
 
 ##### Mac OS X
 
