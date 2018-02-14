@@ -13,10 +13,11 @@ instead of SWIG. From the homepage:
 > * Candlestick pattern recognition
 > * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
-The original Python bindings use [SWIG](http://swig.org) which unfortunately
-are difficult to install and aren't as efficient as they could be. Therefore
-this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
--- producing results 2-4 times faster than the SWIG interface.
+The original Python bindings included with TA-Lib use
+[SWIG](http://swig.org) which unfortunately are difficult to install and
+aren't as efficient as they could be. Therefore this project uses Cython and
+Numpy to efficiently and cleanly bind to TA-Lib -- producing results 2-4
+times faster than the SWIG interface.
 
 ## Installation
 
