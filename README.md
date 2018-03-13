@@ -74,6 +74,21 @@ something like:
 $ sudo apt-get install python3-dev
 ```
 
+Sometimes building the underlying ``TA-Lib`` library has errors running
+``make`` that look like this:
+
+```
+../libtool: line 1717: cd: .libs/libta_lib.lax/libta_abstract.a: No such file or directory
+make[2]: *** [libta_lib.la] Error 1
+make[1]: *** [all-recursive] Error 1
+make: *** [all-recursive] Error 1
+```
+
+This might mean that the directory path to the underlying ``TA-Lib`` library
+has spaces in the directory names.  Try putting it in a path that does not have
+any spaces and trying again.
+
+
 ### Dependencies
 
 To use TA-Lib for python, you need to have the
