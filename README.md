@@ -128,6 +128,10 @@ and unzip to ``C:\ta-lib``
 
 > * Build the Library ``nmake``
 
+You might also try these unofficial windows binaries for both 32-bit and 64-bit:
+
+https://www.lfd.uci.edu/~gohlke/pythonlibs/#ta-lib
+
 ##### Linux
 
 Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
