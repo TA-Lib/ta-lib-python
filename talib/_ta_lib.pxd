@@ -1,6 +1,5 @@
 
 cdef extern from "ta-lib/ta_defs.h":
-    ctypedef int TA_RetCode
 
     ctypedef int TA_RetCode
     TA_RetCode TA_SUCCESS = 0
