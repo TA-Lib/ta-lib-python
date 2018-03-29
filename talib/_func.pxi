@@ -26,7 +26,7 @@ cdef np.ndarray check_array(np.ndarray real):
         real = PyArray_GETCONTIGUOUS(real)
     return real
 
-cdef np.npy_intp check_length2(np.ndarray a1, np.ndarray a2):
+cdef np.npy_intp check_length2(np.ndarray a1, np.ndarray a2) except -1:
     cdef:
         np.npy_intp length
     length = a1.shape[0]
@@ -34,38 +34,40 @@ cdef np.npy_intp check_length2(np.ndarray a1, np.ndarray a2):
         raise Exception("input array lengths are different")
     return length
 
-cdef np.npy_intp check_length3(np.ndarray a1, np.ndarray a2, np.ndarray a3):
+cdef np.npy_intp check_length3(np.ndarray a1, np.ndarray a2, np.ndarray a3) except -1:
     cdef:
         np.npy_intp length
-    length = check_length2(a1, a2)
+    length = a1.shape[0]
+    if length != a2.shape[0]:
+        raise Exception("input array lengths are different")
     if length != a3.shape[0]:
         raise Exception("input array lengths are different")
     return length
 
-cdef np.npy_intp check_length4(np.ndarray a1, np.ndarray a2, np.ndarray a3, np.ndarray a4):
+cdef np.npy_intp check_length4(np.ndarray a1, np.ndarray a2, np.ndarray a3, np.ndarray a4) except -1:
     cdef:
         np.npy_intp length
-    length = check_length3(a1, a2, a3)
+    length = a1.shape[0]
+    if length != a2.shape[0]:
+        raise Exception("input array lengths are different")
+    if length != a3.shape[0]:
+        raise Exception("input array lengths are different")
     if length != a4.shape[0]:
         raise Exception("input array lengths are different")
     return length
 
-cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
+cdef np.npy_int check_begidx1(np.npy_intp length, double* a1) except -1:
     cdef:
         double val
-        np.npy_int begidx
-    begidx = 0
     for i from 0 <= i < length:
         val = a1[i]
         if val != val:
             continue
-        begidx = i
-        break
+        return i
     else:
         raise Exception("inputs are all NaN")
-    return begidx
 
-cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
+cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2) except -1:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -79,7 +81,7 @@ cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
     else:
         raise Exception("inputs are all NaN")
 
-cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3):
+cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3) except -1:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -96,7 +98,7 @@ cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double
     else:
         raise Exception("inputs are all NaN")
 
-cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4):
+cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4) except -1:
     cdef:
         double val
     for i from 0 <= i < length:

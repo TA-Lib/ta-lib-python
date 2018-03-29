@@ -11,6 +11,11 @@ def test_talib_version():
 def test_num_functions():
     assert_equals(len(talib.get_functions()), 158)
 
+def test_input_wrong_type():
+    a1 = np.arange(10, dtype=int)
+    with assert_raises(Exception):
+        func.MOM(a1)
+
 def test_input_lengths():
     a1 = np.arange(10, dtype=float)
     a2 = np.arange(11, dtype=float)
