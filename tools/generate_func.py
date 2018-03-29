@@ -117,8 +117,6 @@ cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
 cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
     cdef:
         double val
-        np.npy_int begidx
-    begidx = 0
     for i from 0 <= i < length:
         val = a1[i]
         if val != val:
@@ -126,17 +124,13 @@ cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
         val = a2[i]
         if val != val:
             continue
-        begidx = i
-        break
+        return i
     else:
         raise Exception("inputs are all NaN")
-    return begidx
 
 cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3):
     cdef:
         double val
-        np.npy_int begidx
-    begidx = 0
     for i from 0 <= i < length:
         val = a1[i]
         if val != val:
@@ -147,17 +141,13 @@ cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double
         val = a3[i]
         if val != val:
             continue
-        begidx = i
-        break
+        return i
     else:
         raise Exception("inputs are all NaN")
-    return begidx
 
 cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4):
     cdef:
         double val
-        np.npy_int begidx
-    begidx = 0
     for i from 0 <= i < length:
         val = a1[i]
         if val != val:
@@ -171,11 +161,9 @@ cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double
         val = a4[i]
         if val != val:
             continue
-        begidx = i
-        break
+        return i
     else:
         raise Exception("inputs are all NaN")
-    return begidx
 
 """)
 

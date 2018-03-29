@@ -243,7 +243,7 @@ for f in functions:
             print('&%s' % var, end=' ')
 
         elif var in ('startIdx', 'endIdx'):
-            print('<int>(&length) - 1', end= ' ')
+            print('<int>(length) - 1', end= ' ')
 
         else:
             cleaned = cleanup(var)
