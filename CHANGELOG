@@ -3,6 +3,8 @@
 
 - [NEW]: Upgrade to Cython 0.28.1
 
+- [NEW]: Reduce size of generated C file and memory requirements to compile it.
+
 0.4.17
 ======
 
