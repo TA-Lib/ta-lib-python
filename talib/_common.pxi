@@ -4,31 +4,48 @@ from _ta_lib cimport TA_RetCode, TA_FuncUnstId
 __ta_version__ = lib.TA_GetVersionString()
 
 cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
-    if ret_code == lib.TA_SUCCESS:
+    if ret_code == 0:
         return True
-    ta_errors = {
-        0: 'Success',
-        1: 'Library Not Initialized (TA_LIB_NOT_INITIALIZE)',
-        2: 'Bad Parameter (TA_BAD_PARAM)',
-        3: 'Allocation Error (TA_ALLOC_ERR)',
-        4: 'Group Not Found (TA_GROUP_NOT_FOUND)',
-        5: 'Function Not Found (TA_FUNC_NOT_FOUND)',
-        6: 'Invalid Handle (TA_INVALID_HANDLE)',
-        7: 'Invalid Parameter Holder (TA_INVALID_PARAM_HOLDER)',
-        8: 'Invalid Parameter Holder Type (TA_INVALID_PARAM_HOLDER_TYPE)',
-        9: 'Invalid Parameter Function (TA_INVALID_PARAM_FUNCTION)',
-        10: 'Input Not All Initialized (TA_INPUT_NOT_ALL_INITIALIZE)',
-        11: 'Output Not All Initialized (TA_OUTPUT_NOT_ALL_INITIALIZE)',
-        12: 'Out-of-Range Start Index (TA_OUT_OF_RANGE_START_INDEX)',
-        13: 'Out-of-Range End Index (TA_OUT_OF_RANGE_END_INDEX)',
-        14: 'Invalid List Type (TA_INVALID_LIST_TYPE)',
-        15: 'Bad Object (TA_BAD_OBJECT)',
-        16: 'Not Supported (TA_NOT_SUPPORTED)',
-        5000: 'Internal Error (TA_INTERNAL_ERROR)',
-        65535: 'Unknown Error (TA_UNKNOWN_ERR)',
-        }
+    elif ret_code == 1:
+        description = 'Library Not Initialized (TA_LIB_NOT_INITIALIZE)'
+    elif ret_code == 2:
+        description = 'Bad Parameter (TA_BAD_PARAM)'
+    elif ret_code == 3:
+        description = 'Allocation Error (TA_ALLOC_ERR)'
+    elif ret_code == 4:
+        description = 'Group Not Found (TA_GROUP_NOT_FOUND)'
+    elif ret_code == 5:
+        description = 'Function Not Found (TA_FUNC_NOT_FOUND)'
+    elif ret_code == 6:
+        description = 'Invalid Handle (TA_INVALID_HANDLE)'
+    elif ret_code == 7:
+        description = 'Invalid Parameter Holder (TA_INVALID_PARAM_HOLDER)'
+    elif ret_code == 8:
+        description = 'Invalid Parameter Holder Type (TA_INVALID_PARAM_HOLDER_TYPE)'
+    elif ret_code == 9:
+        description = 'Invalid Parameter Function (TA_INVALID_PARAM_FUNCTION)'
+    elif ret_code == 10:
+        description = 'Input Not All Initialized (TA_INPUT_NOT_ALL_INITIALIZE)'
+    elif ret_code == 11:
+        description = 'Output Not All Initialized (TA_OUTPUT_NOT_ALL_INITIALIZE)'
+    elif ret_code == 12:
+        description = 'Out-of-Range Start Index (TA_OUT_OF_RANGE_START_INDEX)'
+    elif ret_code == 13:
+        description = 'Out-of-Range End Index (TA_OUT_OF_RANGE_END_INDEX)'
+    elif ret_code == 14:
+        description = 'Invalid List Type (TA_INVALID_LIST_TYPE)'
+    elif ret_code == 15:
+        description = 'Bad Object (TA_BAD_OBJECT)'
+    elif ret_code == 16:
+        description = 'Not Supported (TA_NOT_SUPPORTED)'
+    elif ret_code == 5000:
+        description = 'Internal Error (TA_INTERNAL_ERROR)'
+    elif ret_code == 65535:
+        description = 'Unknown Error (TA_UNKNOWN_ERR)'
+    else:
+        description = 'Unknown Error'
     raise Exception('%s function failed with error code %s: %s' % (
-        function_name, ret_code, ta_errors[ret_code]))
+        function_name, ret_code, description))
 
 def _ta_initialize():
     cdef TA_RetCode ret_code
