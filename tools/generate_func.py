@@ -57,14 +57,125 @@ cdef double NaN = nan
 
 cdef extern from "numpy/arrayobject.h":
     int PyArray_TYPE(np.ndarray)
-    object PyArray_EMPTY(int, np.npy_intp*, int, int)
+    np.ndarray PyArray_EMPTY(int, np.npy_intp*, int, int)
     int PyArray_FLAGS(np.ndarray)
-    object PyArray_GETCONTIGUOUS(np.ndarray)
+    np.ndarray PyArray_GETCONTIGUOUS(np.ndarray)
 
 np.import_array() # Initialize the NumPy C API
 
 cimport _ta_lib as lib
 from _ta_lib cimport TA_RetCode
+
+cdef np.ndarray check_array(np.ndarray real):
+    if PyArray_TYPE(real) != np.NPY_DOUBLE:
+        raise Exception("input array type is not double")
+    if real.ndim != 1:
+        raise Exception("input array has wrong dimensions")
+    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+        real = PyArray_GETCONTIGUOUS(real)
+    return real
+
+cdef np.npy_intp check_length2(np.ndarray a1, np.ndarray a2):
+    cdef:
+        np.npy_intp length
+    length = a1.shape[0]
+    if length != a2.shape[0]:
+        raise Exception("input array lengths are different")
+    return length
+
+cdef np.npy_intp check_length3(np.ndarray a1, np.ndarray a2, np.ndarray a3):
+    cdef:
+        np.npy_intp length
+    length = check_length2(a1, a2)
+    if length != a3.shape[0]:
+        raise Exception("input array lengths are different")
+    return length
+
+cdef np.npy_intp check_length4(np.ndarray a1, np.ndarray a2, np.ndarray a3, np.ndarray a4):
+    cdef:
+        np.npy_intp length
+    length = check_length3(a1, a2, a3)
+    if length != a4.shape[0]:
+        raise Exception("input array lengths are different")
+    return length
+
+cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
+    cdef:
+        double val
+        np.npy_int begidx
+    begidx = 0
+    for i from 0 <= i < length:
+        val = a1[i]
+        if val != val:
+            continue
+        begidx = i
+        break
+    else:
+        raise Exception("inputs are all NaN")
+    return begidx
+
+cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
+    cdef:
+        double val
+        np.npy_int begidx
+    begidx = 0
+    for i from 0 <= i < length:
+        val = a1[i]
+        if val != val:
+            continue
+        val = a2[i]
+        if val != val:
+            continue
+        begidx = i
+        break
+    else:
+        raise Exception("inputs are all NaN")
+    return begidx
+
+cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3):
+    cdef:
+        double val
+        np.npy_int begidx
+    begidx = 0
+    for i from 0 <= i < length:
+        val = a1[i]
+        if val != val:
+            continue
+        val = a2[i]
+        if val != val:
+            continue
+        val = a3[i]
+        if val != val:
+            continue
+        begidx = i
+        break
+    else:
+        raise Exception("inputs are all NaN")
+    return begidx
+
+cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4):
+    cdef:
+        double val
+        np.npy_int begidx
+    begidx = 0
+    for i from 0 <= i < length:
+        val = a1[i]
+        if val != val:
+            continue
+        val = a2[i]
+        if val != val:
+            continue
+        val = a3[i]
+        if val != val:
+            continue
+        val = a4[i]
+        if val != val:
+            continue
+        begidx = i
+        break
+    else:
+        raise Exception("inputs are all NaN")
+    return begidx
 
 """)
 
@@ -161,7 +272,6 @@ for f in functions:
     print('    """%s"""' % ''.join(docs))
     print('    cdef:')
     print('        np.npy_intp length')
-    print('        double val')
     print('        int begidx, endidx, lookback')
     print('        TA_RetCode retCode')
     for arg in args:
@@ -204,61 +314,29 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 cast = '<double*>'
-            elif 'int' in arg:
-                cast = '<int*>'
             else:
                 assert False, arg
-            print('    if PyArray_TYPE(%s) != np.NPY_DOUBLE:' % var)
-            print('        raise Exception("%s is not double")' % var)
-            print('    if %s.ndim != 1:' % var)
-            print('        raise Exception("%s has wrong dimensions")' % var)
-            print('    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var)
-            print('        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var))
+            print('    %s = check_array(%s)' % (var, var))
             print('    %s_data = %s%s.data' % (var, cast, var))
 
     # check all input array lengths are the same
-    seen = False
+    inputs = []
     for arg in args:
         var = arg.split()[-1]
         if 'out' in var:
             break
         if var.endswith('[]'):
             var = cleanup(var[:-2])
-            if not seen:
-                print('    length = %s.shape[0]' % var)
-                seen = True
-            else:
-                print('    if length != %s.shape[0]:' % var)
-                print('        raise Exception("input lengths are different")')
+            inputs.append(var)
+    if len(inputs) == 1:
+        print('    length = %s.shape[0]' % inputs[0])
+    else:
+        print('    length = check_length%s(%s)' % (len(inputs), ', '.join(inputs)))
 
     # check for all input values are non-NaN
-    seen = False
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]') and 'double' in arg:
-            seen = True
-            break
-    print('    begidx = 0')
-    if seen:
-        print('    for i from 0 <= i < length:')
-        for arg in args:
-            var = arg.split()[-1]
-            if 'out' in var:
-                break
-            if var.endswith('[]'):
-                var = cleanup(var[:-2])
-                if 'double' in arg:
-                    print('        val = %s_data[i]' % var)
-                    print('        if val != val:')
-                    print('            continue')
-        print('        begidx = i')
-        print('        break')
-        print('    else:')
-        print('        raise Exception("inputs are all NaN")')
+    print('    begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('%s_data' % s for s in inputs)))
 
-    print('    endidx = length - begidx - 1')
+    print('    endidx = <int>length - begidx - 1')
     print('    lookback = begidx + lib.%s_Lookback(' % name, end=' ')
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):

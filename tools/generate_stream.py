@@ -149,8 +149,6 @@ for f in functions:
     print('    """%s"""' % ''.join(docs))
     print('    cdef:')
     print('        np.npy_intp length')
-    print('        double val')
-    print('        int begidx, endidx, lookback')
     print('        TA_RetCode retCode')
     for arg in args:
         var = arg.split()[-1]
@@ -191,42 +189,25 @@ for f in functions:
             var = cleanup(var[:-2])
             if 'double' in arg:
                 cast = '<double*>'
-            elif 'int' in arg:
-                cast = '<int*>'
             else:
                 assert False, arg
-            print('    if PyArray_TYPE(%s) != np.NPY_DOUBLE:' % var)
-            print('        raise Exception("%s is not double")' % var)
-            print('    if %s.ndim != 1:' % var)
-            print('        raise Exception("%s has wrong dimensions")' % var)
-            print('    if not (PyArray_FLAGS(%s) & np.NPY_C_CONTIGUOUS):' % var)
-            print('        %s = PyArray_GETCONTIGUOUS(%s)' % (var, var))
+            print('    %s = check_array(%s)' % (var, var))
             print('    %s_data = %s%s.data' % (var, cast, var))
 
     # check all input array lengths are the same
-    seen = False
+    inputs = []
     for arg in args:
         var = arg.split()[-1]
         if 'out' in var:
             break
         if var.endswith('[]'):
             var = cleanup(var[:-2])
-            if not seen:
-                print('    length = %s.shape[0]' % var)
-                seen = True
-            else:
-                print('    if length != %s.shape[0]:' % var)
-                print('        raise Exception("input lengths are different")')
+            inputs.append(var)
 
-    # check for all input values are non-NaN
-    seen = False
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]') and 'double' in arg:
-            seen = True
-            break
+    if len(inputs) == 1:
+        print('    length = %s.shape[0]' % inputs[0])
+    else:
+        print('    length = check_length%s(%s)' % (len(inputs), ', '.join(inputs)))
 
     for arg in args:
         var = arg.split()[-1]
@@ -262,7 +243,7 @@ for f in functions:
             print('&%s' % var, end=' ')
 
         elif var in ('startIdx', 'endIdx'):
-            print('length - 1', end= ' ')
+            print('<int>(&length) - 1', end= ' ')
 
         else:
             cleaned = cleanup(var)
