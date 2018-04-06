@@ -246,7 +246,7 @@ class Function(object):
 
     def set_function_args(self, *args, **kwargs):
         """
-        optionl args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
+        optional args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         """
         update_info = False
 
