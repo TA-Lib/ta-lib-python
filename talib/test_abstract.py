@@ -274,3 +274,14 @@ def test_parameter_type_checking():
     with assert_raises(TypeError) as e:
         sma.set_parameters(timeperiod=35.5)
         assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+
+def test_call_doesnt_cache_parameters():
+    sma = abstract.Function('SMA', timeperiod=10)
+
+    expected = func.SMA(ford_2012['close'], 20)
+    output = sma(ford_2012, timeperiod=20)
+    assert_np_arrays_equal(expected, output)
+
+    expected = func.SMA(ford_2012['close'], 10)
+    output = sma(ford_2012)
+    assert_np_arrays_equal(expected, output)
