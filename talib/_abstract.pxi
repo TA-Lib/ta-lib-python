@@ -233,12 +233,15 @@ class Function(object):
             ret[opt_input] = self.__get_opt_input_value(opt_input)
         return ret
 
-    def set_parameters(self, parameters):
+    def set_parameters(self, parameters=None, **kwargs):
         """
         Sets the function parameter values.
         """
+        parameters = parameters or {}
+        parameters.update(kwargs)
         for param, value in parameters.items():
-            self.__opt_inputs[param]['value'] = value
+            if self.__check_opt_input_value(param, value):
+                self.__opt_inputs[param]['value'] = value
         self.__outputs_valid = False
         self.__info['parameters'] = self.parameters
 
@@ -252,8 +255,10 @@ class Function(object):
 
         for key in kwargs:
             if key in self.__opt_inputs:
-                self.__opt_inputs[key]['value'] = kwargs[key]
-                update_info = True
+                value = kwargs[key]
+                if self.__check_opt_input_value(key, value):
+                    self.__opt_inputs[key]['value'] = kwargs[key]
+                    update_info = True
             elif key in self.__input_names:
                 self.__input_names[key]['price_series'] = kwargs[key]
                 self.__info['input_names'][key] = kwargs[key]
@@ -267,8 +272,9 @@ class Function(object):
                     i += skip_first
                     if i < len(args):
                         value = args[i]
-                        self.__opt_inputs[param_name]['value'] = value
-                        update_info = True
+                        if self.__check_opt_input_value(param_name, value):
+                            self.__opt_inputs[param_name]['value'] = value
+                            update_info = True
 
         if args or kwargs:
             if update_info:
@@ -390,6 +396,21 @@ class Function(object):
             for i, output in enumerate(self.__outputs):
                 self.__outputs[output] = results[i]
         self.__outputs_valid = True
+
+    def __check_opt_input_value(self, input_name, value):
+        type_ = self.__opt_inputs[input_name]['type']
+        if type_ in {lib.TA_OptInput_IntegerList, lib.TA_OptInput_IntegerRange}:
+            type_ = int
+        elif type_ in {lib.TA_OptInput_RealList, lib.TA_OptInput_RealRange}:
+            type_ = float
+
+        if isinstance(value, type_):
+           return True
+        elif value is not None:
+            raise TypeError(
+                'Invalid parameter value for %s (expected %s, got %s)' % (
+                    input_name, type_.__name__, type(value).__name__))
+        return False
 
     def __get_opt_input_value(self, input_name):
         """

@@ -255,3 +255,22 @@ def test_lookback():
 
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
     assert_equals(stochrsi.lookback, 26)
+
+def test_parameter_type_checking():
+    sma = abstract.Function('SMA', timeperiod=10)
+
+    with assert_raises(TypeError) as e:
+        sma(ford_2012['close'], 35.5)
+        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+
+    with assert_raises(TypeError) as e:
+        abstract.Function('SMA', timeperiod=35.5)
+        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+
+    with assert_raises(TypeError) as e:
+        sma.parameters = {'timeperiod': 35.5}
+        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+
+    with assert_raises(TypeError) as e:
+        sma.set_parameters(timeperiod=35.5)
+        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
