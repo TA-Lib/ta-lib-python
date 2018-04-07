@@ -34,10 +34,12 @@ __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
 try:
     import pandas
     __INPUT_ARRAYS_TYPES = (dict, pandas.DataFrame)
+    __ARRAY_TYPES = (np.ndarray, pandas.Series)
     __PANDAS_DATAFRAME = pandas.DataFrame
     __PANDAS_SERIES = pandas.Series
 except ImportError:
     __INPUT_ARRAYS_TYPES = (dict,)
+    __ARRAY_TYPES = (np.ndarray,)
     __PANDAS_DATAFRAME = None
     __PANDAS_SERIES = None
 
@@ -357,6 +359,26 @@ class Function(object):
         """
         # do not cache ta-func parameters passed to __call__
         opt_inputs = deepcopy(self.__opt_inputs)
+
+        # allow calling with same signature as talib.func module functions
+        args = list(args)
+        input_arrays = {}
+        input_price_series_names = self.__input_price_series_names()
+        if args and type(args[0]) not in __INPUT_ARRAYS_TYPES:
+            for i, arg in enumerate(args):
+                if type(arg) not in __ARRAY_TYPES:
+                    break
+                try:
+                    input_arrays[input_price_series_names[i]] = arg
+                except IndexError:
+                    raise TypeError(
+                        'Too many price arguments: expected %d (%s)' % (
+                            len(input_price_series_names),
+                            ', '.join(input_price_series_names)))
+        if len(input_arrays) == len(input_price_series_names):
+            self.set_input_arrays(input_arrays)
+            args = args[len(input_arrays):]
+
         self.set_function_args(*args, **kwargs)
         self.__call_function()
         self.__opt_inputs = opt_inputs

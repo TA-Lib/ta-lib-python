@@ -256,6 +256,17 @@ def test_lookback():
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
     assert_equals(stochrsi.lookback, 26)
 
+def test_call_supports_same_signature_as_func_module():
+    adx = abstract.Function('ADX')
+
+    expected = func.ADX(ford_2012['open'], ford_2012['high'], ford_2012['low'])
+    output = adx(ford_2012['open'], ford_2012['high'], ford_2012['low'])
+    assert_np_arrays_equal(expected, output)
+
+    with assert_raises(TypeError) as e:
+        adx(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
+        assert 'Too many price arguments: expected 3 (open, high, low)' in str(e.exception.message)
+
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
