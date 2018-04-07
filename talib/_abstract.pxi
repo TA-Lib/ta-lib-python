@@ -7,6 +7,7 @@ try:
 except ImportError: # handle python 2.6 and earlier
     from ordereddict import OrderedDict
 from cython.operator cimport dereference as deref
+from copy import deepcopy
 import numpy
 import sys
 
@@ -354,8 +355,11 @@ class Function(object):
         This is a shortcut to the outputs property that also allows setting
         the input_arrays dict and function parameters.
         """
+        # do not cache ta-func parameters passed to __call__
+        opt_inputs = deepcopy(self.__opt_inputs)
         self.set_function_args(*args, **kwargs)
         self.__call_function()
+        self.__opt_inputs = opt_inputs
         return self.outputs
 
     # figure out which price series names we're using for inputs
