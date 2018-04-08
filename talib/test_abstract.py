@@ -268,6 +268,11 @@ def test_call_supports_same_signature_as_func_module():
         assert 'Too many price arguments: expected 3 (open, high, low)' in str(
             e.exception.message)
 
+    with assert_raises(TypeError) as e:
+        adx(ford_2012['open'], ford_2012['high'])
+        assert 'Not enough price arguments: expected 3 (open, high, low)' in str(
+            e.exception.message)
+
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
