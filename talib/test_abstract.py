@@ -265,26 +265,29 @@ def test_call_supports_same_signature_as_func_module():
 
     with assert_raises(TypeError) as e:
         adx(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
-        assert 'Too many price arguments: expected 3 (open, high, low)' in str(e.exception.message)
+        assert 'Too many price arguments: expected 3 (open, high, low)' in str(
+            e.exception.message)
 
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
+    expected_error = 'Invalid parameter value for timeperiod (expected int, got float)'
+
     with assert_raises(TypeError) as e:
         sma(ford_2012['close'], 35.5)
-        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+        assert expected_error in str(e.exception.message)
 
     with assert_raises(TypeError) as e:
         abstract.Function('SMA', timeperiod=35.5)
-        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+        assert expected_error in str(e.exception.message)
 
     with assert_raises(TypeError) as e:
         sma.parameters = {'timeperiod': 35.5}
-        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+        assert expected_error in str(e.exception.message)
 
     with assert_raises(TypeError) as e:
         sma.set_parameters(timeperiod=35.5)
-        assert 'Invalid parameter value for timeperiod (expected int, got float)' in str(e.exception.message)
+        assert expected_error in str(e.exception.message)
 
 def test_call_doesnt_cache_parameters():
     sma = abstract.Function('SMA', timeperiod=10)
