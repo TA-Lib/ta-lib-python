@@ -364,9 +364,9 @@ class Function(object):
         args = list(args)
         input_arrays = {}
         input_price_series_names = self.__input_price_series_names()
-        if args and type(args[0]) not in __INPUT_ARRAYS_TYPES:
+        if args and not isinstance(args[0], __INPUT_ARRAYS_TYPES):
             for i, arg in enumerate(args):
-                if type(arg) not in __ARRAY_TYPES:
+                if not isinstance(arg, __ARRAY_TYPES):
                     break
                 try:
                     input_arrays[input_price_series_names[i]] = arg
