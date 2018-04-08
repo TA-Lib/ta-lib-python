@@ -7,7 +7,6 @@ try:
 except ImportError: # handle python 2.6 and earlier
     from ordereddict import OrderedDict
 from cython.operator cimport dereference as deref
-from copy import deepcopy
 import numpy
 import sys
 
@@ -358,7 +357,8 @@ class Function(object):
         the input_arrays dict and function parameters.
         """
         # do not cache ta-func parameters passed to __call__
-        opt_inputs = deepcopy(self.__opt_inputs)
+        opt_input_values = [(param_name, self.__opt_inputs[param_name]['value'])
+                            for param_name in self.__opt_inputs.keys()]
 
         # allow calling with same signature as talib.func module functions
         args = list(args)
@@ -381,7 +381,11 @@ class Function(object):
 
         self.set_function_args(*args, **kwargs)
         self.__call_function()
-        self.__opt_inputs = opt_inputs
+
+        # restore opt_input values to as they were before this call
+        for param_name, value in opt_input_values:
+            self.__opt_inputs[param_name]['value'] = value
+
         return self.outputs
 
     # figure out which price series names we're using for inputs
