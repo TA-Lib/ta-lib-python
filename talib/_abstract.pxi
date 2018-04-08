@@ -368,13 +368,15 @@ class Function(object):
             for i, arg in enumerate(args):
                 if not isinstance(arg, __ARRAY_TYPES):
                     break
+
                 try:
                     input_arrays[input_price_series_names[i]] = arg
                 except IndexError:
-                    raise TypeError(
-                        'Too many price arguments: expected %d (%s)' % (
-                            len(input_price_series_names),
-                            ', '.join(input_price_series_names)))
+                    msg = 'Too many price arguments: expected %d (%s)' % (
+                        len(input_price_series_names),
+                        ', '.join(input_price_series_names))
+                    raise TypeError(msg)
+
         if len(input_arrays) == len(input_price_series_names):
             self.set_input_arrays(input_arrays)
             args = args[len(input_arrays):]
