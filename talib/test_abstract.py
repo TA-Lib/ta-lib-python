@@ -304,3 +304,8 @@ def test_call_doesnt_cache_parameters():
     expected = func.SMA(ford_2012['close'], 10)
     output = sma(ford_2012)
     assert_np_arrays_equal(expected, output)
+
+def test_call_without_arguments():
+    with assert_raises(TypeError) as e:
+        abstract.Function('SMA')()
+        assert 'Not enough price arguments' in str(e.exception.message)
