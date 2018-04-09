@@ -21,6 +21,9 @@ else:
                              if isinstance(arg, _pd_Series))
             except StopIteration:
                 # No pandas.Series passed in; short-circuit
+                index = None
+
+            if index is None:
                 return func(*args, **kwargs)
 
             # Use Series' float64 values if pandas, else use values as passed
