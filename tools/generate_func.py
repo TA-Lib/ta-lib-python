@@ -167,6 +167,26 @@ cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double
     else:
         raise Exception("inputs are all NaN")
 
+cdef np.ndarray make_double_array(np.npy_intp length, int lookback):
+    cdef:
+        np.ndarray outreal
+        double* outreal_data
+    outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal_data = <double*>outreal.data
+    for i from 0 <= i < min(lookback, length):
+        outreal_data[i] = NaN
+    return outreal
+
+cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
+    cdef:
+        np.ndarray outinteger
+        int* outinteger_data
+    outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger_data = <int*>outinteger.data
+    for i from 0 <= i < min(lookback, length):
+        outinteger_data[i] = 0
+    return outinteger
+
 """)
 
 # cleanup variable names to make them more pythonic
@@ -264,18 +284,6 @@ for f in functions:
     print('        np.npy_intp length')
     print('        int begidx, endidx, lookback')
     print('        TA_RetCode retCode')
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'double' in arg:
-                print('        double* %s_data' % var)
-            elif 'int' in arg:
-                print('        int* %s_data' % var)
-            else:
-                assert False, args
 
     for arg in args:
         var = arg.split()[-1]
@@ -284,12 +292,6 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             print('        np.ndarray %s' % var)
-            if 'double' in arg:
-                print('        double* %s_data' % var)
-            elif 'int' in arg:
-                print('        int* %s_data' % var)
-            else:
-                assert False, args
         elif var.startswith('*'):
             var = cleanup(var[1:])
             print('        int %s' % var)
@@ -307,7 +309,6 @@ for f in functions:
             else:
                 assert False, arg
             print('    %s = check_array(%s)' % (var, var))
-            print('    %s_data = %s%s.data' % (var, cast, var))
 
     # check all input array lengths are the same
     inputs = []
@@ -324,7 +325,7 @@ for f in functions:
         print('    length = check_length%s(%s)' % (len(inputs), ', '.join(inputs)))
 
     # check for all input values are non-NaN
-    print('    begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('%s_data' % s for s in inputs)))
+    print('    begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('<double*>(%s.data)' % s for s in inputs)))
 
     print('    endidx = <int>length - begidx - 1')
     print('    lookback = begidx + lib.%s_Lookback(' % name, end=' ')
@@ -344,15 +345,9 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print('    %s = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)' % var)
-                print('    %s_data = <double*>%s.data' % (var, var))
-                print('    for i from 0 <= i < min(lookback, length):')
-                print('        %s_data[i] = NaN' % var)
+                print('    %s = make_double_array(length, lookback)' % var)
             elif 'int' in arg:
-                print('    %s = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)' % var)
-                print('    %s_data = <int*>%s.data' % (var, var))
-                print('    for i from 0 <= i < min(lookback, length):')
-                print('        %s_data[i] = 0' % var)
+                print('    %s = make_int_array(length, lookback)' % var)
             else:
                 assert False, args
 
@@ -366,9 +361,9 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'out' in var:
-                data = '(%s_data+lookback)' % var
+                data = '(%s.data)+lookback' % var
             else:
-                data = '(%s_data+begidx)' % var
+                data = '(%s.data)+begidx' % var
             if 'double' in arg:
                 print('<double *>%s' % data, end=' ')
             elif 'int' in arg:
