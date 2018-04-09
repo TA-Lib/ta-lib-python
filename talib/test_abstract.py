@@ -309,3 +309,7 @@ def test_call_without_arguments():
     with assert_raises(TypeError) as e:
         abstract.Function('SMA')()
         assert 'Not enough price arguments' in str(e.exception.message)
+
+    with assert_raises(TypeError) as e:
+        abstract.Function('SMA')(10)
+        assert 'Not enough price arguments' in str(e.exception.message)

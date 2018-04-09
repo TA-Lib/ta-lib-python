@@ -380,7 +380,8 @@ class Function(object):
         if len(input_arrays) == len(input_price_series_names):
             self.set_input_arrays(input_arrays)
             args = args[len(input_arrays):]
-        elif len(input_arrays) or (not len(args) and not self.__input_arrays):
+        elif len(input_arrays) or (not self.__input_arrays and (
+                not len(args) or not isinstance(args[0], __INPUT_ARRAYS_TYPES))):
             msg = 'Not enough price arguments: expected %d (%s)' % (
                 len(input_price_series_names),
                 ', '.join(input_price_series_names))
