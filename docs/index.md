@@ -16,7 +16,7 @@ are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.
 
-#### [Install TA-Lib](install.html) or [Read the Docs](doc_index.html)
+#### [Install TA-Lib](install.html) or [Read the Docs](doc_index.md)
 
 ## Examples
 
