@@ -79,7 +79,7 @@ def generate_function_code(d: dict):
         default_value = d['_Function__opt_inputs'][k]['default_value']
         type_name = get_type_name(d['_Function__opt_inputs'][k]['type'])
         s_def += f"\n{t}:param {k}: {definition} ({help_text} - **default**: {default_value})"
-        s_def += f"\n{t}:type {k}: {type_name})"
+        s_def += f"\n{t}:type {k}: {type_name}"
 
     if len(d["_Function__info"]["output_names"]) > 1:
         s_def += f'\n{t}:rtype: Tuple'
