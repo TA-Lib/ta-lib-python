@@ -218,10 +218,10 @@ Functions can either be imported directly or instantiated by name:
 from talib import abstract
 
 # directly
-sma = abstract.SMA
+SMA = abstract.SMA
 
 # or by name
-sma = abstract.Function('sma')
+SMA = abstract.Function('sma')
 ```
 
 From there, calling functions is basically the same as the function API:
