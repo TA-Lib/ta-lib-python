@@ -35,6 +35,16 @@ $ python setup.py install
 
 ### Troubleshooting
 
+If you get a warning that looks like this:
+
+```
+setup.py:79: UserWarning: Cannot find ta-lib library, installation may fail.
+warnings.warn('Cannot find ta-lib library, installation may fail.')
+```
+
+This typically means ``setup.py`` can't find the underlying ``TA-Lib``
+library, a dependency which needs to be installed.
+
 Sometimes installation will produce build errors like this:
 
 ```
