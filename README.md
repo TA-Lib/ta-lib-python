@@ -50,11 +50,11 @@ If you installed the underlying ``TA-Lib`` library with a custom prefix
 this python wrapper you can specify additional search paths to find the
 library and include files for the TA-Lib C library:
 
-``sh
+```sh
 $ export TA_LIBRARY_PATH=$PREFIX/lib
 $ export TA_INCLUDE_PATH=$PREFIX/include
 $ python setup.py install # or pip install ta-lib
-``
+```
 
 Sometimes installation will produce build errors like this:
 
