@@ -127,7 +127,7 @@ $ brew install ta-lib
 ##### Windows
 
 Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
-and unzip to ``C:\ta-lib``
+and unzip to ``C:\ta-lib``.
 
 > This is a 32-bit release.  If you want to use 64-bit Python, you will need to
 > build a 64-bit version of the library.
