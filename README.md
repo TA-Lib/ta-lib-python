@@ -33,6 +33,26 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
+## Docker images
+
+### Compiled TA-Lib library and TA-Lib wrapper
+
+You can use the tested [Docker image](https://github.com/9fevrier/docker-python-ta-lib), provided by [9 Février](https://github.com/9fevrier) to use directly [TA-Lib wrapper for Python](https://github.com/mrjbq7/ta-lib):
+
+```
+docker run -it 9fevrier/python-ta-lib
+```
+
+### Compiled TA-Lib library, TA-Lib wrapper and Pandas
+
+
+You can also use the tested [Docker image](https://github.com/9fevrier/docker-python-ta-lib-pandas), provided by [9 Février](https://github.com/9fevrier) to use directly [TA-Lib wrapper for Python](https://github.com/mrjbq7/ta-lib) and including [Python Pandas](http://pandas.pydata.org/):
+
+```
+docker run -it 9fevrier/python-ta-lib-pandas
+```
+
+
 ### Troubleshooting
 
 If you get a warning that looks like this:
