@@ -47,6 +47,8 @@ from ._ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
     _ta_set_unstable_period as set_unstable_period,
     _ta_get_unstable_period as get_unstable_period,
+    _ta_set_compatibility as set_compatibility,
+    _ta_get_compatibility as get_compatibility,
     __TA_FUNCTION_NAMES__
 )
 

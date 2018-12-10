@@ -513,6 +513,10 @@ cdef extern from "ta-lib/ta_func.h":
     TA_RetCode TA_SetUnstablePeriod(TA_FuncUnstId id, unsigned int unstablePeriod)
     unsigned int TA_GetUnstablePeriod(TA_FuncUnstId id)
 
+    # TALIB functions for TA_SetCompatibility
+    TA_RetCode TA_SetCompatibility(TA_Compatibility value)
+    TA_Compatibility TA_GetCompatibility()
+
     # TALIB functions for TA_SetCandleSettings
     TA_RetCode TA_SetCandleSettings(TA_CandleSettingType settingType, TA_RangeType rangeType, int avgPeriod, double factor)
     TA_RetCode TA_RestoreCandleDefaultSettings(TA_CandleSettingType)

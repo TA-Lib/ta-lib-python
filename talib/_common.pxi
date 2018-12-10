@@ -99,6 +99,16 @@ def _ta_get_unstable_period(name):
     period = lib.TA_GetUnstablePeriod(id)
     return period
 
+def _ta_set_compatibility(value):
+    cdef TA_RetCode ret_code
+    ret_code = lib.TA_SetCompatibility(value)
+    _ta_check_success('TA_SetCompatibility', ret_code)
+
+def _ta_get_compatibility():
+    cdef int value
+    value = lib.TA_GetCompatibility()
+    return value
+
 class CandleSettingType(object):
     BodyLong, BodyVeryLong, BodyShort, BodyDoji, ShadowLong, ShadowVeryLong, \
     ShadowShort, ShadowVeryShort, Near, Far, Equal, AllCandleSettings = \
