@@ -49,6 +49,16 @@ def test_unstable_period():
     assert_np_arrays_equal(r, [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 6, 7, 8])
     talib.set_unstable_period('EMA', 0)
 
+def test_compatibility():
+    a = np.arange(10, dtype=float)
+    talib.set_compatibility(0)
+    r = func.EMA(a, 3)
+    assert_np_arrays_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
+    talib.set_compatibility(1)
+    r = func.EMA(a, 3)
+    assert_np_arrays_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.00195312])
+    talib.set_compatibility(0)
+
 def test_MIN():
     result = func.MIN(series, timeperiod=4)
     i = np.where(~np.isnan(result))[0][0]
