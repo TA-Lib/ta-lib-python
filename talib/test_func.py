@@ -56,7 +56,7 @@ def test_compatibility():
     assert_np_arrays_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
     talib.set_compatibility(1)
     r = func.EMA(a, 3)
-    assert_np_arrays_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.00195312])
+    assert_np_arrays_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.001953125])
     talib.set_compatibility(0)
 
 def test_MIN():
