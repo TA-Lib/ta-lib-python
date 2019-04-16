@@ -1,3 +1,10 @@
+0.4.19
+======
+
+- [NEW]: Upgrade to Cython 0.29.7
+
+- [NEW]: Support TA_SetCompatibility
+
 0.4.18
 ======
 
