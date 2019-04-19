@@ -1,2 +1,2 @@
-numpy==1.14.0
-Cython==0.27.3
+numpy==1.16.2
+Cython==0.29.7

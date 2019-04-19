@@ -1,4 +1,4 @@
 -r requirements.txt
-beautifulsoup4==4.6.0
-mistune==0.8.3
-Pygments==2.2.0
+beautifulsoup4==4.7.1
+mistune==0.8.4
+Pygments==2.3.1
