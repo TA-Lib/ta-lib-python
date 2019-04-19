@@ -6,8 +6,8 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-os:
-  - linux
+os: linux
+dist: xenial
 env:
   global:
     - DEPS_DIR=$HOME/dependencies
