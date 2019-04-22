@@ -34,6 +34,12 @@ else:
 
             result = func(*args, **kwargs)
 
+            # check to see if we got a streaming result
+            first_result = result[0] if isinstance(result, tuple) else result
+            is_streaming_fn_result = not hasattr(first_result, '__len__')
+            if is_streaming_fn_result:
+                return result
+
             # Series was passed in, Series gets out; re-apply index
             if isinstance(result, tuple):
                 # Handle multi-array results such as BBANDS
@@ -58,11 +64,18 @@ for func_name in __TA_FUNCTION_NAMES__:
     setattr(func, func_name, wrapped_func)
     globals()[func_name] = wrapped_func
 
+stream_func_names = ['stream_%s' % fname for fname in __TA_FUNCTION_NAMES__]
+stream = __import__("stream", globals(), locals(), stream_func_names, level=1)
+for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names):
+    wrapped_func = _pandas_wrapper(getattr(stream, func_name))
+    setattr(stream, func_name, wrapped_func)
+    globals()[stream_func_name] = wrapped_func
+
 __version__ = '0.4.18'
 
 # In order to use this python library, talib (i.e. this __file__) will be
 # imported at some point, either explicitly or indirectly via talib.func
-# or talib.abstract. Here, we handle initalizing and shutting down the
+# or talib.abstract. Here, we handle initializing and shutting down the
 # underlying TA-Lib. Initialization happens on import, before any other TA-Lib
 # functions are called. Finally, when the python process exits, we shutdown
 # the underlying TA-Lib.
