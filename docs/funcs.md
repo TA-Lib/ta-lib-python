@@ -1,6 +1,6 @@
 # All Supported Indicators and Functions
 
-* [Overlap Studies](func_groups/overlap_studies.html)
+* [Overlap Studies](func_groups/overlap_studies.md)
 * [Momentum Indicators](func_groups/momentum_indicators.html)
 * [Volume Indicators](func_groups/volume_indicators.html)
 * [Volatility Indicators](func_groups/volatility_indicators.html)
