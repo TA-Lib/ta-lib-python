@@ -2,6 +2,8 @@
 
 [![](https://api.travis-ci.org/mrjbq7/ta-lib.svg)](https://travis-ci.org/mrjbq7/ta-lib)
 
+*Note: Please view this documentation on [Github Pages](https://mrjbq7.github.io/ta-lib) where all the links will work*
+
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
 
