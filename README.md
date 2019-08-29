@@ -2,8 +2,6 @@
 
 [![](https://api.travis-ci.org/mrjbq7/ta-lib.svg)](https://travis-ci.org/mrjbq7/ta-lib)
 
-*Note: Please view this documentation on [Github Pages](https://mrjbq7.github.io/ta-lib) where all the links will work*
-
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
 
@@ -20,8 +18,6 @@ The original Python bindings included with TA-Lib use
 aren't as efficient as they could be. Therefore this project uses Cython and
 Numpy to efficiently and cleanly bind to TA-Lib -- producing results 2-4
 times faster than the SWIG interface.
-
-
 
 ## Installation
 
