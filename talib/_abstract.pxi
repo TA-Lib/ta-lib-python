@@ -377,7 +377,8 @@ class Function(object):
                         ', '.join(input_price_series_names))
                     raise TypeError(msg)
 
-        if isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
+        if __PANDAS_DATAFRAME is not None \
+                and isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
             no_existing_input_arrays = self.__input_arrays.empty
         else:
             no_existing_input_arrays = not bool(self.__input_arrays)
