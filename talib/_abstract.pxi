@@ -377,10 +377,16 @@ class Function(object):
                         ', '.join(input_price_series_names))
                     raise TypeError(msg)
 
+        if __PANDAS_DATAFRAME is not None \
+                and isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
+            no_existing_input_arrays = self.__input_arrays.empty
+        else:
+            no_existing_input_arrays = not bool(self.__input_arrays)
+
         if len(input_arrays) == len(input_price_series_names):
             self.set_input_arrays(input_arrays)
             args = args[len(input_arrays):]
-        elif len(input_arrays) or (not self.__input_arrays and (
+        elif len(input_arrays) or (no_existing_input_arrays and (
                 not len(args) or not isinstance(args[0], __INPUT_ARRAYS_TYPES))):
             msg = 'Not enough price arguments: expected %d (%s)' % (
                 len(input_price_series_names),
