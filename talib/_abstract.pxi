@@ -359,6 +359,8 @@ class Function(object):
         # do not cache ta-func parameters passed to __call__
         opt_input_values = [(param_name, self.__opt_inputs[param_name]['value'])
                             for param_name in self.__opt_inputs.keys()]
+        price_series_name_values = [(n, self.__input_names[n]['price_series'])
+                                    for n in self.__input_names]
 
         # allow calling with same signature as talib.func module functions
         args = list(args)
@@ -399,6 +401,12 @@ class Function(object):
         # restore opt_input values to as they were before this call
         for param_name, value in opt_input_values:
             self.__opt_inputs[param_name]['value'] = value
+        self.__info['parameters'] = self.parameters
+
+        # restore input names values to as they were before this call
+        for input_name, value in price_series_name_values:
+            self.__input_names[input_name]['price_series'] = value
+            self.__info['input_names'][input_name] = value
 
         return self.outputs
 
