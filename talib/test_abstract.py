@@ -297,6 +297,10 @@ def test_parameter_type_checking():
 def test_call_doesnt_cache_parameters():
     sma = abstract.Function('SMA', timeperiod=10)
 
+    expected = func.SMA(ford_2012['open'], 20)
+    output = sma(ford_2012, timeperiod=20, price='open')
+    assert_np_arrays_equal(expected, output)
+
     expected = func.SMA(ford_2012['close'], 20)
     output = sma(ford_2012, timeperiod=20)
     assert_np_arrays_equal(expected, output)
