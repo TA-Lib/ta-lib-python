@@ -100,4 +100,4 @@ ma20 = SMA(20)
 For more details, take a look at the
 [code](https://github.com/mrjbq7/ta-lib/blob/master/talib/abstract.pyx#L46).
 
-[Documentation Index](doc_index.html)
+[Documentation Index](doc_index.md)

@@ -16,7 +16,7 @@ are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.
 
-#### [Install TA-Lib](install.html) or [Read the Docs](doc_index.html)
+#### [Install TA-Lib](install.md) or [Read the Docs](doc_index.md)
 
 ## Examples
 
@@ -94,7 +94,7 @@ slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0) # uses high, low, close by def
 slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 ```
 
-Learn about more advanced usage of TA-Lib [here](abstract.html).
+Learn about more advanced usage of TA-Lib [here](abstract.md).
 
 ## Supported Indicators
 
@@ -111,18 +111,18 @@ print talib.get_function_groups()
 
 ### Function Groups
 
-* [Overlap Studies](func_groups/overlap_studies.html)
-* [Momentum Indicators](func_groups/momentum_indicators.html)
-* [Volume Indicators](func_groups/volume_indicators.html)
-* [Volatility Indicators](func_groups/volatility_indicators.html)
-* [Price Transform](func_groups/price_transform.html)
-* [Cycle Indicators](func_groups/cycle_indicators.html)
-* [Pattern Recognition](func_groups/pattern_recognition.html)
-* [Statistic Functions](func_groups/statistic_functions.html)
-* [Math Transform](func_groups/math_transform.html)
-* [Math Operators](func_groups/math_operators.html)
+* [Overlap Studies](func_groups/overlap_studies.md)
+* [Momentum Indicators](func_groups/momentum_indicators.md)
+* [Volume Indicators](func_groups/volume_indicators.md)
+* [Volatility Indicators](func_groups/volatility_indicators.md)
+* [Price Transform](func_groups/price_transform.md)
+* [Cycle Indicators](func_groups/cycle_indicators.md)
+* [Pattern Recognition](func_groups/pattern_recognition.md)
+* [Statistic Functions](func_groups/statistic_functions.md)
+* [Math Transform](func_groups/math_transform.md)
+* [Math Operators](func_groups/math_operators.md)
 
-#### [Overlap Studies](func_groups/overlap_studies.html)
+#### [Overlap Studies](func_groups/overlap_studies.md)
 
 ```
 BBANDS               Bollinger Bands
@@ -144,7 +144,7 @@ TRIMA                Triangular Moving Average
 WMA                  Weighted Moving Average
 ```
 
-#### [Momentum Indicators](func_groups/momentum_indicators.html)
+#### [Momentum Indicators](func_groups/momentum_indicators.md)
 
 ```
 ADX                  Average Directional Movement Index
@@ -179,7 +179,7 @@ ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
 ```
 
-#### [Volume Indicators](func_groups/volume_indicators.html)
+#### [Volume Indicators](func_groups/volume_indicators.md)
 
 ```
 AD                   Chaikin A/D Line
@@ -187,7 +187,7 @@ ADOSC                Chaikin A/D Oscillator
 OBV                  On Balance Volume
 ```
 
-#### [Volatility Indicators](func_groups/volatility_indicators.html)
+#### [Volatility Indicators](func_groups/volatility_indicators.md)
 
 ```
 ATR                  Average True Range
@@ -195,7 +195,7 @@ NATR                 Normalized Average True Range
 TRANGE               True Range
 ```
 
-#### [Price Transform](func_groups/price_transform.html)
+#### [Price Transform](func_groups/price_transform.md)
 
 ```
 AVGPRICE             Average Price
@@ -204,7 +204,7 @@ TYPPRICE             Typical Price
 WCLPRICE             Weighted Close Price
 ```
 
-#### [Cycle Indicators](func_groups/cycle_indicators.html)
+#### [Cycle Indicators](func_groups/cycle_indicators.md)
 
 ```
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
@@ -214,7 +214,7 @@ HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 ```
 
-#### [Pattern Recognition](func_groups/pattern_recognition.html)
+#### [Pattern Recognition](func_groups/pattern_recognition.md)
 
 ```
 CDL2CROWS            Two Crows
@@ -280,7 +280,7 @@ CDLUPSIDEGAP2CROWS   Upside Gap Two Crows
 CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 ```
 
-#### [Statistic Functions](func_groups/statistic_functions.html)
+#### [Statistic Functions](func_groups/statistic_functions.md)
 
 ```
 BETA                 Beta

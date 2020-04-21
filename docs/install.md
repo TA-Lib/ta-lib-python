@@ -47,5 +47,5 @@ $ sudo make install
 > If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
 > Simply rerun ``make -jX`` followed by ``[sudo] make install``.
 
-[Documentation Index](doc_index.html)
-[FLOAT_RIGHTNext: Using the Function API](func.html)
+[Documentation Index](doc_index.md)
+[FLOAT_RIGHTNext: Using the Function API](func.md)
