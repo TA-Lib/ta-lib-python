@@ -108,7 +108,7 @@ def get_doc_links():
             from urllib.request import urlopen
 
         html = urlopen(tadoc_homepage).read()
-        with open(html_file_path, 'w') as f:
+        with open(html_file_path, 'wb') as f:
             f.write(html)
 
     # find every link that's for an indicator and convert to absolute urls
@@ -227,6 +227,7 @@ def run_convert_to_html(output_dir):
     for md_file_path in get_markdown_file_paths():
         with open(md_file_path, 'r') as f:
             html = markdown_to_html(f.read())
+            html = html.replace('.md">', '.html">')
 
         head = HEADER
         if 'func_groups' in md_file_path:
