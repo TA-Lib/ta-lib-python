@@ -60,7 +60,9 @@ $ python setup.py install # or pip install ta-lib
 Sometimes installation will produce build errors like this:
 
 ```
-func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
+talib/_ta_lib.c:601:10: fatal error: ta-lib/ta_defs.h: No such file or directory
+  601 | #include "ta-lib/ta_defs.h"
+      |          ^~~~~~~~~~~~~~~~~~
 compilation terminated.
 ```
 
