@@ -95,7 +95,7 @@ ext_modules = [
 
 setup(
     name = 'TA-Lib',
-    version = '0.4.18',
+    version = '0.4.19',
     description = 'Python wrapper for TA-Lib',
     author = 'John Benediktsson',
     author_email = 'mrjbq7@gmail.com',
