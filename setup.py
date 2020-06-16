@@ -101,6 +101,7 @@ setup(
     author_email = 'mrjbq7@gmail.com',
     url = 'http://github.com/mrjbq7/ta-lib',
     download_url = 'https://github.com/mrjbq7/ta-lib/releases',
+    license = 'BSD',
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",
@@ -115,6 +116,7 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Cython",
         "Topic :: Office/Business :: Financial",
         "Topic :: Scientific/Engineering :: Mathematics",
