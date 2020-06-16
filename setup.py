@@ -6,12 +6,15 @@ import warnings
 
 from distutils.dist import Distribution
 
-display_option_names = Distribution.display_option_names + ['help', 'help-commands']
-query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
+# display_option_names = Distribution.display_option_names + ['help', 'help-commands']
+# query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
 
 try:
     from setuptools import setup, Extension
-    requires = {"install_requires": ["numpy"]}
+    requires = {
+        "install_requires": ["numpy", 'cython'],
+        "setup_requires": ['numpy', 'cython']
+    }
 except:
     from distutils.core import setup
     from distutils.extension import Extension
@@ -57,16 +60,16 @@ if sys.platform == "win32":
 if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-# Do not require numpy or cython for just querying the package
-if not query_only:
-    import numpy
-    include_dirs.insert(0, numpy.get_include())
-
-try:
-    from Cython.Distutils import build_ext
-    has_cython = True
-except ImportError:
-    has_cython = False
+# # Do not require numpy or cython for just querying the package
+# if not query_only:
+#     import numpy
+#     include_dirs.insert(0, numpy.get_include())
+#
+# try:
+#     from Cython.Distutils import build_ext
+#     has_cython = True
+# except ImportError:
+#     has_cython = False
 
 for lib_talib_dir in lib_talib_dirs:
     try:
@@ -78,30 +81,77 @@ for lib_talib_dir in lib_talib_dirs:
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
-cmdclass = {}
-if has_cython:
-    cmdclass['build_ext'] = build_ext
+# cmdclass = {}
+# if has_cython:
+#     cmdclass['build_ext'] = build_ext
+
+
+class LazyBuildExtCommandClass(dict):
+    """
+    Lazy command class that defers operations requiring Cython and numpy until
+    they've actually been downloaded and installed by setup_requires.
+    """
+
+    def __contains__(self, key):
+        return (key == 'build_ext' or
+                super(LazyBuildExtCommandClass, self).__contains__(key))
+
+    def __setitem__(self, key, value):
+        if key == 'build_ext':
+            raise AssertionError("build_ext overridden!")
+        super(LazyBuildExtCommandClass, self).__setitem__(key, value)
+
+    def __getitem__(self, key):
+        global include_dirs
+        if key != 'build_ext':
+            return super(LazyBuildExtCommandClass, self).__getitem__(key)
+
+        from Cython.Distutils import build_ext as cython_build_ext
+        import numpy
+
+        # Cython_build_ext isn't a new-style class in Py2.
+        class build_ext(cython_build_ext, object):
+            """
+            Custom build_ext command that lazily adds numpy's include_dir to
+            extensions.
+            """
+
+            def build_extensions(self):
+                """
+                Lazily append numpy's include directory to Extension includes.
+                This is done here rather than at module scope because setup.py
+                may be run before numpy has been installed, in which case
+                importing numpy and calling `numpy.get_include()` will fail.
+                """
+                numpy_incl = numpy.get_include()
+                for ext in self.extensions:
+                    ext.include_dirs.append(numpy_incl)
+
+                super(build_ext, self).build_extensions()
+
+        return build_ext
+
+
+cmdclass = LazyBuildExtCommandClass()
 
 ext_modules = [
     Extension(
         'talib._ta_lib',
-        ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
+        ['talib/_ta_lib.pyx'],  # if has_cython else 'talib/_ta_lib.c'],
         include_dirs=include_dirs,
         library_dirs=lib_talib_dirs,
         libraries=[lib_talib_name],
-        runtime_library_dirs=runtime_lib_dirs
-    )
+        runtime_library_dirs=runtime_lib_dirs)
 ]
-
 setup(
-    name = 'TA-Lib',
-    version = '0.4.18',
-    description = 'Python wrapper for TA-Lib',
-    author = 'John Benediktsson',
-    author_email = 'mrjbq7@gmail.com',
-    url = 'http://github.com/mrjbq7/ta-lib',
-    download_url = 'https://github.com/mrjbq7/ta-lib/releases',
-    classifiers = [
+    name='TA-Lib',
+    version='0.4.18',
+    description='Python wrapper for TA-Lib',
+    author='John Benediktsson',
+    author_email='mrjbq7@gmail.com',
+    url='http://github.com/mrjbq7/ta-lib',
+    download_url='https://github.com/mrjbq7/ta-lib/releases',
+    classifiers=[
         "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",
         "Operating System :: Unix",
@@ -122,8 +172,7 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Financial and Insurance Industry",
     ],
-    packages = ['talib'],
-    ext_modules = ext_modules,
-    cmdclass = cmdclass,
-    **requires
-)
+    packages=['talib'],
+    ext_modules=ext_modules,
+    cmdclass=cmdclass,
+    **requires)
