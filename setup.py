@@ -6,15 +6,9 @@ import warnings
 
 from distutils.dist import Distribution
 
-# display_option_names = Distribution.display_option_names + ['help', 'help-commands']
-# query_only = any('--' + opt in sys.argv for opt in display_option_names) or len(sys.argv) < 2 or sys.argv[1] == 'egg_info'
-
 try:
     from setuptools import setup, Extension
-    requires = {
-        "install_requires": ["numpy", 'cython'],
-        "setup_requires": ['numpy', 'cython']
-    }
+    requires = {"install_requires": ["numpy"], "setup_requires": ["numpy"]}
 except:
     from distutils.core import setup
     from distutils.extension import Extension
@@ -60,16 +54,11 @@ if sys.platform == "win32":
 if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-# # Do not require numpy or cython for just querying the package
-# if not query_only:
-#     import numpy
-#     include_dirs.insert(0, numpy.get_include())
-#
-# try:
-#     from Cython.Distutils import build_ext
-#     has_cython = True
-# except ImportError:
-#     has_cython = False
+try:
+    from Cython.Distutils import build_ext as cython_build_ext
+    has_cython = True
+except ImportError:
+    has_cython = False
 
 for lib_talib_dir in lib_talib_dirs:
     try:
@@ -80,10 +69,6 @@ for lib_talib_dir in lib_talib_dirs:
         pass
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
-
-# cmdclass = {}
-# if has_cython:
-#     cmdclass['build_ext'] = build_ext
 
 
 class LazyBuildExtCommandClass(dict):
@@ -106,11 +91,14 @@ class LazyBuildExtCommandClass(dict):
         if key != 'build_ext':
             return super(LazyBuildExtCommandClass, self).__getitem__(key)
 
-        from Cython.Distutils import build_ext as cython_build_ext
         import numpy
+        if has_cython:
+            org_build_ext = cython_build_ext
+        else:
+            from setuptools.command.build_ext import build_ext as org_build_ext
 
         # Cython_build_ext isn't a new-style class in Py2.
-        class build_ext(cython_build_ext, object):
+        class build_ext(org_build_ext, object):
             """
             Custom build_ext command that lazily adds numpy's include_dir to
             extensions.
@@ -137,7 +125,7 @@ cmdclass = LazyBuildExtCommandClass()
 ext_modules = [
     Extension(
         'talib._ta_lib',
-        ['talib/_ta_lib.pyx'],  # if has_cython else 'talib/_ta_lib.c'],
+        ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
         include_dirs=include_dirs,
         library_dirs=lib_talib_dirs,
         libraries=[lib_talib_name],
