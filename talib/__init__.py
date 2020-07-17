@@ -280,4 +280,25 @@ def get_function_groups():
     """
     return __function_groups__.copy()
 
-__all__ = ['get_functions', 'get_function_groups']
+def get_functions_df():
+    """
+    Returns a Pandas DataFrame of all the functions supported by TALIB
+    """
+    import pandas as pd
+    lst_info = []
+    for f in get_functions():
+        absf = abstract.Function(f)
+        lst_info.append(absf.info)
+    df_absf = pd.DataFrame(lst_info)
+    df_absf = df_absf.set_index('name')
+    return(df_absf)
+
+def get_functions_grouped_df():
+    """
+    Returns a Pandas DataFrame of all the functions supported by TALIB grouped by "group"
+    """
+    df_absf = get_functions_df()
+    df_grp = df_absf.reset_index().set_index(['group', 'name']).sortlevel(0)
+    return(df_grp)
+
+__all__ = ['get_functions', 'get_function_groups', 'get_functions_df', 'get_functions_grouped_df']
