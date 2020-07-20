@@ -58,6 +58,10 @@ from ._ta_lib import (
     __TA_FUNCTION_NAMES__
 )
 
+# import all the func and stream functions
+from ._ta_lib import *
+
+# wrap them with pandas
 func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
 for func_name in __TA_FUNCTION_NAMES__:
     wrapped_func = _pandas_wrapper(getattr(func, func_name))
@@ -280,4 +284,4 @@ def get_function_groups():
     """
     return __function_groups__.copy()
 
-__all__ = ['get_functions', 'get_function_groups']
+__all__ = ['get_functions', 'get_function_groups'] + __TA_FUNCTION_NAMES__ + ["stream_%s" % name for name in __TA_FUNCTION_NAMES__]
