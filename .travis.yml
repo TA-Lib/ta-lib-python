@@ -1,7 +1,6 @@
 ---
 language: python
 python:
-  - "2.7"
   - "3.5"
   - "3.6"
   - "3.7"
@@ -27,3 +26,37 @@ install:
     fi
 script:
   - make test
+
+jobs:
+  include:
+    # perform a linux build
+    - services: docker
+    # and a mac build
+    - os: osx
+      language: shell
+    # and a windows build
+    - os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.8.5
+        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+  
+  env:
+    global:
+      - TWINE_USERNAME=__token__
+      # Note: TWINE_PASSWORD is set to a PyPI API token in Travis settings
+  
+  install:
+    - python3 -m pip install cibuildwheel==1.5.5
+  
+  script:
+    # build the wheels, put them into './wheelhouse'
+    - python3 -m cibuildwheel --output-dir wheelhouse
+  
+  after_success:
+    # if the release was tagged, upload them to PyPI
+    - |
+      if [[ $TRAVIS_TAG ]]; then
+        python3 -m pip install twine
+        python3 -m twine upload wheelhouse/*.whl
+      fi
