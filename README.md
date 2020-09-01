@@ -112,6 +112,18 @@ This might mean that the directory path to the underlying ``TA-Lib`` library
 has spaces in the directory names.  Try putting it in a path that does not have
 any spaces and trying again.
 
+Sometimes you might get this error running ``setup.py``:
+
+```
+ /usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory
+#include <bits/libc-header-start.h>
+```
+
+This is likely an issue with trying to compile for 32-bit platform but
+without the appropriate headers.  You might find some success looking at the
+first answer to this question:
+
+[](https://stackoverflow.com/questions/54082459/fatal-error-bits-libc-header-start-h-no-such-file-or-directory-while-compili)
 
 ### Dependencies
 
