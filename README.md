@@ -121,9 +121,7 @@ Sometimes you might get this error running ``setup.py``:
 
 This is likely an issue with trying to compile for 32-bit platform but
 without the appropriate headers.  You might find some success looking at the
-first answer to this question:
-
-[](https://stackoverflow.com/questions/54082459/fatal-error-bits-libc-header-start-h-no-such-file-or-directory-while-compili)
+first answer to [this question](https://stackoverflow.com/questions/54082459/fatal-error-bits-libc-header-start-h-no-such-file-or-directory-while-compili).
 
 ### Dependencies
 
