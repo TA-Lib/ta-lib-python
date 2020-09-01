@@ -115,8 +115,9 @@ any spaces and trying again.
 Sometimes you might get this error running ``setup.py``:
 
 ```
- /usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory
+/usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory
 #include <bits/libc-header-start.h>
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 This is likely an issue with trying to compile for 32-bit platform but
