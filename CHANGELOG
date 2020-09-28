@@ -3,6 +3,10 @@
 
 - [NEW]: Upgrade to Cython 0.29.20
 
+- [NEW]: from talib import * (imports all func and stream)
+
+- [FIX]: missing method signatures in PyCharm
+
 0.4.18
 ======
 
