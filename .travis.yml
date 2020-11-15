@@ -1,14 +1,12 @@
 ---
 language: python
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
   - "3.8"
   - "3.9"
 os: linux
-dist: xenial
+dist: bionic
 env:
   global:
     - DEPS_DIR=$HOME/dependencies
