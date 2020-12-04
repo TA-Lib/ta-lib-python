@@ -27,6 +27,7 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             '/usr/local/include',
             '/opt/include',
             '/opt/local/include',
+            '/opt/homebrew/include',
         ]
         if 'TA_INCLUDE_PATH' in os.environ:
             include_dirs.append(os.environ['TA_INCLUDE_PATH'])
@@ -37,6 +38,7 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             '/usr/local/lib64',
             '/opt/lib',
             '/opt/local/lib',
+            '/opt/homebrew/lib',
         ]
         if 'TA_LIBRARY_PATH' in os.environ:
             runtime_lib_dirs = os.environ['TA_LIBRARY_PATH']
