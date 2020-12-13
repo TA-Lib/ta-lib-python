@@ -126,7 +126,24 @@ first answer to [this question](https://stackoverflow.com/questions/54082459/fat
 
 If you wonder why ``STOCHRSI`` gives you different results than you expect,
 probably you want ``STOCH`` applied to ``RSI``, which is a little different
-than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``.
+than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
+
+```python
+>>> import talib
+>>> import numpy
+>>> c = numpy.random.randn(100)
+
+# this is the library function
+>>> k, d = talib.STOCHRSI(c)
+
+# this produces the same result, calling STOCHF
+>>> rsi = talib.RSI(c)
+>>> k, d = talib.STOCHF(rsi, rsi, rsi)
+
+# you might want this instead, calling STOCH
+>>> rsi = talib.RSI(c)
+>>> k, d = talib.STOCH(rsi, rsi, rsi)
+```
 
 ### Dependencies
 
