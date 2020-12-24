@@ -102,7 +102,7 @@ library, a dependency which needs to be installed.
 If you installed the underlying ``TA-Lib`` library with a custom prefix
 (e.g., with ``./configure --prefix=$PREFIX``), then when you go to install
 this python wrapper you can specify additional search paths to find the
-library and include files for the underyling ``TA-Lib`` library using the
+library and include files for the underlying ``TA-Lib`` library using the
 ``TA_LIBRARY_PATH`` and ``TA_INCLUDE_PATH`` environment variables:
 
 ```sh
