@@ -28,11 +28,11 @@ From there, calling functions is basically the same as the function API:
 
 ```python
 from talib.abstract import *
-output = SMA(input_arrays, timeperiod=25) # calculate on close prices by default
-output = SMA(input_arrays, timeperiod=25, price='open') # calculate on opens
-upper, middle, lower = BBANDS(input_arrays, 20, 2, 2)
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0) # uses high, low, close by default
-slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
+output = SMA(inputs, timeperiod=25) # calculate on close prices by default
+output = SMA(inputs, timeperiod=25, price='open') # calculate on opens
+upper, middle, lower = BBANDS(inputs, 20, 2, 2)
+slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0) # uses high, low, close by default
+slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 ```
 
 ## Advanced Usage
