@@ -299,6 +299,29 @@ slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0) # uses high, low, close by default
 slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 ```
 
+# Streaming API
+
+An experimental Streaming API was added that allows users to compute the latest
+value of an indicator.  This can be faster than using the Function API, for
+example in an application that receives streaming data, and wants to know just
+the most recent updated indicator value.
+
+```python
+import talib
+from talib import stream
+
+close = np.random.random(100)
+
+# the Function API
+output = talib.SMA(close)
+
+# the Streaming API
+latest = stream.SMA(close)
+
+# the latest value is the same as the last output value
+assert (output[-1] - latest) < 0.00001
+```
+
 ## Supported Indicators and Functions
 
 We can show all the TA functions supported by TA-Lib, either as a ``list`` or
