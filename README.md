@@ -299,7 +299,7 @@ slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0) # uses high, low, close by default
 slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 ```
 
-# Streaming API
+## Streaming API
 
 An experimental Streaming API was added that allows users to compute the latest
 value of an indicator.  This can be faster than using the Function API, for
