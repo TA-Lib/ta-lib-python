@@ -46,6 +46,14 @@ suggestions are included below for reference.
 $ brew install ta-lib
 ```
 
+If you are using a M1 laptop and Homebrew, then you can set these before
+installing:
+
+```
+export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+```
+
 ##### Windows
 
 Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
