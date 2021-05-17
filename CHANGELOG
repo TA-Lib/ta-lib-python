@@ -1,3 +1,10 @@
+0.4.20
+======
+
+- [NEW]: Upgrade to Cython 0.29.23
+
+- [FIX]: Fix Homebrew directory on Apple M1 devices
+
 0.4.19
 ======
 
