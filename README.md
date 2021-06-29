@@ -33,6 +33,13 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
+It also appears possible to install via 
+[Conda Forge](https://anaconda.org/conda-forge/ta-lib):
+
+```
+$ conda install -c conda-forge ta-lib
+```
+
 ### Dependencies
 
 To use TA-Lib for python, you need to have the
