@@ -2,6 +2,7 @@
 
 import sys
 import os
+import os.path
 import warnings
 
 from distutils.dist import Distribution
@@ -135,10 +136,18 @@ ext_modules = [
         libraries=[lib_talib_name],
         runtime_library_dirs=runtime_lib_dirs)
 ]
+
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='TA-Lib',
     version='0.4.20',
     description='Python wrapper for TA-Lib',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='John Benediktsson',
     author_email='mrjbq7@gmail.com',
     url='http://github.com/mrjbq7/ta-lib',
