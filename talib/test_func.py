@@ -156,3 +156,14 @@ def test_MAVP():
     sma3 = func.SMA(a, 3)
     assert_np_arrays_equal(result[2::2], sma2[2::2])
     assert_np_arrays_equal(result[3::2], sma3[3::2])
+
+def test_MAXINDEX():
+    import talib as func
+    import numpy as np
+    a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
+    b = func.MA(a, 10)
+    c = func.MAXINDEX(b, 10)
+    assert_np_arrays_equal(c, [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,21])
+    d = np.array([1., 2, 3])
+    e = func.MAXINDEX(d, 10)
+    assert_np_arrays_equal(e, [0,0,0])

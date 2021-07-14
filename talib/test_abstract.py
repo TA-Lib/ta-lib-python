@@ -47,21 +47,21 @@ def test_pandas_series():
     output = talib.SMA(input_df['close'], 10)
     expected = pandas.Series(func.SMA(ford_2012['close'], 10),
                              index=input_df.index)
-    pandas.util.testing.assert_series_equal(output, expected)
+    pandas.testing.assert_series_equal(output, expected)
 
     # Test kwargs
     output = talib.SMA(real=input_df['close'], timeperiod=10)
-    pandas.util.testing.assert_series_equal(output, expected)
+    pandas.testing.assert_series_equal(output, expected)
 
     # Test talib.func API
     output = func.SMA(input_df['close'], timeperiod=10)
-    pandas.util.testing.assert_series_equal(output, expected)
+    pandas.testing.assert_series_equal(output, expected)
 
     # Test multiple outputs such as from BBANDS
     _, output, _ = talib.BBANDS(input_df['close'], 10)
     expected = pandas.Series(func.BBANDS(ford_2012['close'], 10)[1],
                              index=input_df.index)
-    pandas.util.testing.assert_series_equal(output, expected)
+    pandas.testing.assert_series_equal(output, expected)
 
 
 def test_SMA():

@@ -57,3 +57,10 @@ def test_CDL3BLACKCROWS_pandas():
 
     r = stream.CDL3BLACKCROWS(o, h, l, c)
     assert_equals(r, -100)
+
+def test_MAXINDEX():
+    import talib as stream
+    import numpy as np
+    a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
+    r = stream.MAXINDEX(a, 10)
+    assert_equals(r, 21)

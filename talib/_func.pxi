@@ -3667,6 +3667,9 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     outinteger = make_int_array(length, lookback)
     retCode = lib.TA_MAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
     _ta_check_success("TA_MAXINDEX", retCode)
+    outinteger_data = <int*>outinteger.data
+    for i from lookback <= i < length:
+        outinteger_data[i] += begidx
     return outinteger 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3856,6 +3859,9 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     outinteger = make_int_array(length, lookback)
     retCode = lib.TA_MININDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
     _ta_check_success("TA_MININDEX", retCode)
+    outinteger_data = <int*>outinteger.data
+    for i from lookback <= i < length:
+        outinteger_data[i] += begidx
     return outinteger 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3924,6 +3930,12 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     outmaxidx = make_int_array(length, lookback)
     retCode = lib.TA_MINMAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx.data)+lookback , <int *>(outmaxidx.data)+lookback )
     _ta_check_success("TA_MINMAXINDEX", retCode)
+    outminidx_data = <int*>outminidx.data
+    for i from lookback <= i < length:
+        outminidx_data[i] += begidx
+    outmaxidx_data = <int*>outmaxidx.data
+    for i from lookback <= i < length:
+        outmaxidx_data[i] += begidx
     return outminidx , outmaxidx 
 
 @wraparound(False)  # turn off relative indexing from end of lists

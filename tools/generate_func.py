@@ -11,7 +11,7 @@ from talib import abstract
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
-include_paths = ['/usr/include', '/usr/local/include', '/opt/include', '/opt/local/include']
+include_paths = ['/usr/include', '/usr/local/include', '/opt/include', '/opt/local/include', '/opt/homebrew/Cellar/ta-lib/0.4.0/include']
 if sys.platform == 'win32':
     include_paths = [r'c:\ta-lib\c\include']
 header_found = False
@@ -381,6 +381,18 @@ for f in functions:
 
     print(')')
     print('    _ta_check_success("%s", retCode)' % name)
+    if 'INDEX' in f:
+        for arg in args:
+            var = arg.split()[-1]
+
+            if 'out' not in var:
+                continue
+
+            if var.endswith('[]'):
+                var = cleanup(var[:-2])
+                print('    %s_data = <int*>%s.data' % (var, var))
+                print('    for i from lookback <= i < length:')
+                print('        %s_data[i] += begidx' % var)
     print('    return ', end='')
     i = 0
     for arg in args:
