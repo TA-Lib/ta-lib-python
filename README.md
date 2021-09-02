@@ -57,8 +57,9 @@ If you are using a M1 laptop and Homebrew, then you can set these before
 installing:
 
 ```
-export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
-export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+$ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+$ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+$ arch -arm64 brew install ta-lib
 ```
 
 You might also find this helpful on M1, particularly if you have tried
