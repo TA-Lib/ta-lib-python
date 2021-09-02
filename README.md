@@ -61,6 +61,13 @@ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
 export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
 ```
 
+You might also find this helpful on M1, particularly if you have tried
+several different installations without success:
+
+```
+$ your-arm64-python -m pip install --no-cache-dir ta-lib
+```
+
 ##### Windows
 
 Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
