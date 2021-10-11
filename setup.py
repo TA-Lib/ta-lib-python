@@ -155,7 +155,7 @@ setup(
     license='BSD',
     classifiers=[
         "License :: OSI Approved :: BSD License",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Operating System :: Unix",
         "Operating System :: POSIX",
         "Operating System :: MacOS :: MacOS X",
