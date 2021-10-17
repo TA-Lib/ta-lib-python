@@ -7,7 +7,7 @@ python:
   - "3.9"
   - "3.10"
 os: linux
-dist: bionic
+dist: focal
 env:
   global:
     - DEPS_DIR=$HOME/dependencies
