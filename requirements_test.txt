@@ -1,3 +1,4 @@
 -r requirements.txt
-pandas>=1.1.4
-nose>=1.3.7
+pandas
+nose
+polars

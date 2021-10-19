@@ -29,18 +29,34 @@ __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
                                  'periods': 'periods', # only used by MAVP; not a price series!
                                  }
 
+__INPUT_ARRAYS_TYPES = [dict]
+__ARRAY_TYPES = [np.ndarray]
+
 # allow use of pandas.DataFrame for input arrays
 try:
     import pandas
-    __INPUT_ARRAYS_TYPES = (dict, pandas.DataFrame)
-    __ARRAY_TYPES = (np.ndarray, pandas.Series)
+    __INPUT_ARRAYS_TYPES.append(pandas.DataFrame)
+    __ARRAY_TYPES.append(pandas.Series)
     __PANDAS_DATAFRAME = pandas.DataFrame
     __PANDAS_SERIES = pandas.Series
 except ImportError:
-    __INPUT_ARRAYS_TYPES = (dict,)
-    __ARRAY_TYPES = (np.ndarray,)
     __PANDAS_DATAFRAME = None
     __PANDAS_SERIES = None
+
+# allow use of polars.DataFrame for input arrays
+try:
+    import polars
+    __INPUT_ARRAYS_TYPES.append(polars.DataFrame)
+    __ARRAY_TYPES.append(polars.Series)
+    __POLARS_DATAFRAME = polars.DataFrame
+    __POLARS_SERIES = polars.Series
+except ImportError:
+    __POLARS_DATAFRAME = None
+    __POLARS_SERIES = None
+
+__INPUT_ARRAYS_TYPES = tuple(__INPUT_ARRAYS_TYPES)
+__ARRAY_TYPES = tuple(__ARRAY_TYPES)
+
 
 if sys.version >= '3':
 
@@ -64,10 +80,10 @@ class Function(object):
     intended to simplify using individual TALIB functions by providing a
     unified interface for setting/controlling input data, setting function
     parameters and retrieving results. Input data consists of a ``dict`` of
-    ``numpy`` arrays (or a ``pandas.DataFrame``), one array for each of open,
-    high, low, close and volume. This can be set with the set_input_arrays()
-    method. Which keyed array(s) are used as inputs when calling the function
-    is controlled using the input_names property.
+    ``numpy`` arrays (or a ``pandas.DataFrame`` or ``polars.DataFrame``), one
+    array for each of open, high, low, close and volume. This can be set with
+    the set_input_arrays() method. Which keyed array(s) are used as inputs when
+    calling the function is controlled using the input_names property.
 
     This class gets initialized with a TALIB function name and optionally an
     input_arrays object. It provides the following primary functions for
@@ -334,6 +350,13 @@ class Function(object):
                 return __PANDAS_DATAFRAME(numpy.column_stack(ret),
                                           index=index,
                                           columns=self.output_names)
+        elif __POLARS_DATAFRAME is not None and \
+                isinstance(self.__input_arrays, __POLARS_DATAFRAME):
+            if len(ret) == 1:
+                return __POLARS_SERIES(ret[0])
+            else:
+                return __POLARS_DATAFRAME(numpy.column_stack(ret),
+                                          columns=self.output_names)
         else:
             return ret[0] if len(ret) == 1 else ret
 
@@ -381,6 +404,9 @@ class Function(object):
 
         if __PANDAS_DATAFRAME is not None \
                 and isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
+            no_existing_input_arrays = self.__input_arrays.empty
+        elif __POLARS_DATAFRAME is not None \
+                and isinstance(self.__input_arrays, __POLARS_DATAFRAME):
             no_existing_input_arrays = self.__input_arrays.empty
         else:
             no_existing_input_arrays = not bool(self.__input_arrays)
@@ -432,6 +458,9 @@ class Function(object):
             if __PANDAS_SERIES is not None and \
                     isinstance(series, __PANDAS_SERIES):
                 series = series.values.astype(float)
+            elif __POLARS_SERIES is not None and \
+                    isinstance(series, __POLARS_SERIES):
+                series = series.to_numpy().astype(float)
             args.append(series)
         for opt_input in self.__opt_inputs:
             value = self.__get_opt_input_value(opt_input)

@@ -3,6 +3,12 @@
 
 - [NEW]: Upgrade to Cython 0.29.24
 
+- [NEW]: Support polars.Series in Function API
+
+- [NEW]: Support polars.Series in Streaming API
+
+- [NEW]: Support polars.DataFrame in Abstract API
+
 0.4.21
 ======
 

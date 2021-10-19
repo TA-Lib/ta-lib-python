@@ -233,7 +233,7 @@ will have an initial "lookback" period (a required number of observations
 before an output is generated) set to ``NaN``.
 
 For convenience, the Function API supports both ``numpy.ndarray`` and
-``pandas.Series`` inputs.
+``pandas.Series`` and ``polars.Series`` inputs.
 
 All of the following examples use the Function API:
 
@@ -270,9 +270,10 @@ If you're already familiar with using the function API, you should feel right
 at home using the Abstract API.
 
 Every function takes a collection of named inputs, either a ``dict`` of
-``numpy.ndarray`` or ``pandas.Series``, or a ``pandas.DataFrame``. If a
-``pandas.DataFrame`` is provided, the output is returned as a
-``pandas.DataFrame`` with named output columns.
+``numpy.ndarray`` or ``pandas.Series`` or ``polars.Series``, or a
+``pandas.DataFrame`` or ``polars.DataFrame``. If a ``pandas.DataFrame`` or
+``polars.DataFrame`` is provided, the output is returned as the same type
+with named output columns.
 
 For example, inputs could be provided for the typical "OHLCV" data:
 
