@@ -9,18 +9,59 @@ try:
     from polars import Series as _pl_Series
 except ImportError:
     # polars not available, nothing to wrap
-    _polars_wrapper = lambda x: x
-else:
-    def _polars_wrapper(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            # Use Series' float64 values if pandas, else use values as passed
-            args = [arg.to_numpy().astype(float) if isinstance(arg, _pl_Series) else arg
-                    for arg in args]
-            kwargs = {k: v.to_numpy().astype(float) if isinstance(v, _pl_Series) else v
-                      for k, v in kwargs.items()}
+    _pl_Series = None
 
-            result = func(*args, **kwargs)
+# If pandas is available, wrap talib functions so that they support
+# pandas.Series input
+try:
+    from pandas import Series as _pd_Series
+except ImportError:
+    # pandas not available, nothing to wrap
+    _pd_Series = None
+
+if _pl_Series is not None or _pd_Series is not None:
+
+    def _wrapper(func):
+        @wraps(func)
+        def wrapper(*args, **kwds):
+
+            if _pl_Series is not None:
+                use_pl = any(isinstance(arg, _pl_Series) for arg in args) or \
+                         any(isinstance(v, _pl_Series) for v in kwds.values())
+            else:
+                use_pl = False
+
+            if _pd_Series is not None:
+                use_pd = any(isinstance(arg, _pd_Series) for arg in args) or \
+                         any(isinstance(v, _pd_Series) for v in kwds.values())
+            else:
+                use_pd = False
+
+            if use_pl and use_pd:
+                raise Exception("Cannot mix polars and pandas")
+
+            # Use float64 values if polars or pandas, else use values as passed
+            if use_pl:
+                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pl_Series) else
+                         arg for arg in args]
+                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pl_Series) else
+                            v for k, v in kwds.items()}
+
+            elif use_pd:
+                index = next(arg.index
+                             for arg in chain(args, kwds.values())
+                             if isinstance(arg, _pd_Series))
+
+                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pd_Series) else
+                         arg for arg in args]
+                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pd_Series) else
+                            v for k, v in kwds.items()}
+
+            else:
+                _args = args
+                _kwds = kwds
+
+            result = func(*_args, **_kwds)
 
             # check to see if we got a streaming result
             first_result = result[0] if isinstance(result, tuple) else result
@@ -29,58 +70,25 @@ else:
                 return result
 
             # Series was passed in, Series gets out
-            if isinstance(result, tuple):
-                # Handle multi-array results such as BBANDS
-                return tuple(_pl_Series(arr) for arr in result)
-            return _pl_Series(result)
+            if use_pl:
+                if isinstance(result, tuple):
+                    return tuple(_pl_Series(arr) for arr in result)
+                else:
+                    return _pl_Series(result)
 
-        return wrapper
+            elif use_pd:
+                if isinstance(result, tuple):
+                    return tuple(_pd_Series(arr, index=index) for arr in result)
+                else:
+                    return _pd_Series(result, index=index)
 
-# If pandas is available, wrap talib functions so that they support
-# pandas.Series input
-try:
-    from pandas import Series as _pd_Series
-except ImportError:
-    # pandas not available, nothing to wrap
-    _pandas_wrapper = lambda x: x
-else:
-    def _pandas_wrapper(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                # Get the index of the first Series object, if any
-                index = next(arg.index
-                             for arg in chain(args, kwargs.values())
-                             if isinstance(arg, _pd_Series))
-            except StopIteration:
-                # No pandas.Series passed in; short-circuit
-                index = None
-
-            if index is None:
-                return func(*args, **kwargs)
-
-            # Use Series' float64 values if pandas, else use values as passed
-            args = [arg.values.astype(float) if isinstance(arg, _pd_Series) else arg
-                    for arg in args]
-            kwargs = {k: v.values.astype(float) if isinstance(v, _pd_Series) else v
-                      for k, v in kwargs.items()}
-
-            result = func(*args, **kwargs)
-
-            # check to see if we got a streaming result
-            first_result = result[0] if isinstance(result, tuple) else result
-            is_streaming_fn_result = not hasattr(first_result, '__len__')
-            if is_streaming_fn_result:
+            else:
                 return result
 
-            # Series was passed in, Series gets out; re-apply index
-            if isinstance(result, tuple):
-                # Handle multi-array results such as BBANDS
-                return tuple(_pd_Series(arr, index=index)
-                             for arr in result)
-            return _pd_Series(result, index=index)
-
         return wrapper
+else:
+    _wrapper = lambda x: x
+
 
 from ._ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
@@ -94,31 +102,17 @@ from ._ta_lib import (
 # import all the func and stream functions
 from ._ta_lib import *
 
-# wrap them with polars
+# wrap them for polars or pandas support
 func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
 for func_name in __TA_FUNCTION_NAMES__:
-    wrapped_func = _polars_wrapper(getattr(func, func_name))
+    wrapped_func = _wrapper(getattr(func, func_name))
     setattr(func, func_name, wrapped_func)
     globals()[func_name] = wrapped_func
 
 stream_func_names = ['stream_%s' % fname for fname in __TA_FUNCTION_NAMES__]
 stream = __import__("stream", globals(), locals(), stream_func_names, level=1)
 for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names):
-    wrapped_func = _polars_wrapper(getattr(stream, func_name))
-    setattr(stream, func_name, wrapped_func)
-    globals()[stream_func_name] = wrapped_func
-
-# wrap them with pandas
-func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
-for func_name in __TA_FUNCTION_NAMES__:
-    wrapped_func = _pandas_wrapper(getattr(func, func_name))
-    setattr(func, func_name, wrapped_func)
-    globals()[func_name] = wrapped_func
-
-stream_func_names = ['stream_%s' % fname for fname in __TA_FUNCTION_NAMES__]
-stream = __import__("stream", globals(), locals(), stream_func_names, level=1)
-for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names):
-    wrapped_func = _pandas_wrapper(getattr(stream, func_name))
+    wrapped_func = _wrapper(getattr(stream, func_name))
     setattr(stream, func_name, wrapped_func)
     globals()[stream_func_name] = wrapped_func
 
