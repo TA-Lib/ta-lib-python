@@ -15,9 +15,14 @@ instead of SWIG. From the homepage:
 
 The original Python bindings included with TA-Lib use
 [SWIG](http://swig.org) which unfortunately are difficult to install and
-aren't as efficient as they could be. Therefore this project uses Cython and
-Numpy to efficiently and cleanly bind to TA-Lib -- producing results 2-4
-times faster than the SWIG interface.
+aren't as efficient as they could be. Therefore this project uses
+[Cython](https://cython.org) and [Numpy](https://numpy.org) to efficiently
+and cleanly bind to TA-Lib -- producing results 2-4 times faster than the
+SWIG interface.
+
+In addition, this project also supports the use of the
+[Polars](https://www.pola.rs) and [Pandas](https://pandas.pydata.org)
+libraries.
 
 ## Installation
 
