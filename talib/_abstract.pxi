@@ -227,7 +227,12 @@ class Function(object):
         if isinstance(input_arrays, __INPUT_ARRAYS_TYPES):
             missing_keys = []
             for key in self.__input_price_series_names():
-                if key not in input_arrays:
+                if __POLARS_DATAFRAME is not None \
+                    and isinstance(input_arrays, __POLARS_DATAFRAME):
+                    missing = key not in input_arrays.columns
+                else:
+                    missing = key not in input_arrays
+                if missing:
                     missing_keys.append(key)
             if len(missing_keys) == 0:
                 self.__input_arrays = input_arrays
