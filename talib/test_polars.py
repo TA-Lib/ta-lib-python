@@ -54,4 +54,4 @@ def test_TEVA():
     )
     tema = abstract.TEMA(df, timeperiod=9)
     assert_is_instance(tema, pl.Series)
-    assert_equal(len(tema), 50)
+    assert_equals(len(tema), 50)
