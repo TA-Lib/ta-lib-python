@@ -39,3 +39,18 @@ def test_MAVP():
     assert_is_instance(sma3, pl.Series)
     assert_np_arrays_equal(result.to_numpy()[2::2], sma2.to_numpy()[2::2])
     assert_np_arrays_equal(result.to_numpy()[3::2], sma3.to_numpy()[3::2])
+
+def test_TEVA():
+    size = 50
+    df = pl.DataFrame(
+        {
+            "open": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "high": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "low": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "close": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "volume": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32")
+        }
+    )
+    tema = ta.TEMA(df, timeperiod=9)
+    assert_is_instance(tema, pl.Series)
+    assert_equal(len(tema), 50)
