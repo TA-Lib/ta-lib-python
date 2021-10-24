@@ -3,6 +3,7 @@ import polars as pl
 from nose.tools import assert_equals, assert_is_instance, assert_true
 
 import talib
+from talib import abstract
 from talib.test_data import series, assert_np_arrays_equal
 
 def test_MOM():
@@ -51,6 +52,6 @@ def test_TEVA():
             "volume": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32")
         }
     )
-    tema = ta.TEMA(df, timeperiod=9)
+    tema = abstract.TEMA(df, timeperiod=9)
     assert_is_instance(tema, pl.Series)
     assert_equal(len(tema), 50)
