@@ -39,7 +39,7 @@ RUN python -m pip install -e . \
 ARG RUN_TESTS="1"
 RUN if [ "$RUN_TESTS" -ne "0" ]; then \
         python -m pip install -r requirements_test.txt \
-        && nosetests -w . ; \
+        && pytest . ; \
     else \
         echo "Skipping tests\n" ; \
     fi

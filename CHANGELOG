@@ -9,6 +9,8 @@
 
 - [NEW]: Support polars.DataFrame in Abstract API
 
+- [NEW]: Switch tests to pytest from nose (no longer supported).
+
 0.4.21
 ======
 

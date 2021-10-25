@@ -24,7 +24,7 @@ perf:
 	python3 tools/perf_talib.py
 
 test: build
-	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} nosetests
+	LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} pytest
 
 sdist:
 	python3 setup.py sdist --formats=gztar,zip

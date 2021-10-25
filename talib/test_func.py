@@ -1,31 +1,31 @@
 import numpy as np
-from nose.tools import assert_equals, assert_true, assert_raises
+import pytest
 
 import talib
 from talib import func
 from talib.test_data import series, assert_np_arrays_equal, assert_np_arrays_not_equal
 
 def test_talib_version():
-    assert_equals(talib.__ta_version__[:5], b'0.4.0')
+    assert talib.__ta_version__[:5] == b'0.4.0'
 
 def test_num_functions():
-    assert_equals(len(talib.get_functions()), 158)
+    assert len(talib.get_functions()) == 158
 
 def test_input_wrong_type():
     a1 = np.arange(10, dtype=int)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         func.MOM(a1)
 
 def test_input_lengths():
     a1 = np.arange(10, dtype=float)
     a2 = np.arange(11, dtype=float)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         func.BOP(a2, a1, a1, a1)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         func.BOP(a1, a2, a1, a1)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         func.BOP(a1, a1, a2, a1)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         func.BOP(a1, a1, a1, a2)
 
 def test_input_nans():
@@ -62,11 +62,11 @@ def test_compatibility():
 def test_MIN():
     result = func.MIN(series, timeperiod=4)
     i = np.where(~np.isnan(result))[0][0]
-    assert_equals(len(series), len(result))
-    assert_equals(result[i + 1], 93.780)
-    assert_equals(result[i + 2], 93.780)
-    assert_equals(result[i + 3], 92.530)
-    assert_equals(result[i + 4], 92.530)
+    assert len(series) == len(result)
+    assert result[i + 1] == 93.780
+    assert result[i + 2] == 93.780
+    assert result[i + 3] == 92.530
+    assert result[i + 4] == 92.530
     values = np.array([np.nan, 5., 4., 3., 5., 7.])
     result = func.MIN(values, timeperiod=2)
     assert_np_arrays_equal(result, [np.nan, np.nan, 4, 3, 3, 5])
@@ -74,11 +74,11 @@ def test_MIN():
 def test_MAX():
     result = func.MAX(series, timeperiod=4)
     i = np.where(~np.isnan(result))[0][0]
-    assert_equals(len(series), len(result))
-    assert_equals(result[i + 2], 95.090)
-    assert_equals(result[i + 3], 95.090)
-    assert_equals(result[i + 4], 94.620)
-    assert_equals(result[i + 5], 94.620)
+    assert len(series) == len(result)
+    assert result[i + 2] == 95.090
+    assert result[i + 3] == 95.090
+    assert result[i + 4] == 94.620
+    assert result[i + 5] == 94.620
 
 def test_MOM():
     values = np.array([90.0,88.0,89.0])
@@ -96,29 +96,29 @@ def test_BBANDS():
                                         nbdevup=2.0, nbdevdn=2.0,
                                         matype=talib.MA_Type.EMA)
     i = np.where(~np.isnan(upper))[0][0]
-    assert_true(len(upper) == len(middle) == len(lower) == len(series))
-    #assert_true(abs(upper[i + 0] - 98.0734) < 1e-3)
-    assert_true(abs(middle[i + 0] - 92.8910) < 1e-3)
-    assert_true(abs(lower[i + 0] - 87.7086) < 1e-3)
-    #assert_true(abs(upper[i + 13] - 93.674) < 1e-3)
-    assert_true(abs(middle[i + 13] - 87.679) < 1e-3)
-    assert_true(abs(lower[i + 13] - 81.685) < 1e-3)
+    assert len(upper) == len(middle) == len(lower) == len(series)
+    #assert abs(upper[i + 0] - 98.0734) < 1e-3
+    assert abs(middle[i + 0] - 92.8910) < 1e-3
+    assert abs(lower[i + 0] - 87.7086) < 1e-3
+    #assert abs(upper[i + 13] - 93.674) < 1e-3
+    assert abs(middle[i + 13] - 87.679) < 1e-3
+    assert abs(lower[i + 13] - 81.685) < 1e-3
 
 def test_DEMA():
     result = func.DEMA(series)
     i = np.where(~np.isnan(result))[0][0]
-    assert_true(len(series) == len(result))
-    assert_true(abs(result[i + 1] - 86.765) < 1e-3)
-    assert_true(abs(result[i + 2] - 86.942) < 1e-3)
-    assert_true(abs(result[i + 3] - 87.089) < 1e-3)
-    assert_true(abs(result[i + 4] - 87.656) < 1e-3)
+    assert len(series) == len(result)
+    assert abs(result[i + 1] - 86.765) < 1e-3
+    assert abs(result[i + 2] - 86.942) < 1e-3
+    assert abs(result[i + 3] - 87.089) < 1e-3
+    assert abs(result[i + 4] - 87.656) < 1e-3
 
 def test_EMAEMA():
     result = func.EMA(series, timeperiod=2)
     result = func.EMA(result, timeperiod=2)
     i = np.where(~np.isnan(result))[0][0]
-    assert_true(len(series) == len(result))
-    assert_equals(i, 2)
+    assert len(series) == len(result)
+    assert i == 2
 
 def test_CDL3BLACKCROWS():
     o = np.array([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00, 27.66, 30.80])

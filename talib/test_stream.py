@@ -1,44 +1,42 @@
 import numpy as np
 import pandas as pd
 
-from nose.tools import assert_equals, assert_true, assert_raises
-
 import talib
 from talib import stream
 
 def test_streaming():
     a = np.array([1,1,2,3,5,8,13], dtype=float)
     r = stream.MOM(a, timeperiod=1)
-    assert_equals(r, 5)
+    assert r == 5
     r = stream.MOM(a, timeperiod=2)
-    assert_equals(r, 8)
+    assert r == 8
     r = stream.MOM(a, timeperiod=3)
-    assert_equals(r, 10)
+    assert r == 10
     r = stream.MOM(a, timeperiod=4)
-    assert_equals(r, 11)
+    assert r == 11
     r = stream.MOM(a, timeperiod=5)
-    assert_equals(r, 12)
+    assert r == 12
     r = stream.MOM(a, timeperiod=6)
-    assert_equals(r, 12)
+    assert r == 12
     r = stream.MOM(a, timeperiod=7)
-    assert_true(np.isnan(r))
+    assert np.isnan(r)
 
 def test_streaming_pandas():
     a = pd.Series([1,1,2,3,5,8,13])
     r = stream.MOM(a, timeperiod=1)
-    assert_equals(r, 5)
+    assert r == 5
     r = stream.MOM(a, timeperiod=2)
-    assert_equals(r, 8)
+    assert r == 8
     r = stream.MOM(a, timeperiod=3)
-    assert_equals(r, 10)
+    assert r == 10
     r = stream.MOM(a, timeperiod=4)
-    assert_equals(r, 11)
+    assert r == 11
     r = stream.MOM(a, timeperiod=5)
-    assert_equals(r, 12)
+    assert r == 12
     r = stream.MOM(a, timeperiod=6)
-    assert_equals(r, 12)
+    assert r == 12
     r = stream.MOM(a, timeperiod=7)
-    assert_true(np.isnan(r))
+    assert np.isnan(r)
 
 def test_CDL3BLACKCROWS():
     o = np.array([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00])
@@ -47,7 +45,7 @@ def test_CDL3BLACKCROWS():
     c = np.array([40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.46, 37.08, 33.37, 30.03])
 
     r = stream.CDL3BLACKCROWS(o, h, l, c)
-    assert_equals(r, -100)
+    assert r == -100
 
 def test_CDL3BLACKCROWS_pandas():
     o = pd.Series([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00])
@@ -56,9 +54,9 @@ def test_CDL3BLACKCROWS_pandas():
     c = pd.Series([40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.46, 37.08, 33.37, 30.03])
 
     r = stream.CDL3BLACKCROWS(o, h, l, c)
-    assert_equals(r, -100)
+    assert r == -100
 
 def test_MAXINDEX():
     a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
     r = stream.MAXINDEX(a, 10)
-    assert_equals(r, 21)
+    assert r == 21

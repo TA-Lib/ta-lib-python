@@ -1,10 +1,5 @@
 import numpy as np
-from nose.tools import (
-    assert_equals,
-    assert_true,
-    assert_false,
-    assert_raises,
-    )
+import pytest
 
 try:
     from collections import OrderedDict
@@ -24,20 +19,20 @@ def test_pandas():
 
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
     output = abstract.Function('stoch', input_df).outputs
-    assert_true(isinstance(output, pandas.DataFrame))
+    assert isinstance(output, pandas.DataFrame)
     assert_np_arrays_equal(expected_k, output['slowk'])
     assert_np_arrays_equal(expected_d, output['slowd'])
     output = abstract.Function('stoch', input_dict).outputs
-    assert_true(isinstance(output, list))
+    assert isinstance(output, list)
     assert_np_arrays_equal(expected_k, output[0])
     assert_np_arrays_equal(expected_d, output[1])
 
     expected = func.SMA(ford_2012['close'], 10)
     output = abstract.Function('sma', input_df, 10).outputs
-    assert_true(isinstance(output, pandas.Series))
+    assert isinstance(output, pandas.Series)
     assert_np_arrays_equal(expected, output)
     output = abstract.Function('sma', input_dict, 10).outputs
-    assert_true(isinstance(output, np.ndarray))
+    assert isinstance(output, np.ndarray)
     assert_np_arrays_equal(expected, output)
 
 
@@ -109,12 +104,13 @@ def test_doji_candle():
 
 def test_MAVP():
     mavp = abstract.MAVP
-    assert_raises(Exception, mavp.set_input_arrays, ford_2012)
+    with pytest.raises(Exception):
+        mavp.set_input_arrays(ford_2012)
     input_d = {}
     input_d['close'] = ford_2012['close']
     input_d['periods'] = np.arange(30)
-    assert_true(mavp.set_input_arrays(input_d))
-    assert_equals(mavp.input_arrays, input_d)
+    assert mavp.set_input_arrays(input_d)
+    assert mavp.input_arrays == input_d
 
 def test_info():
     stochrsi = abstract.Function('STOCHRSI')
@@ -138,7 +134,7 @@ def test_info():
             ('fastd_matype', 1),
             ]),
         }
-    assert_equals(expected, stochrsi.info)
+    assert expected == stochrsi.info
 
     expected = {
         'display_name': 'Bollinger Bands',
@@ -159,11 +155,11 @@ def test_info():
             ('matype', 0),
             ]),
         }
-    assert_equals(expected, abstract.Function('BBANDS').info)
+    assert expected == abstract.Function('BBANDS').info
 
 def test_input_names():
     expected = OrderedDict([('price', 'close')])
-    assert_equals(expected, abstract.Function('MAMA').input_names)
+    assert expected == abstract.Function('MAMA').input_names
 
     # test setting input_names
     obv = abstract.Function('OBV')
@@ -172,16 +168,17 @@ def test_input_names():
         ('prices', ['volume']),
         ])
     obv.input_names = expected
-    assert_equals(obv.input_names, expected)
+    assert obv.input_names == expected
 
     obv.input_names = {
         'price': 'open',
         'prices': ['volume'],
         }
-    assert_equals(obv.input_names, expected)
+    assert obv.input_names == expected
 
 def test_input_arrays():
     mama = abstract.Function('MAMA')
+
     # test default setting
     expected = {
         'open': None,
@@ -190,33 +187,35 @@ def test_input_arrays():
         'close': None,
         'volume': None,
         }
-    assert_equals(expected, mama.get_input_arrays())
+    assert expected == mama.get_input_arrays()
+
     # test setting/getting input_arrays
-    assert_true(mama.set_input_arrays(ford_2012))
-    assert_equals(mama.get_input_arrays(), ford_2012)
-    assert_raises(Exception,
-                  mama.set_input_arrays, {'hello': 'fail', 'world': 'bye'})
+    assert mama.set_input_arrays(ford_2012)
+    assert mama.get_input_arrays() == ford_2012
+    with pytest.raises(Exception):
+        mama.set_input_arrays({'hello': 'fail', 'world': 'bye'})
 
     # test only required keys are needed
     willr = abstract.Function('WILLR')
     reqd = willr.input_names['prices']
     input_d = dict([(key, ford_2012[key]) for key in reqd])
-    assert_true(willr.set_input_arrays(input_d))
-    assert_equals(willr.input_arrays, input_d)
+    assert willr.set_input_arrays(input_d)
+    assert willr.input_arrays == input_d
 
     # test extraneous keys are ignored
     input_d['extra_stuffs'] = 'you should never see me'
     input_d['date'] = np.random.rand(100)
-    assert_true(willr.set_input_arrays(input_d))
+    assert willr.set_input_arrays(input_d)
 
     # test missing keys get detected
     input_d['open'] = ford_2012['open']
     input_d.pop('close')
-    assert_raises(Exception, willr.set_input_arrays, input_d)
+    with pytest.raises(Exception):
+        willr.set_input_arrays(input_d)
 
     # test changing input_names on the Function
     willr.input_names = {'prices': ['high', 'low', 'open']}
-    assert_true(willr.set_input_arrays(input_d))
+    assert willr.set_input_arrays(input_d)
 
 def test_parameters():
     stoch = abstract.Function('STOCH')
@@ -227,20 +226,20 @@ def test_parameters():
         ('slowd_period', 3),
         ('slowd_matype', 0),
         ])
-    assert_equals(expected, stoch.parameters)
+    assert expected == stoch.parameters
 
     stoch.parameters = {'fastk_period': 10}
     expected['fastk_period'] = 10
-    assert_equals(expected, stoch.parameters)
+    assert expected == stoch.parameters
 
     stoch.parameters = {'slowk_period': 8, 'slowd_period': 5}
     expected['slowk_period'] = 8
     expected['slowd_period'] = 5
-    assert_equals(expected, stoch.parameters)
+    assert expected == stoch.parameters
 
     stoch.parameters = {'slowd_matype': talib.MA_Type.T3}
     expected['slowd_matype'] = 8
-    assert_equals(expected, stoch.parameters)
+    assert expected == stoch.parameters
 
     stoch.parameters = {
         'slowk_matype': talib.MA_Type.WMA,
@@ -248,13 +247,13 @@ def test_parameters():
         }
     expected['slowk_matype'] = 2
     expected['slowd_matype'] = 1
-    assert_equals(expected, stoch.parameters)
+    assert expected == stoch.parameters
 
 def test_lookback():
-    assert_equals(abstract.Function('SMA', 10).lookback, 9)
+    assert abstract.Function('SMA', 10).lookback == 9
 
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
-    assert_equals(stochrsi.lookback, 26)
+    assert stochrsi.lookback == 26
 
 def test_call_supports_same_signature_as_func_module():
     adx = abstract.Function('ADX')
@@ -263,36 +262,26 @@ def test_call_supports_same_signature_as_func_module():
     output = adx(ford_2012['open'], ford_2012['high'], ford_2012['low'])
     assert_np_arrays_equal(expected, output)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         adx(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
-        assert 'Too many price arguments: expected 3 (open, high, low)' in str(
-            e.exception.message)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         adx(ford_2012['open'], ford_2012['high'])
-        assert 'Not enough price arguments: expected 3 (open, high, low)' in str(
-            e.exception.message)
 
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
-    expected_error = 'Invalid parameter value for timeperiod (expected int, got float)'
-
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         sma(ford_2012['close'], 35.5)
-        assert expected_error in str(e.exception.message)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         abstract.Function('SMA', timeperiod=35.5)
-        assert expected_error in str(e.exception.message)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         sma.parameters = {'timeperiod': 35.5}
-        assert expected_error in str(e.exception.message)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         sma.set_parameters(timeperiod=35.5)
-        assert expected_error in str(e.exception.message)
 
 def test_call_doesnt_cache_parameters():
     sma = abstract.Function('SMA', timeperiod=10)
@@ -310,10 +299,8 @@ def test_call_doesnt_cache_parameters():
     assert_np_arrays_equal(expected, output)
 
 def test_call_without_arguments():
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         abstract.Function('SMA')()
-        assert 'Not enough price arguments' in str(e.exception.message)
 
-    with assert_raises(TypeError) as e:
+    with pytest.raises(TypeError):
         abstract.Function('SMA')(10)
-        assert 'Not enough price arguments' in str(e.exception.message)
