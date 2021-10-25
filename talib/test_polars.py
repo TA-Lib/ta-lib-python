@@ -54,3 +54,6 @@ def test_TEVA():
     tema = abstract.TEMA(df, timeperiod=9)
     assert isinstance(tema, pl.Series)
     assert len(tema) == 50
+
+def test_breaks():
+    assert 42 == 12
