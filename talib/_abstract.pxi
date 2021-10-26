@@ -15,13 +15,6 @@ cimport _ta_lib as lib
 # NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
 
-__INPUT_ARRAYS_DEFAULTS = {'open':   None,
-                           'high':   None,
-                           'low':    None,
-                           'close':  None,
-                           'volume': None,
-                           }
-
 # lookup for TALIB input parameters which don't define expected price series inputs
 __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
                                  'price0':  'high',
@@ -109,7 +102,7 @@ class Function(object):
         self.__namestr = self.__name
         self.__name = str2bytes(self.__name)
         self.__info = None
-        self.__input_arrays = __INPUT_ARRAYS_DEFAULTS
+        self.__input_arrays = {}
 
         # dictionaries of function args. keys are input/opt_input/output parameter names
         self.__input_names = OrderedDict()
@@ -197,7 +190,11 @@ class Function(object):
         """
         Returns a copy of the dict of input arrays in use.
         """
-        return self.__input_arrays.copy()
+        if __POLARS_DATAFRAME is not None \
+            and isinstance(self.__input_arrays, __POLARS_DATAFRAME):
+            return self.__input_arrays.clone()
+        else:
+            return self.__input_arrays.copy()
 
     def set_input_arrays(self, input_arrays):
         """
@@ -412,7 +409,7 @@ class Function(object):
             no_existing_input_arrays = self.__input_arrays.empty
         elif __POLARS_DATAFRAME is not None \
                 and isinstance(self.__input_arrays, __POLARS_DATAFRAME):
-            no_existing_input_arrays = self.__input_arrays.empty
+            no_existing_input_arrays = self.__input_arrays.is_empty()
         else:
             no_existing_input_arrays = not bool(self.__input_arrays)
 

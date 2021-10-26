@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import re
 
 try:
     from collections import OrderedDict
@@ -180,14 +181,7 @@ def test_input_arrays():
     mama = abstract.Function('MAMA')
 
     # test default setting
-    expected = {
-        'open': None,
-        'high': None,
-        'low': None,
-        'close': None,
-        'volume': None,
-        }
-    assert expected == mama.get_input_arrays()
+    assert mama.get_input_arrays() == {}
 
     # test setting/getting input_arrays
     assert mama.set_input_arrays(ford_2012)
@@ -262,25 +256,31 @@ def test_call_supports_same_signature_as_func_module():
     output = adx(ford_2012['open'], ford_2012['high'], ford_2012['low'])
     assert_np_arrays_equal(expected, output)
 
-    with pytest.raises(TypeError):
+    expected_error = re.escape('Too many price arguments: expected 3 (high, low, close)')
+
+    with pytest.raises(TypeError, match=expected_error):
         adx(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
 
-    with pytest.raises(TypeError):
+    expected_error = re.escape('Not enough price arguments: expected 3 (high, low, close)')
+
+    with pytest.raises(TypeError, match=expected_error):
         adx(ford_2012['open'], ford_2012['high'])
 
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
-    with pytest.raises(TypeError):
+    expected_error = re.escape('Invalid parameter value for timeperiod (expected int, got float)')
+
+    with pytest.raises(TypeError, match=expected_error):
         sma(ford_2012['close'], 35.5)
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match=expected_error):
         abstract.Function('SMA', timeperiod=35.5)
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match=expected_error):
         sma.parameters = {'timeperiod': 35.5}
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match=expected_error):
         sma.set_parameters(timeperiod=35.5)
 
 def test_call_doesnt_cache_parameters():
@@ -299,8 +299,9 @@ def test_call_doesnt_cache_parameters():
     assert_np_arrays_equal(expected, output)
 
 def test_call_without_arguments():
-    with pytest.raises(TypeError):
+
+    with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')()
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')(10)

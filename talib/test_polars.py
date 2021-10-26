@@ -51,6 +51,20 @@ def test_TEVA():
             "volume": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32")
         }
     )
-    tema = abstract.TEMA(df, timeperiod=9)
-    assert isinstance(tema, pl.Series)
-    assert len(tema) == 50
+    tema1 = abstract.TEMA(df, timeperiod=9)
+    assert isinstance(tema1, pl.Series)
+    assert len(tema1) == 50
+    inputs = abstract.TEMA.get_input_arrays()
+    assert inputs.columns == df.columns
+    for column in df.columns:
+        assert_np_arrays_equal(inputs[column].to_numpy(), df[column].to_numpy())
+
+    tema2 = abstract.TEMA(df, timeperiod=9)
+    assert isinstance(tema2, pl.Series)
+    assert len(tema2) == 50
+    inputs = abstract.TEMA.get_input_arrays()
+    assert inputs.columns == df.columns
+    for column in df.columns:
+        assert_np_arrays_equal(inputs[column].to_numpy(), df[column].to_numpy())
+
+    assert_np_arrays_equal(tema1.to_numpy(), tema2.to_numpy())
