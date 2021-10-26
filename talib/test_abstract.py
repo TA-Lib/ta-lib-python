@@ -305,3 +305,15 @@ def test_call_without_arguments():
 
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')(10)
+
+def test_call_first_exception():
+    inputs = {'close': np.array([np.nan, np.nan, np.nan])}
+
+    with pytest.raises(Exception, match="inputs are all NaN"):
+        abstract.SMA(inputs, timeperiod=2)
+
+    inputs = {'close': np.array([1.0, 2.0, 3.0])}
+
+    output = abstract.SMA(inputs, timeperiod=2)
+    expected = np.array([np.nan, 1.5, 2.5])
+    assert_np_arrays_equal(expected, output)
