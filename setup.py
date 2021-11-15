@@ -5,13 +5,16 @@ import os
 import os.path
 import warnings
 
-from distutils.dist import Distribution
-
 try:
     from setuptools import setup, Extension
-    requires = {"install_requires": ["numpy"], "setup_requires": ["numpy"]}
-except:
+    from setuptools.dist import Distribution
+    requires = {
+        "install_requires": ["numpy"],
+        "setup_requires": ["numpy"]
+    }
+except ImportError:
     from distutils.core import setup
+    from distutils.dist import Distribution
     from distutils.extension import Extension
     requires = {"requires": ["numpy"]}
 
