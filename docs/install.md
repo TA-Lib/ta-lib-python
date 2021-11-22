@@ -38,7 +38,7 @@ and unzip to ``C:\ta-lib``
 #### Linux
 Download [ta-lib-0.4.0-src.tar.gz](https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
 ```
-$ tar -xvf ta-lib-0.4.0-src.tar.gz
+$ tar zxvf ta-lib-0.4.0-src.tar.gz
 $ cd ta-lib
 $ ./configure --prefix=/usr
 $ make
