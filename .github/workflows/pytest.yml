@@ -25,7 +25,7 @@ jobs:
         pip install flake8 pytest
         ./tools/build_talib_from_source.bash $DEPS_PATH
       env:
-        DEPS_PATH: ${{ env.GITHUB_WORKSPACE}}/dependencies
+        DEPS_PATH: ${{ github.workspace }}/dependencies
         TA_INCLUDE_PATH: ${{ env.DEPS_PATH }}/include
         TA_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
     - name: Lint with flake8
@@ -38,5 +38,5 @@ jobs:
       run: |
         PYTHONPATH=. pytest
       env:
-        DEPS_PATH: ${{ env.GITHUB_WORKSPACE}}/dependencies
+        DEPS_PATH: ${{ github.workspace }}/dependencies
         LD_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
