@@ -23,7 +23,7 @@ jobs:
         python -m pip install --upgrade pip wheel
         python -m pip install -r requirements.txt
         pip install flake8 pytest
-        ./tools/build_talib_from_source.bash $DEPS_DIR
+        ./tools/build_talib_from_source.bash ./dependencies
       env:
         TA_INCLUDE_PATH: ./dependencies/include
         TA_LIBRARY_PATH: ./dependencies/lib
