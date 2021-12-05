@@ -42,3 +42,6 @@ jobs:
     - name: Test with pytest
       run: |
         PYTHONPATH=. pytest
+      env:
+        DEPS_PATH: ${{ github.workspace }}/dependencies
+        LD_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
