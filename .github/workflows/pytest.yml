@@ -28,6 +28,9 @@ jobs:
         DEPS_PATH: ${{ github.workspace }}/dependencies
         TA_INCLUDE_PATH: ${{ env.DEPS_PATH }}/include
         TA_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
+    - name: Build cython modules in-place
+      run: |
+        python setup.py build_ext --inplace
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
