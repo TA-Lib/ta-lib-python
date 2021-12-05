@@ -31,6 +31,9 @@ jobs:
     - name: Build cython modules in-place
       run: |
         python setup.py build_ext --inplace
+      env:
+        DEPS_PATH: ${{ github.workspace }}/dependencies
+        LD_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -40,6 +43,3 @@ jobs:
     - name: Test with pytest
       run: |
         PYTHONPATH=. pytest
-      env:
-        DEPS_PATH: ${{ github.workspace }}/dependencies
-        LD_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
