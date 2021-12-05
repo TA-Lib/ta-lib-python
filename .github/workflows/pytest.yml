@@ -23,10 +23,10 @@ jobs:
         python -m pip install --upgrade pip wheel
         python -m pip install -r requirements.txt
         pip install flake8 pytest
-        ./tools/build_talib_from_source.bash ./dependencies
+        ./tools/build_talib_from_source.bash ${{ env.HOME}}/dependencies
       env:
-        TA_INCLUDE_PATH: ./dependencies/include
-        TA_LIBRARY_PATH: ./dependencies/lib
+        TA_INCLUDE_PATH: ${{ env.HOME }}/dependencies/include
+        TA_LIBRARY_PATH: ${{ env.HOME }}/dependencies/lib
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -37,4 +37,4 @@ jobs:
       run: |
         PYTHONPATH=. pytest
       env:
-        LD_LIBRARY_PATH: ./dependencies/lib
+        LD_LIBRARY_PATH: ${{ env.HOME}}/dependencies/lib
