@@ -26,13 +26,14 @@ jobs:
         ./tools/build_talib_from_source.bash $DEPS_PATH
       env:
         DEPS_PATH: ${{ github.workspace }}/dependencies
-        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/lib
+        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/include
         TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
     - name: Build cython modules in-place
       run: |
-        python setup.py build_ext --inplace --include-dirs=$DEPS_PATH/include --library-dirs=$DEPS_PATH/lib
+        python setup.py build_ext --inplace --include-dirs=$TA_INCLUDE_PATH --library-dirs=$TA_LIBRARY_PATH
       env:
-        DEPS_PATH: ${{ github.workspace }}/dependencies
+        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/include
+        TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
