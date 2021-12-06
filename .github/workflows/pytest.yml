@@ -41,6 +41,8 @@ jobs:
         #flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+        echo $DEPS_PATH
+        echo $LD_LIBRARY_PATH
         PYTHONPATH=. pytest
       env:
         DEPS_PATH: ${{ github.workspace }}/dependencies
