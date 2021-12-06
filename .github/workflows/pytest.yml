@@ -26,8 +26,8 @@ jobs:
         ./tools/build_talib_from_source.bash $DEPS_PATH
       env:
         DEPS_PATH: ${{ github.workspace }}/dependencies
-        TA_INCLUDE_PATH: ${{ env.DEPS_PATH }}/include
-        TA_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
+        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/lib
+        TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
     - name: Build cython modules in-place
       run: |
         python setup.py build_ext --inplace --include-dirs=$DEPS_PATH/include --library-dirs=$DEPS_PATH/lib
@@ -41,9 +41,6 @@ jobs:
         #flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        echo $DEPS_PATH
-        echo $LD_LIBRARY_PATH
         PYTHONPATH=. pytest
       env:
-        DEPS_PATH: ${{ github.workspace }}/dependencies
-        LD_LIBRARY_PATH: ${{ env.DEPS_PATH }}/lib
+        LD_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
