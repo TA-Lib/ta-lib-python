@@ -56,8 +56,8 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
 if sys.platform == "win32":
     platform_supported = True
     lib_talib_name = 'ta_libc_cdr'
-    include_dirs = [r"c:\ta-lib\c\include"]
-    lib_talib_dirs = [r"c:\ta-lib\c\lib"]
+    include_dirs = [os.environ["TA_INCLUDE_PATH"]] if 'TA_INCLUDE_PATH' in os.environ else [r"c:\ta-lib\c\include"]
+    lib_talib_dirs = [os.environ["TA_LIBRARY_PATH"]] if 'TA_LIBRARY_PATH' in os.environ else [r"c:\ta-lib\c\lib"]
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
