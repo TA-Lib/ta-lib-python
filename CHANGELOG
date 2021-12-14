@@ -3,6 +3,8 @@
 
 - [NEW]: Upgrade to Cython 0.29.25
 
+- [NEW]: Allow TA_INCLUDE_PATH and TA_LIBRARY_PATH to work on Windows.
+
 0.4.22
 ======
 
