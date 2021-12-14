@@ -1,5 +1,7 @@
 # TA-Lib
 
+![Pytest](https://github.com/mrjbq7/ta-lib/actions/workflows/pytest.yml/badge.svg)
+
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
 
