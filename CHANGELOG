@@ -1,3 +1,8 @@
+0.4.24
+======
+
+- [FIX]: runtime_lib_dirs preventing install on Windows
+
 0.4.23
 ======
 
