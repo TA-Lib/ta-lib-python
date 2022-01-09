@@ -85,24 +85,24 @@ cdef extern from "ta-lib/ta_defs.h":
     TA_CandleSettingType TA_AllCandleSettings = 11
 
 cdef extern from "ta-lib/ta_common.h":
-    char *TA_GetVersionString()
-    char *TA_GetVersionMajor()
-    char *TA_GetVersionMinor()
-    char *TA_GetVersionBuild()
-    char *TA_GetVersionDate()
-    char *TA_GetVersionTime()
+    const char *TA_GetVersionString()
+    const char *TA_GetVersionMajor()
+    const char *TA_GetVersionMinor()
+    const char *TA_GetVersionBuild()
+    const char *TA_GetVersionDate()
+    const char *TA_GetVersionTime()
 
     ctypedef double TA_Real
     ctypedef int TA_Integer
 
     ctypedef struct TA_StringTable:
         unsigned int size
-        char **string
+        const char **string
         void *hiddenData
 
     ctypedef struct TA_RetCodeInfo:
-        char* enumStr
-        char* infoStr
+        const char* enumStr
+        const char* infoStr
 
     void TA_SetRetCodeInfo(TA_RetCode theRetCode, TA_RetCodeInfo *retCodeInfo)
 
@@ -114,25 +114,25 @@ cdef extern from "ta-lib/ta_abstract.h":
     TA_RetCode TA_GroupTableAlloc(TA_StringTable **table)
     TA_RetCode TA_GroupTableFree(TA_StringTable *table)
 
-    TA_RetCode TA_FuncTableAlloc(char *group, TA_StringTable **table)
+    TA_RetCode TA_FuncTableAlloc(const char *group, TA_StringTable **table)
     TA_RetCode TA_FuncTableFree(TA_StringTable *table)
 
     ctypedef unsigned int TA_FuncHandle
-    TA_RetCode TA_GetFuncHandle(char *name, TA_FuncHandle **handle)
+    TA_RetCode TA_GetFuncHandle(const char *name, const TA_FuncHandle **handle)
 
     ctypedef int TA_FuncFlags
     ctypedef struct TA_FuncInfo:
-        char *name
-        char *group
-        char *hint
-        char *camelCaseName
+        const char *name
+        const char *group
+        const char *hint
+        const char *camelCaseName
         TA_FuncFlags flags
         unsigned int nbInput
         unsigned int nbOptInput
         unsigned int nbOutput
-        TA_FuncHandle *handle
+        const TA_FuncHandle *handle
 
-    TA_RetCode TA_GetFuncInfo(TA_FuncHandle *handle, TA_FuncInfo **funcInfo)
+    TA_RetCode TA_GetFuncInfo(const TA_FuncHandle *handle, const TA_FuncInfo **funcInfo)
 
     ctypedef int TA_InputParameterType
     TA_InputParameterType TA_Input_Price = 0
@@ -155,40 +155,40 @@ cdef extern from "ta-lib/ta_abstract.h":
 
     ctypedef struct TA_InputParameterInfo:
         TA_InputParameterType type
-        char *paramName
+        const char *paramName
         TA_InputFlags flags
 
     ctypedef struct TA_OptInputParameterInfo:
         TA_OptInputParameterType type
-        char *paramName
+        const char *paramName
         TA_OptInputFlags flags
-        char *displayName
-        void *dataSet
+        const char *displayName
+        const void *dataSet
         TA_Real defaultValue
-        char *hint
-        char *helpFile
+        const char *hint
+        const char *helpFile
 
     ctypedef struct TA_OutputParameterInfo:
         TA_OutputParameterType type
-        char *paramName
+        const char *paramName
         TA_OutputFlags flags
 
-    TA_RetCode TA_GetInputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_InputParameterInfo **info)
-    TA_RetCode TA_GetOptInputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OptInputParameterInfo **info)
-    TA_RetCode TA_GetOutputParameterInfo(TA_FuncHandle *handle, unsigned int paramIndex, TA_OutputParameterInfo **info)
+    TA_RetCode TA_GetInputParameterInfo(const TA_FuncHandle *handle, unsigned int paramIndex, const TA_InputParameterInfo **info)
+    TA_RetCode TA_GetOptInputParameterInfo(const TA_FuncHandle *handle, unsigned int paramIndex, const TA_OptInputParameterInfo **info)
+    TA_RetCode TA_GetOutputParameterInfo(const TA_FuncHandle *handle, unsigned int paramIndex, const TA_OutputParameterInfo **info)
 
     ctypedef struct TA_ParamHolder:
         void *hiddenData
 
-    TA_RetCode TA_ParamHolderAlloc(TA_FuncHandle *handle, TA_ParamHolder **allocatedParams) # get_lookback()
+    TA_RetCode TA_ParamHolderAlloc(const TA_FuncHandle *handle, TA_ParamHolder **allocatedParams) # get_lookback()
     TA_RetCode TA_ParamHolderFree(TA_ParamHolder *params)
 
     TA_RetCode TA_SetOptInputParamInteger(TA_ParamHolder *params, unsigned int paramIndex, TA_Integer optInValue)
     TA_RetCode TA_SetOptInputParamReal(TA_ParamHolder *params, unsigned int paramIndex, TA_Real optInValue)
 
-    TA_RetCode TA_GetLookback(TA_ParamHolder *params, TA_Integer *lookback)
+    TA_RetCode TA_GetLookback(const TA_ParamHolder *params, TA_Integer *lookback)
 
-    TA_RetCode TA_CallFunc(TA_ParamHolder *params, TA_Integer startIdx, TA_Integer endIdx, TA_Integer *outBegIdx, TA_Integer *outNbElement)
+    TA_RetCode TA_CallFunc(const TA_ParamHolder *params, TA_Integer startIdx, TA_Integer endIdx, TA_Integer *outBegIdx, TA_Integer *outNbElement)
 
     char* TA_FunctionDescriptionXML()
 
