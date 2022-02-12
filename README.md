@@ -114,6 +114,8 @@ $ sudo make install
 > If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
 > Simply rerun ``make -jX`` followed by ``[sudo] make install``.
 
+Note: if your directory path includes spaces, the installation will probably
+fail with ``No such file or directory`` errors.
 
 ### Troubleshooting
 
