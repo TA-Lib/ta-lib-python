@@ -29,7 +29,7 @@ libraries.
 You can install from PyPI:
 
 ```
-$ pip install TA-Lib
+$ python3 -m pip install TA-Lib
 ```
 
 Or checkout the sources and run ``setup.py`` yourself:
