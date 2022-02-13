@@ -7,11 +7,25 @@ on:
     branches: [ master ]
 
 jobs:
+  build_talib:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build talib
+        run: |
+          ./tools/build_talib_from_source.bash ${{ github.workspace }}/dependencies
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dependencies
+          path: ${{ github.workspace }}/dependencies/
+          if-no-files-found: error
+
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+    needs: [build_talib]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -24,11 +38,14 @@ jobs:
         python -m pip install -r requirements.txt
         python -m pip install -r requirements_test.txt
         pip install flake8 pytest
-        ./tools/build_talib_from_source.bash $DEPS_PATH
       env:
         DEPS_PATH: ${{ github.workspace }}/dependencies
         TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/include
         TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
+    - uses: actions/download-artifact@v2
+      with:
+        name: dependencies
+        path: ${{ github.workspace }}/dependencies
     - name: Build cython modules in-place
       run: |
         python setup.py build_ext --inplace --include-dirs=$TA_INCLUDE_PATH --library-dirs=$TA_LIBRARY_PATH
