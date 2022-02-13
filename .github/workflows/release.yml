@@ -1,0 +1,85 @@
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Creating release
+
+env:
+  CIBW_TEST_EXTRAS: test
+  CIBW_TEST_COMMAND: "pytest {project}/tests"
+  CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
+  CIBW_ARCHS_MACOS: "x86_64 universal2"
+  CIBW_BEFORE_BUILD_LINUX: "yum install -y gcc && curl -sL http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar -zxvf ta-lib-0.4.0-src.tar.gz && rm ta-lib-0.4.0-src.tar.gz && cd ta-lib && ./configure && make && make install"
+  CIBW_BEFORE_BUILD_MACOS: "brew install ta-lib"
+  CIBW_BEFORE_BUILD_WINDOWS: "curl -sL http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip -o $HOME/ta-lib.zip --create-dirs && 7z x $HOME/ta-lib.zip -o/c/ta-lib && mv /c/ta-lib/ta-lib/* /c/ta-lib/ && rm -rf /c/ta-lib/ta-lib && cd /c/ta-lib/c/make/cdr/win32/msvc && nmake"
+
+
+jobs:
+  # Build & test simple source release before wasting hours building and
+  # testing the binary build matrix.
+  sdist:
+    name: Creating source release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setting up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Installing python build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
+
+      - name: Building source distribution
+        run: |
+          pip install -e ".[release]"
+          python setup.py sdist
+
+      - name: Ensuring documentation builds
+        run: |
+          cd docs && make clean && make html
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
+
+  build_wheels:
+    needs: [sdist]
+    name: "[${{ strategy.job-index }}/${{ strategy.job-total }}] py${{ matrix.py }} on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
+        # cp - CPython
+        # pp - PyPy
+        py: [cp37", "cp38", "cp39", "cp310", "pp37"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        name: Setting up Python
+        with:
+          python-version: '3.8'
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Build & test wheels
+        uses: pypa/cibuildwheel@v2.2.2
+        env:
+          CIBW_ARCHS_LINUX: auto aarch64 ppc64le
+          CIBW_BUILD: "${{ matrix.py }}-*"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
