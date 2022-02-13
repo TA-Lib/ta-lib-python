@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.testing import assert_array_equal, assert_raises
 import pytest
 import re
 
@@ -10,10 +11,13 @@ except ImportError: # handle python 2.6 and earlier
 import talib
 from talib import func
 from talib import abstract
-from talib.test_data import ford_2012, assert_np_arrays_equal, assert_np_arrays_not_equal
 
 
-def test_pandas():
+def assert_array_not_equal(x, y):
+    assert_raises(AssertionError, assert_array_equal, x, y)
+
+
+def test_pandas(ford_2012):
     import pandas
     input_df = pandas.DataFrame(ford_2012)
     input_dict = dict((k, pandas.Series(v)) for k, v in ford_2012.items())
@@ -21,23 +25,23 @@ def test_pandas():
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
     output = abstract.Function('stoch', input_df).outputs
     assert isinstance(output, pandas.DataFrame)
-    assert_np_arrays_equal(expected_k, output['slowk'])
-    assert_np_arrays_equal(expected_d, output['slowd'])
+    assert_array_equal(expected_k, output['slowk'])
+    assert_array_equal(expected_d, output['slowd'])
     output = abstract.Function('stoch', input_dict).outputs
     assert isinstance(output, list)
-    assert_np_arrays_equal(expected_k, output[0])
-    assert_np_arrays_equal(expected_d, output[1])
+    assert_array_equal(expected_k, output[0])
+    assert_array_equal(expected_d, output[1])
 
     expected = func.SMA(ford_2012['close'], 10)
     output = abstract.Function('sma', input_df, 10).outputs
     assert isinstance(output, pandas.Series)
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
     output = abstract.Function('sma', input_dict, 10).outputs
     assert isinstance(output, np.ndarray)
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
 
 
-def test_pandas_series():
+def test_pandas_series(ford_2012):
     import pandas
     input_df = pandas.DataFrame(ford_2012)
     output = talib.SMA(input_df['close'], 10)
@@ -60,50 +64,52 @@ def test_pandas_series():
     pandas.testing.assert_series_equal(output, expected)
 
 
-def test_SMA():
+def test_SMA(ford_2012):
     expected = func.SMA(ford_2012['close'], 10)
-    assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10).outputs)
-    assert_np_arrays_equal(expected, abstract.Function('sma')(ford_2012, 10, price='close'))
-    assert_np_arrays_equal(expected, abstract.Function('sma')(ford_2012, timeperiod=10))
+    assert_array_equal(expected, abstract.Function('sma', ford_2012, 10).outputs)
+    assert_array_equal(expected, abstract.Function('sma')(ford_2012, 10, price='close'))
+    assert_array_equal(expected, abstract.Function('sma')(ford_2012, timeperiod=10))
     expected = func.SMA(ford_2012['open'], 10)
-    assert_np_arrays_equal(expected, abstract.Function('sma', ford_2012, 10, price='open').outputs)
-    assert_np_arrays_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10, price='open'))
-    assert_np_arrays_not_equal(expected, abstract.Function('sma', ford_2012, 10, price='open')(timeperiod=20))
-    assert_np_arrays_not_equal(expected, abstract.Function('sma', ford_2012)(10, price='close'))
-    assert_np_arrays_not_equal(expected, abstract.Function('sma', 10)(ford_2012, price='high'))
-    assert_np_arrays_not_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10))
+    assert_array_equal(expected, abstract.Function('sma', ford_2012, 10, price='open').outputs)
+    assert_array_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10, price='open'))
+    assert_array_not_equal(expected, abstract.Function('sma', ford_2012, 10, price='open')(timeperiod=20))
+    assert_array_not_equal(expected, abstract.Function('sma', ford_2012)(10, price='close'))
+    assert_array_not_equal(expected, abstract.Function('sma', 10)(ford_2012, price='high'))
+    assert_array_not_equal(expected, abstract.Function('sma', price='low')(ford_2012, 10))
     input_arrays = {'foobarbaz': ford_2012['open']}
-    assert_np_arrays_equal(expected, abstract.SMA(input_arrays, 10, price='foobarbaz'))
+    assert_array_equal(expected, abstract.SMA(input_arrays, 10, price='foobarbaz'))
 
 
-def test_STOCH():
+def test_STOCH(ford_2012):
     # check defaults match
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
     got_k, got_d = abstract.Function('stoch', ford_2012).outputs
-    assert_np_arrays_equal(expected_k, got_k)
-    assert_np_arrays_equal(expected_d, got_d)
+    assert_array_equal(expected_k, got_k)
+    assert_array_equal(expected_d, got_d)
 
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'])
     got_k, got_d = abstract.Function('stoch', ford_2012)(5, 3, 0, 3, 0)
-    assert_np_arrays_equal(expected_k, got_k)
-    assert_np_arrays_equal(expected_d, got_d)
+    assert_array_equal(expected_k, got_k)
+    assert_array_equal(expected_d, got_d)
 
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'], 15)
     got_k, got_d = abstract.Function('stoch', ford_2012)(15, 5, 0, 5, 0)
-    assert_np_arrays_not_equal(expected_k, got_k)
-    assert_np_arrays_not_equal(expected_d, got_d)
+    assert_array_not_equal(expected_k, got_k)
+    assert_array_not_equal(expected_d, got_d)
 
     expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'], 15, 5, 1, 5, 1)
     got_k, got_d = abstract.Function('stoch', ford_2012)(15, 5, 1, 5, 1)
-    assert_np_arrays_equal(expected_k, got_k)
-    assert_np_arrays_equal(expected_d, got_d)
+    assert_array_equal(expected_k, got_k)
+    assert_array_equal(expected_d, got_d)
 
-def test_doji_candle():
+
+def test_doji_candle(ford_2012):
     expected = func.CDLDOJI(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
     got = abstract.Function('CDLDOJI').run(ford_2012)
-    assert_np_arrays_equal(got, expected)
+    assert_array_equal(got, expected)
 
-def test_MAVP():
+
+def test_MAVP(ford_2012):
     mavp = abstract.MAVP
     with pytest.raises(Exception):
         mavp.set_input_arrays(ford_2012)
@@ -112,6 +118,7 @@ def test_MAVP():
     input_d['periods'] = np.arange(30)
     assert mavp.set_input_arrays(input_d)
     assert mavp.input_arrays == input_d
+
 
 def test_info():
     stochrsi = abstract.Function('STOCHRSI')
@@ -158,6 +165,7 @@ def test_info():
         }
     assert expected == abstract.Function('BBANDS').info
 
+
 def test_input_names():
     expected = OrderedDict([('price', 'close')])
     assert expected == abstract.Function('MAMA').input_names
@@ -177,7 +185,8 @@ def test_input_names():
         }
     assert obv.input_names == expected
 
-def test_input_arrays():
+
+def test_input_arrays(ford_2012):
     mama = abstract.Function('MAMA')
 
     # test default setting
@@ -211,6 +220,7 @@ def test_input_arrays():
     willr.input_names = {'prices': ['high', 'low', 'open']}
     assert willr.set_input_arrays(input_d)
 
+
 def test_parameters():
     stoch = abstract.Function('STOCH')
     expected = OrderedDict([
@@ -243,18 +253,20 @@ def test_parameters():
     expected['slowd_matype'] = 1
     assert expected == stoch.parameters
 
+
 def test_lookback():
     assert abstract.Function('SMA', 10).lookback == 9
 
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
     assert stochrsi.lookback == 26
 
-def test_call_supports_same_signature_as_func_module():
+
+def test_call_supports_same_signature_as_func_module(ford_2012):
     adx = abstract.Function('ADX')
 
     expected = func.ADX(ford_2012['open'], ford_2012['high'], ford_2012['low'])
     output = adx(ford_2012['open'], ford_2012['high'], ford_2012['low'])
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
 
     expected_error = re.escape('Too many price arguments: expected 3 (high, low, close)')
 
@@ -266,7 +278,8 @@ def test_call_supports_same_signature_as_func_module():
     with pytest.raises(TypeError, match=expected_error):
         adx(ford_2012['open'], ford_2012['high'])
 
-def test_parameter_type_checking():
+
+def test_parameter_type_checking(ford_2012):
     sma = abstract.Function('SMA', timeperiod=10)
 
     expected_error = re.escape('Invalid parameter value for timeperiod (expected int, got float)')
@@ -283,28 +296,30 @@ def test_parameter_type_checking():
     with pytest.raises(TypeError, match=expected_error):
         sma.set_parameters(timeperiod=35.5)
 
-def test_call_doesnt_cache_parameters():
+
+def test_call_doesnt_cache_parameters(ford_2012):
     sma = abstract.Function('SMA', timeperiod=10)
 
     expected = func.SMA(ford_2012['open'], 20)
     output = sma(ford_2012, timeperiod=20, price='open')
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
 
     expected = func.SMA(ford_2012['close'], 20)
     output = sma(ford_2012, timeperiod=20)
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
 
     expected = func.SMA(ford_2012['close'], 10)
     output = sma(ford_2012)
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)
+
 
 def test_call_without_arguments():
-
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')()
 
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')(10)
+
 
 def test_call_first_exception():
     inputs = {'close': np.array([np.nan, np.nan, np.nan])}
@@ -316,4 +331,4 @@ def test_call_first_exception():
 
     output = abstract.SMA(inputs, timeperiod=2)
     expected = np.array([np.nan, 1.5, 2.5])
-    assert_np_arrays_equal(expected, output)
+    assert_array_equal(expected, output)

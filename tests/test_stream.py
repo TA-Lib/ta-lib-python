@@ -4,6 +4,7 @@ import pandas as pd
 import talib
 from talib import stream
 
+
 def test_streaming():
     a = np.array([1,1,2,3,5,8,13], dtype=float)
     r = stream.MOM(a, timeperiod=1)
@@ -20,6 +21,7 @@ def test_streaming():
     assert r == 12
     r = stream.MOM(a, timeperiod=7)
     assert np.isnan(r)
+
 
 def test_streaming_pandas():
     a = pd.Series([1,1,2,3,5,8,13])
@@ -38,6 +40,7 @@ def test_streaming_pandas():
     r = stream.MOM(a, timeperiod=7)
     assert np.isnan(r)
 
+
 def test_CDL3BLACKCROWS():
     o = np.array([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00])
     h = np.array([40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 41.69, 40.84, 38.12, 35.50])
@@ -47,6 +50,7 @@ def test_CDL3BLACKCROWS():
     r = stream.CDL3BLACKCROWS(o, h, l, c)
     assert r == -100
 
+
 def test_CDL3BLACKCROWS_pandas():
     o = pd.Series([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00])
     h = pd.Series([40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 41.69, 40.84, 38.12, 35.50])
@@ -55,6 +59,7 @@ def test_CDL3BLACKCROWS_pandas():
 
     r = stream.CDL3BLACKCROWS(o, h, l, c)
     assert r == -100
+
 
 def test_MAXINDEX():
     a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
