@@ -1,9 +1,13 @@
 import numpy as np
+import pytest
 from numpy.testing import assert_array_equal
-import polars as pl
 
 import talib
 from talib import abstract
+
+
+pl = pytest.importorskip('polars')
+
 
 def test_MOM():
     values = pl.Series([90.0,88.0,89.0])

@@ -1,20 +1,31 @@
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+  #   tags:
+  #     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 name: Creating release
 
 env:
-  CIBW_TEST_EXTRAS: test
+  CIBW_BEFORE_TEST: "pip install -r requirements_test.txt"
   CIBW_TEST_COMMAND: "pytest {project}/tests"
   CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
-  CIBW_ARCHS_MACOS: "x86_64 universal2"
-  CIBW_BEFORE_BUILD_LINUX: "yum install -y gcc && curl -sL http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar -zxvf ta-lib-0.4.0-src.tar.gz && rm ta-lib-0.4.0-src.tar.gz && cd ta-lib && ./configure && make && make install"
+  CIBW_ARCHS_MACOS: "x86_64 arm64"
+  CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
+  # Polars is needed for the test suite, and Polars currently is only building binary packages for py3.6.
+  # So, we have to install rust before every build.
+  CIBW_BEFORE_BUILD_LINUX: |
+    curl -L -s https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o ta.tar.gz && \
+    tar -zxvf ta.tar.gz && \
+    rm ta.tar.gz && \
+    cd ta-lib && \
+    ./configure && \
+    make && \
+    make install
   CIBW_BEFORE_BUILD_MACOS: "brew install ta-lib"
-  CIBW_BEFORE_BUILD_WINDOWS: "curl -sL http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip -o $HOME/ta-lib.zip --create-dirs && 7z x $HOME/ta-lib.zip -o/c/ta-lib && mv /c/ta-lib/ta-lib/* /c/ta-lib/ && rm -rf /c/ta-lib/ta-lib && cd /c/ta-lib/c/make/cdr/win32/msvc && nmake"
-
+  CIBW_BEFORE_BUILD_WINDOWS: |
+    curl -L -s https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip -o ta.zip && 7z x ta.zip -o/c/ta-lib && mv /c/ta-lib/ta-lib/* /c/ta-lib/ && rm -rf /c/ta-lib/ta-lib && cd /c/ta-lib/c/make/cdr/win32/msvc && nmake
 
 jobs:
   # Build & test simple source release before wasting hours building and
@@ -32,17 +43,14 @@ jobs:
 
       - name: Installing python build dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pip wheel
+          python -m pip install -r requirements.txt
+          python -m pip install -r requirements_test.txt
+          pip install flake8 pytest
 
       - name: Building source distribution
         run: |
-          pip install -e ".[release]"
           python setup.py sdist
-
-      - name: Ensuring documentation builds
-        run: |
-          cd docs && make clean && make html
 
       - uses: actions/upload-artifact@v2
         with:
@@ -53,12 +61,10 @@ jobs:
     name: "[${{ strategy.job-index }}/${{ strategy.job-total }}] py${{ matrix.py }} on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ubuntu-20.04, windows-2019, macos-10.15]
-        # cp - CPython
-        # pp - PyPy
-        py: [cp37", "cp38", "cp39", "cp310", "pp37"]
+        py: ["cp37", "cp38", "cp39", "cp310"]
 
     steps:
       - uses: actions/checkout@v2
