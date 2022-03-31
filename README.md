@@ -54,21 +54,29 @@ suggestions are included below for reference.
 
 ##### Mac OS X
 
+You can simply install using Homebrew:
+
 ```
 $ brew install ta-lib
 ```
 
-If you are using a M1 laptop and Homebrew, then you can set these before
-installing:
+If you are using Apple Silicon, such as the M1 processors, and building mixed
+architecture Homebrew projects, you might want to make sure it's being built
+for your architecture:
+
+```
+$ arch -arm64 brew install ta-lib
+```
+
+And perhaps you can set these before installing with ``pip``:
 
 ```
 $ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
 $ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
-$ arch -arm64 brew install ta-lib
 ```
 
-You might also find this helpful on M1, particularly if you have tried
-several different installations without success:
+You might also find this helpful, particularly if you have tried several
+different installations without success:
 
 ```
 $ your-arm64-python -m pip install --no-cache-dir ta-lib
