@@ -237,6 +237,9 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 >>> k, d = talib.STOCH(rsi, rsi, rsi)
 ```
 
+If the build appears to hang, you might be running on a VM with not enough
+memory -- try 1 GB or 2 GB.
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
