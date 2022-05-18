@@ -1,5 +1,9 @@
 import numpy as np
-from numpy.testing import assert_array_equal, assert_array_almost_equal
+from numpy.testing import (
+    assert_array_equal,
+    assert_array_almost_equal,
+    assert_allclose
+)
 import pytest
 
 import talib
@@ -60,10 +64,10 @@ def test_compatibility():
     a = np.arange(10, dtype=float)
     talib.set_compatibility(0)
     r = func.EMA(a, 3)
-    assert_array_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
+    assert_array_almost_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
     talib.set_compatibility(1)
     r = func.EMA(a, 3)
-    assert_array_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.001953125])
+    assert_array_almost_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.001953125])
     talib.set_compatibility(0)
 
 
@@ -112,22 +116,20 @@ def test_BBANDS(series):
     )
     i = np.where(~np.isnan(upper))[0][0]
     assert len(upper) == len(middle) == len(lower) == len(series)
-    # assert abs(upper[i + 0] - 98.0734) < 1e-3
-    assert abs(middle[i + 0] - 92.8910) < 1e-3
-    assert abs(lower[i + 0] - 87.7086) < 1e-3
-    # assert abs(upper[i + 13] - 93.674) < 1e-3
-    assert abs(middle[i + 13] - 87.679) < 1e-3
-    assert abs(lower[i + 13] - 81.685) < 1e-3
+    assert_allclose(middle[i + 0], 92.8910, atol=1e-3)
+    assert_allclose(lower[i + 0], 87.7086, atol=1e-3)
+    assert_allclose(middle[i + 13], 87.679, atol=1e-3)
+    assert_allclose(lower[i + 13], 81.685, atol=1e-3)
 
 
 def test_DEMA(series):
     result = func.DEMA(series)
     i = np.where(~np.isnan(result))[0][0]
     assert len(series) == len(result)
-    assert abs(result[i + 1] - 86.765) < 1e-3
-    assert abs(result[i + 2] - 86.942) < 1e-3
-    assert abs(result[i + 3] - 87.089) < 1e-3
-    assert abs(result[i + 4] - 87.656) < 1e-3
+    assert_allclose(result[i + 1], 86.765, atol=1e-3)
+    assert_allclose(result[i + 2], 86.942, atol=1e-3)
+    assert_allclose(result[i + 3], 87.089, atol=1e-3)
+    assert_allclose(result[i + 4], 87.656, atol=1e-3)
 
 
 def test_EMAEMA(series):
@@ -166,16 +168,16 @@ def test_MAVP():
     a = np.array([1,5,3,4,7,3,8,1,4,6], dtype=float)
     b = np.array([2,4,2,4,2,4,2,4,2,4], dtype=float)
     result = func.MAVP(a, b, minperiod=2, maxperiod=4)
-    assert_array_equal(result, [np.nan,np.nan,np.nan,3.25,5.5,4.25,5.5,4.75,2.5,4.75])
+    assert_array_almost_equal(result, [np.nan,np.nan,np.nan,3.25,5.5,4.25,5.5,4.75,2.5,4.75])
     sma2 = func.SMA(a, 2)
-    assert_array_equal(result[4::2], sma2[4::2])
+    assert_array_almost_equal(result[4::2], sma2[4::2])
     sma4 = func.SMA(a, 4)
-    assert_array_equal(result[3::2], sma4[3::2])
+    assert_array_almost_equal(result[3::2], sma4[3::2])
     result = func.MAVP(a, b, minperiod=2, maxperiod=3)
-    assert_array_equal(result, [np.nan,np.nan,4,4,5.5,4.666666666666667,5.5,4,2.5,3.6666666666666665])
+    assert_array_almost_equal(result, [np.nan,np.nan,4,4,5.5,4.666666666666667,5.5,4,2.5,3.6666666666666665])
     sma3 = func.SMA(a, 3)
-    assert_array_equal(result[2::2], sma2[2::2])
-    assert_array_equal(result[3::2], sma3[3::2])
+    assert_array_almost_equal(result[2::2], sma2[2::2])
+    assert_array_almost_equal(result[3::2], sma3[3::2])
 
 
 def test_MAXINDEX():
