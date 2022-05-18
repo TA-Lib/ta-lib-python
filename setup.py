@@ -1,80 +1,23 @@
 #!/usr/bin/env python
-
-import sys
-import os
-import os.path
-import warnings
+import glob
+from os import path
 
 try:
     from setuptools import setup, Extension
-    from setuptools.dist import Distribution
     requires = {
         "install_requires": ["numpy"],
         "setup_requires": ["numpy"]
     }
 except ImportError:
     from distutils.core import setup
-    from distutils.dist import Distribution
     from distutils.extension import Extension
     requires = {"requires": ["numpy"]}
-
-lib_talib_name = 'ta_lib'  # the underlying C library's name
-
-platform_supported = False
-
-if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
-    platform_supported = True
-    include_dirs = [
-        '/usr/include',
-        '/usr/local/include',
-        '/opt/include',
-        '/opt/local/include',
-        '/opt/homebrew/include',
-        '/opt/homebrew/opt/ta-lib/include',
-    ]
-    library_dirs = [
-        '/usr/lib',
-        '/usr/local/lib',
-        '/usr/lib64',
-        '/usr/local/lib64',
-        '/opt/lib',
-        '/opt/local/lib',
-        '/opt/homebrew/lib',
-        '/opt/homebrew/opt/ta-lib/lib',
-    ]
-
-elif sys.platform == "win32":
-    platform_supported = True
-    lib_talib_name = 'ta_libc_cdr'
-    include_dirs = [r"c:\ta-lib\c\include"]
-    library_dirs = [r"c:\ta-lib\c\lib"]
-
-if 'TA_INCLUDE_PATH' in os.environ:
-    paths = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
-    include_dirs.extend(path for path in paths if path)
-
-if 'TA_LIBRARY_PATH' in os.environ:
-    paths = os.environ['TA_LIBRARY_PATH'].split(os.pathsep)
-    library_dirs.extend(path for path in paths if path)
-
-if not platform_supported:
-    raise NotImplementedError(sys.platform)
 
 try:
     from Cython.Distutils import build_ext as cython_build_ext
     has_cython = True
 except ImportError:
     has_cython = False
-
-for path in library_dirs:
-    try:
-        files = os.listdir(path)
-        if any(lib_talib_name in f for f in files):
-            break
-    except OSError:
-        pass
-else:
-    warnings.warn('Cannot find ta-lib library, installation may fail.')
 
 
 class LazyBuildExtCommandClass(dict):
@@ -126,19 +69,34 @@ class LazyBuildExtCommandClass(dict):
         return build_ext
 
 
-cmdclass = LazyBuildExtCommandClass()
-
 ext_modules = [
     Extension(
         'talib._ta_lib',
-        ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
-        include_dirs=include_dirs,
-        library_dirs=library_dirs,
-        libraries=[lib_talib_name],
-        runtime_library_dirs=[] if sys.platform == 'win32' else library_dirs)
+        [
+            *glob.glob('talib/upstream/src/ta_common/*.c', recursive=True),
+            *glob.glob('talib/upstream/src/ta_func/*.c', recursive=True),
+            # We can't just glob ta_abstract, as ta_abstract includes things we
+            # don't want like the Excel integration.
+            'talib/upstream/src/ta_abstract/ta_group_idx.c',
+            'talib/upstream/src/ta_abstract/ta_def_ui.c',
+            'talib/upstream/src/ta_abstract/ta_abstract.c',
+            'talib/upstream/src/ta_abstract/ta_func_api.c',
+            'talib/upstream/src/ta_abstract/frames/ta_frame.c',
+            *glob.glob('talib/upstream/src/ta_abstract/tables/*.c'),
+            # This is our actual Python extension, everything else above is
+            # just the upstream ta-lib dependency.
+            'talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'
+        ],
+        include_dirs=[
+            'talib/upstream/include',
+            'talib/upstream/src/ta_abstract',
+            'talib/upstream/src/ta_abstract/frames',
+            'talib/upstream/src/ta_common',
+            'talib/upstream/src/ta_func'
+        ]
+    )
 ]
 
-from os import path
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
@@ -181,5 +139,6 @@ setup(
     ],
     packages=['talib'],
     ext_modules=ext_modules,
-    cmdclass=cmdclass,
-    **requires)
+    cmdclass=LazyBuildExtCommandClass(),
+    **requires
+)

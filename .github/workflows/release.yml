@@ -13,19 +13,8 @@ env:
   CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
   CIBW_ARCHS_MACOS: "x86_64 arm64"
   CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
-  # Polars is needed for the test suite, and Polars currently is only building binary packages for py3.6.
-  # So, we have to install rust before every build.
-  CIBW_BEFORE_BUILD_LINUX: |
-    curl -L -s https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o ta.tar.gz && \
-    tar -zxvf ta.tar.gz && \
-    rm ta.tar.gz && \
-    cd ta-lib && \
-    ./configure && \
-    make && \
-    make install
-  CIBW_BEFORE_BUILD_MACOS: "brew install ta-lib"
-  CIBW_BEFORE_BUILD_WINDOWS: |
-    curl -L -s https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip -o ta.zip && 7z x ta.zip -o/c/ta-lib && mv /c/ta-lib/ta-lib/* /c/ta-lib/ && rm -rf /c/ta-lib/ta-lib && cd /c/ta-lib/c/make/cdr/win32/msvc && nmake
+  # Polars is needed for the test suite, and Polars currently is only building
+  # binary packages for py3.6. So, we have to install rust before every build.
 
 jobs:
   # Build & test simple source release before wasting hours building and
