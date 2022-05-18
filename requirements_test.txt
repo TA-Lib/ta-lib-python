@@ -1,5 +1,4 @@
 -r requirements.txt
 pandas
 pytest
-polars
 flake8

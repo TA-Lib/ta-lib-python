@@ -31,9 +31,6 @@ jobs:
       - name: Installing python build dependencies
         run: |
           pip install --upgrade pip wheel
-          pip install -r requirements.txt
-          pip install -r requirements_test.txt
-          pip install flake8 pytest polars
 
       - name: Building source distribution
         run: |
