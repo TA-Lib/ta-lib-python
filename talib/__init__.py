@@ -90,7 +90,7 @@ else:
     _wrapper = lambda x: x
 
 
-from ._ta_lib import (
+from talib._ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
     _ta_set_unstable_period as set_unstable_period,
     _ta_get_unstable_period as get_unstable_period,
@@ -100,10 +100,15 @@ from ._ta_lib import (
 )
 
 # import all the func and stream functions
-from ._ta_lib import *
+from talib._ta_lib import *
 
 # wrap them for polars or pandas support
-func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
+func = __import__(
+    "talib._ta_lib",
+    globals(), locals(),
+    __TA_FUNCTION_NAMES__,
+    level=1
+)
 for func_name in __TA_FUNCTION_NAMES__:
     wrapped_func = _wrapper(getattr(func, func_name))
     setattr(func, func_name, wrapped_func)
