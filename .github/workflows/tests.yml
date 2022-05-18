@@ -23,8 +23,7 @@ jobs:
         python -m pip install --upgrade pip wheel
         python -m pip install -r requirements.txt
         python -m pip install -r requirements_test.txt
-        pip install flake8 pytest polars
-    - name: Build cython modules in-place
+    - name: Installing Python TA-Lib
       run: |
         python setup.py install
     - name: Lint with flake8
