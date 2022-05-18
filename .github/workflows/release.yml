@@ -13,8 +13,6 @@ env:
   CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
   CIBW_ARCHS_MACOS: "x86_64 arm64"
   CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
-  # Polars is needed for the test suite, and Polars currently is only building
-  # binary packages for py3.6. So, we have to install rust before every build.
 
 jobs:
   # Build & test simple source release before wasting hours building and
@@ -32,10 +30,10 @@ jobs:
 
       - name: Installing python build dependencies
         run: |
-          python -m pip install --upgrade pip wheel
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements_test.txt
-          pip install flake8 pytest
+          pip install --upgrade pip wheel
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+          pip install flake8 pytest polars
 
       - name: Building source distribution
         run: |
