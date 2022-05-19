@@ -7,13 +7,6 @@ on:
 
 name: Creating release
 
-env:
-  CIBW_BEFORE_TEST: "pip install -r requirements_test.txt"
-  CIBW_TEST_COMMAND: "pytest {project}/tests"
-  CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
-  CIBW_ARCHS_MACOS: "x86_64 arm64"
-  CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
-
 jobs:
   # Build & test simple source release before wasting hours building and
   # testing the binary build matrix.
@@ -40,8 +33,8 @@ jobs:
         with:
           path: dist/*.tar.gz
 
+  # Build the wheels which do not require host emulation.
   build_wheels:
-    needs: [sdist]
     name: "[${{ strategy.job-index }}/${{ strategy.job-total }}] py${{ matrix.py }} on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
@@ -51,23 +44,45 @@ jobs:
         py: ["cp37", "cp38", "cp39", "cp310"]
 
     steps:
+        - uses: actions/checkout@v2
+
+        - name: Building binary wheels
+          uses: pypa/cibuildwheel@v2.4.0
+          env:
+            CIBW_BUILD: "${{ matrix.py }}-*"
+            CIBW_ARCHS_LINUX: auto
+            CIBW_ARCHS_MACOS: auto universal2
+            CIBW_ARCHS_WINDOWS: auto
+            CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
+            CIBW_BEFORE_TEST: "pip install -r requirements_test.txt"
+            CIBW_TEST_COMMAND: "pytest"
+            # Can't test cross-compiled Mac OS builds.
+            CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
+
+        - uses: actions/upload-artifact@v2
+          with:
+            path: ./wheelhouse/*.whl
+
+  # Build the wheels which require host emulation.
+  build_emulated_wheels:
+    name: "[${{ strategy.job-index }}/${{ strategy.job-total }}] py${{ matrix.py }} (${{ matrix.arch }})"
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        py: ["cp37", "cp38", "cp39", "cp310"]
+        arch: [aarch64, ppc64le]
+
+    steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-python@v2
-        name: Setting up Python
-        with:
-          python-version: '3.8'
-
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
+      - name: Setting up Qemu for host emulation
         uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
 
-      - name: Build & test wheels
-        uses: pypa/cibuildwheel@v2.2.2
+      - name: Building binary wheels
+        uses: pypa/cibuildwheel@v2.4.0
         env:
-          CIBW_ARCHS_LINUX: auto aarch64 ppc64le
+          CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "${{ matrix.py }}-*"
 
       - uses: actions/upload-artifact@v2
