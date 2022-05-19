@@ -45,6 +45,25 @@ Unofficial packages are available on
 $ conda install -c conda-forge ta-lib
 ```
 
+Binary packages are provided for the following setups. Older version of Python
+and other architectures may be supported, but will require a C compiler when
+installing:
+
+|                     | Python 3.8 | Python 3.9 | Python 3.10 |
+|---------------------|------------|------------|-------------|
+| Linux (x86)         |      ✓     |      ✓     |      ✓      |
+| Linux (x86_64)      |      ✓     |      ✓     |      ✓      |
+| Linux (aarch64)     |      ✓     |      ✓     |      ✓      |
+| Linux (ppc64le)     |      ✓     |      ✓     |      ✓      |
+| Mac OS (x86_64)     |      ✓     |      ✓     |      ✓      |
+| Mac OS (M1/aarch64) |      ✓     |      ✓     |      ✓      |
+| Windows (x86)       |      ✓     |      ✓     |      ✓      |
+| Windows (x86_64)    |      ✓     |      ✓     |      ✓      |
+
+Support is primarily limited by what versions of Python are supported by recent
+versions of numpy. When building locally, make sure you're using a version of
+numpy that supports your Python version.
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the

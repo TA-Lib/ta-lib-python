@@ -37,27 +37,26 @@ jobs:
   build_wheels:
     name: "[${{ strategy.job-index }}/${{ strategy.job-total }}] py${{ matrix.py }} on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
+    env:
+      CIBW_BUILD: "${{ matrix.py }}-*"
+      CIBW_ARCHS_LINUX: auto
+      CIBW_ARCHS_MACOS: auto universal2
+      CIBW_ARCHS_WINDOWS: auto
+      CIBW_BEFORE_TEST: "pip install pytest flake8"
+      CIBW_TEST_COMMAND: "pytest {project}/tests"
+      # Can't test cross-compiled Mac OS builds.
+      CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-10.15]
-        py: ["cp37", "cp38", "cp39", "cp310"]
+        os: [ubuntu-20.04, windows-2019, macos-11]
+        py: ["cp38", "cp39", "cp310"]
 
     steps:
         - uses: actions/checkout@v2
 
         - name: Building binary wheels
           uses: pypa/cibuildwheel@v2.4.0
-          env:
-            CIBW_BUILD: "${{ matrix.py }}-*"
-            CIBW_ARCHS_LINUX: auto
-            CIBW_ARCHS_MACOS: auto universal2
-            CIBW_ARCHS_WINDOWS: auto
-            CIBW_BEFORE_BUILD: "pip install -r requirements_dev.txt"
-            CIBW_BEFORE_TEST: "pip install -r requirements_test.txt"
-            CIBW_TEST_COMMAND: "pytest"
-            # Can't test cross-compiled Mac OS builds.
-            CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
 
         - uses: actions/upload-artifact@v2
           with:
@@ -70,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py: ["cp37", "cp38", "cp39", "cp310"]
+        py: ["cp38", "cp39", "cp310"]
         arch: [aarch64, ppc64le]
 
     steps:
