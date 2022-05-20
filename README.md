@@ -54,7 +54,6 @@ installing:
 | Linux (x86)         |      ✓     |      ✓     |      ✓      |
 | Linux (x86_64)      |      ✓     |      ✓     |      ✓      |
 | Linux (aarch64)     |      ✓     |      ✓     |      ✓      |
-| Linux (ppc64le)     |      ✓     |      ✓     |      ✓      |
 | Mac OS (x86_64)     |      ✓     |      ✓     |      ✓      |
 | Mac OS (M1/aarch64) |      ✓     |      ✓     |      ✓      |
 | Windows (x86)       |      ✓     |      ✓     |      ✓      |
