@@ -11,7 +11,7 @@ jobs:
   # Build & test simple source release before wasting hours building and
   # testing the binary build matrix.
   sdist:
-    name: Creating source release
+    name: "🏗 Creating source release"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -42,6 +42,8 @@ jobs:
       CIBW_ARCHS_LINUX: auto
       CIBW_ARCHS_MACOS: auto universal2
       CIBW_ARCHS_WINDOWS: auto
+      # musllinux builds, but is unstable, see https://github.com/numpy/numpy/pull/21200
+      CIBW_SKIP: "*-musllinux_*"
       # Ensure numpy is installed first to get around a bug with setuptools
       # which causes conflicts when installing eggs.
       CIBW_BEFORE_BUILD: "pip install numpy"
@@ -66,30 +68,29 @@ jobs:
             path: ./wheelhouse/*.whl
 
   # Build the wheels which require host emulation.
-  build_emulated_wheels:
-    name: "🏗 py${{ matrix.py }} (${{ matrix.arch }})"
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        py: ["cp38", "cp39", "cp310"]
-        arch: [aarch64]
-        # ppc64le compilation works, but is unbelievably slow.
-        # We're talking half a day. Ice this until it can be improved.
-        # arch: [aarch64, ppc64le]
+  # ppc64le compilation works, but is unbelievably slow.
+  # We're talking half a day. Ice this until it can be improved.
+  # build_emulated_wheels:
+  #   name: "🏗 py${{ matrix.py }} (${{ matrix.arch }})"
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       py: ["cp38", "cp39", "cp310"]
+  #       arch: [aarch64, ppc64le]
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Setting up Qemu for host emulation
-        uses: docker/setup-qemu-action@v1
+  #     - name: Setting up Qemu for host emulation
+  #       uses: docker/setup-qemu-action@v1
 
-      - name: Building binary wheels
-        uses: pypa/cibuildwheel@v2.4.0
-        env:
-          CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BUILD: "${{ matrix.py }}-*"
+  #     - name: Building binary wheels
+  #       uses: pypa/cibuildwheel@v2.4.0
+  #       env:
+  #         CIBW_ARCHS: "${{ matrix.arch }}"
+  #         CIBW_BUILD: "${{ matrix.py }}-*"
 
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ./wheelhouse/*.whl
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         path: ./wheelhouse/*.whl
