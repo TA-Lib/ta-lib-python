@@ -29973,7 +29973,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_300STOCHRSI(CYTHON_UNUSED PyObject *__
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_303SUB(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_302SUB[] = " SUB(real0, real1)\n\n    Vector Arithmetic Substraction (Math Operators)\n\n    Inputs:\n        real0: (any ndarray)\n        real1: (any ndarray)\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_302SUB[] = " SUB(real0, real1)\n\n    Vector Arithmetic Subtraction (Math Operators)\n\n    Inputs:\n        real0: (any ndarray)\n        real1: (any ndarray)\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_303SUB = {"SUB", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_303SUB, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_302SUB};
 static PyObject *__pyx_pw_5talib_7_ta_lib_303SUB(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real0 = 0;
@@ -63008,7 +63008,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_640stream_STOCHRSI(CYTHON_UNUSED PyObj
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_643stream_SUB(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_642stream_SUB[] = " SUB(real0, real1)\n\n    Vector Arithmetic Substraction (Math Operators)\n\n    Inputs:\n        real0: (any ndarray)\n        real1: (any ndarray)\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_642stream_SUB[] = " SUB(real0, real1)\n\n    Vector Arithmetic Subtraction (Math Operators)\n\n    Inputs:\n        real0: (any ndarray)\n        real1: (any ndarray)\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_643stream_SUB = {"stream_SUB", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_643stream_SUB, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_642stream_SUB};
 static PyObject *__pyx_pw_5talib_7_ta_lib_643stream_SUB(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real0 = 0;
