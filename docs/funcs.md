@@ -215,7 +215,7 @@ MININDEX             Index of lowest value over a specified period
 MINMAX               Lowest and highest values over a specified period
 MINMAXINDEX          Indexes of lowest and highest values over a specified period
 MULT                 Vector Arithmetic Mult
-SUB                  Vector Arithmetic Substraction
+SUB                  Vector Arithmetic Subtraction
 SUM                  Summation
 ```
 
