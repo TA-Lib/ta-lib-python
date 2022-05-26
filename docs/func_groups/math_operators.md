@@ -44,7 +44,7 @@ minidx, maxidx = MINMAXINDEX(close, timeperiod=30)
 real = MULT(high, low)
 ```
 
-### SUB - Vector Arithmetic Substraction
+### SUB - Vector Arithmetic Subtraction
 ```python
 real = SUB(high, low)
 ```

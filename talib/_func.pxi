@@ -4724,7 +4724,7 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
 def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     """ SUB(real0, real1)
 
-    Vector Arithmetic Substraction (Math Operators)
+    Vector Arithmetic Subtraction (Math Operators)
 
     Inputs:
         real0: (any ndarray)

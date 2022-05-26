@@ -4761,7 +4761,7 @@ def stream_STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fast
 def stream_SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     """ SUB(real0, real1)
 
-    Vector Arithmetic Substraction (Math Operators)
+    Vector Arithmetic Subtraction (Math Operators)
 
     Inputs:
         real0: (any ndarray)
