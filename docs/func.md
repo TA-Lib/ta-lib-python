@@ -28,7 +28,7 @@ Calculating bollinger bands, with triple exponential moving average:
 ```python
 from talib import MA_Type
 
-upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
+lower, middle, upper = talib.BBANDS(close, matype=MA_Type.T3)
 ```
 
 Calculating momentum of the close prices, with a time period of 5:
