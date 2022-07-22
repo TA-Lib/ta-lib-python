@@ -771,7 +771,7 @@ cdef int __ta_setOptInputParamInteger(lib.TA_ParamHolder *holder, int idx, int v
     retCode = lib.TA_SetOptInputParamInteger(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamInteger', retCode)
 
-cdef int __ta_setOptInputParamReal(lib.TA_ParamHolder *holder, int idx, int value):
+cdef int __ta_setOptInputParamReal(lib.TA_ParamHolder *holder, int idx, double value):
     retCode = lib.TA_SetOptInputParamReal(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamReal', retCode)
 
