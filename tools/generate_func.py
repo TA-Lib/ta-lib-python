@@ -26,6 +26,8 @@ if not header_found:
 with open(ta_func_header) as f:
     tmp = []
     for line in f:
+        if line.startswith('TA_LIB_API'):
+            line = line[10:]
         line = line.strip()
         if tmp or \
             line.startswith('TA_RetCode TA_') or \
