@@ -103,12 +103,16 @@ class Function(object):
         self.__namestr = self.__name
         self.__name = str2bytes(self.__name)
 
+        # thread-local storage
+        self.__localdata = threading.local()
+
         # finish initializing: query the TALIB abstract interface and set arguments
         self.set_function_args(*args, **kwargs)
         self.func_object = func_object
 
     @property
-    def __local(self, local=threading.local()):
+    def __local(self):
+        local = self.__localdata
         if not hasattr(local, 'info'):
             local.info = None
             local.input_arrays = {}
@@ -285,7 +289,7 @@ class Function(object):
         update_info = False
 
         for key in kwargs:
-            if key in self.__opt_inputs:
+            if key in local.opt_inputs:
                 value = kwargs[key]
                 if self.__check_opt_input_value(key, value):
                     local.opt_inputs[key]['value'] = kwargs[key]
@@ -321,7 +325,7 @@ class Function(object):
         local = self.__local
         cdef lib.TA_ParamHolder *holder
         holder = __ta_paramHolderAlloc(self.__name)
-        for i, opt_input in enumerate(self.__opt_inputs):
+        for i, opt_input in enumerate(local.opt_inputs):
             value = self.__get_opt_input_value(opt_input)
             type_ = local.opt_inputs[opt_input]['type']
             if type_ == lib.TA_OptInput_RealRange or type_ == lib.TA_OptInput_RealList:
