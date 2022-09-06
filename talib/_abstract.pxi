@@ -2,6 +2,7 @@
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
 import math
+import threading
 try:
     from collections import OrderedDict
 except ImportError: # handle python 2.6 and earlier
@@ -101,88 +102,93 @@ class Function(object):
         self.__name = function_name.upper()
         self.__namestr = self.__name
         self.__name = str2bytes(self.__name)
-        self.__info = None
-        self.__input_arrays = {}
-
-        # dictionaries of function args. keys are input/opt_input/output parameter names
-        self.__input_names = OrderedDict()
-        self.__opt_inputs = OrderedDict()
-        self.__outputs = OrderedDict()
-        self.__outputs_valid = False
 
         # finish initializing: query the TALIB abstract interface and set arguments
-        self.__initialize_function_info()
         self.set_function_args(*args, **kwargs)
         self.func_object = func_object
 
-    def __initialize_function_info(self):
-        # function info
-        self.__info = _ta_getFuncInfo(self.__name)
+    @property
+    def __local(self, local=threading.local()):
+        if not hasattr(local, 'info'):
+            local.info = None
+            local.input_arrays = {}
 
-        # inputs (price series names)
-        for i in xrange(self.__info.pop('num_inputs')):
-            info = _ta_getInputParameterInfo(self.__name, i)
-            input_name = info['name']
-            if info['price_series'] is None:
-                info['price_series'] = __INPUT_PRICE_SERIES_DEFAULTS[input_name]
-            self.__input_names[input_name] = info
-        self.__info['input_names'] = self.input_names
+            # dictionaries of function args. keys are input/opt_input/output parameter names
+            local.input_names = OrderedDict()
+            local.opt_inputs = OrderedDict()
+            local.outputs = OrderedDict()
+            local.outputs_valid = False
 
-        # optional inputs (function parameters)
-        for i in xrange(self.__info.pop('num_opt_inputs')):
-            info = _ta_getOptInputParameterInfo(self.__name, i)
-            param_name = info['name']
-            self.__opt_inputs[param_name] = info
-        self.__info['parameters'] = self.parameters
+            # function info
+            local.info = _ta_getFuncInfo(self.__name)
 
-        # outputs
-        self.__info['output_flags'] = OrderedDict()
-        for i in xrange(self.__info.pop('num_outputs')):
-            info = _ta_getOutputParameterInfo(self.__name, i)
-            output_name = info['name']
-            self.__info['output_flags'][output_name] = info['flags']
-            self.__outputs[output_name] = None
-        self.__info['output_names'] = self.output_names
+            # inputs (price series names)
+            for i in xrange(local.info.pop('num_inputs')):
+                info = _ta_getInputParameterInfo(self.__name, i)
+                input_name = info['name']
+                if info['price_series'] is None:
+                    info['price_series'] = __INPUT_PRICE_SERIES_DEFAULTS[input_name]
+                local.input_names[input_name] = info
+            local.info['input_names'] = self.input_names
+
+            # optional inputs (function parameters)
+            for i in xrange(local.info.pop('num_opt_inputs')):
+                info = _ta_getOptInputParameterInfo(self.__name, i)
+                param_name = info['name']
+                local.opt_inputs[param_name] = info
+            local.info['parameters'] = self.parameters
+
+            # outputs
+            local.info['output_flags'] = OrderedDict()
+            for i in xrange(local.info.pop('num_outputs')):
+                info = _ta_getOutputParameterInfo(self.__name, i)
+                output_name = info['name']
+                local.info['output_flags'][output_name] = info['flags']
+                local.outputs[output_name] = None
+            local.info['output_names'] = self.output_names
+        return local
 
     @property
     def info(self):
         """
         Returns a copy of the function's info dict.
         """
-        return self.__info.copy()
+        return self.__local.info.copy()
 
     @property
     def function_flags(self):
         """
         Returns any function flags defined for this indicator function.
         """
-        return self.__info['function_flags']
+        return self.__local.info['function_flags']
 
     @property
     def output_flags(self):
         """
         Returns the flags for each output for this indicator function.
         """
-        return self.__info['output_flags'].copy()
+        return self.__local.info['output_flags'].copy()
 
     def get_input_names(self):
         """
         Returns the dict of input price series names that specifies which
         of the ndarrays in input_arrays will be used to calculate the function.
         """
+        local = self.__local
         ret = OrderedDict()
-        for input_name in self.__input_names:
-            ret[input_name] = self.__input_names[input_name]['price_series']
+        for input_name in local.input_names:
+            ret[input_name] = local.input_names[input_name]['price_series']
         return ret
 
     def set_input_names(self, input_names):
         """
         Sets the input price series names to use.
         """
+        local = self.__local
         for input_name, price_series in input_names.items():
-            self.__input_names[input_name]['price_series'] = price_series
-            self.__info['input_names'][input_name] = price_series
-        self.__outputs_valid = False
+            local.input_names[input_name]['price_series'] = price_series
+            local.info['input_names'][input_name] = price_series
+        local.outputs_valid = False
 
     input_names = property(get_input_names, set_input_names)
 
@@ -190,11 +196,12 @@ class Function(object):
         """
         Returns a copy of the dict of input arrays in use.
         """
+        local = self.__local
         if __POLARS_DATAFRAME is not None \
-            and isinstance(self.__input_arrays, __POLARS_DATAFRAME):
-            return self.__input_arrays.clone()
+            and isinstance(local.input_arrays, __POLARS_DATAFRAME):
+            return local.input_arrays.clone()
         else:
-            return self.__input_arrays.copy()
+            return local.input_arrays.copy()
 
     def set_input_arrays(self, input_arrays):
         """
@@ -221,6 +228,7 @@ class Function(object):
                     return True
                 return False
         """
+        local = self.__local
         if isinstance(input_arrays, __INPUT_ARRAYS_TYPES):
             missing_keys = []
             for key in self.__input_price_series_names():
@@ -232,8 +240,8 @@ class Function(object):
                 if missing:
                     missing_keys.append(key)
             if len(missing_keys) == 0:
-                self.__input_arrays = input_arrays
-                self.__outputs_valid = False
+                local.input_arrays = input_arrays
+                local.outputs_valid = False
                 return True
             else:
                 raise Exception('input_arrays parameter missing required data '\
@@ -248,8 +256,9 @@ class Function(object):
         """
         Returns the function's optional parameters and their default values.
         """
+        local = self.__local
         ret = OrderedDict()
-        for opt_input in self.__opt_inputs:
+        for opt_input in local.opt_inputs:
             ret[opt_input] = self.__get_opt_input_value(opt_input)
         return ret
 
@@ -257,13 +266,14 @@ class Function(object):
         """
         Sets the function parameter values.
         """
+        local = self.__local
         parameters = parameters or {}
         parameters.update(kwargs)
         for param, value in parameters.items():
             if self.__check_opt_input_value(param, value):
-                self.__opt_inputs[param]['value'] = value
-        self.__outputs_valid = False
-        self.__info['parameters'] = self.parameters
+                local.opt_inputs[param]['value'] = value
+        local.outputs_valid = False
+        local.info['parameters'] = self.parameters
 
     parameters = property(get_parameters, set_parameters)
 
@@ -271,35 +281,36 @@ class Function(object):
         """
         optional args:[input_arrays,] [parameter_args,] [input_price_series_kwargs,] [parameter_kwargs]
         """
+        local = self.__local
         update_info = False
 
         for key in kwargs:
             if key in self.__opt_inputs:
                 value = kwargs[key]
                 if self.__check_opt_input_value(key, value):
-                    self.__opt_inputs[key]['value'] = kwargs[key]
+                    local.opt_inputs[key]['value'] = kwargs[key]
                     update_info = True
-            elif key in self.__input_names:
-                self.__input_names[key]['price_series'] = kwargs[key]
-                self.__info['input_names'][key] = kwargs[key]
+            elif key in local.input_names:
+                local.input_names[key]['price_series'] = kwargs[key]
+                local.info['input_names'][key] = kwargs[key]
 
         if args:
             skip_first = 0
             if self.set_input_arrays(args[0]):
                 skip_first = 1
             if len(args) > skip_first:
-                for i, param_name in enumerate(self.__opt_inputs):
+                for i, param_name in enumerate(local.opt_inputs):
                     i += skip_first
                     if i < len(args):
                         value = args[i]
                         if self.__check_opt_input_value(param_name, value):
-                            self.__opt_inputs[param_name]['value'] = value
+                            local.opt_inputs[param_name]['value'] = value
                             update_info = True
 
         if args or kwargs:
             if update_info:
-                self.__info['parameters'] = self.parameters
-            self.__outputs_valid = False
+                local.info['parameters'] = self.parameters
+            local.outputs_valid = False
 
     @property
     def lookback(self):
@@ -307,11 +318,12 @@ class Function(object):
         Returns the lookback window size for the function with the parameter
         values that are currently set.
         """
+        local = self.__local
         cdef lib.TA_ParamHolder *holder
         holder = __ta_paramHolderAlloc(self.__name)
         for i, opt_input in enumerate(self.__opt_inputs):
             value = self.__get_opt_input_value(opt_input)
-            type_ = self.__opt_inputs[opt_input]['type']
+            type_ = local.opt_inputs[opt_input]['type']
             if type_ == lib.TA_OptInput_RealRange or type_ == lib.TA_OptInput_RealList:
                 __ta_setOptInputParamReal(holder, i, value)
             elif type_ == lib.TA_OptInput_IntegerRange or type_ == lib.TA_OptInput_IntegerList:
@@ -326,7 +338,7 @@ class Function(object):
         """
         Returns a list of the output names returned by this function.
         """
-        ret = self.__outputs.keys()
+        ret = self.__local.outputs.keys()
         if not isinstance(ret, list):
             ret = list(ret)
         return ret
@@ -338,14 +350,15 @@ class Function(object):
         parameters. Returned values are a ndarray if there is only one output
         or a list of ndarrays for more than one output.
         """
-        if not self.__outputs_valid:
+        local = self.__local
+        if not local.outputs_valid:
             self.__call_function()
-        ret = self.__outputs.values()
+        ret = local.outputs.values()
         if not isinstance(ret, list):
             ret = list(ret)
         if __PANDAS_DATAFRAME is not None and \
-                isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
-            index = self.__input_arrays.index
+                isinstance(local.input_arrays, __PANDAS_DATAFRAME):
+            index = local.input_arrays.index
             if len(ret) == 1:
                 return __PANDAS_SERIES(ret[0], index=index)
             else:
@@ -353,7 +366,7 @@ class Function(object):
                                           index=index,
                                           columns=self.output_names)
         elif __POLARS_DATAFRAME is not None and \
-                isinstance(self.__input_arrays, __POLARS_DATAFRAME):
+                isinstance(local.input_arrays, __POLARS_DATAFRAME):
             if len(ret) == 1:
                 return __POLARS_SERIES(ret[0])
             else:
@@ -381,11 +394,12 @@ class Function(object):
         This is a shortcut to the outputs property that also allows setting
         the input_arrays dict and function parameters.
         """
+        local = self.__local
         # do not cache ta-func parameters passed to __call__
-        opt_input_values = [(param_name, self.__opt_inputs[param_name]['value'])
-                            for param_name in self.__opt_inputs.keys()]
-        price_series_name_values = [(n, self.__input_names[n]['price_series'])
-                                    for n in self.__input_names]
+        opt_input_values = [(param_name, local.opt_inputs[param_name]['value'])
+                            for param_name in local.opt_inputs.keys()]
+        price_series_name_values = [(n, local.input_names[n]['price_series'])
+                                    for n in local.input_names]
 
         # allow calling with same signature as talib.func module functions
         args = list(args)
@@ -405,13 +419,13 @@ class Function(object):
                     raise TypeError(msg)
 
         if __PANDAS_DATAFRAME is not None \
-                and isinstance(self.__input_arrays, __PANDAS_DATAFRAME):
-            no_existing_input_arrays = self.__input_arrays.empty
+                and isinstance(local.input_arrays, __PANDAS_DATAFRAME):
+            no_existing_input_arrays = local.input_arrays.empty
         elif __POLARS_DATAFRAME is not None \
-                and isinstance(self.__input_arrays, __POLARS_DATAFRAME):
-            no_existing_input_arrays = self.__input_arrays.is_empty()
+                and isinstance(local.input_arrays, __POLARS_DATAFRAME):
+            no_existing_input_arrays = local.input_arrays.is_empty()
         else:
-            no_existing_input_arrays = not bool(self.__input_arrays)
+            no_existing_input_arrays = not bool(local.input_arrays)
 
         if len(input_arrays) == len(input_price_series_names):
             self.set_input_arrays(input_arrays)
@@ -428,21 +442,22 @@ class Function(object):
 
         # restore opt_input values to as they were before this call
         for param_name, value in opt_input_values:
-            self.__opt_inputs[param_name]['value'] = value
-        self.__info['parameters'] = self.parameters
+            local.opt_inputs[param_name]['value'] = value
+        local.info['parameters'] = self.parameters
 
         # restore input names values to as they were before this call
         for input_name, value in price_series_name_values:
-            self.__input_names[input_name]['price_series'] = value
-            self.__info['input_names'][input_name] = value
+            local.input_names[input_name]['price_series'] = value
+            local.info['input_names'][input_name] = value
 
         return self.outputs
 
     # figure out which price series names we're using for inputs
     def __input_price_series_names(self):
+        local = self.__local
         input_price_series_names = []
-        for input_name in self.__input_names:
-            price_series = self.__input_names[input_name]['price_series']
+        for input_name in local.input_names:
+            price_series = local.input_names[input_name]['price_series']
             if isinstance(price_series, list): # TALIB-supplied input names
                 for name in price_series:
                     input_price_series_names.append(name)
@@ -451,12 +466,13 @@ class Function(object):
         return input_price_series_names
 
     def __call_function(self):
+        local = self.__local
         input_price_series_names = self.__input_price_series_names()
 
         # populate the ordered args we'll call the function with
         args = []
         for price_series in input_price_series_names:
-            series = self.__input_arrays[price_series]
+            series = local.input_arrays[price_series]
             if __PANDAS_SERIES is not None and \
                     isinstance(series, __PANDAS_SERIES):
                 series = series.values.astype(float)
@@ -464,24 +480,24 @@ class Function(object):
                     isinstance(series, __POLARS_SERIES):
                 series = series.to_numpy().astype(float)
             args.append(series)
-        for opt_input in self.__opt_inputs:
+        for opt_input in local.opt_inputs:
             value = self.__get_opt_input_value(opt_input)
             args.append(value)
 
         # Use the func module to actually call the function.
         results = self.func_object(*args)
         if isinstance(results, np.ndarray):
-            keys = self.__outputs.keys()
+            keys = local.outputs.keys()
             if not isinstance(keys, list):
                 keys = list(keys)
-            self.__outputs[keys[0]] = results
+            local.outputs[keys[0]] = results
         else:
-            for i, output in enumerate(self.__outputs):
-                self.__outputs[output] = results[i]
-        self.__outputs_valid = True
+            for i, output in enumerate(local.outputs):
+                local.outputs[output] = results[i]
+        local.outputs_valid = True
 
     def __check_opt_input_value(self, input_name, value):
-        type_ = self.__opt_inputs[input_name]['type']
+        type_ = self.__local.opt_inputs[input_name]['type']
         if type_ in {lib.TA_OptInput_IntegerList, lib.TA_OptInput_IntegerRange}:
             type_ = int
         elif type_ in {lib.TA_OptInput_RealList, lib.TA_OptInput_RealRange}:
@@ -499,9 +515,10 @@ class Function(object):
         """
         Returns the user-set value if there is one, otherwise the default.
         """
-        value = self.__opt_inputs[input_name]['value']
+        local = self.__local
+        value = local.opt_inputs[input_name]['value']
         if value is None:
-            value = self.__opt_inputs[input_name]['default_value']
+            value = local.opt_inputs[input_name]['default_value']
         return value
 
     def __repr__(self):
