@@ -25,7 +25,7 @@ total = 0
 
 def loop():
     global total
-    if total % 2 == 0:
+    if threading.get_native_id() % 2 == 0:
         df = copy.deepcopy(df_short)
     else:
         df = copy.deepcopy(df_long)
