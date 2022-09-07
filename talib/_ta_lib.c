@@ -741,10 +741,14 @@ static CYTHON_INLINE float __PYX_NAN() {
 #define __PYX_HAVE__talib___ta_lib
 #define __PYX_HAVE_API__talib___ta_lib
 /* Early includes */
+#if defined(WIN32) || defined(MS_WINDOWS)
+#include "ta_libc.h"
+#else
 #include "ta-lib/ta_defs.h"
 #include "ta-lib/ta_common.h"
 #include "ta-lib/ta_abstract.h"
 #include "ta-lib/ta_func.h"
+#endif
 #include <string.h>
 #include <stdio.h>
 #include "numpy/arrayobject.h"
