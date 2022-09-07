@@ -282,6 +282,35 @@ Calculating momentum of the close prices, with a time period of 5:
 output = talib.MOM(close, timeperiod=5)
 ```
 
+##### NaN's
+
+The underlying TA-Lib C library handles NaN's in a sometimes surprising manner
+by typically propagating NaN's to the end of the output, for example:
+
+```python
+>>> c = numpy.array([1.0, 2.0, 3.0, np.nan, 4.0, 5.0, 6.0])
+
+>>> talib.SMA(c, 3)
+array([nan, nan,  2., nan, nan, nan, nan])
+```
+
+You can compare that to a Pandas rolling mean, where their approach is to
+output NaN until enough "lookback" values are observed to generate new outputs:
+
+```python
+>>> c = pandas.Series([1.0, 2.0, 3.0, np.nan, 4.0, 5.0, 6.0])
+
+>>> c.rolling(3).mean()
+0    NaN
+1    NaN
+2    2.0
+3    NaN
+4    NaN
+5    NaN
+6    5.0
+dtype: float64
+```
+
 ## Abstract API
 
 If you're already familiar with using the function API, you should feel right
