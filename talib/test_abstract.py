@@ -338,9 +338,9 @@ def test_threading():
 
     total = 0
 
-    def loop():
+    def loop(i):
         nonlocal total
-        if threading.get_native_id() % 2 == 0:
+        if i % 2 == 0:
             df = copy.deepcopy(df_short)
         else:
             df = copy.deepcopy(df_long)
@@ -353,7 +353,7 @@ def test_threading():
 
     threads = []
     for i in range(THREADS):
-        t = threading.Thread(target=loop)
+        t = threading.Thread(target=lambda: loop(i))
         threads.append(t)
         t.start()
 
