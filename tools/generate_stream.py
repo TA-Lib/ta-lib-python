@@ -124,7 +124,7 @@ for f in functions:
                 else:
                     print('int %s=-2**31' % var, end=' ')   # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
-                print('int %s=0' % var, end=' ')            # TA_MAType_SMA
+                print('int %s=%s' % (var, defaults.get('matype', 0)), end=' ') # TA_MAType_SMA
             else:
                 assert False, arg
             if '[, ' not in docs:
