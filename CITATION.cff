@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: ta-lib-python
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: John
+    family-names: Benediktsson
+    email: mrjbq7@gmail.com
