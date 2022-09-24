@@ -331,10 +331,8 @@ def test_threading():
     data_short = np.random.rand(TEST_LEN_SHORT, 5)
     data_long = np.random.rand(TEST_LEN_LONG, 5)
 
-    df_short = pd.DataFrame(data_short, columns={
-                            'open', 'high', 'low', 'close', 'volume'})
-    df_long = pd.DataFrame(data_long, columns={
-                           'open', 'high', 'low', 'close', 'volume'})
+    df_short = pd.DataFrame(data_short, columns=['open', 'high', 'low', 'close', 'volume'])
+    df_long = pd.DataFrame(data_long, columns=['open', 'high', 'low', 'close', 'volume'])
 
     total = 0
 
