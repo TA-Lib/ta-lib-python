@@ -220,6 +220,17 @@ If you wonder why ``STOCHRSI`` gives you different results than you expect,
 probably you want ``STOCH`` applied to ``RSI``, which is a little different
 than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 
+If you get an error on macOS like this:
+
+```
+code signature in <141BC883-189B-322C-AE90-CBF6B5206F67>
+'python3.9/site-packages/talib/_ta_lib.cpython-39-darwin.so' not valid for
+use in process: Trying to load an unsigned library)
+```
+
+You might look at [this question](https://stackoverflow.com/questions/69610572/how-can-i-solve-the-below-error-while-importing-nltk-package)
+and use ``xcrun codesign`` to fix it.
+
 ```python
 >>> import talib
 >>> import numpy
