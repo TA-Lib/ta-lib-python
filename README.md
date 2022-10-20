@@ -216,10 +216,6 @@ This is likely an issue with trying to compile for 32-bit platform but
 without the appropriate headers.  You might find some success looking at the
 first answer to [this question](https://stackoverflow.com/questions/54082459/fatal-error-bits-libc-header-start-h-no-such-file-or-directory-while-compili).
 
-If you wonder why ``STOCHRSI`` gives you different results than you expect,
-probably you want ``STOCH`` applied to ``RSI``, which is a little different
-than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
-
 If you get an error on macOS like this:
 
 ```
@@ -230,6 +226,10 @@ use in process: Trying to load an unsigned library)
 
 You might look at [this question](https://stackoverflow.com/questions/69610572/how-can-i-solve-the-below-error-while-importing-nltk-package)
 and use ``xcrun codesign`` to fix it.
+
+If you wonder why ``STOCHRSI`` gives you different results than you expect,
+probably you want ``STOCH`` applied to ``RSI``, which is a little different
+than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 
 ```python
 >>> import talib
