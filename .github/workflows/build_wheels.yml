@@ -1,6 +1,9 @@
 name: PyPI
 
 on:
+  push:
+    branches:
+      - 'wheels'
   workflow_dispatch:
     inputs:
       target:
