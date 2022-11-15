@@ -71,6 +71,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
       - name: Upload wheels
@@ -120,6 +121,11 @@ jobs:
           popd
           popd
           del ta-lib-0.4.0-msvc.zip
+
+      - name: Check install
+        run: |
+          ls "C:\ta-lib\c\include"
+          ls "C:\ta-lib\c\lib"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
