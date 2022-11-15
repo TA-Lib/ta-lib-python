@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        python: [ 37, 38, 39, '310']
+        python: [ 37, 38, 39, '310' ]
         manylinux_image: [ manylinux2010, manylinux2014 ]
 
     steps:
@@ -46,8 +46,9 @@ jobs:
             yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
                                freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
                                harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
 
-      - name: Store artifacts
+      - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
@@ -59,7 +60,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ macos-latest ]
-        python: [ 37, 38, 39, '310']
+        python: [ 37, 38, 39, '310' ]
 
     steps:
       - name: Checkout zipline
@@ -74,10 +75,11 @@ jobs:
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/*.whl
+          path: wheelhouse/*.whl
 
   build_windows:
     name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
@@ -86,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ windows-latest ]
-        python: [ 37, 38, 39, '310']
+        python: [ 37, 38, 39, '310' ]
 
     steps:
       - name: Checkout zipline
@@ -129,13 +131,18 @@ jobs:
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
+
         env:
+          CIBW_ENVIRONMENT_WINDOWS: >
+            TA_INCLUDE_PATH="C:\ta-lib\c\include"
+            TA_LIBRARY_PATH="C:\ta-lib\c\lib"
           CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/*.whl
+          path: wheelhouse/*.whl
 
   build_sdist:
     name: Build source distribution
