@@ -1,7 +1,6 @@
-
 import atexit
-from itertools import chain
 from functools import wraps
+from itertools import chain
 
 # If polars is available, wrap talib functions so that they support
 # polars.Series input
@@ -26,14 +25,14 @@ if _pl_Series is not None or _pd_Series is not None:
         def wrapper(*args, **kwds):
 
             if _pl_Series is not None:
-                use_pl = any(isinstance(arg, _pl_Series) for arg in args) or \
-                         any(isinstance(v, _pl_Series) for v in kwds.values())
+                use_pl = (any(isinstance(arg, _pl_Series) for arg in args)
+                          or any(isinstance(v, _pl_Series) for v in kwds.values()))
             else:
                 use_pl = False
 
             if _pd_Series is not None:
-                use_pd = any(isinstance(arg, _pd_Series) for arg in args) or \
-                         any(isinstance(v, _pd_Series) for v in kwds.values())
+                use_pd = (any(isinstance(arg, _pd_Series) for arg in args)
+                          or any(isinstance(v, _pd_Series) for v in kwds.values()))
             else:
                 use_pd = False
 
@@ -44,18 +43,15 @@ if _pl_Series is not None or _pd_Series is not None:
             if use_pl:
                 _args = [arg.to_numpy().astype(float) if isinstance(arg, _pl_Series) else
                          arg for arg in args]
-                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pl_Series) else
-                            v for k, v in kwds.items()}
+                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pl_Series) else v for k, v in kwds.items()}
 
             elif use_pd:
                 index = next(arg.index
                              for arg in chain(args, kwds.values())
                              if isinstance(arg, _pd_Series))
 
-                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pd_Series) else
-                         arg for arg in args]
-                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pd_Series) else
-                            v for k, v in kwds.items()}
+                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pd_Series) else arg for arg in args]
+                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pd_Series) else v for k, v in kwds.items()}
 
             else:
                 _args = args
@@ -87,8 +83,8 @@ if _pl_Series is not None or _pd_Series is not None:
 
         return wrapper
 else:
-    _wrapper = lambda x: x
-
+    def _wrapper(x):
+        x
 
 from ._ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
@@ -135,7 +131,7 @@ __function_groups__ = {
         'HT_PHASOR',
         'HT_SINE',
         'HT_TRENDMODE',
-        ],
+    ],
     'Math Operators': [
         'ADD',
         'DIV',
@@ -148,7 +144,7 @@ __function_groups__ = {
         'MULT',
         'SUB',
         'SUM',
-        ],
+    ],
     'Math Transform': [
         'ACOS',
         'ASIN',
@@ -165,7 +161,7 @@ __function_groups__ = {
         'SQRT',
         'TAN',
         'TANH',
-        ],
+    ],
     'Momentum Indicators': [
         'ADX',
         'ADXR',
@@ -197,7 +193,7 @@ __function_groups__ = {
         'TRIX',
         'ULTOSC',
         'WILLR',
-        ],
+    ],
     'Overlap Studies': [
         'BBANDS',
         'DEMA',
@@ -216,7 +212,7 @@ __function_groups__ = {
         'TEMA',
         'TRIMA',
         'WMA',
-        ],
+    ],
     'Pattern Recognition': [
         'CDL2CROWS',
         'CDL3BLACKCROWS',
@@ -279,13 +275,13 @@ __function_groups__ = {
         'CDLUNIQUE3RIVER',
         'CDLUPSIDEGAP2CROWS',
         'CDLXSIDEGAP3METHODS',
-        ],
+    ],
     'Price Transform': [
         'AVGPRICE',
         'MEDPRICE',
         'TYPPRICE',
         'WCLPRICE',
-        ],
+    ],
     'Statistic Functions': [
         'BETA',
         'CORREL',
@@ -296,18 +292,19 @@ __function_groups__ = {
         'STDDEV',
         'TSF',
         'VAR',
-        ],
+    ],
     'Volatility Indicators': [
         'ATR',
         'NATR',
         'TRANGE',
-        ],
+    ],
     'Volume Indicators': [
         'AD',
         'ADOSC',
         'OBV'
-        ],
-    }
+    ],
+}
+
 
 def get_functions():
     """
@@ -318,6 +315,7 @@ def get_functions():
         ret.extend(__function_groups__[group])
     return ret
 
+
 def get_function_groups():
     """
     Returns a dict with keys of function-group names and values of lists
@@ -325,4 +323,6 @@ def get_function_groups():
     """
     return __function_groups__.copy()
 
-__all__ = ['get_functions', 'get_function_groups'] + __TA_FUNCTION_NAMES__ + ["stream_%s" % name for name in __TA_FUNCTION_NAMES__]
+
+__all__ = ['get_functions', 'get_function_groups'] + __TA_FUNCTION_NAMES__ + ["stream_%s" % name for name in
+                                                                              __TA_FUNCTION_NAMES__]

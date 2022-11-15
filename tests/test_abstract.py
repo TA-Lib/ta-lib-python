@@ -1,19 +1,20 @@
-import numpy as np
-import pytest
 import copy
 import re
-import time
 import threading
+import time
+
+import numpy as np
+import pytest
 
 try:
     from collections import OrderedDict
-except ImportError: # handle python 2.6 and earlier
+except ImportError:  # handle python 2.6 and earlier
     from ordereddict import OrderedDict
 
 import talib
 from talib import func
 from talib import abstract
-from talib.test_data import ford_2012, assert_np_arrays_equal, assert_np_arrays_not_equal
+from tests.test_data import ford_2012, assert_np_arrays_equal, assert_np_arrays_not_equal
 
 
 def test_pandas():
@@ -21,7 +22,7 @@ def test_pandas():
     input_df = pandas.DataFrame(ford_2012)
     input_dict = dict((k, pandas.Series(v)) for k, v in ford_2012.items())
 
-    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'])  # 5, 3, 0, 3, 0
     output = abstract.Function('stoch', input_df).outputs
     assert isinstance(output, pandas.DataFrame)
     assert_np_arrays_equal(expected_k, output['slowk'])
@@ -81,7 +82,7 @@ def test_SMA():
 
 def test_STOCH():
     # check defaults match
-    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close']) # 5, 3, 0, 3, 0
+    expected_k, expected_d = func.STOCH(ford_2012['high'], ford_2012['low'], ford_2012['close'])  # 5, 3, 0, 3, 0
     got_k, got_d = abstract.Function('stoch', ford_2012).outputs
     assert_np_arrays_equal(expected_k, got_k)
     assert_np_arrays_equal(expected_d, got_d)
@@ -101,10 +102,12 @@ def test_STOCH():
     assert_np_arrays_equal(expected_k, got_k)
     assert_np_arrays_equal(expected_d, got_d)
 
+
 def test_doji_candle():
     expected = func.CDLDOJI(ford_2012['open'], ford_2012['high'], ford_2012['low'], ford_2012['close'])
     got = abstract.Function('CDLDOJI').run(ford_2012)
     assert_np_arrays_equal(got, expected)
+
 
 def test_MAVP():
     mavp = abstract.MAVP
@@ -115,6 +118,7 @@ def test_MAVP():
     input_d['periods'] = np.arange(30)
     assert mavp.set_input_arrays(input_d)
     assert mavp.input_arrays == input_d
+
 
 def test_info():
     stochrsi = abstract.Function('STOCHRSI')
@@ -129,15 +133,15 @@ def test_info():
         'output_flags': OrderedDict([
             ('fastk', ['Line']),
             ('fastd', ['Line']),
-            ]),
+        ]),
         'output_names': ['fastk', 'fastd'],
         'parameters': OrderedDict([
             ('timeperiod', 14),
             ('fastk_period', 5),
             ('fastd_period', 3),
             ('fastd_matype', 1),
-            ]),
-        }
+        ]),
+    }
     assert expected == stochrsi.info
 
     expected = {
@@ -150,16 +154,17 @@ def test_info():
             ('upperband', ['Values represent an upper limit']),
             ('middleband', ['Line']),
             ('lowerband', ['Values represent a lower limit']),
-            ]),
+        ]),
         'output_names': ['upperband', 'middleband', 'lowerband'],
         'parameters': OrderedDict([
             ('timeperiod', 5),
             ('nbdevup', 2),
             ('nbdevdn', 2),
             ('matype', 0),
-            ]),
-        }
+        ]),
+    }
     assert expected == abstract.Function('BBANDS').info
+
 
 def test_input_names():
     expected = OrderedDict([('price', 'close')])
@@ -170,15 +175,16 @@ def test_input_names():
     expected = OrderedDict([
         ('price', 'open'),
         ('prices', ['volume']),
-        ])
+    ])
     obv.input_names = expected
     assert obv.input_names == expected
 
     obv.input_names = {
         'price': 'open',
         'prices': ['volume'],
-        }
+    }
     assert obv.input_names == expected
+
 
 def test_input_arrays():
     mama = abstract.Function('MAMA')
@@ -214,6 +220,7 @@ def test_input_arrays():
     willr.input_names = {'prices': ['high', 'low', 'open']}
     assert willr.set_input_arrays(input_d)
 
+
 def test_parameters():
     stoch = abstract.Function('STOCH')
     expected = OrderedDict([
@@ -222,7 +229,7 @@ def test_parameters():
         ('slowk_matype', 0),
         ('slowd_period', 3),
         ('slowd_matype', 0),
-        ])
+    ])
     assert expected == stoch.parameters
 
     stoch.parameters = {'fastk_period': 10}
@@ -241,16 +248,18 @@ def test_parameters():
     stoch.parameters = {
         'slowk_matype': talib.MA_Type.WMA,
         'slowd_matype': talib.MA_Type.EMA,
-        }
+    }
     expected['slowk_matype'] = 2
     expected['slowd_matype'] = 1
     assert expected == stoch.parameters
+
 
 def test_lookback():
     assert abstract.Function('SMA', 10).lookback == 9
 
     stochrsi = abstract.Function('stochrsi', 20, 5, 3)
     assert stochrsi.lookback == 26
+
 
 def test_call_supports_same_signature_as_func_module():
     adx = abstract.Function('ADX')
@@ -269,6 +278,7 @@ def test_call_supports_same_signature_as_func_module():
     with pytest.raises(TypeError, match=expected_error):
         adx(ford_2012['open'], ford_2012['high'])
 
+
 def test_parameter_type_checking():
     sma = abstract.Function('SMA', timeperiod=10)
 
@@ -286,6 +296,7 @@ def test_parameter_type_checking():
     with pytest.raises(TypeError, match=expected_error):
         sma.set_parameters(timeperiod=35.5)
 
+
 def test_call_doesnt_cache_parameters():
     sma = abstract.Function('SMA', timeperiod=10)
 
@@ -301,13 +312,14 @@ def test_call_doesnt_cache_parameters():
     output = sma(ford_2012)
     assert_np_arrays_equal(expected, output)
 
-def test_call_without_arguments():
 
+def test_call_without_arguments():
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')()
 
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')(10)
+
 
 def test_call_first_exception():
     inputs = {'close': np.array([np.nan, np.nan, np.nan])}
@@ -320,6 +332,7 @@ def test_call_first_exception():
     output = abstract.SMA(inputs, timeperiod=2)
     expected = np.array([np.nan, 1.5, 2.5])
     assert_np_arrays_equal(expected, output)
+
 
 def test_threading():
     import pandas as pd

@@ -1,0 +1,40 @@
+#[project]
+#requires-python = '>=3.7, <3.11'
+
+[build-system]
+requires = [
+    'setuptools>=42.0.0',
+    'wheel>=0.36.0',
+    'Cython>=0.29.21,<3',
+    'oldest-supported-numpy; python_version>="3.7"',
+]
+build-backend = 'setuptools.build_meta'
+
+[tool.cibuildwheel]
+skip = "*musllinux*"
+test-extras = "test"
+test-command = 'python -c "import talib; print(talib.__version__)"'
+build-verbosity = 3
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64", "universal2"]
+test-skip = ["*universal2:arm64"]
+
+[tool.cibuildwheel.linux]
+archs = ["auto64"]
+
+[tool.black]
+line-length = 88
+target-version = ['py37', 'py38', 'py39', 'py310']
+exclude = '''
+(
+    asv_bench/env
+  | \.egg
+  | \.git
+  | \.hg
+  | _build
+  | build
+  | dist
+  | setup.py
+)
+'''

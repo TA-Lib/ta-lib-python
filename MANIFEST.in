@@ -1,5 +1,5 @@
-include LICENSE
-include COPYRIGHT
-include README.md
-include talib/*.c
-include talib/*.pyx
+prune *
+include LICENSE COPYRIGHT README.md
+graft src
+graft tests
+global-exclude __pycache__ *.py[cod] .*

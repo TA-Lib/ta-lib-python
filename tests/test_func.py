@@ -1,20 +1,24 @@
 import numpy as np
 import pytest
-
 import talib
 from talib import func
-from talib.test_data import series, assert_np_arrays_equal, assert_np_arrays_not_equal
+
+from tests.test_data import series, assert_np_arrays_equal
+
 
 def test_talib_version():
     assert talib.__ta_version__[:5] == b'0.4.0'
 
+
 def test_num_functions():
     assert len(talib.get_functions()) == 158
+
 
 def test_input_wrong_type():
     a1 = np.arange(10, dtype=int)
     with pytest.raises(Exception):
         func.MOM(a1)
+
 
 def test_input_lengths():
     a1 = np.arange(10, dtype=float)
@@ -28,6 +32,7 @@ def test_input_lengths():
     with pytest.raises(Exception):
         func.BOP(a1, a1, a1, a2)
 
+
 def test_input_nans():
     a1 = np.arange(10, dtype=float)
     a2 = np.arange(10, dtype=float)
@@ -40,6 +45,7 @@ def test_input_nans():
     assert_np_arrays_equal(r1, [np.nan, np.nan, np.nan, np.nan, 0, 0, 0, 0, 0, 0])
     assert_np_arrays_equal(r2, [np.nan, np.nan, np.nan, np.nan, 100, 100, 100, 100, 100, 100])
 
+
 def test_unstable_period():
     a = np.arange(10, dtype=float)
     r = func.EMA(a, 3)
@@ -49,6 +55,7 @@ def test_unstable_period():
     assert_np_arrays_equal(r, [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 6, 7, 8])
     talib.set_unstable_period('EMA', 0)
 
+
 def test_compatibility():
     a = np.arange(10, dtype=float)
     talib.set_compatibility(0)
@@ -56,8 +63,10 @@ def test_compatibility():
     assert_np_arrays_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
     talib.set_compatibility(1)
     r = func.EMA(a, 3)
-    assert_np_arrays_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.001953125])
+    assert_np_arrays_equal(r,
+                           [np.nan, np.nan, 1.25, 2.125, 3.0625, 4.03125, 5.015625, 6.0078125, 7.00390625, 8.001953125])
     talib.set_compatibility(0)
+
 
 def test_MIN():
     result = func.MIN(series, timeperiod=4)
@@ -71,6 +80,7 @@ def test_MIN():
     result = func.MIN(values, timeperiod=2)
     assert_np_arrays_equal(result, [np.nan, np.nan, 4, 3, 3, 5])
 
+
 def test_MAX():
     result = func.MAX(series, timeperiod=4)
     i = np.where(~np.isnan(result))[0][0]
@@ -80,8 +90,9 @@ def test_MAX():
     assert result[i + 4] == 94.620
     assert result[i + 5] == 94.620
 
+
 def test_MOM():
-    values = np.array([90.0,88.0,89.0])
+    values = np.array([90.0, 88.0, 89.0])
     result = func.MOM(values, timeperiod=1)
     assert_np_arrays_equal(result, [np.nan, -2, 1])
     result = func.MOM(values, timeperiod=2)
@@ -91,18 +102,20 @@ def test_MOM():
     result = func.MOM(values, timeperiod=4)
     assert_np_arrays_equal(result, [np.nan, np.nan, np.nan])
 
+
 def test_BBANDS():
     upper, middle, lower = func.BBANDS(series, timeperiod=20,
-                                        nbdevup=2.0, nbdevdn=2.0,
-                                        matype=talib.MA_Type.EMA)
+                                       nbdevup=2.0, nbdevdn=2.0,
+                                       matype=talib.MA_Type.EMA)
     i = np.where(~np.isnan(upper))[0][0]
     assert len(upper) == len(middle) == len(lower) == len(series)
-    #assert abs(upper[i + 0] - 98.0734) < 1e-3
+    # assert abs(upper[i + 0] - 98.0734) < 1e-3
     assert abs(middle[i + 0] - 92.8910) < 1e-3
     assert abs(lower[i + 0] - 87.7086) < 1e-3
-    #assert abs(upper[i + 13] - 93.674) < 1e-3
+    # assert abs(upper[i + 13] - 93.674) < 1e-3
     assert abs(middle[i + 13] - 87.679) < 1e-3
     assert abs(lower[i + 13] - 81.685) < 1e-3
+
 
 def test_DEMA():
     result = func.DEMA(series)
@@ -113,6 +126,7 @@ def test_DEMA():
     assert abs(result[i + 3] - 87.089) < 1e-3
     assert abs(result[i + 4] - 87.656) < 1e-3
 
+
 def test_EMAEMA():
     result = func.EMA(series, timeperiod=2)
     result = func.EMA(result, timeperiod=2)
@@ -120,42 +134,59 @@ def test_EMAEMA():
     assert len(series) == len(result)
     assert i == 2
 
-def test_CDL3BLACKCROWS():
-    o = np.array([39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51, 38.09, 35.00, 27.66, 30.80])
-    h = np.array([40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 41.69, 40.84, 38.12, 35.50, 31.74, 32.51])
-    l = np.array([35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 39.26, 36.73, 33.37, 30.03, 27.03, 28.31])
-    c = np.array([40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.46, 37.08, 33.37, 30.03, 31.46, 28.31])
 
-    result = func.CDL3BLACKCROWS(o, h, l, c)
+def test_CDL3BLACKCROWS():
+    o = np.array(
+        [39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 39.00, 40.32, 40.51,
+         38.09, 35.00, 27.66, 30.80])
+    h = np.array(
+        [40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 40.84, 41.69, 40.84,
+         38.12, 35.50, 31.74, 32.51])
+    lo = np.array(
+        [35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 35.80, 39.26, 36.73,
+         33.37, 30.03, 27.03, 28.31])
+    c = np.array(
+        [40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.29, 40.46, 37.08,
+         33.37, 30.03, 31.46, 28.31])
+
+    result = func.CDL3BLACKCROWS(o, h, lo, c)
     assert_np_arrays_equal(result, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -100, 0, 0])
+
 
 def test_RSI():
     a = np.array([0.00000024, 0.00000024, 0.00000024,
-      0.00000024, 0.00000024, 0.00000023,
-      0.00000024, 0.00000024, 0.00000024,
-      0.00000024, 0.00000023, 0.00000024,
-      0.00000023, 0.00000024, 0.00000023,
-      0.00000024, 0.00000024, 0.00000023,
-      0.00000023, 0.00000023], dtype='float64')
+                  0.00000024, 0.00000024, 0.00000023,
+                  0.00000024, 0.00000024, 0.00000024,
+                  0.00000024, 0.00000023, 0.00000024,
+                  0.00000023, 0.00000024, 0.00000023,
+                  0.00000024, 0.00000024, 0.00000023,
+                  0.00000023, 0.00000023], dtype='float64')
     result = func.RSI(a, 10)
-    assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,0,0,0,0,0,0,0,0,0,0])
+    assert_np_arrays_equal(result,
+                           [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0])
     result = func.RSI(a * 100000, 10)
-    assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,np.nan,33.333333333333329,51.351351351351347,39.491916859122398,51.84807024709005,42.25953803191981,52.101824405061215,52.101824405061215,43.043664867691085,43.043664867691085,43.043664867691085])
+    assert_np_arrays_equal(result, [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan,
+                                    33.333333333333329, 51.351351351351347, 39.491916859122398, 51.84807024709005,
+                                    42.25953803191981, 52.101824405061215, 52.101824405061215, 43.043664867691085,
+                                    43.043664867691085, 43.043664867691085])
+
 
 def test_MAVP():
-    a = np.array([1,5,3,4,7,3,8,1,4,6], dtype=float)
-    b = np.array([2,4,2,4,2,4,2,4,2,4], dtype=float)
+    a = np.array([1, 5, 3, 4, 7, 3, 8, 1, 4, 6], dtype=float)
+    b = np.array([2, 4, 2, 4, 2, 4, 2, 4, 2, 4], dtype=float)
     result = func.MAVP(a, b, minperiod=2, maxperiod=4)
-    assert_np_arrays_equal(result, [np.nan,np.nan,np.nan,3.25,5.5,4.25,5.5,4.75,2.5,4.75])
+    assert_np_arrays_equal(result, [np.nan, np.nan, np.nan, 3.25, 5.5, 4.25, 5.5, 4.75, 2.5, 4.75])
     sma2 = func.SMA(a, 2)
     assert_np_arrays_equal(result[4::2], sma2[4::2])
     sma4 = func.SMA(a, 4)
     assert_np_arrays_equal(result[3::2], sma4[3::2])
     result = func.MAVP(a, b, minperiod=2, maxperiod=3)
-    assert_np_arrays_equal(result, [np.nan,np.nan,4,4,5.5,4.666666666666667,5.5,4,2.5,3.6666666666666665])
+    assert_np_arrays_equal(result, [np.nan, np.nan, 4, 4, 5.5, 4.666666666666667, 5.5, 4, 2.5, 3.6666666666666665])
     sma3 = func.SMA(a, 3)
     assert_np_arrays_equal(result[2::2], sma2[2::2])
     assert_np_arrays_equal(result[3::2], sma3[3::2])
+
 
 def test_MAXINDEX():
     import talib as func
@@ -163,7 +194,7 @@ def test_MAXINDEX():
     a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
     b = func.MA(a, 10)
     c = func.MAXINDEX(b, 10)
-    assert_np_arrays_equal(c, [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,16,16,21])
+    assert_np_arrays_equal(c, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 21])
     d = np.array([1., 2, 3])
     e = func.MAXINDEX(d, 10)
-    assert_np_arrays_equal(e, [0,0,0])
+    assert_np_arrays_equal(e, [0, 0, 0])
