@@ -1,0 +1,172 @@
+name: PyPI
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Package Index'
+        required: true
+        default: 'TESTPYPI'
+
+jobs:
+  build_linux:
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} using ${{ matrix.manylinux_image }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        python: [ 37, 38, 39, '310']
+        manylinux_image: [ manylinux2010, manylinux2014 ]
+
+    steps:
+      - name: Checkout ta-lib
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+
+      - name: Build and test wheels
+        uses: pypa/cibuildwheel@v2.11.2
+        env:
+          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BEFORE_TEST_LINUX: >
+            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
+            tar xvfz ta-lib-0.4.0-src.tar.gz &&
+            cd ta-lib &&
+            ./configure &&
+            make &&
+            make install &&
+            ldconfig &&
+            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
+                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
+                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
+
+  build_macos:
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest ]
+        python: [ 37, 38, 39, '310']
+
+    steps:
+      - name: Checkout zipline
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.11.2
+        env:
+          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BEFORE_TEST_MACOS: >
+            brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
+
+  build_windows:
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest ]
+        python: [ 37, 38, 39, '310']
+
+    steps:
+      - name: Checkout zipline
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Developer Command Prompt for Microsoft Visual C++
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.11.2
+        env:
+          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BEFORE_TEST_WINDOWS: >
+            powershell -Command "(New-Object Net.WebClient).DownloadFile('http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip', 'ta-lib-0.4.0-msvc.zip')"
+            powershell -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem;[System.IO.Compression.ZipFile]::ExtractToDirectory('ta-lib-0.4.0-msvc.zip', 'C:\')"
+            pushd C:\ta-lib\c\
+            pushd make\cdd\win32\msvc
+            nmake
+            popd
+            pushd make\cdr\win32\msvc
+            nmake
+            popd
+            pushd make\cmd\win32\msvc
+            nmake
+            popd
+            pushd make\cmr\win32\msvc
+            nmake
+            popd
+            pushd make\csd\win32\msvc
+            nmake
+            popd
+            pushd make\csr\win32\msvc
+            nmake
+            popd
+            popd
+            del ta-lib-0.4.0-msvc.zip
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        name: Install Python
+        with:
+          python-version: '3.9'
+
+      - name: Build sdist
+        run: |
+          pip install -U pip setuptools build
+          python -m build --sdist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist/*.tar.gz
+
+  upload_pypi:
+    needs: [ build_linux, build_macos, build_windows, build_sdist ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - name: publish to testpypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event.inputs.target }} == 'TESTPYPI'
+        with:
+          user: __token__
+          password: ${{ secrets.TESTPYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+
+      - name: publish to pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event.inputs.target }} == 'PYPI' || (github.event_name == 'release' && github.event.action == 'published')
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
