@@ -90,9 +90,10 @@ jobs:
     steps:
       - name: Checkout zipline
       - uses: actions/checkout@v3
-      - uses: ilammy/msvc-dev-cmd@v1
         with:
           fetch-depth: 0
+      - name: Setup Windows Dev Environment
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
@@ -122,8 +123,8 @@ jobs:
             popd
             popd
             del ta-lib-0.4.0-msvc.zip
-      - name: Upload wheels
-      - uses: actions/upload-artifact@v3
+      - name: Build wheels
+        uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
 
