@@ -35,7 +35,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_TEST_LINUX: >
+          CIBW_BEFORE_ALL_LINUX: >
             curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
             tar xvfz ta-lib-0.4.0-src.tar.gz &&
             cd ta-lib &&
@@ -71,7 +71,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_TEST_MACOS: >
+          CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
 
       - uses: actions/upload-artifact@v3
@@ -100,7 +100,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_TEST_WINDOWS: >
+          CIBW_BEFORE_ALL_WINDOWS: >
             powershell -Command "(New-Object Net.WebClient).DownloadFile('http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip', 'ta-lib-0.4.0-msvc.zip')"
             powershell -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem;[System.IO.Compression.ZipFile]::ExtractToDirectory('ta-lib-0.4.0-msvc.zip', 'C:\')"
             pushd C:\ta-lib\c\
