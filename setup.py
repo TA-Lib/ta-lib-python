@@ -149,26 +149,3 @@ setup(
     package_data={'talib': ['*.pxd', '*.pyx', '*.c', '*.h'],
                   'src/talib': ['*.pxd', '*.pyx', '*.c', '*.h']},
     **requires)
-
-"""
-    "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\bin\HostX86\x64\cl.exe" 
-    /c /nologo /O2 /W3 /GL /DNDEBUG /MD 
-    -Ic:\ta-lib\c\include 
-    -IC:ta-libcinclude 
-    -IC:\Users\runneradmin\AppData\Local\Temp\pip-build-env-mnzwoltv\overlay\Lib\site-packages\numpy\core\include -
-    IC:\Users\runneradmin\AppData\Local\Temp\cibw-run-z19twzdw\cp310-win32\build\venv\include 
-    -IC:\Users\runneradmin\AppData\Local\pypa\cibuildwheel\Cache\nuget-cpython\pythonx86.3.10.8\tools\include 
-    -IC:\Users\runneradmin\AppData\Local\pypa\cibuildwheel\Cache\nuget-cpython\pythonx86.3.10.8\tools\Include 
-    " -IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include" 
-    "-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\ATLMFC\include" 
-    "-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\VS\include" 
-    "-IC:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt" 
-    "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um" 
-    "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared" 
-    "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt" 
-    "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt" 
-    "-IC:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" 
-    "-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include" 
-    "-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\ATLMFC\include"
-     "-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\VS\include" "-IC:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt" "-IC:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt" "-IC:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" /Tcsrc/talib\_ta_lib.c /Fobuild\temp.win-amd64-cpython-310\Release\src/talib\_ta_lib.obj
-"""
