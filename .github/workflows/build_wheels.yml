@@ -132,12 +132,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
+          CIBW_ENVIRONMENT_WINDOWS: >
+            TA_INCLUDE_PATH="C:\\ta-lib\\c\\include"
+            TA_LIBRARY_PATH="C:\\ta-lib\\c\\lib"
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_TEST_COMMAND: "pytest {project}/tests"
-          CIBW_ENVIRONMENT_WINDOWS: >
-            TA_INCLUDE_PATH="C:\ta-lib\c\include"
-            TA_LIBRARY_PATH="C:\ta-lib\c\lib"
-
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
