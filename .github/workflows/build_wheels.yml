@@ -73,8 +73,8 @@ jobs:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
-
-      - uses: actions/upload-artifact@v3
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
 
@@ -99,7 +99,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_ALL_WINDOWS: >
+          CIBW_BEFORE_BUILD_WINDOWS: >
             powershell -Command "(New-Object Net.WebClient).DownloadFile('http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip', 'ta-lib-0.4.0-msvc.zip')"
             powershell -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem;[System.IO.Compression.ZipFile]::ExtractToDirectory('ta-lib-0.4.0-msvc.zip', 'C:\')"
             pushd C:\ta-lib\c\
@@ -123,7 +123,7 @@ jobs:
             popd
             popd
             del ta-lib-0.4.0-msvc.zip
-      - name: Build wheels
+      - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
