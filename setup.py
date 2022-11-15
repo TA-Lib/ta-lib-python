@@ -49,7 +49,7 @@ if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
 
 elif sys.platform == 'win32':
     platform_supported = True
-    lib_talib_name = 'ta_libc_cdr'
+    # lib_talib_name = 'ta_libc_cdr'
     include_dirs = [r'c:\ta-lib\c\include']
     library_dirs = [r'c:\ta-lib\c\lib']
 
