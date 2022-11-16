@@ -88,7 +88,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ windows-latest ]
-        python: [ 37, 38, 39, '310' ]
+#        python: [ 37, 38, 39, '310' ]
+        python: [ '310' ]
 
     steps:
       - name: Checkout TA-Lib
@@ -129,7 +130,7 @@ jobs:
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_WINDOWS: > 
-            call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64;
+            call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64 &&
             call ./tools/install_talib.bat
 
       - name: Upload wheels
