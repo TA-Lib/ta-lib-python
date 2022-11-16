@@ -61,6 +61,7 @@ jobs:
       matrix:
         os: [ macos-latest ]
         python: [ 37, 38, 39, '310' ]
+        platform_id: [ macosx_x86_64, macosx_arm64 ]
 
     steps:
       - name: Checkout zipline
@@ -71,7 +72,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
-          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BUILD: "cp${{ matrix.python }}-${{ matrix.platform_id }}"
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
@@ -128,7 +129,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
-          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BUILD: "cp${{ matrix.python }}-${{ matrix.platform_id }}"
           CIBW_BEFORE_ALL_WINDOWS: >
             call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
             call ./tools/install_talib.bat &&
