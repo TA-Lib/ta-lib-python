@@ -100,9 +100,9 @@ jobs:
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install TA-Lib Windows
-        run: |
-          ./tools/install_talib.bat
+#      - name: Install TA-Lib Windows
+#        run: |
+#          ./tools/install_talib.bat
 
 #      - name: Check install location
 #        run: |
@@ -129,7 +129,8 @@ jobs:
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_WINDOWS: > 
-            "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" tools/install_talib.bat
+            call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" 
+            call ./tools/install_talib.bat
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
