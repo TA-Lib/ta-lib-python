@@ -12,74 +12,74 @@ on:
         default: 'TESTPYPI'
 
 jobs:
-  build_linux:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} using ${{ matrix.manylinux_image }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest ]
-        python: [ 37, 38, 39, '310' ]
-        manylinux_image: [ manylinux2010, manylinux2014 ]
+#  build_linux:
+#    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} using ${{ matrix.manylinux_image }}
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ ubuntu-latest ]
+#        python: [ 37, 38, 39, '310' ]
+#        manylinux_image: [ manylinux2010, manylinux2014 ]
+#
+#    steps:
+#      - name: Checkout ta-lib
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v4
+#
+#      - name: Build and test wheels
+#        uses: pypa/cibuildwheel@v2.11.2
+#        env:
+#          CIBW_BUILD: "cp${{ matrix.python }}-*"
+#          CIBW_BEFORE_ALL_LINUX: >
+#            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
+#            tar xvfz ta-lib-0.4.0-src.tar.gz &&
+#            cd ta-lib &&
+#            ./configure &&
+#            make &&
+#            make install &&
+#            ldconfig &&
+#            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
+#                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
+#                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
+#          CIBW_TEST_COMMAND: "pytest {project}/tests"
+#
+#      - name: Upload wheels
+#        uses: actions/upload-artifact@v3
+#        with:
+#          path: wheelhouse/*.whl
 
-    steps:
-      - name: Checkout ta-lib
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-
-      - name: Build and test wheels
-        uses: pypa/cibuildwheel@v2.11.2
-        env:
-          CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_ALL_LINUX: >
-            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
-            tar xvfz ta-lib-0.4.0-src.tar.gz &&
-            cd ta-lib &&
-            ./configure &&
-            make &&
-            make install &&
-            ldconfig &&
-            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
-                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
-                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
-
-      - name: Upload wheels
-        uses: actions/upload-artifact@v3
-        with:
-          path: wheelhouse/*.whl
-
-  build_macos:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ macos-latest ]
-        python: [ 37, 38, 39, '310' ]
-
-    steps:
-      - name: Checkout zipline
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
-        env:
-          CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_ARCHS_MACOS: x86_64 arm64
-          CIBW_BEFORE_ALL_MACOS: >
-            brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
-      - name: Upload wheels
-        uses: actions/upload-artifact@v3
-        with:
-          path: wheelhouse/*.whl
+#  build_macos:
+#    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ macos-latest ]
+#        python: [ 37, 38, 39, '310' ]
+#
+#    steps:
+#      - name: Checkout zipline
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Build wheels
+#        uses: pypa/cibuildwheel@v2.11.2
+#        env:
+#          CIBW_BUILD: "cp${{ matrix.python }}-*"
+#          CIBW_ARCHS_MACOS: x86_64 arm64
+#          CIBW_BEFORE_ALL_MACOS: >
+#            brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
+#          CIBW_TEST_COMMAND: "pytest {project}/tests"
+#      - name: Upload wheels
+#        uses: actions/upload-artifact@v3
+#        with:
+#          path: wheelhouse/*.whl
 
   build_windows:
     name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
