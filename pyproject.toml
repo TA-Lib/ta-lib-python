@@ -12,7 +12,7 @@ requires = [
 build-backend = 'setuptools.build_meta'
 
 [tool.setuptools_scm]
-write_to = "src/<package>/_version.py"
+write_to = "src/talib/_version.py"
 
 [tool.cibuildwheel]
 skip = '*musllinux*'
