@@ -91,16 +91,18 @@ jobs:
         python: [ 37, 38, 39, '310' ]
 
     steps:
-      - name: Checkout zipline
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install TA-Lib Windows
         run: |
           ./tools/install_talib_windows.bat
+
+      - name: Checkout TA-Lib
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
 
       - name: Check install location
         run: |

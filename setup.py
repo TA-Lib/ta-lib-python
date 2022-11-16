@@ -3,6 +3,7 @@
 import os
 import sys
 import warnings
+import setuptools_scm  # noqa: F401
 
 try:
     from setuptools import setup, Extension
