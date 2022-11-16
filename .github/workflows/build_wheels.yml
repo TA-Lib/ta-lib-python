@@ -97,34 +97,10 @@ jobs:
           fetch-depth: 0
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          vsversion: 2019
 
       - name: Install TA-Lib Windows
         run: |
-          powershell -Command "(New-Object Net.WebClient).DownloadFile('http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip', 'ta-lib-0.4.0-msvc.zip')"
-          powershell -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem;[System.IO.Compression.ZipFile]::ExtractToDirectory('ta-lib-0.4.0-msvc.zip', 'C:\')"
-          pushd C:\ta-lib\c\
-          pushd make\cdd\win32\msvc
-          nmake
-          popd
-          pushd make\cdr\win32\msvc
-          nmake
-          popd
-          pushd make\cmd\win32\msvc
-          nmake
-          popd
-          pushd make\cmr\win32\msvc
-          nmake
-          popd
-          pushd make\csd\win32\msvc
-          nmake
-          popd
-          pushd make\csr\win32\msvc
-          nmake
-          popd
-          popd
-          del ta-lib-0.4.0-msvc.zip
+          ./tools/install_ta-lib_windows.bat
 
       - name: Check install location
         run: |
@@ -135,7 +111,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_ENVIRONMENT_WINDOWS:
-            TA_INCLUDE_PATH=C:\ta-lib\c\include 
+            TA_INCLUDE_PATH=C:\ta-lib\c\include
             TA_LIBRARY_PATH=C:\ta-lib\c\lib
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_TEST_COMMAND: "pytest {project}/tests"
