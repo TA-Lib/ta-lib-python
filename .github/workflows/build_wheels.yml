@@ -124,7 +124,7 @@ jobs:
           popd
           del ta-lib-0.4.0-msvc.zip
 
-      - name: Check install
+      - name: Check install location
         run: |
           ls "C:\ta-lib\c\include"
           ls "C:\ta-lib\c\lib"
@@ -132,9 +132,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
-          CIBW_ENVIRONMENT_WINDOWS: >
-            TA_INCLUDE_PATH="C:\\ta-lib\\c\\include"
-            TA_LIBRARY_PATH="C:\\ta-lib\\c\\lib"
+          CIBW_ENVIRONMENT_WINDOWS:
+            TA_INCLUDE_PATH=C:\ta-lib\c\include 
+            TA_LIBRARY_PATH=C:\ta-lib\c\lib
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_TEST_COMMAND: "pytest {project}/tests"
 
