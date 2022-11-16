@@ -128,7 +128,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_BEFORE_ALL: ./tools/install_talib.bat
+          CIBW_BEFORE_ALL_WINDOWS: tools/install_talib.bat
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
