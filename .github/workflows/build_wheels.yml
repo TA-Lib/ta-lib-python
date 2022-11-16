@@ -36,7 +36,7 @@ jobs:
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_LINUX: >
-            ./install_talib_ubuntu.sh
+            ./tools/install_talib_ubuntu.sh
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
