@@ -100,9 +100,9 @@ jobs:
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install TA-Lib Windows
-        run: |
-          ./tools/install_talib.bat
+#      - name: Install TA-Lib Windows
+#        run: |
+#          ./tools/install_talib.bat
 
 #      - name: Check install location
 #        run: |
@@ -128,7 +128,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_ENVIRONMENT: PATH=$PATH:"c:\ta-lib\c\lib":"c:\ta-lib\c\include"
+          CIBW_BEFORE_ALL: ./tools/install_talib.bat
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
