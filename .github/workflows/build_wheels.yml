@@ -97,6 +97,8 @@ jobs:
           fetch-depth: 0
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          vsversion: 2019
 
       - name: Install TA-Lib Windows
         run: |
