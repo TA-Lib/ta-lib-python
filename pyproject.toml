@@ -17,7 +17,7 @@ write_to = "src/talib/_version.py"
 [tool.cibuildwheel]
 skip = '*musllinux*'
 test-extras = 'test'
-test-command = 'python -c "import talib; print(talib.__version__)"'
+test-command = 'pytest {project}/tests'
 build-verbosity = 3
 
 [tool.cibuildwheel.macos]

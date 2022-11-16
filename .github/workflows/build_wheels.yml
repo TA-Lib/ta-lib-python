@@ -104,31 +104,31 @@ jobs:
         run: |
           ./tools/install_talib.bat
 
-      - name: Check install location
-        run: |
-          ls "C:\ta-lib\c\include"
-          ls "C:\ta-lib\c\lib"
+#      - name: Check install location
+#        run: |
+#          ls "C:\ta-lib\c\include"
+#          ls "C:\ta-lib\c\lib"
 
-      - name: Install TA-Lib Python
-        run: |
-          python -VV
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install tox tox-gh-actions
-          python -m pip install --no-cache-dir --verbose .[test]
-
-      - name: Unittests with tox & pytest
-        run: |
-          tox -v -e ci_tests
-
-      - name: Uninstall TA-Lib Python
-        run: |          
-          python -m pip uninstall TA-Lib_zipline -y
+#      - name: Install TA-Lib Python
+#        run: |
+#          python -VV
+#          python -m pip install --upgrade pip setuptools wheel
+#          python -m pip install tox tox-gh-actions
+#          python -m pip install --no-cache-dir --verbose .[test]
+#
+#      - name: Unittests with tox & pytest
+#        run: |
+#          tox -v -e ci_tests
+#
+#      - name: Uninstall TA-Lib Python
+#        run: |
+#          python -m pip uninstall TA-Lib_zipline -y
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
+          CIBW_ENVIRONMENT: PATH=$PATH:"c:\ta-lib\c\lib":"c:\ta-lib\c\include"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
