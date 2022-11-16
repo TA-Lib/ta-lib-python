@@ -96,7 +96,7 @@ jobs:
 
       - name: Install TA-Lib Windows
         run: |
-          ./tools/install_talib_windows.bat
+          ./tools/install_talib.bat
 
       - name: Checkout TA-Lib
         uses: actions/checkout@v3
