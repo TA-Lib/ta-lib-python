@@ -12,74 +12,74 @@ on:
         default: 'TESTPYPI'
 
 jobs:
-  #  build_linux:
-  #    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} using ${{ matrix.manylinux_image }}
-  #    runs-on: ${{ matrix.os }}
-  #    strategy:
-  #      fail-fast: false
-  #      matrix:
-  #        os: [ ubuntu-latest ]
-  #        python: [ 37, 38, 39, '310' ]
-  #        manylinux_image: [ manylinux2010, manylinux2014 ]
-  #
-  #    steps:
-  #      - name: Checkout ta-lib
-  #        uses: actions/checkout@v3
-  #        with:
-  #          fetch-depth: 0
-  #
-  #      - name: Setup Python
-  #        uses: actions/setup-python@v4
-  #
-  #      - name: Build and test wheels
-  #        uses: pypa/cibuildwheel@v2.11.2
-  #        env:
-  #          CIBW_BUILD: "cp${{ matrix.python }}-*"
-  #          CIBW_BEFORE_ALL_LINUX: >
-  #            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
-  #            tar xvfz ta-lib-0.4.0-src.tar.gz &&
-  #            cd ta-lib &&
-  #            ./configure &&
-  #            make &&
-  #            make install &&
-  #            ldconfig &&
-  #            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
-  #                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
-  #                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
-  #          CIBW_TEST_COMMAND: "pytest {project}/tests"
-  #
-  #      - name: Upload wheels
-  #        uses: actions/upload-artifact@v3
-  #        with:
-  #          path: wheelhouse/*.whl
+  build_linux:
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} using ${{ matrix.manylinux_image }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        python: [ 37, 38, 39, '310' ]
+        manylinux_image: [ manylinux2010, manylinux2014 ]
 
-  #  build_macos:
-  #    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
-  #    runs-on: ${{ matrix.os }}
-  #    strategy:
-  #      fail-fast: false
-  #      matrix:
-  #        os: [ macos-latest ]
-  #        python: [ 37, 38, 39, '310' ]
-  #
-  #    steps:
-  #      - name: Checkout zipline
-  #        uses: actions/checkout@v3
-  #        with:
-  #          fetch-depth: 0
-  #
-  #      - name: Build wheels
-  #        uses: pypa/cibuildwheel@v2.11.2
-  #        env:
-  #          CIBW_BUILD: "cp${{ matrix.python }}-*"
-  #          CIBW_ARCHS_MACOS: x86_64 arm64
-  #          CIBW_BEFORE_ALL_MACOS: >
-  #            brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
-  #          CIBW_TEST_COMMAND: "pytest {project}/tests"
-  #      - name: Upload wheels
-  #        uses: actions/upload-artifact@v3
-  #        with:
-  #          path: wheelhouse/*.whl
+    steps:
+      - name: Checkout ta-lib
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+
+      - name: Build and test wheels
+        uses: pypa/cibuildwheel@v2.11.2
+        env:
+          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_BEFORE_ALL_LINUX: >
+            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
+            tar xvfz ta-lib-0.4.0-src.tar.gz &&
+            cd ta-lib &&
+            ./configure &&
+            make &&
+            make install &&
+            ldconfig &&
+            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
+                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
+                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
+
+  build_macos:
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest ]
+        python: [ 37, 38, 39, '310' ]
+
+    steps:
+      - name: Checkout zipline
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.11.2
+        env:
+          CIBW_BUILD: "cp${{ matrix.python }}-*"
+          CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_BEFORE_ALL_MACOS: >
+            brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
 
   build_windows:
     name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
@@ -87,9 +87,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019 ]
-        #        python: [ 37, 38, 39, '310' ]
-        python: [ '310' ]
+        os: [ windows-latest ]
+        python: [ 37, 38, 39, '310' ]
         platform_id: [ win_amd64 ]
 
     steps:
@@ -101,42 +100,37 @@ jobs:
 
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          toolset: 14
 
-      - name: Check VS version
+      - name: Install TA-Lib Windows
         run: |
-          vswhere
-      #      - name: Install TA-Lib Windows
-      #        run: |
-      #          ./tools/install_talib.bat
+          ./tools/install_talib.bat
 
-      #      - name: Check install location
-      #        run: |
-      #          ls "C:\ta-lib\c\include"
-      #          ls "C:\ta-lib\c\lib"
+      - name: Check install location
+        run: |
+          ls "C:\ta-lib\c\include"
+          ls "C:\ta-lib\c\lib"
 
-      #      - name: Install TA-Lib Python
-      #        run: |
-      #          python -VV
-      #          python -m pip install --upgrade pip setuptools wheel
-      #          python -m pip install tox tox-gh-actions
-      #          python -m pip install --no-cache-dir --verbose .[test]
-      #
-      #      - name: Unittests with tox & pytest
-      #        run: |
-      #          tox -v -e ci_tests
-      #
-      #      - name: Uninstall TA-Lib Python
-      #        run: |
-      #          python -m pip uninstall TA-Lib_zipline -y
+      - name: Install TA-Lib Python
+        run: |
+          python -VV
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install tox tox-gh-actions
+          python -m pip install --no-cache-dir --verbose .[test]
+
+      - name: Unittests with tox & pytest
+        run: |
+          tox -v -e ci_tests
+
+      - name: Uninstall TA-Lib Python
+        run: |
+          python -m pip uninstall TA-Lib_zipline -y
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_WINDOWS: >
-            call "c:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
+            call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
             call ./tools/install_talib.bat &&
             dir "C:\ta-lib\c\include" &&
             dir "C:\ta-lib\c\lib"
@@ -146,48 +140,48 @@ jobs:
         with:
           path: wheelhouse/*.whl
 
-#  build_sdist:
-#    name: Build source distribution
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#
-#      - uses: actions/setup-python@v4
-#        name: Install Python
-#        with:
-#          python-version: '3.9'
-#
-#      - name: Build sdist
-#        run: |
-#          pip install -U pip setuptools build
-#          python -m build --sdist
-#
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          path: dist/*.tar.gz
-#
-#  upload_pypi:
-#    needs: [ build_linux, build_macos, build_windows, build_sdist ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/download-artifact@v2
-#        with:
-#          name: artifact
-#          path: dist
-#
-#      - name: publish to testpypi
-#        uses: pypa/gh-action-pypi-publish@release/v1
-#        if: ${{ github.event.inputs.target }} == 'TESTPYPI'
-#        with:
-#          user: __token__
-#          password: ${{ secrets.TESTPYPI_TOKEN }}
-#          repository_url: https://test.pypi.org/legacy/
-#
-#      - name: publish to pypi
-#        uses: pypa/gh-action-pypi-publish@release/v1
-#        if: ${{ github.event.inputs.target }} == 'PYPI' || (github.event_name == 'release' && github.event.action == 'published')
-#        with:
-#          user: __token__
-#          password: ${{ secrets.PYPI_TOKEN }}
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        name: Install Python
+        with:
+          python-version: '3.9'
+
+      - name: Build sdist
+        run: |
+          pip install -U pip setuptools build
+          python -m build --sdist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist/*.tar.gz
+
+  upload_pypi:
+    needs: [ build_linux, build_macos, build_windows, build_sdist ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - name: publish to testpypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event.inputs.target }} == 'TESTPYPI'
+        with:
+          user: __token__
+          password: ${{ secrets.TESTPYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+
+      - name: publish to pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event.inputs.target }} == 'PYPI' || (github.event_name == 'release' && github.event.action == 'published')
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
