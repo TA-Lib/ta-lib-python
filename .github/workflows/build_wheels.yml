@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        python: [ 37, 38, 39, '310' ]
+        python: [ 37, 38, 39, '310', '311' ]
         manylinux_image: [ manylinux2010, manylinux2014 ]
 
     steps:
@@ -36,17 +36,7 @@ jobs:
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_LINUX: >
-            curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
-            tar xvfz ta-lib-0.4.0-src.tar.gz &&
-            cd ta-lib &&
-            ./configure &&
-            make &&
-            make install &&
-            ldconfig &&
-            yum install -y libtiff-devel libjpeg-devel openjpeg2-devel zlib-devel \
-                               freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel \
-                               harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
+            ./install_talib_ubuntu.sh
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
@@ -54,13 +44,13 @@ jobs:
           path: wheelhouse/*.whl
 
   build_macos:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for {{ matrix.platform_id }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ macos-latest ]
-        python: [ 37, 38, 39, '310' ]
+        python: [ 37, 38, 39, '310', '311' ]
         platform_id: [ macosx_x86_64, macosx_arm64 ]
 
     steps:
@@ -73,23 +63,23 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-${{ matrix.platform_id }}"
+          CIBW_SKIP: cp37-macosx_arm64
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BEFORE_ALL_MACOS: >
             brew install freetype pkg-config gcc openssl c-blosc hdf5 ta-lib
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
       - name: Upload wheels
         uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
 
   build_windows:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }}
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for {{ matrix.platform_id }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ windows-latest ]
-        python: [ 37, 38, 39, '310' ]
+        python: [ 37, 38, 39, '310', '311' ]
         platform_id: [ win_amd64 ]
 
     steps:
@@ -102,39 +92,13 @@ jobs:
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install TA-Lib Windows
-        run: |
-          ./tools/install_talib.bat
-
-      - name: Check install location
-        run: |
-          ls "C:\ta-lib\c\include"
-          ls "C:\ta-lib\c\lib"
-
-      - name: Install TA-Lib Python
-        run: |
-          python -VV
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install tox tox-gh-actions
-          python -m pip install --no-cache-dir --verbose .[test]
-
-      - name: Unittests with tox & pytest
-        run: |
-          tox -v -e ci_tests
-
-      - name: Uninstall TA-Lib Python
-        run: |
-          python -m pip uninstall TA-Lib_zipline -y
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.2
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-${{ matrix.platform_id }}"
           CIBW_BEFORE_ALL_WINDOWS: >
             call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
-            call ./tools/install_talib.bat &&
-            dir "C:\ta-lib\c\include" &&
-            dir "C:\ta-lib\c\lib"
+            call ./tools/install_talib.bat
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
