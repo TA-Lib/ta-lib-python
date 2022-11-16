@@ -44,7 +44,7 @@ jobs:
           path: wheelhouse/*.whl
 
   build_macos:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for {{ matrix.platform_id }}
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for ${{ matrix.platform_id }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -52,6 +52,10 @@ jobs:
         os: [ macos-latest ]
         python: [ 37, 38, 39, '310' ]
         platform_id: [ macosx_x86_64, macosx_arm64 ]
+        exclude:
+          - os: macos-latest
+            python: 37
+            platform_id: macosx_arm64
 
     steps:
       - name: Checkout zipline
@@ -73,7 +77,7 @@ jobs:
           path: wheelhouse/*.whl
 
   build_windows:
-    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for {{ matrix.platform_id }}
+    name: Wheels for py${{ matrix.python }} on ${{ matrix.os }} for ${{ matrix.platform_id }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
