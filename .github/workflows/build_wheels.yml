@@ -87,9 +87,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ]
+        os: [ windows-2019 ]
 #        python: [ 37, 38, 39, '310' ]
         python: [ '310' ]
+        platform_id: win_amd64
 
     steps:
       - name: Checkout TA-Lib
@@ -100,7 +101,12 @@ jobs:
 
       - name: Setup Windows Dev Environment
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: 14
 
+      - name: Check VS version
+        run: |
+          vswhere
 #      - name: Install TA-Lib Windows
 #        run: |
 #          ./tools/install_talib.bat
@@ -130,11 +136,10 @@ jobs:
         env:
           CIBW_BUILD: "cp${{ matrix.python }}-*"
           CIBW_BEFORE_ALL_WINDOWS: > 
-            call "c:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
+            call "c:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 &&
             call ./tools/install_talib.bat &&
             dir "C:\ta-lib\c\include" &&
             dir "C:\ta-lib\c\lib"
-          CIBW_ENVIRONMENT: PIP_GLOBAL_OPTION="build_ext -j4"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v3
