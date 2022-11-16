@@ -26,13 +26,7 @@ jobs:
       - name: Install TA-Lib Linux
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          curl -L -o ta-lib-0.4.0-src.tar.gz  http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz &&
-          tar xvfz ta-lib-0.4.0-src.tar.gz &&
-          cd ta-lib &&
-          ./configure &&
-          sudo make &&
-          sudo make install &&
-          sudo ldconfig
+          ./tools/install_talib_ubuntu.sh
 
       - name: Install TA-Lib macOS
         if: ${{ matrix.os == 'macos-latest' }}

@@ -142,7 +142,7 @@ jobs:
 
       - name: publish to testpypi
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ github.event.inputs.target }} == 'TESTPYPI'
+        if: ${{ github.event.inputs.target }} != 'PYPI'
         with:
           user: __token__
           password: ${{ secrets.TESTPYPI_TOKEN }}
