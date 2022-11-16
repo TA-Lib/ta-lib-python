@@ -100,7 +100,7 @@ jobs:
 
       - name: Install TA-Lib Windows
         run: |
-          ./tools/install_ta-lib_windows.bat
+          ./tools/install_talib_windows.bat
 
       - name: Check install location
         run: |
