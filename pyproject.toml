@@ -13,6 +13,7 @@ build-backend = 'setuptools.build_meta'
 
 [tool.setuptools_scm]
 write_to = "src/talib/_version.py"
+local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
 skip = '*musllinux*'

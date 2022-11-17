@@ -30,6 +30,8 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.11.2
