@@ -267,6 +267,20 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 If the build appears to hang, you might be running on a VM with not enough
 memory -- try 1 GB or 2 GB.
 
+---
+
+If you get "permission denied" errors such as this, you might need to give
+your user access to the location where the underlying TA-Lib C library is
+installed -- or install it to a user-accessible location.
+
+```
+talib/_ta_lib.c:747:28: fatal error: /usr/include/ta-lib/ta_defs.h: Permission denied
+ #include "ta-lib/ta-defs.h"
+                            ^
+compilation terminated
+error: command 'gcc' failed with exit status 1
+```
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
