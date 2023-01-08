@@ -247,8 +247,8 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 
 ```python
 >>> import talib
->>> import numpy
->>> c = numpy.random.randn(100)
+>>> import numpy as np
+>>> c = np.random.randn(100)
 
 # this is the library function
 >>> k, d = talib.STOCHRSI(c)
@@ -297,10 +297,10 @@ For convenience, the Function API supports both ``numpy.ndarray`` and
 All of the following examples use the Function API:
 
 ```python
-import numpy
+import numpy as np
 import talib
 
-close = numpy.random.random(100)
+close = np.random.random(100)
 ```
 
 Calculate a simple moving average of the close prices:
@@ -329,7 +329,7 @@ The underlying TA-Lib C library handles NaN's in a sometimes surprising manner
 by typically propagating NaN's to the end of the output, for example:
 
 ```python
->>> c = numpy.array([1.0, 2.0, 3.0, np.nan, 4.0, 5.0, 6.0])
+>>> c = np.array([1.0, 2.0, 3.0, np.nan, 4.0, 5.0, 6.0])
 
 >>> talib.SMA(c, 3)
 array([nan, nan,  2., nan, nan, nan, nan])
