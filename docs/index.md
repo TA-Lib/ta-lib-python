@@ -1,6 +1,6 @@
 # About
 
-This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
+This is a Python wrapper for [TA-LIB](https://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
 
 > TA-Lib is widely used by trading software developers requiring to perform
@@ -11,7 +11,7 @@ instead of SWIG. From the homepage:
 > * Candlestick pattern recognition
 > * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
-The original Python bindings use [SWIG](http://swig.org) which unfortunately
+The original Python bindings use [SWIG](https://swig.org) which unfortunately
 are difficult to install and aren't as efficient as they could be. Therefore
 this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
 -- producing results 2-4 times faster than the SWIG interface.

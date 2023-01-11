@@ -23,7 +23,7 @@ If you get build errors like this, it typically means that it can't find the
 underlying ``TA-Lib`` library and needs to be installed:
 
 # Dependencies
-To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org/hdr_dw.html)
+To use TA-Lib for python, you need to have the [TA-Lib](https://ta-lib.org/hdr_dw.html)
 already installed:
 
 #### Mac OS X
@@ -32,11 +32,11 @@ $ brew install ta-lib
 ```
 
 #### Windows
-Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
+Download [ta-lib-0.4.0-msvc.zip](https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
 and unzip to ``C:\ta-lib``
 
 #### Linux
-Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
+Download [ta-lib-0.4.0-src.tar.gz](https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
 ```
 $ untar and cd
 $ ./configure --prefix=/usr

@@ -19,7 +19,7 @@ import os
 import sys
 import talib
 
-import mistune
+import mistune.renderers
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
@@ -41,7 +41,7 @@ HEADER = '''\
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (https://ta-lib.org/)." />
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
     <title>TA-Lib</title>
   </head>
@@ -49,7 +49,7 @@ HEADER = '''\
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/ta-lib/ta-lib-python">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
@@ -57,11 +57,11 @@ HEADER = '''\
                 </ul>
             </div>
             <br>
-            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
-            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <h1 id="project_title"><a href="https://ta-lib.github.io/ta-lib-python/">TA-Lib</a></h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (https://ta-lib.org/).</h2>
             <section id="downloads">
-                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
-                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+                <a class="zip_download_link" href="https://github.com/ta-lib/ta-lib-python/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/ta-lib/ta-lib-python/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -79,9 +79,9 @@ FOOTER = '''\
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
+        and <a href="https://github.com/ta-lib/ta-lib-python/network/members">contributors</a></p>
         
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
@@ -96,7 +96,7 @@ def slugify(string):
 
 def get_doc_links():
     """Returns a dictionary of function names -> upstream documentation link"""
-    tadoc_homepage = 'http://www.tadoc.org/'
+    tadoc_homepage = 'https://www.tadoc.org/'
     html_file_path = os.path.join(INPUT_DIR, '.tadoc.org.html')
     if os.path.exists(html_file_path):
         with open(html_file_path, 'r') as f:
@@ -211,7 +211,7 @@ def get_markdown_file_paths():
 
 def _get_markdown_renderer():
     """Returns a function to convert a Markdown string into pygments-highlighted HTML"""
-    class PygmentsHighlighter(mistune.Renderer):
+    class PygmentsHighlighter(mistune.renderers.HTMLRenderer):
         def block_code(self, code, lang=None):
             if not lang:
                 return '\n<pre><code>%s</code></pre>\n' % mistune.escape(code)
