@@ -3,6 +3,8 @@
 
 - [NEW]: Upgrade to Cython 0.29.33
 
+- [NEW]: Moved to https://github.com/ta-lib/ta-lib-python
+
 0.4.25
 ======
 
