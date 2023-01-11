@@ -1,6 +1,6 @@
 # TA-Lib
 
-![Tests](https://github.com/mrjbq7/ta-lib/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/ta-lib/ta-lib-python/actions/workflows/tests.yml/badge.svg)
 
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
