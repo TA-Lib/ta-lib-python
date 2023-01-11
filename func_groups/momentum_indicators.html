@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (https://ta-lib.org/)." />
     <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
     <title>TA-Lib</title>
   </head>
@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/ta-lib/ta-lib-python">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="../index.html">Home</a></li>
@@ -20,11 +20,11 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
-            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <h1 id="project_title"><a href="https://ta-lib.github.io/ta-lib-python/">TA-Lib</a></h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (https://ta-lib.org/).</h2>
             <section id="downloads">
-                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
-                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+                <a class="zip_download_link" href="https://github.com/ta-lib/ta-lib-python/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/ta-lib/ta-lib-python/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -37,46 +37,36 @@
 <p>NOTE: The <code>ADX</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADX</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Average Directional Movement Index at <a href="http://www.tadoc.org/indicator/ADX.htm">tadoc.org</a>.</p>
 <h3>ADXR - Average Directional Movement Index Rating</h3>
 <p>NOTE: The <code>ADXR</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADXR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Average Directional Movement Index Rating at <a href="http://www.tadoc.org/indicator/ADXR.htm">tadoc.org</a>.</p>
 <h3>APO - Absolute Price Oscillator</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">APO</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">12</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">26</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Absolute Price Oscillator at <a href="http://www.tadoc.org/indicator/APO.htm">tadoc.org</a>.</p>
 <h3>AROON - Aroon</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">aroondown</span><span class="highlight p">,</span> <span class="highlight n">aroonup</span> <span class="highlight o">=</span> <span class="highlight n">AROON</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Aroon at <a href="http://www.tadoc.org/indicator/AROON.htm">tadoc.org</a>.</p>
 <h3>AROONOSC - Aroon Oscillator</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">AROONOSC</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Aroon Oscillator at <a href="http://www.tadoc.org/indicator/AROONOSC.htm">tadoc.org</a>.</p>
 <h3>BOP - Balance Of Power</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">BOP</span><span class="highlight p">(</span><span class="highlight nb">open</span><span class="highlight p">,</span> <span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Balance Of Power at <a href="http://www.tadoc.org/indicator/BOP.htm">tadoc.org</a>.</p>
 <h3>CCI - Commodity Channel Index</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">CCI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Commodity Channel Index at <a href="http://www.tadoc.org/indicator/CCI.htm">tadoc.org</a>.</p>
 <h3>CMO - Chande Momentum Oscillator</h3>
 <p>NOTE: The <code>CMO</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">CMO</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Chande Momentum Oscillator at <a href="http://www.tadoc.org/indicator/CMO.htm">tadoc.org</a>.</p>
 <h3>DX - Directional Movement Index</h3>
 <p>NOTE: The <code>DX</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DX</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Directional Movement Index at <a href="http://www.tadoc.org/indicator/DX.htm">tadoc.org</a>.</p>
 <h3>MACD - Moving Average Convergence/Divergence</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">macd</span><span class="highlight p">,</span> <span class="highlight n">macdsignal</span><span class="highlight p">,</span> <span class="highlight n">macdhist</span> <span class="highlight o">=</span> <span class="highlight n">MACD</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">12</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">26</span><span class="highlight p">,</span> <span class="highlight n">signalperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Moving Average Convergence/Divergence at <a href="http://www.tadoc.org/indicator/MACD.htm">tadoc.org</a>.</p>
 <h3>MACDEXT - MACD with controllable MA type</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">macd</span><span class="highlight p">,</span> <span class="highlight n">macdsignal</span><span class="highlight p">,</span> <span class="highlight n">macdhist</span> <span class="highlight o">=</span> <span class="highlight n">MACDEXT</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">12</span><span class="highlight p">,</span> <span class="highlight n">fastmatype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">26</span><span class="highlight p">,</span> <span class="highlight n">slowmatype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">signalperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">,</span> <span class="highlight n">signalmatype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
@@ -87,81 +77,63 @@
 <p>NOTE: The <code>MFI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MFI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">volume</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Money Flow Index at <a href="http://www.tadoc.org/indicator/MFI.htm">tadoc.org</a>.</p>
 <h3>MINUS_DI - Minus Directional Indicator</h3>
 <p>NOTE: The <code>MINUS_DI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MINUS_DI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Minus Directional Indicator at <a href="http://www.tadoc.org/indicator/MINUS_DI.htm">tadoc.org</a>.</p>
 <h3>MINUS_DM - Minus Directional Movement</h3>
 <p>NOTE: The <code>MINUS_DM</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MINUS_DM</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Minus Directional Movement at <a href="http://www.tadoc.org/indicator/MINUS_DM.htm">tadoc.org</a>.</p>
 <h3>MOM - Momentum</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MOM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Momentum at <a href="http://www.tadoc.org/indicator/MOM.htm">tadoc.org</a>.</p>
 <h3>PLUS_DI - Plus Directional Indicator</h3>
 <p>NOTE: The <code>PLUS_DI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">PLUS_DI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Plus Directional Indicator at <a href="http://www.tadoc.org/indicator/PLUS_DI.htm">tadoc.org</a>.</p>
 <h3>PLUS_DM - Plus Directional Movement</h3>
 <p>NOTE: The <code>PLUS_DM</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">PLUS_DM</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Plus Directional Movement at <a href="http://www.tadoc.org/indicator/PLUS_DM.htm">tadoc.org</a>.</p>
 <h3>PPO - Percentage Price Oscillator</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">PPO</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">12</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">26</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Percentage Price Oscillator at <a href="http://www.tadoc.org/indicator/PPO.htm">tadoc.org</a>.</p>
 <h3>ROC - Rate of change : ((price/prevPrice)-1)*100</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ROC</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Rate of change : ((price/prevPrice)-1)*100 at <a href="http://www.tadoc.org/indicator/ROC.htm">tadoc.org</a>.</p>
 <h3>ROCP - Rate of change Percentage: (price-prevPrice)/prevPrice</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ROCP</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Rate of change Percentage: (price-prevPrice)/prevPrice at <a href="http://www.tadoc.org/indicator/ROCP.htm">tadoc.org</a>.</p>
 <h3>ROCR - Rate of change ratio: (price/prevPrice)</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ROCR</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Rate of change ratio: (price/prevPrice) at <a href="http://www.tadoc.org/indicator/ROCR.htm">tadoc.org</a>.</p>
 <h3>ROCR100 - Rate of change ratio 100 scale: (price/prevPrice)*100</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ROCR100</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Rate of change ratio 100 scale: (price/prevPrice)*100 at <a href="http://www.tadoc.org/indicator/ROCR100.htm">tadoc.org</a>.</p>
 <h3>RSI - Relative Strength Index</h3>
 <p>NOTE: The <code>RSI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RSI</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Relative Strength Index at <a href="http://www.tadoc.org/indicator/RSI.htm">tadoc.org</a>.</p>
 <h3>STOCH - Stochastic</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastk_period</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">slowk_period</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight n">slowk_matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">slowd_period</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight n">slowd_matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Stochastic at <a href="http://www.tadoc.org/indicator/STOCH.htm">tadoc.org</a>.</p>
 <h3>STOCHF - Stochastic Fast</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">fastk</span><span class="highlight p">,</span> <span class="highlight n">fastd</span> <span class="highlight o">=</span> <span class="highlight n">STOCHF</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastk_period</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">fastd_period</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight n">fastd_matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Stochastic Fast at <a href="http://www.tadoc.org/indicator/STOCHF.htm">tadoc.org</a>.</p>
 <h3>STOCHRSI - Stochastic Relative Strength Index</h3>
 <p>NOTE: The <code>STOCHRSI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">fastk</span><span class="highlight p">,</span> <span class="highlight n">fastd</span> <span class="highlight o">=</span> <span class="highlight n">STOCHRSI</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">,</span> <span class="highlight n">fastk_period</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">fastd_period</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight n">fastd_matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Stochastic Relative Strength Index at <a href="http://www.tadoc.org/indicator/STOCHRSI.htm">tadoc.org</a>.</p>
 <h3>TRIX - 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TRIX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA at <a href="http://www.tadoc.org/indicator/TRIX.htm">tadoc.org</a>.</p>
 <h3>ULTOSC - Ultimate Oscillator</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ULTOSC</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod1</span><span class="highlight o">=</span><span class="highlight mi">7</span><span class="highlight p">,</span> <span class="highlight n">timeperiod2</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">,</span> <span class="highlight n">timeperiod3</span><span class="highlight o">=</span><span class="highlight mi">28</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Ultimate Oscillator at <a href="http://www.tadoc.org/indicator/ULTOSC.htm">tadoc.org</a>.</p>
 <h3>WILLR - Williams' %R</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">WILLR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
-<p>Learn more about the Williams' %R at <a href="http://www.tadoc.org/indicator/WILLR.htm">tadoc.org</a>.</p>
 <p><a href="../doc_index.html">Documentation Index</a>
 <a class="float-right" href="../funcs.html">All Function Groups</a></p>
         </section>
@@ -171,9 +143,9 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
+        and <a href="https://github.com/ta-lib/ta-lib-python/network/members">contributors</a></p>
         
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 

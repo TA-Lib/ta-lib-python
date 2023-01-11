@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (http://ta-lib.org/)." />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (https://ta-lib.org/)." />
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
     <title>TA-Lib</title>
   </head>
@@ -12,7 +12,7 @@
   <body>
     <div id="header_wrap" class="outer">
         <header class="inner">
-            <a id="forkme_banner" href="https://github.com/mrjbq7/ta-lib">View on GitHub</a>
+            <a id="forkme_banner" href="https://github.com/ta-lib/ta-lib-python">View on GitHub</a>
             <div class="clearfix">
                 <ul id="menu" class="drop">
                     <li><a href="index.html">Home</a></li>
@@ -20,11 +20,11 @@
                 </ul>
             </div>
             <br>
-            <h1 id="project_title"><a href="http://mrjbq7.github.io/ta-lib/">TA-Lib</a></h1>
-            <h2 id="project_tagline">Python wrapper for TA-Lib (http://ta-lib.org/).</h2>
+            <h1 id="project_title"><a href="https://ta-lib.github.io/ta-lib-python/">TA-Lib</a></h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (https://ta-lib.org/).</h2>
             <section id="downloads">
-                <a class="zip_download_link" href="https://github.com/mrjbq7/ta-lib/zipball/master">Download this project as a .zip file</a>
-                <a class="tar_download_link" href="https://github.com/mrjbq7/ta-lib/tarball/master">Download this project as a tar.gz file</a>
+                <a class="zip_download_link" href="https://github.com/ta-lib/ta-lib-python/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/ta-lib/ta-lib-python/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -36,7 +36,7 @@
 <p>If you're already familiar with using the function API, you should feel right
 at home using the abstract API. Every function takes the same input, passed
 as a dictionary of Numpy arrays:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span> <span class="highlight kn">as</span> <span class="highlight nn">np</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span> <span class="highlight k">as</span> <span class="highlight nn">np</span>
 <span class="highlight c1"># note that all ndarrays must be the same length!</span>
 <span class="highlight n">inputs</span> <span class="highlight o">=</span> <span class="highlight p">{</span>
     <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
@@ -53,11 +53,11 @@ as a dictionary of Numpy arrays:</p>
 </pre></div>
 <p>From there, calling functions is basically the same as the function API:</p>
 <div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib.abstract</span> <span class="highlight kn">import</span> <span class="highlight o">*</span>
-<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on close prices by default</span>
-<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">,</span> <span class="highlight n">price</span><span class="highlight o">=</span><span class="highlight s1">&#39;open&#39;</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on opens</span>
-<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">)</span>
-<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">)</span> <span class="highlight c1"># uses high, low, close by default</span>
-<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">prices</span><span class="highlight o">=</span><span class="highlight p">[</span><span class="highlight s1">&#39;high&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">])</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">inputs</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on close prices by default</span>
+<span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">inputs</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">,</span> <span class="highlight n">price</span><span class="highlight o">=</span><span class="highlight s1">&#39;open&#39;</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on opens</span>
+<span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">inputs</span><span class="highlight p">,</span> <span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">)</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">inputs</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">)</span> <span class="highlight c1"># uses high, low, close by default</span>
+<span class="highlight n">slowk</span><span class="highlight p">,</span> <span class="highlight n">slowd</span> <span class="highlight o">=</span> <span class="highlight n">STOCH</span><span class="highlight p">(</span><span class="highlight n">inputs</span><span class="highlight p">,</span> <span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight mi">3</span><span class="highlight p">,</span> <span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">prices</span><span class="highlight o">=</span><span class="highlight p">[</span><span class="highlight s1">&#39;high&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;low&#39;</span><span class="highlight p">,</span> <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">])</span>
 </pre></div>
 <h2>Advanced Usage</h2>
 <p>For more advanced use cases of TA-Lib, the Abstract API also offers much more
@@ -65,7 +65,7 @@ flexibility. You can even subclass <code>abstract.Function</code> and override
 <code>set_input_arrays</code> to customize the type of input data Function accepts
 (e.g. a pandas DataFrame).</p>
 <p>Details about every function can be accessed via the info property:</p>
-<div class="highlight"><pre><span></span><span class="highlight k">print</span> <span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;stoch&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">info</span>
+<div class="highlight"><pre><span></span><span class="highlight nb">print</span> <span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;stoch&#39;</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">info</span>
 <span class="highlight p">{</span>
   <span class="highlight s1">&#39;name&#39;</span><span class="highlight p">:</span> <span class="highlight s1">&#39;STOCH&#39;</span><span class="highlight p">,</span>
   <span class="highlight s1">&#39;display_name&#39;</span><span class="highlight p">:</span> <span class="highlight s1">&#39;Stochastic&#39;</span><span class="highlight p">,</span>
@@ -110,7 +110,7 @@ parameters and recalculate with new input data using run():</p>
 <span class="highlight n">ma20</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
 <p>For more details, take a look at the
-<a href="https://github.com/mrjbq7/ta-lib/blob/master/talib/abstract.pyx#L46">code</a>.</p>
+<a href="https://github.com/ta-lib/ta-lib-python/blob/master/talib/abstract.pyx#L46">code</a>.</p>
 <p><a href="doc_index.html">Documentation Index</a></p>
         </section>
     </div>
@@ -119,9 +119,9 @@ parameters and recalculate with new input data using run():</p>
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
-        and <a href="https://github.com/mrjbq7/ta-lib/network/members">contributors</a></p>
+        and <a href="https://github.com/ta-lib/ta-lib-python/network/members">contributors</a></p>
         
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
