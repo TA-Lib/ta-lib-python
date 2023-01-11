@@ -151,8 +151,8 @@ setup(
     long_description_content_type='text/markdown',
     author='John Benediktsson',
     author_email='mrjbq7@gmail.com',
-    url='http://github.com/mrjbq7/ta-lib',
-    download_url='https://github.com/mrjbq7/ta-lib/releases',
+    url='http://github.com/ta-lib/ta-lib-python',
+    download_url='https://github.com/ta-lib/ta-lib-python/releases',
     license='BSD',
     classifiers=[
         "License :: OSI Approved :: BSD License",
