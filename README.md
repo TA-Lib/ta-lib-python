@@ -52,6 +52,11 @@ To use TA-Lib for python, you need to have the
 probably follow their installation directions for your platform, but some
 suggestions are included below for reference.
 
+> Some Conda Forge users have reported success installing the underlying TA-Lib C
+> library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
+>
+> ``$ conda install -c conda-forge libta-lib``
+
 ##### Mac OS X
 
 You can simply install using Homebrew:
