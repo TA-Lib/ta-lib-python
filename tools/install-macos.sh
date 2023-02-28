@@ -1,10 +1,8 @@
+#!/bin/bash
 
 brew install ta-lib
 
-arch="$(uname -m)"
-if [ "$arch" = "arm64" ]; then
-  export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
-  export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
-fi
+export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
 
 pip3 install ta-lib
