@@ -375,7 +375,7 @@ class Function(object):
                 return __POLARS_SERIES(ret[0])
             else:
                 return __POLARS_DATAFRAME(numpy.column_stack(ret),
-                                          columns=self.output_names)
+                                          schema=self.output_names)
         else:
             return ret[0] if len(ret) == 1 else ret
 
