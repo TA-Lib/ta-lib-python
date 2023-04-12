@@ -680,7 +680,7 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     name = bytes2str(info.paramName)
     name = name[len('optIn'):].lower()
     default_value = info.defaultValue
-    if default_value % 1 == 0:
+    if default_value % 1 == 0 and info.type > 1:
         default_value = int(default_value)
 
     return {
