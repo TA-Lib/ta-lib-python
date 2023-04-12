@@ -566,8 +566,8 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdevup: 2
-        nbdevdn: 2
+        nbdevup: 2.0
+        nbdevdn: 2.0
         matype: 0 (Simple Moving Average)
     Outputs:
         upperband
@@ -4425,8 +4425,8 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     Inputs:
         prices: ['high', 'low']
     Parameters:
-        startvalue: 0
-        offsetonreverse: 0
+        startvalue: 0.0
+        offsetonreverse: 0.0
         accelerationinitlong: 0.02
         accelerationlong: 0.02
         accelerationmaxlong: 0.2
@@ -4583,7 +4583,7 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdev: 1
+        nbdev: 1.0
     Outputs:
         real
     """
@@ -5103,7 +5103,7 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdev: 1
+        nbdev: 1.0
     Outputs:
         real
     """

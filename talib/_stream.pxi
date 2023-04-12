@@ -443,8 +443,8 @@ def stream_BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbd
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdevup: 2
-        nbdevdn: 2
+        nbdevup: 2.0
+        nbdevdn: 2.0
         matype: 0 (Simple Moving Average)
     Outputs:
         upperband
@@ -4470,8 +4470,8 @@ def stream_SAREXT( np.ndarray high not None , np.ndarray low not None , double s
     Inputs:
         prices: ['high', 'low']
     Parameters:
-        startvalue: 0
-        offsetonreverse: 0
+        startvalue: 0.0
+        offsetonreverse: 0.0
         accelerationinitlong: 0.02
         accelerationlong: 0.02
         accelerationmaxlong: 0.2
@@ -4620,7 +4620,7 @@ def stream_STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbd
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdev: 1
+        nbdev: 1.0
     Outputs:
         real
     """
@@ -5130,7 +5130,7 @@ def stream_VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=
         real: (any ndarray)
     Parameters:
         timeperiod: 5
-        nbdev: 1
+        nbdev: 1.0
     Outputs:
         real
     """

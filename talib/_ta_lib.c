@@ -8597,7 +8597,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_42AVGPRICE(CYTHON_UNUSED PyObject *__p
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_45BBANDS(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_44BBANDS[] = " BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])\n\n    Bollinger Bands (Overlap Studies)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdevup: 2\n        nbdevdn: 2\n        matype: 0 (Simple Moving Average)\n    Outputs:\n        upperband\n        middleband\n        lowerband\n    ";
+static char __pyx_doc_5talib_7_ta_lib_44BBANDS[] = " BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])\n\n    Bollinger Bands (Overlap Studies)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdevup: 2.0\n        nbdevdn: 2.0\n        matype: 0 (Simple Moving Average)\n    Outputs:\n        upperband\n        middleband\n        lowerband\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_45BBANDS = {"BBANDS", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_45BBANDS, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_44BBANDS};
 static PyObject *__pyx_pw_5talib_7_ta_lib_45BBANDS(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
@@ -28504,7 +28504,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_282SAR(CYTHON_UNUSED PyObject *__pyx_s
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_285SAREXT(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_284SAREXT[] = " SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])\n\n    Parabolic SAR - Extended (Overlap Studies)\n\n    Inputs:\n        prices: ['high', 'low']\n    Parameters:\n        startvalue: 0\n        offsetonreverse: 0\n        accelerationinitlong: 0.02\n        accelerationlong: 0.02\n        accelerationmaxlong: 0.2\n        accelerationinitshort: 0.02\n        accelerationshort: 0.02\n        accelerationmaxshort: 0.2\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_284SAREXT[] = " SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])\n\n    Parabolic SAR - Extended (Overlap Studies)\n\n    Inputs:\n        prices: ['high', 'low']\n    Parameters:\n        startvalue: 0.0\n        offsetonreverse: 0.0\n        accelerationinitlong: 0.02\n        accelerationlong: 0.02\n        accelerationmaxlong: 0.2\n        accelerationinitshort: 0.02\n        accelerationshort: 0.02\n        accelerationmaxshort: 0.2\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_285SAREXT = {"SAREXT", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_285SAREXT, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_284SAREXT};
 static PyObject *__pyx_pw_5talib_7_ta_lib_285SAREXT(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_high = 0;
@@ -29182,7 +29182,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_292SQRT(CYTHON_UNUSED PyObject *__pyx_
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_295STDDEV(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_294STDDEV[] = " STDDEV(real[, timeperiod=?, nbdev=?])\n\n    Standard Deviation (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_294STDDEV[] = " STDDEV(real[, timeperiod=?, nbdev=?])\n\n    Standard Deviation (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1.0\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_295STDDEV = {"STDDEV", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_295STDDEV, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_294STDDEV};
 static PyObject *__pyx_pw_5talib_7_ta_lib_295STDDEV(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
@@ -31764,7 +31764,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_324ULTOSC(CYTHON_UNUSED PyObject *__py
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_327VAR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_326VAR[] = " VAR(real[, timeperiod=?, nbdev=?])\n\n    Variance (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_326VAR[] = " VAR(real[, timeperiod=?, nbdev=?])\n\n    Variance (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1.0\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_327VAR = {"VAR", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_327VAR, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_326VAR};
 static PyObject *__pyx_pw_5talib_7_ta_lib_327VAR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
@@ -39430,7 +39430,8 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_352_ta_getOptInputParameterInfo(CYTHON
   PyObject *__pyx_t_4 = NULL;
   Py_ssize_t __pyx_t_5;
   int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  int __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -39499,8 +39500,16 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_352_ta_getOptInputParameterInfo(CYTHON
   __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 683, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(1, 683, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(1, 683, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__pyx_t_7) {
+  } else {
+    __pyx_t_6 = __pyx_t_7;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_7 = ((__pyx_v_info->type > 1) != 0);
+  __pyx_t_6 = __pyx_t_7;
+  __pyx_L4_bool_binop_done:;
   if (__pyx_t_6) {
 
     __pyx_t_3 = __Pyx_PyNumber_Int(__pyx_v_default_value); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 684, __pyx_L1_error)
@@ -39520,18 +39529,18 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_352_ta_getOptInputParameterInfo(CYTHON
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_info->displayName); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 688, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = NULL;
+  __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_7)) {
+    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_8)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_7);
+      __Pyx_INCREF(__pyx_t_8);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_2, function);
     }
   }
-  __pyx_t_1 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_7, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 688, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -39548,18 +39557,18 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_352_ta_getOptInputParameterInfo(CYTHON
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_info->hint); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 690, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = NULL;
+  __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_7)) {
+    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_8)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_7);
+      __Pyx_INCREF(__pyx_t_8);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_2, function);
     }
   }
-  __pyx_t_1 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_7, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 690, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -39581,7 +39590,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_352_ta_getOptInputParameterInfo(CYTHON
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("talib._ta_lib._ta_getOptInputParameterInfo", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -42429,7 +42438,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_382stream_AVGPRICE(CYTHON_UNUSED PyObj
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_385stream_BBANDS(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_384stream_BBANDS[] = " BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])\n\n    Bollinger Bands (Overlap Studies)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdevup: 2\n        nbdevdn: 2\n        matype: 0 (Simple Moving Average)\n    Outputs:\n        upperband\n        middleband\n        lowerband\n    ";
+static char __pyx_doc_5talib_7_ta_lib_384stream_BBANDS[] = " BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])\n\n    Bollinger Bands (Overlap Studies)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdevup: 2.0\n        nbdevdn: 2.0\n        matype: 0 (Simple Moving Average)\n    Outputs:\n        upperband\n        middleband\n        lowerband\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_385stream_BBANDS = {"stream_BBANDS", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_385stream_BBANDS, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_384stream_BBANDS};
 static PyObject *__pyx_pw_5talib_7_ta_lib_385stream_BBANDS(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
@@ -61735,7 +61744,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_622stream_SAR(CYTHON_UNUSED PyObject *
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_625stream_SAREXT(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_624stream_SAREXT[] = " SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])\n\n    Parabolic SAR - Extended (Overlap Studies)\n\n    Inputs:\n        prices: ['high', 'low']\n    Parameters:\n        startvalue: 0\n        offsetonreverse: 0\n        accelerationinitlong: 0.02\n        accelerationlong: 0.02\n        accelerationmaxlong: 0.2\n        accelerationinitshort: 0.02\n        accelerationshort: 0.02\n        accelerationmaxshort: 0.2\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_624stream_SAREXT[] = " SAREXT(high, low[, startvalue=?, offsetonreverse=?, accelerationinitlong=?, accelerationlong=?, accelerationmaxlong=?, accelerationinitshort=?, accelerationshort=?, accelerationmaxshort=?])\n\n    Parabolic SAR - Extended (Overlap Studies)\n\n    Inputs:\n        prices: ['high', 'low']\n    Parameters:\n        startvalue: 0.0\n        offsetonreverse: 0.0\n        accelerationinitlong: 0.02\n        accelerationlong: 0.02\n        accelerationmaxlong: 0.2\n        accelerationinitshort: 0.02\n        accelerationshort: 0.02\n        accelerationmaxshort: 0.2\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_625stream_SAREXT = {"stream_SAREXT", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_625stream_SAREXT, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_624stream_SAREXT};
 static PyObject *__pyx_pw_5talib_7_ta_lib_625stream_SAREXT(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_high = 0;
@@ -62366,7 +62375,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_632stream_SQRT(CYTHON_UNUSED PyObject 
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_635stream_STDDEV(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_634stream_STDDEV[] = " STDDEV(real[, timeperiod=?, nbdev=?])\n\n    Standard Deviation (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_634stream_STDDEV[] = " STDDEV(real[, timeperiod=?, nbdev=?])\n\n    Standard Deviation (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1.0\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_635stream_STDDEV = {"stream_STDDEV", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_635stream_STDDEV, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_634stream_STDDEV};
 static PyObject *__pyx_pw_5talib_7_ta_lib_635stream_STDDEV(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
@@ -64827,7 +64836,7 @@ static PyObject *__pyx_pf_5talib_7_ta_lib_664stream_ULTOSC(CYTHON_UNUSED PyObjec
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5talib_7_ta_lib_667stream_VAR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_5talib_7_ta_lib_666stream_VAR[] = " VAR(real[, timeperiod=?, nbdev=?])\n\n    Variance (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1\n    Outputs:\n        real\n    ";
+static char __pyx_doc_5talib_7_ta_lib_666stream_VAR[] = " VAR(real[, timeperiod=?, nbdev=?])\n\n    Variance (Statistic Functions)\n\n    Inputs:\n        real: (any ndarray)\n    Parameters:\n        timeperiod: 5\n        nbdev: 1.0\n    Outputs:\n        real\n    ";
 static PyMethodDef __pyx_mdef_5talib_7_ta_lib_667stream_VAR = {"stream_VAR", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5talib_7_ta_lib_667stream_VAR, METH_VARARGS|METH_KEYWORDS, __pyx_doc_5talib_7_ta_lib_666stream_VAR};
 static PyObject *__pyx_pw_5talib_7_ta_lib_667stream_VAR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_real = 0;
