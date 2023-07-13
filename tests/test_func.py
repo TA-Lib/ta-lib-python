@@ -33,6 +33,13 @@ def test_input_lengths():
         func.BOP(a1, a1, a1, a2)
 
 
+def test_input_allnans():
+    a = np.arange(20, dtype=float)
+    a[:] = np.nan
+    r = func.RSI(a)
+    assert np.all(np.isnan(r))
+
+
 def test_input_nans():
     a1 = np.arange(10, dtype=float)
     a2 = np.arange(10, dtype=float)

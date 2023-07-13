@@ -324,18 +324,6 @@ def test_call_without_arguments():
         abstract.Function('SMA')(10)
 
 
-def test_call_first_exception():
-    inputs = {'close': np.array([np.nan, np.nan, np.nan])}
-
-    with pytest.raises(Exception, match="inputs are all NaN"):
-        abstract.SMA(inputs, timeperiod=2)
-
-    inputs = {'close': np.array([1.0, 2.0, 3.0])}
-
-    output = abstract.SMA(inputs, timeperiod=2)
-    expected = np.array([np.nan, 1.5, 2.5])
-    assert_array_equal(expected, output)
-
 def test_threading():
     import pandas as pd
     TEST_LEN_SHORT = 999
