@@ -107,7 +107,7 @@ cdef np.npy_intp check_length4(np.ndarray a1, np.ndarray a2, np.ndarray a3, np.n
         raise Exception("input array lengths are different")
     return length
 
-cdef np.npy_int check_begidx1(np.npy_intp length, double* a1) except -1:
+cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
     cdef:
         double val
     for i from 0 <= i < length:
@@ -116,9 +116,9 @@ cdef np.npy_int check_begidx1(np.npy_intp length, double* a1) except -1:
             continue
         return i
     else:
-        raise Exception("inputs are all NaN")
+        return length - 1
 
-cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2) except -1:
+cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
     cdef:
         double val
     for i from 0 <= i < length:
@@ -130,9 +130,9 @@ cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2) except
             continue
         return i
     else:
-        raise Exception("inputs are all NaN")
+        return length - 1
 
-cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3) except -1:
+cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3):
     cdef:
         double val
     for i from 0 <= i < length:
@@ -147,9 +147,9 @@ cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double
             continue
         return i
     else:
-        raise Exception("inputs are all NaN")
+        return length - 1
 
-cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4) except -1:
+cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4):
     cdef:
         double val
     for i from 0 <= i < length:
@@ -167,7 +167,7 @@ cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double
             continue
         return i
     else:
-        raise Exception("inputs are all NaN")
+        return length - 1
 
 cdef np.ndarray make_double_array(np.npy_intp length, int lookback):
     cdef:
