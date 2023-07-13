@@ -455,8 +455,8 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_ROCR_Lookback(int optInTimePeriod)
     TA_RetCode TA_ROCR100(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ROCR100_Lookback(int optInTimePeriod)
-    TA_RetCode TA_RSI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
-    int TA_RSI_Lookback(int optInTimePeriod)
+    TA_RetCode TA_RSI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[]) nogil
+    int TA_RSI_Lookback(int optInTimePeriod) nogil
     TA_RetCode TA_SAR(int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInAcceleration, double optInMaximum, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SAR_Lookback(double optInAcceleration, double optInMaximum)
     TA_RetCode TA_SAREXT(int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInStartValue, double optInOffsetOnReverse, double optInAccelerationInitLong, double optInAccelerationLong, double optInAccelerationMaxLong, double optInAccelerationInitShort, double optInAccelerationShort, double optInAccelerationMaxShort, int *outBegIdx, int *outNBElement, double outReal[])
