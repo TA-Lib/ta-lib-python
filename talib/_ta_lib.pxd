@@ -1,4 +1,4 @@
-#cython: language_level=2
+#cython: language_level=2, embedsignature=True
 
 cdef extern from "ta-lib/ta_defs.h":
 
