@@ -188,8 +188,8 @@ def get_groups_markdown():
                 group_docs.append('Learn more about the %s at [tadoc.org](%s).  ' % (
                     f.info['display_name'], doc_links[func]))
 
-        group_docs.append('\n[Documentation Index](../doc_index.html)')
-        group_docs.append('[FLOAT_RIGHTAll Function Groups](../funcs.html)')
+        group_docs.append('\n[Documentation Index](../doc_index.md)')
+        group_docs.append('[FLOAT_RIGHTAll Function Groups](../funcs.md)')
 
         ret[slugify(group)] = '\n'.join(group_docs) + '\n'
     return ret
