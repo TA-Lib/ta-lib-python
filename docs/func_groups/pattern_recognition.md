@@ -305,5 +305,6 @@ integer = CDLXSIDEGAP3METHODS(open, high, low, close)
 ```
 
 
-[Documentation Index](../doc_index.html)
-[FLOAT_RIGHTAll Function Groups](../funcs.html)
+[Documentation Index](../doc_index.md)
+
+[FLOAT_RIGHTAll Function Groups](../funcs.md)
