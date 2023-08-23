@@ -4,6 +4,7 @@ docs/.tadoc.org.html
 *.pyc
 build/
 dist/
+c-ta-lib/
 *.so
 .*
 *~
