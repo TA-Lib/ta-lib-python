@@ -40,3 +40,6 @@ sdist_static:
 
 talib_static:
 	tools/build_talib_from_source.bash ${PWD}/c-ta-lib
+
+wheel_static:
+	TA_LINK_STATIC=1 TA_INCLUDE_PATH=c-ta-lib/include TA_LIBRARY_PATH=c-ta-lib/lib python3 setup.py bdist_wheel
