@@ -1,7 +1,12 @@
+0.4.29
+======
+
+- [NEW]: Upgrade to Cython 3.0.2
+
 0.4.28
 ======
 
-- [New]: Upgrade to Cython 3.0.0
+- [NEW]: Upgrade to Cython 3.0.0
 
 - [FIX]: Use embedsignature to enable code completions?
 
