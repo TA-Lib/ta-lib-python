@@ -448,10 +448,14 @@ etc):
 import talib
 
 # list of functions
-print talib.get_functions()
+for name in talib.get_functions():
+    print(name)
 
 # dict of functions by group
-print talib.get_function_groups()
+for group, names in talib.get_function_groups():
+    print(group)
+    for name in names:
+        print(name)
 ```
 
 ### Indicator Groups
