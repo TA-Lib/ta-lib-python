@@ -93,9 +93,8 @@ Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-li
 and unzip to ``C:\ta-lib``.
 
 > This is a 32-bit binary release.  If you want to use 64-bit Python, you will
-> need to build a 64-bit version of the library. Some unofficial (**and
-> unsupported**) instructions for building on 64-bit Windows 10, here for
-> reference:
+> need to build a 64-bit version of the library. Some unofficial instructions
+> for building on 64-bit Windows 10 or Windows 11, here for reference:
 >
 > 1. Download and Unzip ``ta-lib-0.4.0-msvc.zip``
 > 2. Move the Unzipped Folder ``ta-lib`` to ``C:\``
