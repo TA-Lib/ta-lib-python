@@ -3,6 +3,8 @@
 
 - [NEW]: Upgrade to Cython 3.0.8
 
+- [FIX]: Make TA_INCLUDE_PATH and TA_LIBRARY_PATH override default search list
+
 0.4.28
 ======
 
