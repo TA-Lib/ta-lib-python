@@ -457,7 +457,7 @@ for name in talib.get_functions():
 for group, names in talib.get_function_groups().items():
     print(group)
     for name in names:
-        print(name)
+        print(f"  {name}")
 ```
 
 ### Indicator Groups
