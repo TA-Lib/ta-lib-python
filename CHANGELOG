@@ -1,9 +1,11 @@
 0.4.29
 ======
 
-- [NEW]: Upgrade to Cython 3.0.9
+- [NEW]: Upgrade to Cython 3.0.10
 
 - [FIX]: Make TA_INCLUDE_PATH and TA_LIBRARY_PATH override default search list
+
+- [FIX]: Silent some compiler warnings about const pointers
 
 0.4.28
 ======

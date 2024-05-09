@@ -633,7 +633,7 @@ def _ta_getFuncInfo(char *function_name):
     Returns the info dict for the function. It has the following keys: name,
     group, help, flags, num_inputs, num_opt_inputs and num_outputs.
     """
-    cdef lib.TA_FuncInfo *info
+    cdef const lib.TA_FuncInfo *info
     retCode = lib.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
@@ -652,7 +652,7 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     Returns the function's input info dict for the given index. It has two
     keys: name and flags.
     """
-    cdef lib.TA_InputParameterInfo *info
+    cdef const lib.TA_InputParameterInfo *info
     retCode = lib.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
@@ -673,7 +673,7 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     Returns the function's opt_input info dict for the given index. It has the
     following keys: name, display_name, type, help, default_value and value.
     """
-    cdef lib.TA_OptInputParameterInfo *info
+    cdef const lib.TA_OptInputParameterInfo *info
     retCode = lib.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
@@ -697,7 +697,7 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     Returns the function's output info dict for the given index. It has two
     keys: name and flags.
     """
-    cdef lib.TA_OutputParameterInfo *info
+    cdef const lib.TA_OutputParameterInfo *info
     retCode = lib.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
@@ -764,11 +764,11 @@ def _get_defaults_and_docs(func_info):
 # - Getting TALIB handle and paramholder pointers
 # - Setting TALIB paramholder optInput values and calling the lookback function
 
-cdef lib.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
+cdef const lib.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     """
     Returns a pointer to a function handle for the given function name
     """
-    cdef lib.TA_FuncHandle *handle
+    cdef const lib.TA_FuncHandle *handle
     _ta_check_success('TA_GetFuncHandle', lib.TA_GetFuncHandle(function_name, &handle))
     return handle
 
