@@ -51,12 +51,10 @@ elif sys.platform == "win32":
     library_dirs = [r"c:\ta-lib\c\lib"]
 
 if 'TA_INCLUDE_PATH' in os.environ:
-    paths = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
-    include_dirs.extend(path for path in paths if path)
+    include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
 
 if 'TA_LIBRARY_PATH' in os.environ:
-    paths = os.environ['TA_LIBRARY_PATH'].split(os.pathsep)
-    library_dirs.extend(path for path in paths if path)
+    library_dirs = os.environ['TA_LIBRARY_PATH'].split(os.pathsep)
 
 if 'TA_LINK_STATIC' in os.environ:
     for base in library_dirs:

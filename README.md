@@ -89,13 +89,12 @@ $ your-arm64-python -m pip install --no-cache-dir ta-lib
 
 ##### Windows
 
-Download [ta-lib-0.4.0-msvc.zip](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
+Download [ta-lib-0.4.0-msvc.zip](https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/ta-lib-0.4.0-msvc.zip/download)
 and unzip to ``C:\ta-lib``.
 
 > This is a 32-bit binary release.  If you want to use 64-bit Python, you will
-> need to build a 64-bit version of the library. Some unofficial (**and
-> unsupported**) instructions for building on 64-bit Windows 10, here for
-> reference:
+> need to build a 64-bit version of the library. Some unofficial instructions
+> for building on 64-bit Windows 10 or Windows 11, here for reference:
 >
 > 1. Download and Unzip ``ta-lib-0.4.0-msvc.zip``
 > 2. Move the Unzipped Folder ``ta-lib`` to ``C:\``
@@ -107,14 +106,16 @@ and unzip to ``C:\ta-lib``.
 >    * Move to ``C:\ta-lib\c\make\cdr\win32\msvc``
 >    * Build the Library ``nmake``
 
-You might also try these unofficial windows binaries for both 32-bit and
-64-bit:
+You might also try these unofficial windows binary wheels for both 32-bit
+and 64-bit:
 
-https://www.lfd.uci.edu/~gohlke/pythonlibs/#ta-lib
+https://github.com/cgohlke/talib-build/
 
 ##### Linux
 
-Download [ta-lib-0.4.0-src.tar.gz](http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
+Download
+[ta-lib-0.4.0-src.tar.gz](https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/ta-lib-0.4.0-src.tar.gz/download)
+and:
 
 ```
 $ tar -xzf ta-lib-0.4.0-src.tar.gz
@@ -460,10 +461,14 @@ etc):
 import talib
 
 # list of functions
-print talib.get_functions()
+for name in talib.get_functions():
+    print(name)
 
 # dict of functions by group
-print talib.get_function_groups()
+for group, names in talib.get_function_groups().items():
+    print(group)
+    for name in names:
+        print(f"  {name}")
 ```
 
 ### Indicator Groups

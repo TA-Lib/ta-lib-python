@@ -70,3 +70,19 @@ def test_TEVA():
         assert_array_equal(inputs[column].to_numpy(), df[column].to_numpy())
 
     assert_array_equal(tema1.to_numpy(), tema2.to_numpy())
+
+def test_AVR():
+    size = 50
+    df = pl.DataFrame(
+        {
+            "open": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "high": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "low": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "close": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32"),
+            "volume": np.random.uniform(low=0.0, high=100.0, size=size).astype("float32")
+        }
+    )
+    high = df['high']
+    low = df['low']
+    close = df['close']
+    atr = talib.ATR(high, low, close, timeperiod=14)
