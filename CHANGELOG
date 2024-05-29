@@ -1,3 +1,8 @@
+0.4.30
+======
+
+- [FIX]: Fix the C library imports to work again on Windows, oops.
+
 0.4.29
 ======
 
