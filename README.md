@@ -287,6 +287,16 @@ compilation terminated
 error: command 'gcc' failed with exit status 1
 ```
 
+---
+
+If you're having trouble compiling the underlying TA-Lib C library on ARM64,
+you might need to configure it with an explicit build type before running
+``make`` and ``make install``, for example:
+
+```
+$ ./configure --build=aarch64-unknown-linux-gnu
+```
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
