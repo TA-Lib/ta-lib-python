@@ -297,6 +297,20 @@ you might need to configure it with an explicit build type before running
 $ ./configure --build=aarch64-unknown-linux-gnu
 ```
 
+This is caused by old ``config.guess`` file, so another way to solve this is
+to copy a newer version of config.guess into the underyling TA-Lib C library
+sources:
+
+```
+$ cp /usr/share/automake-1.16/config.guess /path/to/extracted/ta-lib/config.guess
+```
+
+And then re-run configure:
+
+```
+$ ./configure
+```
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
