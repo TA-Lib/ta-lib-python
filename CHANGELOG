@@ -1,3 +1,8 @@
+0.4.32
+======
+
+- [FIX]: Make sure numpy<2 is in the requirements.txt
+
 0.4.31
 ======
 
