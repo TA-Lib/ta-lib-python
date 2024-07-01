@@ -3,8 +3,14 @@
 build:
 	python3 setup.py build_ext --inplace
 
+build_static:
+	TA_LINK_STATIC=1 TA_INCLUDE_PATH=c-ta-lib/include TA_LIBRARY_PATH=c-ta-lib/lib python3 setup.py build_ext --inplace
+
 install:
 	python3 setup.py install
+
+install_static:
+	TA_LINK_STATIC=1 TA_INCLUDE_PATH=c-ta-lib/include TA_LIBRARY_PATH=c-ta-lib/lib python3 setup.py install
 
 talib/_func.pxi: tools/generate_func.py
 	python3 tools/generate_func.py > talib/_func.pxi
@@ -28,3 +34,12 @@ test: build
 
 sdist:
 	python3 setup.py sdist --formats=gztar,zip
+
+sdist_static:
+	TA_LINK_STATIC=1 TA_INCLUDE_PATH=c-ta-lib/include TA_LIBRARY_PATH=c-ta-lib/lib python3 setup.py sdist --formats=gztar,zip
+
+talib_static:
+	tools/build_talib_from_source.bash ${PWD}/c-ta-lib
+
+wheel_static:
+	TA_LINK_STATIC=1 TA_INCLUDE_PATH=c-ta-lib/include TA_LIBRARY_PATH=c-ta-lib/lib python3 setup.py bdist_wheel
