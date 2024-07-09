@@ -3,8 +3,8 @@ from cython import boundscheck, wraparound
 cimport _ta_lib as lib
 from _ta_lib cimport TA_RetCode
 # NOTE: _ta_check_success, NaN are defined in common.pxi
-#       NumPy C API is initialize in _func.pxi
 
+np.import_array() # Initialize the NumPy C API
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function

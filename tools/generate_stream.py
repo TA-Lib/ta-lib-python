@@ -54,8 +54,8 @@ from cython import boundscheck, wraparound
 cimport _ta_lib as lib
 from _ta_lib cimport TA_RetCode
 # NOTE: _ta_check_success, NaN are defined in common.pxi
-#       NumPy C API is initialize in _func.pxi
 
+np.import_array() # Initialize the NumPy C API
 """)
 
 # cleanup variable names to make them more pythonic

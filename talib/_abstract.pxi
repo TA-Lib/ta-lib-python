@@ -15,6 +15,7 @@ cimport numpy as np
 cimport _ta_lib as lib
 # NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
+np.import_array() # Initialize the NumPy C API
 
 # lookup for TALIB input parameters which don't define expected price series inputs
 __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
