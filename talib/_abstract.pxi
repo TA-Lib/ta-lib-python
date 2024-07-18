@@ -18,9 +18,9 @@ cimport _ta_lib as lib
 np.import_array() # Initialize the NumPy C API
 
 # lookup for TALIB input parameters which don't define expected price series inputs
-__INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
-                                 'price0':  'high',
-                                 'price1':  'low',
+__INPUT_PRICE_SERIES_DEFAULTS = {'price':   'real',
+                                 'price0':  'real0',
+                                 'price1':  'real1',
                                  'periods': 'periods', # only used by MAVP; not a price series!
                                  }
 
