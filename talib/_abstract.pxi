@@ -89,7 +89,7 @@ class Function(object):
     - set_function_args([input_arrays,] [param_args_andor_kwargs])
 
     Documentation for param_args_andor_kwargs can be seen by printing the
-    Function instance or programatically via the info, input_names and
+    Function instance or programmatically via the info, input_names and
     parameters properties.
 
     ----- result-returning functions -----

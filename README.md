@@ -298,7 +298,7 @@ $ ./configure --build=aarch64-unknown-linux-gnu
 ```
 
 This is caused by old ``config.guess`` file, so another way to solve this is
-to copy a newer version of config.guess into the underyling TA-Lib C library
+to copy a newer version of config.guess into the underlying TA-Lib C library
 sources:
 
 ```
