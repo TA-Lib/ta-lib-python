@@ -1,7 +1,7 @@
 0.4.33
 ======
 
-- [DOC]: change abstract arg names to real, real0, real1
+- [NEW]: Upgrade to Cython 3.0.11
 
 0.4.32
 ======
