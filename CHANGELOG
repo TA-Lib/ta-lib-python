@@ -3,6 +3,8 @@
 
 - [NEW]: Upgrade to Cython 3.0.11
 
+- [FIX]: Fix import of ``pandas`` and ``polars`` to throw underlying import errors
+
 0.4.32
 ======
 
