@@ -7,7 +7,15 @@ from functools import wraps
 # polars.Series input
 try:
     from polars import Series as _pl_Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'polars':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     # polars not available, nothing to wrap
     _pl_Series = None
 
@@ -15,7 +23,15 @@ except ImportError:
 # pandas.Series input
 try:
     from pandas import Series as _pd_Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'pandas':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     # pandas not available, nothing to wrap
     _pd_Series = None
 

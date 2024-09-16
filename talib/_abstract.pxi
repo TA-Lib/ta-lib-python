@@ -34,7 +34,15 @@ try:
     __ARRAY_TYPES.append(pandas.Series)
     __PANDAS_DATAFRAME = pandas.DataFrame
     __PANDAS_SERIES = pandas.Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'pandas':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     __PANDAS_DATAFRAME = None
     __PANDAS_SERIES = None
 
@@ -45,7 +53,15 @@ try:
     __ARRAY_TYPES.append(polars.Series)
     __POLARS_DATAFRAME = polars.DataFrame
     __POLARS_SERIES = polars.Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'polars':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     __POLARS_DATAFRAME = None
     __POLARS_SERIES = None
 
