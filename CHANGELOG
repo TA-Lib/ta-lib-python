@@ -1,3 +1,25 @@
+0.4.33
+======
+
+- [NEW]: Upgrade to Cython 3.0.11
+
+- [FIX]: Fix import of ``pandas`` and ``polars`` to throw underlying import errors
+
+0.4.32
+======
+
+- [FIX]: Make sure numpy<2 is in the requirements.txt
+
+0.4.31
+======
+
+- [FIX]: Fix build issue with numpy2 released by requiring numpy<2.0.0 for now
+
+0.4.30
+======
+
+- [FIX]: Fix the C library imports to work again on Windows, oops.
+
 0.4.29
 ======
 

@@ -15,6 +15,7 @@ cimport numpy as np
 cimport _ta_lib as lib
 # NOTE: _ta_check_success, MA_Type is defined in _common.pxi
 
+np.import_array() # Initialize the NumPy C API
 
 # lookup for TALIB input parameters which don't define expected price series inputs
 __INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
@@ -33,7 +34,15 @@ try:
     __ARRAY_TYPES.append(pandas.Series)
     __PANDAS_DATAFRAME = pandas.DataFrame
     __PANDAS_SERIES = pandas.Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'pandas':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     __PANDAS_DATAFRAME = None
     __PANDAS_SERIES = None
 
@@ -44,7 +53,15 @@ try:
     __ARRAY_TYPES.append(polars.Series)
     __POLARS_DATAFRAME = polars.DataFrame
     __POLARS_SERIES = polars.Series
-except ImportError:
+except ImportError as import_error:
+    try:
+        if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'polars':
+            # Propagate the error when the module exists but failed to be imported.
+            raise import_error
+    # `ModuleNotFoundError` was introduced in Python 3.6.
+    except NameError:
+        pass
+
     __POLARS_DATAFRAME = None
     __POLARS_SERIES = None
 
@@ -88,7 +105,7 @@ class Function(object):
     - set_function_args([input_arrays,] [param_args_andor_kwargs])
 
     Documentation for param_args_andor_kwargs can be seen by printing the
-    Function instance or programatically via the info, input_names and
+    Function instance or programmatically via the info, input_names and
     parameters properties.
 
     ----- result-returning functions -----

@@ -154,7 +154,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.4.29',
+    version='0.4.33',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -183,6 +183,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Cython",
         "Topic :: Office/Business :: Financial",
         "Topic :: Scientific/Engineering :: Mathematics",

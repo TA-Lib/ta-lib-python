@@ -298,6 +298,48 @@ compilation terminated
 error: command 'gcc' failed with exit status 1
 ```
 
+---
+
+If you're having trouble compiling the underlying TA-Lib C library on ARM64,
+you might need to configure it with an explicit build type before running
+``make`` and ``make install``, for example:
+
+```
+$ ./configure --build=aarch64-unknown-linux-gnu
+```
+
+This is caused by old ``config.guess`` file, so another way to solve this is
+to copy a newer version of config.guess into the underlying TA-Lib C library
+sources:
+
+```
+$ cp /usr/share/automake-1.16/config.guess /path/to/extracted/ta-lib/config.guess
+```
+
+And then re-run configure:
+
+```
+$ ./configure
+```
+
+---
+
+If you're having trouble using [PyInstaller](https://pyinstaller.org) and
+get an error that looks like this:
+
+```
+...site-packages\PyInstaller\loader\pyimod03_importers.py", line 493, in exec_module
+    exec(bytecode, module.__dict__)
+  File "talib\__init__.py", line 72, in <module>
+ModuleNotFoundError: No module named 'talib.stream'
+```
+
+Then, perhaps you can use the ``--hidden-import`` argument to fix this:
+
+```
+$ pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
+```
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the

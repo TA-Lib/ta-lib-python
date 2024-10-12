@@ -1,77 +1,77 @@
 # Math Transform Functions
 ### ACOS - Vector Trigonometric ACos
 ```python
-real = ACOS(close)
+real = ACOS(real)
 ```
 
 ### ASIN - Vector Trigonometric ASin
 ```python
-real = ASIN(close)
+real = ASIN(real)
 ```
 
 ### ATAN - Vector Trigonometric ATan
 ```python
-real = ATAN(close)
+real = ATAN(real)
 ```
 
 ### CEIL - Vector Ceil
 ```python
-real = CEIL(close)
+real = CEIL(real)
 ```
 
 ### COS - Vector Trigonometric Cos
 ```python
-real = COS(close)
+real = COS(real)
 ```
 
 ### COSH - Vector Trigonometric Cosh
 ```python
-real = COSH(close)
+real = COSH(real)
 ```
 
 ### EXP - Vector Arithmetic Exp
 ```python
-real = EXP(close)
+real = EXP(real)
 ```
 
 ### FLOOR - Vector Floor
 ```python
-real = FLOOR(close)
+real = FLOOR(real)
 ```
 
 ### LN - Vector Log Natural
 ```python
-real = LN(close)
+real = LN(real)
 ```
 
 ### LOG10 - Vector Log10
 ```python
-real = LOG10(close)
+real = LOG10(real)
 ```
 
 ### SIN - Vector Trigonometric Sin
 ```python
-real = SIN(close)
+real = SIN(real)
 ```
 
 ### SINH - Vector Trigonometric Sinh
 ```python
-real = SINH(close)
+real = SINH(real)
 ```
 
 ### SQRT - Vector Square Root
 ```python
-real = SQRT(close)
+real = SQRT(real)
 ```
 
 ### TAN - Vector Trigonometric Tan
 ```python
-real = TAN(close)
+real = TAN(real)
 ```
 
 ### TANH - Vector Trigonometric Tanh
 ```python
-real = TANH(close)
+real = TANH(real)
 ```
 
 
