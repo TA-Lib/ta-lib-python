@@ -19,6 +19,7 @@ except ImportError:
     requires = {"requires": ["numpy"]}
 
 lib_talib_name = 'ta_lib'  # the underlying C library's name
+lib_talib_static_lib = ''  # static C library, such as '/usr/lib/libta_lib.a'
 
 platform_supported = False
 
@@ -54,6 +55,15 @@ if 'TA_INCLUDE_PATH' in os.environ:
 
 if 'TA_LIBRARY_PATH' in os.environ:
     library_dirs = os.environ['TA_LIBRARY_PATH'].split(os.pathsep)
+
+if 'TA_LINK_STATIC' in os.environ:
+    for base in library_dirs:
+        fname = f'{base}/libta_lib.a'
+        if os.path.exists(fname):
+            lib_talib_static_lib = fname
+            lib_talib_name = ''
+            break
+
 
 if not platform_supported:
     raise NotImplementedError(sys.platform)
@@ -130,9 +140,11 @@ ext_modules = [
     Extension(
         'talib._ta_lib',
         ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
+        define_macros=[('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')],
         include_dirs=include_dirs,
         library_dirs=library_dirs,
-        libraries=[lib_talib_name],
+        libraries=[lib_talib_name] if len(lib_talib_name) > 0 else [],
+        extra_objects=[lib_talib_static_lib] if len(lib_talib_static_lib) > 0 else [],
         runtime_library_dirs=[] if sys.platform == 'win32' else library_dirs)
 ]
 

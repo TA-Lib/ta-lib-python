@@ -131,6 +131,17 @@ $ sudo make install
 Note: if your directory path includes spaces, the installation will probably
 fail with ``No such file or directory`` errors.
 
+###### Link static ta-lib in Linux
+
+Linux build can link `ta-lib` static, so there is no need to install `ta-lib` global, may be easier to distribute.
+
+1. build `ta-lib` to current dir, `make talib_static`, it download`ta-lib` and build it to `c-ta-lib` of current dir.
+2. install static link version of ta-lib-python, `make install_static`
+
+A bool environment variables `TA_LINK_STATIC` is used to tell `setup.py` do static link `ta-lib`, it find `libta_lib.a`
+in all `library_dirs`, when found, it set `lib_talib_name` with empty str to disable dynamic link.
+
+
 ### Troubleshooting
 
 If you get a warning that looks like this:
