@@ -102,7 +102,7 @@ and unzip to ``C:\ta-lib``.
 >    * Remember to Select ``[Visual C++]`` Feature
 > 4. Build TA-Lib Library
 >    * From Windows Start Menu, Start ``[VS2015 x64 Native Tools Command
->      Prompt]``
+>      Prompt]`` or ``x64``
 >    * Move to ``C:\ta-lib\c\make\cdr\win32\msvc``
 >    * Build the Library ``nmake``
 
