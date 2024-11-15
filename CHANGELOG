@@ -1,3 +1,8 @@
+0.5.1
+=====
+
+- [FIX]: include cython *.pxi files in the source tar.gz
+
 0.5.0
 =====
 
