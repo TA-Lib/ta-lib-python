@@ -329,6 +329,12 @@ Then, perhaps you can use the ``--hidden-import`` argument to fix this:
 $ pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
 ```
 
+---
+
+If you want to use ``numpy<2``, then you should use ``ta-lib<0.5``.
+
+If you want to use ``numpy>=2``, then you should use ``ta-lib>=0.5``.
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
