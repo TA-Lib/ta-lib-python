@@ -8,6 +8,11 @@
 
 - [NEW]: Upgrade to Numpy 2.0
 
+0.4.34
+=====
+
+- [FIX]: include cython *.pxi files in the source tar.gz
+
 0.4.33
 ======
 
