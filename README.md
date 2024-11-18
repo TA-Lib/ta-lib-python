@@ -341,7 +341,10 @@ If you have trouble getting the code autocompletions to work in Visual
 Studio Code, a suggestion was made to look for the ``Python`` extension
 settings, and an option for ``Language Server``, and change it from
 ``Default`` (which means ``Pylance if it is installed, Jedi otherwise``, to
-manually set ``Jedi`` and the completions should work.
+manually set ``Jedi`` and the completions should work. It is possible that
+you might need to [install it
+manually](https://github.com/pappasam/jedi-language-server) for this to
+work.
 
 ## Function API
 
