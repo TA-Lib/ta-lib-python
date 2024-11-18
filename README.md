@@ -335,6 +335,14 @@ If you want to use ``numpy<2``, then you should use ``ta-lib<0.5``.
 
 If you want to use ``numpy>=2``, then you should use ``ta-lib>=0.5``.
 
+---
+
+If you have trouble getting the code autocompletions to work in Visual
+Studio Code, a suggestion was made to look for the ``Python`` extension
+settings, and an option for ``Language Server``, and change it from
+``Default`` (which means ``Pylance if it is installed, Jedi otherwise``, to
+manually set ``Jedi`` and the completions should work.
+
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
