@@ -18,7 +18,7 @@ class MA_Type(Enum):
 
 #Overlap Studies Functions
 
-def BBAND(
+def BBANDS(
         real: Union[NDArray[np.float64], pd.Series, pl.Series],  
         timeperiod: int= 5, 
         nbdevup: float= 2, 
