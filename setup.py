@@ -183,5 +183,6 @@ setup(
     ],
     packages=['talib'],
     ext_modules=ext_modules,
+    package_data={ 'talib': ['_ta_lib.pyi', 'py.typed'], },
     cmdclass=cmdclass,
     **requires)
