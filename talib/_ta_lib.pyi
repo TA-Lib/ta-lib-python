@@ -402,7 +402,7 @@ def HT_PHASOR(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np
 
 def HT_SINE(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 
-def HT_TRENDMODE(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+def HT_TRENDMODE(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np.int32]]: ...
 
 #Pattern Recognition Functions
 
@@ -411,49 +411,49 @@ def CDL2CROWS(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3BLACKCROWS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3INSIDE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3LINESTRIKE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3OUTSIDE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3STARSINSOUTH(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDL3WHITESOLDIERS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLABANDONEDBABY(
         open: NDArray[np.float64], 
@@ -461,49 +461,49 @@ def CDLABANDONEDBABY(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLADVANCEBLOCK(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLBELTHOLD(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLBREAKAWAY(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLCLOSINGMARUBOZU(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLCONCEALBABYSWALL(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLCOUNTERATTACK(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLDARKCLOUDCOVER(
         open: NDArray[np.float64], 
@@ -511,35 +511,35 @@ def CDLDARKCLOUDCOVER(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLDOJI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLDOJISTAR(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLDRAGONFLYDOJI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLENGULFING(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLEVENINGDOJISTAR(
         open: NDArray[np.float64], 
@@ -547,7 +547,7 @@ def CDLEVENINGDOJISTAR(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLEVENINGSTAR(
         open: NDArray[np.float64], 
@@ -555,147 +555,147 @@ def CDLEVENINGSTAR(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLGAPSIDESIDEWHITE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLGRAVESTONEDOJI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHAMMER(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHANGINGMAN(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHARAMI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHARAMICROSS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHIGHWAVE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHIKKAKE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHIKKAKEMOD(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLHOMINGPIGEON(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLIDENTICAL3CROWS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLINNECK(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLINVERTEDHAMMER(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLKICKING(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLKICKINGBYLENGTH(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLLADDERBOTTOM(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLLONGLEGGEDDOJI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLLONGLINE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLMARUBOZU(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLMATCHINGLOW(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLMATHOLD(
         open: NDArray[np.float64], 
@@ -703,7 +703,7 @@ def CDLMATHOLD(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLMORNINGDOJISTAR(
         open: NDArray[np.float64], 
@@ -711,7 +711,7 @@ def CDLMORNINGDOJISTAR(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLMORNINGSTAR(
         open: NDArray[np.float64], 
@@ -719,126 +719,126 @@ def CDLMORNINGSTAR(
         low: NDArray[np.float64], 
         close: NDArray[np.float64],
         penetration: float= 0
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLONNECK(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLPIERCING(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLRICKSHAWMAN(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLRISEFALL3METHODS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSEPARATINGLINES(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSHOOTINGSTAR(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSHORTLINE(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSPINNINGTOP(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSTALLEDPATTERN(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLSTICKSANDWICH(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLTAKURI(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLTASUKIGAP(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLTHRUSTING(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLTRISTAR(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLUNIQUE3RIVER(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLUPSIDEGAP2CROWS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def CDLXSIDEGAP3METHODS(
         open: NDArray[np.float64], 
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 # Statistic Functions
 
@@ -943,7 +943,7 @@ def MAX(
 def MAXINDEX(
         real: NDArray[np.float64], 
         timeperiod: int= 30
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def MIN(
         real: NDArray[np.float64], 
@@ -953,7 +953,7 @@ def MIN(
 def MININDEX(
         real: NDArray[np.float64], 
         timeperiod: int= 30
-        )-> NDArray[np.float64]: ...
+        )-> NDArray[np.int32]: ...
 
 def MINMAX(
         real: NDArray[np.float64], 
