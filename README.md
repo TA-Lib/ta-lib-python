@@ -101,8 +101,7 @@ and unzip to ``C:\ta-lib``.
 > 3. Download and Install Visual Studio Community (2015 or later)
 >    * Remember to Select ``[Visual C++]`` Feature
 > 4. Build TA-Lib Library
->    * From Windows Start Menu, Start ``[VS2015 x64 Native Tools Command
->      Prompt]``
+>    * From Windows Start Menu, Start ``[x64 Native Tools Command Prompt]``
 >    * Move to ``C:\ta-lib\c\make\cdr\win32\msvc``
 >    * Build the Library ``nmake``
 
@@ -339,6 +338,23 @@ Then, perhaps you can use the ``--hidden-import`` argument to fix this:
 ```
 $ pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
 ```
+
+---
+
+If you want to use ``numpy<2``, then you should use ``ta-lib<0.5``.
+
+If you want to use ``numpy>=2``, then you should use ``ta-lib>=0.5``.
+
+---
+
+If you have trouble getting the code autocompletions to work in Visual
+Studio Code, a suggestion was made to look for the ``Python`` extension
+settings, and an option for ``Language Server``, and change it from
+``Default`` (which means ``Pylance if it is installed, Jedi otherwise``, to
+manually set ``Jedi`` and the completions should work. It is possible that
+you might need to [install it
+manually](https://github.com/pappasam/jedi-language-server) for this to
+work.
 
 ## Function API
 
