@@ -3,6 +3,8 @@
 
 - [NEW]: Provide py typed information for C wrapper
 
+- [FIX]: Make sure this wrapper works with TA-Lib 0.6.1
+
 0.5.1
 =====
 
