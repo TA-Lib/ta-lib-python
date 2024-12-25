@@ -18,8 +18,6 @@ except ImportError:
     from distutils.extension import Extension
     requires = {"requires": ["numpy"]}
 
-lib_talib_name = 'ta_lib'  # the underlying C library's name
-
 platform_supported = False
 
 if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
@@ -64,11 +62,23 @@ try:
 except ImportError:
     has_cython = False
 
+lib_talib_names = ['ta-lib', 'ta_lib']  # the underlying C library's name
+lib_talib_name = 'ta-lib'               # the name as of TA-Lib 0.6.1
+
 for path in library_dirs:
     try:
         files = os.listdir(path)
-        if any(lib_talib_name in f for f in files):
+        for f in files:
+            for name in lib_talib_names:
+                if name in f:
+                    lib_talib_name = name
+                    break
+            else:
+                continue
             break
+        else:
+            continue
+        break
     except OSError:
         pass
 else:
