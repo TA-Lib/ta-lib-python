@@ -15,6 +15,11 @@
 
 - [NEW]: Upgrade to Numpy 2.0
 
+0.4.35
+======
+
+- [FIX]: Make sure this wrapper works with TA-Lib 0.6.1
+
 0.4.34
 =====
 
