@@ -24,6 +24,14 @@ In addition, this project also supports the use of the
 [Polars](https://www.pola.rs) and [Pandas](https://pandas.pydata.org)
 libraries.
 
+## Versions
+
+Some notes about the different version branches:
+
+* ``ta-lib-python`` 0.4.x (supports ``ta-lib`` 0.4.x and ``numpy`` 1)
+* ``ta-lib-python`` 0.5.x (supports ``ta-lib`` 0.4.x and ``numpy`` 2)
+* ``ta-lib-python`` 0.6.x (supports ``ta-lib`` 0.6.x and ``numpy`` 2)
+
 ## Installation
 
 You can install from PyPI:
