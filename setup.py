@@ -62,23 +62,13 @@ try:
 except ImportError:
     has_cython = False
 
-lib_talib_names = ['ta-lib', 'ta_lib']  # the underlying C library's name
-lib_talib_name = 'ta-lib'               # the name as of TA-Lib 0.6.1
+lib_talib_name = 'ta_lib'               # the name as of TA-Lib 0.4.0
 
 for path in library_dirs:
     try:
         files = os.listdir(path)
-        for f in files:
-            for name in lib_talib_names:
-                if name in f:
-                    lib_talib_name = name
-                    break
-            else:
-                continue
+        if any(lib_talib_name in f for f in files):
             break
-        else:
-            continue
-        break
     except OSError:
         pass
 else:
@@ -153,7 +143,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.4.35',
+    version='0.4.36',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
