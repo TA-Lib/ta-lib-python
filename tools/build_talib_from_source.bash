@@ -20,7 +20,7 @@ wget -O "$DEPS_DIR/tmp/$TA_LIB_TGZ" $TA_LIB_URL
 pushd $DEPS_DIR/tmp
 tar -zxvf $TA_LIB_TGZ
 popd
-pushd $DEPS_DIR/tmp/ta-lib
+pushd $DEPS_DIR/tmp/ta-lib-0.6.2
 ./configure --prefix=$DEPS_DIR
 make install
 popd
