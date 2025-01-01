@@ -62,7 +62,7 @@ try:
 except ImportError:
     has_cython = False
 
-lib_talib_name = 'ta-lib'               # the name as of TA-Lib 0.6.1
+lib_talib_name = 'ta_lib'               # the name as of TA-Lib 0.4.0
 
 for path in library_dirs:
     try:
@@ -143,7 +143,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.6.0',
+    version='0.5.3',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
