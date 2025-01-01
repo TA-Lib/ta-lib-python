@@ -8,8 +8,8 @@ fi
 
 DEPS_DIR=$1
 
-TA_LIB_TGZ="ta-lib-0.4.0-src.tar.gz"
-TA_LIB_URL="http://prdownloads.sourceforge.net/ta-lib/$TA_LIB_TGZ"
+TA_LIB_TGZ="ta-lib-0.6.2-src.tar.gz"
+TA_LIB_URL="https://github.com/TA-Lib/ta-lib/releases/download/v0.6.2/$TA_LIB_TGZ"
 
 if [[ -d $DEPS_DIR/lib ]]; then
   echo "Already built"
