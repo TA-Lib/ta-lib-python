@@ -26,7 +26,10 @@ libraries.
 
 ## Versions
 
-Some notes about the different version branches:
+The upstream TA-Lib C library released version 0.6.1 and changed the library
+name to ``-lta-lib`` from ``-lta_lib``. After trying to support both via
+autodetect and having some issues, we have decided to currently support three
+feature branches:
 
 * ``ta-lib-python`` 0.4.x (supports ``ta-lib`` 0.4.x and ``numpy`` 1)
 * ``ta-lib-python`` 0.5.x (supports ``ta-lib`` 0.4.x and ``numpy`` 2)
