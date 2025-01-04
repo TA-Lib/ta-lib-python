@@ -9,14 +9,14 @@ try:
     from setuptools import setup, Extension
     from setuptools.dist import Distribution
     requires = {
-        "install_requires": ["numpy"],
-        "setup_requires": ["numpy"]
+        "install_requires": ["numpy<2"],
+        "setup_requires": ["numpy<2"]
     }
 except ImportError:
     from distutils.core import setup
     from distutils.dist import Distribution
     from distutils.extension import Extension
-    requires = {"requires": ["numpy"]}
+    requires = {"requires": ["numpy<2"]}
 
 platform_supported = False
 
@@ -143,7 +143,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.4.36',
+    version='0.4.37',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',

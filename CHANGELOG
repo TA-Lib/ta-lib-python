@@ -1,3 +1,8 @@
+0.4.37
+======
+
+- [FIX]: Make sure to pin numpy<2 in the setup.py.
+
 0.4.36
 ======
 
