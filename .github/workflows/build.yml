@@ -8,7 +8,7 @@ on:
 
 env:
   TALIB_C_VER: ${{ github.ref_name }}
-  TALIB_PY_VER: 0.6.0
+  TALIB_PY_VER: ${{ github.ref_name }}
 
 jobs:
   build_manylinux_x86_64:
