@@ -7,7 +7,7 @@ on:
       - "v*"
 
 env:
-  TALIB_C_VER: ${{ github.ref_name }}
+  TALIB_C_VER: 0.6.2
   TALIB_PY_VER: ${{ github.ref_name }}
 
 jobs:
