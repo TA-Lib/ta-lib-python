@@ -248,7 +248,7 @@ jobs:
             PIP_NO_BUILD_ISOLATION=false
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
             export MACOSX_DEPLOYMENT_TARGET=13.7
-            export DYLD_LIBRARY_PATH="/Users/runner/work/talib-prebuilt/talib-prebuilt/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
+            export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Set wheel name
         run: |
@@ -292,7 +292,7 @@ jobs:
             PIP_NO_BUILD_ISOLATION=false
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
             export MACOSX_DEPLOYMENT_TARGET=14.0
-            export DYLD_LIBRARY_PATH="/Users/runner/work/talib-prebuilt/talib-prebuilt/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
+            export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Set wheel name
         run: |
