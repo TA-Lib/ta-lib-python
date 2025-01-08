@@ -1,0 +1,304 @@
+
+name: TA-Lib-python GitHub Actions to build wheels
+run-name: TA-Lib-python GitHub Actions to build wheels
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  TALIB_C_VER: ${{ github.ref_name }}
+  TALIB_PY_VER: 0.6.0
+
+jobs:
+  build_manylinux_x86_64:
+    name: Build ManyLinux x86_64 wheels
+    strategy:
+      matrix:
+        os: ["ubuntu-22.04"]
+    runs-on: ${{ matrix.os }}
+    env:
+      PIP_NO_VERIFY: 0
+      PIP_VERBOSE: 1
+      CIBW_BUILD_VERBOSITY: 2
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
+      CIBW_BEFORE_BUILD: pip install setuptools==58.0.1&&pip install -U Cython&&pip install -U wheel numpy
+      CIBW_BEFORE_TEST: pip install -U Cython
+      CIBW_TEST_REQUIRES: pytest pandas polars
+      CIBW_TEST_COMMAND: >
+        cd .. &&
+        pytest -k "not RSI and not threading" {project}/tests
+      CIBW_TEST_SKIP: "*win32 cp*"
+      CIBW_SKIP: "pp* cp*-musllinux*"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install GCC and CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc g++ cmake
+      - name: Make script executable
+        run: chmod +x build_linux.sh
+      - name: Build TA-Lib
+        run: ./tools/build_wheel_linux.sh
+        shell: bash
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS_LINUX: x86_64
+          CIBW_BUILD_FRONTEND: build
+          CIBW_ENVIRONMENT_LINUX : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
+            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
+            auditwheel repair -w {dest_dir} {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_x86_64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_musllinux_x86_64:
+    name: Build MuslLinux x86_64 wheels
+    strategy:
+      matrix:
+        os: ["ubuntu-22.04"]
+    runs-on: ${{ matrix.os }}
+    env:
+      PIP_NO_VERIFY: 0
+      PIP_VERBOSE: 1
+      CIBW_BUILD_VERBOSITY: 2
+      CIBW_BEFORE_BUILD: pip install setuptools==58.0.1&&pip install Cython==0.29.37&&pip install -U wheel numpy
+      CIBW_BEFORE_TEST: apk add bash&&bash setup_rust.sh&&. "$HOME/.cargo/env"&&pip install Cython==0.29.37&&pip install -U maturin&&pip install -U polars
+      CIBW_TEST_REQUIRES: pytest pandas polars
+      CIBW_TEST_COMMAND: >
+        cd .. &&
+        pytest -k "not RSI and not threading" {project}/tests
+      CIBW_TEST_SKIP: "*win32 cp*"
+      CIBW_SKIP: "pp* cp*-manylinux*"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup latest Alpine Linux
+        uses: jirutka/setup-alpine@v1
+        with:
+          branch: v3.15
+          packages: >
+            build-base
+            bash
+            curl
+            unzip
+            gcc
+            g++
+            cmake
+          volumes: ${{ github.workspace }}:/project
+      - name: Make script executable
+        run: chmod +x build_linux.sh
+      - name: Build TA-Lib
+        run: |
+          ./tools/build_wheel_linux.sh
+        shell: alpine.sh {0}
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS_LINUX: x86_64
+          CIBW_BUILD_FRONTEND: build
+          CIBW_ENVIRONMENT_LINUX : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
+            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
+            auditwheel repair -w {dest_dir} {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_x86_64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_windows_amd64:
+    name: Build Windows amd64 wheels
+    strategy:
+      matrix:
+        os: ["windows-2022"]
+    runs-on: ${{ matrix.os }}
+    env:
+      MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Set up MSVC for x64
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+      - name: Build TA-Lib C library
+        run: tools/build_wheel_windows.cmd
+        shell: cmd
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          PIP_NO_VERIFY: 0
+          PIP_VERBOSE: 1
+          CIBW_BUILD_VERBOSITY: 2
+          CIBW_BEFORE_BUILD: pip install -U setuptools wheel numpy Cython
+          CIBW_TEST_REQUIRES: pytest pandas polars
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
+          CIBW_TEST_SKIP: "*win32*"
+          CIBW_SKIP: "pp*"
+          CIBW_ARCHS_WINDOWS: AMD64
+          CIBW_ENVIRONMENT_WINDOWS: >
+            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
+            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
+            PIP_NO_BUILD_ISOLATION=false
+      - name: Set wheel name
+        run: |
+          echo ("WHEEL_NAME=" + "ta_lib-" + $env:TALIB_PY_VER + "-win_amd64") >> $env:GITHUB_ENV
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_windows_x86:
+    name: Build Windows x86 wheels
+    strategy:
+      matrix:
+        os: ["windows-2022"]
+    runs-on: ${{ matrix.os }}
+    env:
+      MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Set up MSVC for x86
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64_x86
+      - name: Build TA-Lib C library
+        run: tools/build_wheel_windows.cmd
+        shell: cmd
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          PIP_NO_VERIFY: 0
+          PIP_VERBOSE: 1
+          CIBW_BUILD_VERBOSITY: 2
+          CIBW_BEFORE_BUILD: pip install -U setuptools wheel numpy Cython
+          CIBW_TEST_REQUIRES: pytest pandas polars
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
+          CIBW_TEST_SKIP: "*win32 cp*"
+          CIBW_SKIP: "pp*"
+          MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
+          CIBW_ARCHS_WINDOWS: x86
+          CIBW_ENVIRONMENT_WINDOWS: >
+            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
+            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
+            PIP_NO_BUILD_ISOLATION=false
+      - name: Set wheel name
+        run: |
+          echo ("WHEEL_NAME=" + "ta_lib-" + $env:TALIB_PY_VER + "-win32") >> $env:GITHUB_ENV
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_macos_x86_64:
+    name: Build MacOS x86_64 wheels
+    strategy:
+      matrix:
+        os: [macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x build_macos.sh
+      - name: Build TA-Lib
+        run: ./tools/build_wheel_macos.sh
+        shell: bash
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          PIP_NO_VERIFY: 0
+          PIP_VERBOSE: 1
+          CIBW_BUILD_VERBOSITY: 2
+          CIBW_BEFORE_BUILD: python -c "import sys; from subprocess import call; call(['pip', 'install', 'setuptools==58.0.1' if sys.version_info <= (3, 11) else '-U', 'setuptools'])"&&pip install -U wheel numpy Cython
+          CIBW_TEST_REQUIRES: pytest pandas polars
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
+          CIBW_TEST_SKIP: "*win32 cp*"
+          CIBW_SKIP: "pp*"
+          CIBW_ARCHS_MACOS: x86_64
+          CIBW_ENVIRONMENT_MACOS : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
+            export MACOSX_DEPLOYMENT_TARGET=13.7
+            export DYLD_LIBRARY_PATH="/Users/runner/work/talib-prebuilt/talib-prebuilt/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
+            delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macos_x86_64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_macos_arm64:
+    name: Build MacOS arm64 wheels
+    strategy:
+      matrix:
+        os: [macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x build_macos.sh
+      - name: Build TA-Lib
+        run: ./tools/build_wheel_macos.sh
+        shell: bash
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          PIP_NO_VERIFY: 0
+          PIP_VERBOSE: 1
+          CIBW_BUILD_VERBOSITY: 2
+          CIBW_BEFORE_BUILD: python -c "import sys; from subprocess import call; call(['pip', 'install', 'setuptools==58.0.1' if sys.version_info <= (3, 11) else '-U', 'setuptools'])"&&pip install -U wheel numpy Cython
+          CIBW_TEST_REQUIRES: pytest pandas polars
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
+          CIBW_TEST_SKIP: "*win32 cp*"
+          CIBW_SKIP: "pp*"
+          CIBW_ARCHS_MACOS: arm64
+          CIBW_ENVIRONMENT_MACOS : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
+            export MACOSX_DEPLOYMENT_TARGET=14.0
+            export DYLD_LIBRARY_PATH="/Users/runner/work/talib-prebuilt/talib-prebuilt/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
+            delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macosx_arm64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
