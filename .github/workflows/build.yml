@@ -41,7 +41,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc g++ cmake
       - name: Make script executable
-        run: chmod +x build_linux.sh
+        run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
         run: ./tools/build_wheel_linux.sh
         shell: bash
@@ -100,7 +100,7 @@ jobs:
             cmake
           volumes: ${{ github.workspace }}:/project
       - name: Make script executable
-        run: chmod +x build_linux.sh
+        run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
         run: |
           ./tools/build_wheel_linux.sh
@@ -224,7 +224,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Make script executable
-        run: chmod +x build_macos.sh
+        run: chmod +x ./tools/build_wheel_macos.sh
       - name: Build TA-Lib
         run: ./tools/build_wheel_macos.sh
         shell: bash
@@ -268,7 +268,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Make script executable
-        run: chmod +x build_macos.sh
+        run: chmod +x ./tools/build_wheel_macos.sh
       - name: Build TA-Lib
         run: ./tools/build_wheel_macos.sh
         shell: bash
