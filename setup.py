@@ -44,8 +44,16 @@ if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
 elif sys.platform == "win32":
     platform_supported = True
     lib_talib_name = 'ta_libc_cdr'
-    include_dirs = [r"c:\ta-lib\c\include"]
-    library_dirs = [r"c:\ta-lib\c\lib"]
+    include_dirs = [
+        r"c:\ta-lib\c\include",
+        r"c:\Program Files\TA-Lib\include"
+        r"c:\Program Files (x86)\TA-Lib\include"
+    ]
+    library_dirs = [
+        r"c:\ta-lib\c\lib"
+        r"c:\Program Files\TA-Lib\lib"
+        r"c:\Program Files (x86)\TA-Lib\lib"
+    ]
 
 if 'TA_INCLUDE_PATH' in os.environ:
     include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
@@ -143,7 +151,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.6.0',
+    version='0.6.1',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
