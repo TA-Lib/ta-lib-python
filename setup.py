@@ -20,6 +20,8 @@ except ImportError:
 
 platform_supported = False
 
+lib_talib_name = 'ta-lib'               # the name as of TA-Lib 0.6.1
+
 if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
     platform_supported = True
     include_dirs = [
@@ -43,16 +45,16 @@ if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
 
 elif sys.platform == "win32":
     platform_supported = True
-    lib_talib_name = 'ta_libc_cdr'
+    lib_talib_name = 'ta-lib-static'
     include_dirs = [
         r"c:\ta-lib\c\include",
-        r"c:\Program Files\TA-Lib\include"
-        r"c:\Program Files (x86)\TA-Lib\include"
+        r"c:\Program Files\TA-Lib\include",
+        r"c:\Program Files (x86)\TA-Lib\include",
     ]
     library_dirs = [
-        r"c:\ta-lib\c\lib"
-        r"c:\Program Files\TA-Lib\lib"
-        r"c:\Program Files (x86)\TA-Lib\lib"
+        r"c:\ta-lib\c\lib",
+        r"c:\Program Files\TA-Lib\lib",
+        r"c:\Program Files (x86)\TA-Lib\lib",
     ]
 
 if 'TA_INCLUDE_PATH' in os.environ:
@@ -69,8 +71,6 @@ try:
     has_cython = True
 except ImportError:
     has_cython = False
-
-lib_talib_name = 'ta-lib'               # the name as of TA-Lib 0.6.1
 
 for path in library_dirs:
     try:
