@@ -58,9 +58,9 @@ $ conda install -c conda-forge ta-lib
 
 ### Dependencies
 
-To use TA-Lib for python, you need to have the
-[TA-Lib](http://ta-lib.org/hdr_dw.html) already installed. You should
-probably follow their installation directions for your platform, but some
+To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
+already installed. You should probably follow their [installation
+directions](https://ta-lib.org/install/) for your platform, but some
 suggestions are included below for reference.
 
 > Some Conda Forge users have reported success installing the underlying TA-Lib C
