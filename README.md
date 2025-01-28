@@ -100,36 +100,26 @@ $ your-arm64-python -m pip install --no-cache-dir ta-lib
 
 ##### Windows
 
-Download [ta-lib-0.4.0-msvc.zip](https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/ta-lib-0.4.0-msvc.zip/download)
-and unzip to ``C:\ta-lib``.
+For 64-bit Windows, the easiest way is to get the *executable installer*:
 
-> This is a 32-bit binary release.  If you want to use 64-bit Python, you will
-> need to build a 64-bit version of the library. Some unofficial instructions
-> for building on 64-bit Windows 10 or Windows 11, here for reference:
->
-> 1. Download and Unzip ``ta-lib-0.4.0-msvc.zip``
-> 2. Move the Unzipped Folder ``ta-lib`` to ``C:\``
-> 3. Download and Install Visual Studio Community (2015 or later)
->    * Remember to Select ``[Visual C++]`` Feature
-> 4. Build TA-Lib Library
->    * From Windows Start Menu, Start ``[x64 Native Tools Command Prompt]``
->    * Move to ``C:\ta-lib\c\make\cdr\win32\msvc``
->    * Build the Library ``nmake``
+1. Download [ta-lib-0.6.4-windows-x86_64.msi](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_64.msi).
+2. Run the Installer or run ``msiexec`` [from the command-line](https://learn.microsoft.com/en-us/windows/win32/msi/standard-installer-command-line-options).
 
-You might also try these unofficial windows binary wheels for both 32-bit
-and 64-bit:
+Alternatively, if you prefer to get the libraries without installing, or
+would like to use the 32-bit version:
 
-https://github.com/cgohlke/talib-build/
+* Intel/AMD 64-bit [ta-lib-0.6.4-windows-x86_64.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_64.zip)
+* Intel/AMD 32-bit [ta-lib-0.6.4-windows-x86_32.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_32.zip)
 
 ##### Linux
 
 Download
-[ta-lib-0.4.0-src.tar.gz](https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/ta-lib-0.4.0-src.tar.gz/download)
+[ta-lib-0.6.4-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-src.tar.gz)
 and:
 
 ```
-$ tar -xzf ta-lib-0.4.0-src.tar.gz
-$ cd ta-lib/
+$ tar -xzf ta-lib-0.6.4-src.tar.gz
+$ cd ta-lib-0.6.4/
 $ ./configure --prefix=/usr
 $ make
 $ sudo make install
