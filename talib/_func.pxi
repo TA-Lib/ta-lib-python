@@ -142,7 +142,19 @@ cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def ACCBANDS( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
-    """ ACCBANDS(high, low, close[, timeperiod=?])"""
+    """ ACCBANDS(high, low, close[, timeperiod=?])
+
+    Acceleration Bands (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        upperband
+        middleband
+        lowerband
+    """
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
@@ -585,7 +597,17 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
-    """ AVGDEV(real[, timeperiod=?])"""
+    """ AVGDEV(real[, timeperiod=?])
+
+    Average Deviation (Price Transform)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback
@@ -3225,7 +3247,17 @@ def HT_TRENDMODE( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def IMI( np.ndarray open not None , np.ndarray close not None , int timeperiod=-2**31 ):
-    """ IMI(open, close[, timeperiod=?])"""
+    """ IMI(open, close[, timeperiod=?])
+
+    Intraday Momentum Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
     cdef:
         np.npy_intp length
         int begidx, endidx, lookback

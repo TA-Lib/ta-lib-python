@@ -9,7 +9,19 @@ np.import_array() # Initialize the NumPy C API
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def stream_ACCBANDS( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
-    """ ACCBANDS(high, low, close[, timeperiod=?])"""
+    """ ACCBANDS(high, low, close[, timeperiod=?])
+
+    Acceleration Bands (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        upperband
+        middleband
+        lowerband
+    """
     cdef:
         np.npy_intp length
         TA_RetCode retCode
@@ -464,7 +476,17 @@ def stream_AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.nd
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def stream_AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
-    """ AVGDEV(real[, timeperiod=?])"""
+    """ AVGDEV(real[, timeperiod=?])
+
+    Average Deviation (Price Transform)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
     cdef:
         np.npy_intp length
         TA_RetCode retCode
@@ -3324,7 +3346,17 @@ def stream_HT_TRENDMODE( np.ndarray real not None ):
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
 def stream_IMI( np.ndarray open not None , np.ndarray close not None , int timeperiod=-2**31 ):
-    """ IMI(open, close[, timeperiod=?])"""
+    """ IMI(open, close[, timeperiod=?])
+
+    Intraday Momentum Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
     cdef:
         np.npy_intp length
         TA_RetCode retCode
