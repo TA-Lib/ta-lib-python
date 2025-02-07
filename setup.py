@@ -20,6 +20,8 @@ except ImportError:
 
 platform_supported = False
 
+lib_talib_name = 'ta_lib'               # the name as of TA-Lib 0.4.0
+
 if any(s in sys.platform for s in ['darwin', 'linux', 'bsd', 'sunos']):
     platform_supported = True
     include_dirs = [
@@ -61,8 +63,6 @@ try:
     has_cython = True
 except ImportError:
     has_cython = False
-
-lib_talib_name = 'ta_lib'               # the name as of TA-Lib 0.4.0
 
 for path in library_dirs:
     try:
@@ -143,7 +143,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.4.37',
+    version='0.4.38',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
