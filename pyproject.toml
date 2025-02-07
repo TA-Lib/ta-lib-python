@@ -1,6 +1,6 @@
 [project]
 name = "ta-lib"
-version = "0.5.3"
+version = "0.5.4"
 dynamic = ["authors", "classifiers", "description", "license", "readme"]
 dependencies = [
     "setuptools",

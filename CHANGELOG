@@ -3,6 +3,11 @@
 
 - [FIX]: Make sure this wrapper works with TA-Lib 0.6.1 and newer releases.
 
+0.5.4
+=====
+
+- [FIX]: Fix lib name on windows.
+
 0.5.3
 =====
 
@@ -24,6 +29,21 @@
 =====
 
 - [NEW]: Upgrade to Numpy 2.0
+
+0.4.38
+======
+
+- [FIX]: Fix lib name on windows.
+
+0.4.37
+======
+
+- [FIX]: Make sure to pin numpy<2 in the setup.py.
+
+0.4.36
+======
+
+- [BUG]: Make this release only support TA-Lib 0.4.0
 
 0.4.35
 ======
