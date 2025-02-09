@@ -1,3 +1,8 @@
+0.6.3
+=====
+
+- [FIX]: Fix issue building against numpy2
+
 0.6.2
 =====
 
