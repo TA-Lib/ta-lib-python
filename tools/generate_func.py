@@ -11,11 +11,27 @@ from talib import abstract
 # FIXME: don't return number of elements since it always equals allocation?
 
 functions = []
-include_paths = ['/usr/include', '/usr/local/include', '/opt/include', '/opt/local/include', '/opt/homebrew/include']
 if sys.platform == 'win32':
-    include_paths = [r'c:\ta-lib\c\include']
+    include_dirs = [
+        r"c:\ta-lib\c\include",
+        r"c:\Program Files\TA-Lib\include",
+        r"c:\Program Files (x86)\TA-Lib\include",
+    ]
+else:
+    include_dirs = [
+        '/usr/include',
+        '/usr/local/include',
+        '/opt/include',
+        '/opt/local/include',
+        '/opt/homebrew/include',
+        '/opt/homebrew/opt/ta-lib/include',
+    ]
+
+if 'TA_INCLUDE_PATH' in os.environ:
+    include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
+
 header_found = False
-for path in include_paths:
+for path in include_dirs:
     ta_func_header = os.path.join(path, 'ta-lib', 'ta_func.h')
     if os.path.exists(ta_func_header):
         header_found = True
@@ -213,8 +229,12 @@ for f in functions:
 
     shortname = name[3:]
     names.append(shortname)
-    func_info = abstract.Function(shortname).info
-    defaults, documentation = abstract._get_defaults_and_docs(func_info)
+    try:
+        func_info = abstract.Function(shortname).info
+        defaults, documentation = abstract._get_defaults_and_docs(func_info)
+    except:
+        print("cannot find defaults and docs for", shortname, file=sys.stderr)
+        defaults, documentation = {}, ""
 
     print('@wraparound(False)  # turn off relative indexing from end of lists')
     print('@boundscheck(False) # turn off bounds-checking for entire function')

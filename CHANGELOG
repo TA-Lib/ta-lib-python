@@ -1,7 +1,39 @@
+0.6.3
+=====
+
+- [FIX]: Fix issue building against numpy2
+
+0.6.2
+=====
+
+- [NEW]: Adding indicators ACCBANDS, AVGDEV, IMI
+
+0.6.1
+=====
+
+- [FIX]: Build properly against TA-Lib 0.6.2 and newer on Windows.
+
+0.6.0
+=====
+
+- [FIX]: Make sure this wrapper works with TA-Lib 0.6.1 and newer releases.
+
+0.5.4
+=====
+
+- [FIX]: Fix lib name on windows.
+
+0.5.3
+=====
+
+- [BUG]: Make this release only support TA-Lib 0.4.0.
+
 0.5.2
 =====
 
 - [NEW]: Provide py typed information for C wrapper
+
+- [FIX]: Make sure this wrapper works with TA-Lib 0.6.1
 
 0.5.1
 =====
@@ -12,6 +44,26 @@
 =====
 
 - [NEW]: Upgrade to Numpy 2.0
+
+0.4.38
+======
+
+- [FIX]: Fix lib name on windows.
+
+0.4.37
+======
+
+- [FIX]: Make sure to pin numpy<2 in the setup.py.
+
+0.4.36
+======
+
+- [BUG]: Make this release only support TA-Lib 0.4.0
+
+0.4.35
+======
+
+- [FIX]: Make sure this wrapper works with TA-Lib 0.6.1
 
 0.4.34
 =====

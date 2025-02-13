@@ -1,8 +1,8 @@
 [project]
 name = "ta-lib"
-version = "0.5.1"
-dynamic = ["authors", "classifiers", "dependencies", "description", "license", "readme"]
-
-[build-system]
-requires = ["setuptools >= 51.0.0", "wheel", "numpy"]
-build-backend = "setuptools.build_meta:__legacy__"
+version = "0.6.3"
+dynamic = ["authors", "classifiers", "description", "license", "readme"]
+dependencies = [
+    "setuptools",
+    "numpy",
+]
