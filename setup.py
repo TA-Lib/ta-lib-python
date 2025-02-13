@@ -20,7 +20,7 @@ except ImportError:
 platform_supported = False
 
 lib_talib_name = "ta-lib"  # the name as of TA-Lib 0.6.1
-lib_talib_static_lib = ""  # static C library, such as '/usr/lib/libta_lib.a'
+lib_talib_static_lib = ""  # static C library, such as '/usr/lib/libta-lib.a'
 
 if any(s in sys.platform for s in ["darwin", "linux", "bsd", "sunos"]):
   platform_supported = True
@@ -65,10 +65,10 @@ if "TA_LIBRARY_PATH" in os.environ:
 
 if "TA_LINK_STATIC" in os.environ:
   for base in library_dirs:
-    fname = f"{base}/libta_lib.a"
+    fname = f"{base}/lib{lib_talib_name}.a"
     if os.path.exists(fname):
       lib_talib_static_lib = fname
-      lib_talib_name = ""
+      print(f"Using static library: {lib_talib_static_lib}")
       break
 
 
@@ -148,10 +148,10 @@ ext_modules = [
   Extension(
     "talib._ta_lib",
     ["talib/_ta_lib.pyx" if has_cython else "talib/_ta_lib.c"],
-    # define_macros=[('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')],
+    define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     include_dirs=include_dirs,
     library_dirs=library_dirs,
-    libraries=[lib_talib_name] if len(lib_talib_name) > 0 else [],
+    libraries=[lib_talib_name] if len(lib_talib_static_lib) == 0 else [],
     extra_objects=[lib_talib_static_lib] if len(lib_talib_static_lib) > 0 else [],
     runtime_library_dirs=[] if sys.platform == "win32" else library_dirs,
   )
