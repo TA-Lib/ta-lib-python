@@ -48,11 +48,11 @@ with open(ta_func_header) as f:
         if tmp or \
             line.startswith('TA_RetCode TA_') or \
             line.startswith('int TA_'):
-            line = re.sub('/\*[^\*]+\*/', '', line) # strip comments
+            line = re.sub(r'/\*[^\*]+\*/', '', line) # strip comments
             tmp.append(line)
             if not line:
                 s = ' '.join(tmp)
-                s = re.sub('\s+', ' ', s)
+                s = re.sub(r'\s+', ' ', s)
                 functions.append(s)
                 tmp = []
 
@@ -225,7 +225,7 @@ for f in functions:
     i = f.index('(')
     name = f[:i].split()[1]
     args = f[i:].split(',')
-    args = [re.sub('[\(\);]', '', s).strip() for s in args]
+    args = [re.sub(r'[\(\);]', '', s).strip() for s in args]
 
     shortname = name[3:]
     names.append(shortname)
