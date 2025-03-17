@@ -1,3 +1,8 @@
+0.6.4
+=====
+
+- [FIX]: Adding typed for ACCBANDS, AVGDEV, IMI, and stream_* functions
+
 0.6.3
 =====
 
