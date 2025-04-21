@@ -273,6 +273,15 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 If the build appears to hang, you might be running on a VM with not enough
 memory -- try 1 GB or 2 GB.
 
+It has also been reported that using a swapfile could help, for example:
+
+```
+$ sudo fallocate -l 1G /swapfile
+$ sudo chmod 600 /swapfile
+$ sudo mkswap /swapfile
+$ sudo swapon /swapfile
+```
+
 ---
 
 If you get "permission denied" errors such as this, you might need to give
