@@ -99,7 +99,6 @@ class LazyBuildExtCommandClass(dict):
         super(LazyBuildExtCommandClass, self).__setitem__(key, value)
 
     def __getitem__(self, key):
-        global include_dirs
         if key != 'build_ext':
             return super(LazyBuildExtCommandClass, self).__getitem__(key)
 
