@@ -40,20 +40,20 @@ feature branches:
 You can install from PyPI:
 
 ```
-$ python -m pip install TA-Lib
+ python -m pip install TA-Lib
 ```
 
 Or checkout the sources and run ``setup.py`` yourself:
 
 ```
-$ python setup.py install
+ python setup.py install
 ```
 
 It also appears possible to install via 
 [Conda Forge](https://anaconda.org/conda-forge/ta-lib):
 
 ```
-$ conda install -c conda-forge ta-lib
+ conda install -c conda-forge ta-lib
 ```
 
 ### Dependencies
@@ -66,14 +66,14 @@ suggestions are included below for reference.
 > Some Conda Forge users have reported success installing the underlying TA-Lib C
 > library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
 >
-> ``$ conda install -c conda-forge libta-lib``
+> `` conda install -c conda-forge libta-lib``
 
 ##### Mac OS X
 
 You can simply install using Homebrew:
 
 ```
-$ brew install ta-lib
+ brew install ta-lib
 ```
 
 If you are using Apple Silicon, such as the M1 processors, and building mixed
@@ -81,21 +81,21 @@ architecture Homebrew projects, you might want to make sure it's being built
 for your architecture:
 
 ```
-$ arch -arm64 brew install ta-lib
+ arch -arm64 brew install ta-lib
 ```
 
 And perhaps you can set these before installing with ``pip``:
 
 ```
-$ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
-$ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
 ```
 
 You might also find this helpful, particularly if you have tried several
 different installations without success:
 
 ```
-$ your-arm64-python -m pip install --no-cache-dir ta-lib
+ your-arm64-python -m pip install --no-cache-dir ta-lib
 ```
 
 ##### Windows
@@ -118,11 +118,11 @@ Download
 and:
 
 ```
-$ tar -xzf ta-lib-0.6.4-src.tar.gz
-$ cd ta-lib-0.6.4/
-$ ./configure --prefix=/usr
-$ make
-$ sudo make install
+ tar -xzf ta-lib-0.6.4-src.tar.gz
+ cd ta-lib-0.6.4/
+ ./configure --prefix=/usr
+ make
+ sudo make install
 ```
 
 > If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
@@ -152,9 +152,9 @@ library and include files for the underlying ``TA-Lib`` library using the
 ``TA_LIBRARY_PATH`` and ``TA_INCLUDE_PATH`` environment variables:
 
 ```sh
-$ export TA_LIBRARY_PATH=$PREFIX/lib
-$ export TA_INCLUDE_PATH=$PREFIX/include
-$ python setup.py install # or pip install ta-lib
+ export TA_LIBRARY_PATH=$PREFIX/lib
+ export TA_INCLUDE_PATH=$PREFIX/include
+ python setup.py install # or pip install ta-lib
 ```
 
 ---
