@@ -1,6 +1,7 @@
 [project]
 name = "ta-lib"
 version = "0.6.4"
+license = "BSD-2-Clause"
 dynamic = ["authors", "classifiers", "description", "license", "readme"]
 dependencies = [
     "setuptools",
