@@ -22,7 +22,7 @@ cdef np.ndarray check_array(np.ndarray real):
         raise Exception("input array type is not double")
     if real.ndim != 1:
         raise Exception("input array has wrong dimensions")
-    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+    if not (PyArray_FLAGS(real) & np.NPY_CONTIGUOUS):
         real = PyArray_GETCONTIGUOUS(real)
     return real
 
