@@ -3,6 +3,11 @@
 
 - [FIX]: Make sure this wrapper works with TA-Lib 0.6.1 and newer releases.
 
+0.5.5
+=====
+
+- [FIX]: Fix for numpy 2.3.0, which removed the npy_1_7_deprecated_api
+
 0.5.4
 =====
 
