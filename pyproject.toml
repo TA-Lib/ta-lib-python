@@ -1,8 +1,52 @@
+[build-system]
+requires = ["setuptools", "wheel", "Cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "ta-lib"
-version = "0.6.4"
-dynamic = ["authors", "classifiers", "description", "license", "readme"]
-dependencies = [
-    "setuptools",
-    "numpy",
+name = "TA-Lib"
+version = "0.6.5"
+description = "Python wrapper for TA-Lib"
+readme = "README.md"
+license = "BSD-2-Clause"
+authors = [
+    {name = "John Benediktsson", email = "mrjbq7@gmail.com"}
 ]
+urls = {homepage = "http://github.com/ta-lib/ta-lib-python", download = "https://github.com/ta-lib/ta-lib-python/releases"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Cython",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+]
+dependencies = [
+    "build",
+    "numpy",
+    "pip",
+]
+
+[tool.setuptools]
+packages = ["talib"]
+package-data = {"talib" = ["_ta_lib.pyi", "py.typed"]}

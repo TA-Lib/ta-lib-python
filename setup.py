@@ -5,18 +5,8 @@ import os
 import os.path
 import warnings
 
-try:
-    from setuptools import setup, Extension
-    from setuptools.dist import Distribution
-    requires = {
-        "install_requires": ["numpy"],
-        "setup_requires": ["numpy"]
-    }
-except ImportError:
-    from distutils.core import setup
-    from distutils.dist import Distribution
-    from distutils.extension import Extension
-    requires = {"requires": ["numpy"]}
+from setuptools import setup, Extension
+from setuptools.dist import Distribution
 
 platform_supported = False
 
@@ -83,55 +73,30 @@ else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
 
-class LazyBuildExtCommandClass(dict):
+import numpy
+
+# Get the Cython build_ext or fall back to setuptools build_ext
+if has_cython:
+    from Cython.Distutils import build_ext
+else:
+    from setuptools.command.build_ext import build_ext
+
+class NumpyBuildExt(build_ext):
     """
-    Lazy command class that defers operations requiring Cython and numpy until
-    they've actually been downloaded and installed by setup_requires.
+    Custom build_ext command that adds numpy's include_dir to extensions.
     """
 
-    def __contains__(self, key):
-        return (key == 'build_ext' or
-                super(LazyBuildExtCommandClass, self).__contains__(key))
+    def build_extensions(self):
+        """
+        Add numpy's include directory to Extension includes.
+        """
+        numpy_incl = numpy.get_include()
+        for ext in self.extensions:
+            ext.include_dirs.append(numpy_incl)
 
-    def __setitem__(self, key, value):
-        if key == 'build_ext':
-            raise AssertionError("build_ext overridden!")
-        super(LazyBuildExtCommandClass, self).__setitem__(key, value)
+        super().build_extensions()
 
-    def __getitem__(self, key):
-        if key != 'build_ext':
-            return super(LazyBuildExtCommandClass, self).__getitem__(key)
-
-        import numpy
-        if has_cython:
-            org_build_ext = cython_build_ext
-        else:
-            from setuptools.command.build_ext import build_ext as org_build_ext
-
-        # Cython_build_ext isn't a new-style class in Py2.
-        class build_ext(org_build_ext, object):
-            """
-            Custom build_ext command that lazily adds numpy's include_dir to
-            extensions.
-            """
-
-            def build_extensions(self):
-                """
-                Lazily append numpy's include directory to Extension includes.
-                This is done here rather than at module scope because setup.py
-                may be run before numpy has been installed, in which case
-                importing numpy and calling `numpy.get_include()` will fail.
-                """
-                numpy_incl = numpy.get_include()
-                for ext in self.extensions:
-                    ext.include_dirs.append(numpy_incl)
-
-                super(build_ext, self).build_extensions()
-
-        return build_ext
-
-
-cmdclass = LazyBuildExtCommandClass()
+cmdclass = {'build_ext': NumpyBuildExt}
 
 ext_modules = [
     Extension(
@@ -143,53 +108,7 @@ ext_modules = [
         runtime_library_dirs=[] if sys.platform == 'win32' else library_dirs)
 ]
 
-from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(
-    name='TA-Lib',
-    version='0.6.4',
-    description='Python wrapper for TA-Lib',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    author='John Benediktsson',
-    author_email='mrjbq7@gmail.com',
-    url='http://github.com/ta-lib/ta-lib-python',
-    download_url='https://github.com/ta-lib/ta-lib-python/releases',
-    license="BSD",
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Operating System :: Unix",
-        "Operating System :: POSIX",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-        "Programming Language :: Python :: 3.14",
-        "Programming Language :: Cython",
-        "Topic :: Office/Business :: Financial",
-        "Topic :: Scientific/Engineering :: Mathematics",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Science/Research",
-        "Intended Audience :: Financial and Insurance Industry",
-    ],
-    packages=['talib'],
     ext_modules=ext_modules,
-    package_data={ 'talib': ['_ta_lib.pyi', 'py.typed'], },
     cmdclass=cmdclass,
-    **requires)
+)

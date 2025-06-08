@@ -2,3 +2,5 @@
 beautifulsoup4
 mistune
 Pygments
+build
+cython
