@@ -158,7 +158,6 @@ setup(
     author_email='mrjbq7@gmail.com',
     url='http://github.com/ta-lib/ta-lib-python',
     download_url='https://github.com/ta-lib/ta-lib-python/releases',
-    license='BSD',
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Operating System :: Unix",
