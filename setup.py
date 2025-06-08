@@ -160,7 +160,6 @@ setup(
     download_url='https://github.com/ta-lib/ta-lib-python/releases',
     license='BSD',
     classifiers=[
-        "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
         "Operating System :: Unix",
         "Operating System :: POSIX",
