@@ -1,3 +1,5 @@
+#cython: embedsignature=True, emit_code_comments=False
+
 include "_common.pxi"
 include "_func.pxi"
 include "_abstract.pxi"
