@@ -122,7 +122,7 @@ cdef np.ndarray make_double_array(np.npy_intp length, int lookback):
     cdef:
         np.ndarray outreal
         double* outreal_data
-    outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_ARRAY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
@@ -132,7 +132,7 @@ cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
     cdef:
         np.ndarray outinteger
         int* outinteger_data
-    outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_ARRAY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0

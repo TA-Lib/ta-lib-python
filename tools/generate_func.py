@@ -89,7 +89,7 @@ cdef np.ndarray check_array(np.ndarray real):
         raise Exception("input array type is not double")
     if real.ndim != 1:
         raise Exception("input array has wrong dimensions")
-    if not (PyArray_FLAGS(real) & np.NPY_C_CONTIGUOUS):
+    if not (PyArray_FLAGS(real) & np.NPY_ARRAY_C_CONTIGUOUS):
         real = PyArray_GETCONTIGUOUS(real)
     return real
 
@@ -189,7 +189,7 @@ cdef np.ndarray make_double_array(np.npy_intp length, int lookback):
     cdef:
         np.ndarray outreal
         double* outreal_data
-    outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_DEFAULT)
+    outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_ARRAY_DEFAULT)
     outreal_data = <double*>outreal.data
     for i from 0 <= i < min(lookback, length):
         outreal_data[i] = NaN
@@ -199,7 +199,7 @@ cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
     cdef:
         np.ndarray outinteger
         int* outinteger_data
-    outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_DEFAULT)
+    outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_ARRAY_DEFAULT)
     outinteger_data = <int*>outinteger.data
     for i from 0 <= i < min(lookback, length):
         outinteger_data[i] = 0
