@@ -3,6 +3,8 @@
 
 - [FIX]: Adding typed for ACCBANDS, AVGDEV, IMI, and stream_* functions
 
+- [FIX]: Using NPY_ARRAY_DEFAULT and NPY_ARRAY_C_CONTIGUOUS
+
 0.6.3
 =====
 
