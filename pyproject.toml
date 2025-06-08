@@ -7,7 +7,7 @@ name = "TA-Lib"
 version = "0.6.5"
 description = "Python wrapper for TA-Lib"
 readme = "README.md"
-license = "LICENSE"
+license = { text = "BSD-2-Clause" }
 authors = [
     {name = "John Benediktsson", email = "mrjbq7@gmail.com"}
 ]
