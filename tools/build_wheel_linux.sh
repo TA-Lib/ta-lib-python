@@ -13,12 +13,29 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Download TA-Lib Python
+curl -L -o talib-python.zip https://github.com/TA-Lib/ta-lib-python/archive/refs/tags/TA_Lib-${TALIB_PY_VER}.zip
+if [ $? -ne 0 ]; then
+    echo "Failed to download TA-Lib Python library"
+    exit 1
+fi
+
 # Unzip TA-Lib C
 unzip -q talib-c.zip
 if [ $? -ne 0 ]; then
     echo "Failed to extract TA-Lib C library"
     exit 1
 fi
+
+# Unzip TA-Lib Python
+unzip -q talib-python.zip -d ta-lib-python
+if [ $? -ne 0 ]; then
+    echo "Failed to extract TA-Lib Python library"
+    exit 1
+fi
+
+mv ta-lib-python/ta-lib-python-TA_Lib-${TALIB_PY_VER}/* .
+rm -r ta-lib-python
 
 # cd to TA-Lib C
 cd ta-lib-${TALIB_C_VER}
