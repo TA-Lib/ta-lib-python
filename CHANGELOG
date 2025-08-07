@@ -5,6 +5,8 @@
 
 - [NEW]: Upgrade to Cython 3.1.1
 
+- [NEW]: Build binary wheels for Windows, macOS, and Linux.
+
 0.6.4
 =====
 
