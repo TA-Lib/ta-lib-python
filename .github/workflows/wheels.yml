@@ -13,7 +13,6 @@ env:
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
   CIBW_TEST_REQUIRES: pytest pandas polars
-  CIBW_TEST_SKIP: "*win32* cp*"
   CIBW_SKIP: "pp*"
 
 jobs:
