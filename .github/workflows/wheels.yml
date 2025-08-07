@@ -23,29 +23,19 @@ jobs:
       matrix:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-      CIBW_SKIP: "pp* cp*-musllinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install GCC and CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake ninja-build
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: bash
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_SKIP: "pp* cp*-musllinux*"
+          CIBW_BEFORE_ALL: |
+            bash ./tools/build_talib_linux.sh
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -57,7 +47,7 @@ jobs:
             auditwheel repair -w {dest_dir} {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_x86_64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_2_28_x86_64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -69,29 +59,19 @@ jobs:
       matrix:
         os: ["ubuntu-22.04-arm"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-      CIBW_SKIP: "pp* cp*-musllinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install GCC and CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake ninja-build
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: bash
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
+          CIBW_SKIP: "pp* cp*-musllinux*"
+          CIBW_BEFORE_ALL: |
+            bash ./tools/build_talib_linux.sh
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -103,7 +83,7 @@ jobs:
             auditwheel repair -w {dest_dir} {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_aarch64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_2_28_aarch64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -117,8 +97,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
       CIBW_SKIP: "pp* cp*-manylinux*"
       CIBW_TEST_COMMAND: >
         cd .. &&
@@ -160,7 +138,7 @@ jobs:
             auditwheel repair -w {dest_dir} {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_x86_64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_1_2_x86_64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -172,14 +150,6 @@ jobs:
       matrix:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-      CIBW_SKIP: "pp* cp*-manylinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -207,6 +177,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
+          CIBW_SKIP: "pp* cp*-manylinux*"
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -218,7 +193,7 @@ jobs:
             auditwheel repair -w {dest_dir} {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_aarch64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_1_2_aarch64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -363,7 +338,7 @@ jobs:
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macos_x86_64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macosx_14_0_x86_64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -400,7 +375,7 @@ jobs:
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Set wheel name
         run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macos_arm64" >> $GITHUB_ENV
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-macosx_14_0_arm64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
