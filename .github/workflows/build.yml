@@ -26,7 +26,7 @@ jobs:
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
       CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
@@ -75,7 +75,7 @@ jobs:
       PIP_NO_VERIFY: 0
       PIP_VERBOSE: 1
       CIBW_BUILD_VERBOSITY: 2
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
       CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
@@ -138,7 +138,7 @@ jobs:
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
       CIBW_BEFORE_TEST: pip install -U Cython
       CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
@@ -188,7 +188,7 @@ jobs:
       PIP_NO_VERIFY: 0
       PIP_VERBOSE: 1
       CIBW_BUILD_VERBOSITY: 2
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
       CIBW_BEFORE_TEST: apk add bash&&bash setup_rust.sh&&. "$HOME/.cargo/env"&&pip install Cython&&pip install -U maturin&&pip install -U polars
       CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
@@ -263,7 +263,7 @@ jobs:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
           CIBW_BUILD_VERBOSITY: 2
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
@@ -307,7 +307,7 @@ jobs:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
           CIBW_BUILD_VERBOSITY: 2
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
@@ -352,7 +352,7 @@ jobs:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
           CIBW_BUILD_VERBOSITY: 2
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel numpy meson-python
+          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
