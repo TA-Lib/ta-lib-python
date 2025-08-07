@@ -133,17 +133,18 @@ fail with ``No such file or directory`` errors.
 
 ### Wheels
 
-We build binary TA-Lib wheels for Python using GitHub Actions.
+We build binary wheels for Python using GitHub Actions which include the
+underlying TA-Lib C library and are easy to install.
 
 Supported platforms:
 
-* Windows 64-bit
-* Windows 32-bit
-* Windows ARM64
+* Linux x86_64
+* Linux arm64
 * macOS x86_64
-* macOS ARM64
-* Linux 64-bit
-* Linux ARM64
+* macOS arm64
+* Windows x86_64
+* Windows x86
+* Windows arm64
 
 Supported Python versions:
 
@@ -152,8 +153,6 @@ Supported Python versions:
 * 3.11
 * 3.12
 * 3.13
-
-These will be available when new [releases](https://github.com/ta-lib/ta-lib-python/releases) are generated.
 
 ### Troubleshooting
 
