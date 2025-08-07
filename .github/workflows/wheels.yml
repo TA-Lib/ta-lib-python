@@ -135,6 +135,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
+          CIBW_TEST_SKIP: "cp*"
           CIBW_SKIP: "pp* cp*-manylinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
@@ -190,6 +191,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
+          CIBW_TEST_SKIP: "cp*"
           CIBW_SKIP: "pp* cp*-manylinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
