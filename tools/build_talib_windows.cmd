@@ -1,8 +1,7 @@
 :: Download and build TA-Lib 
 @echo on
 
-:: set TALIB_C_VER=0.6.2
-:: set TALIB_PY_VER=0.5.2
+if not defined TALIB_C_VER set TALIB_C_VER=0.6.4
 
 set CMAKE_GENERATOR=NMake Makefiles
 set CMAKE_BUILD_TYPE=Release
