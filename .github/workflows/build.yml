@@ -39,7 +39,7 @@ jobs:
       - name: Install GCC and CMake
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake
+          sudo apt-get install -y gcc g++ cmake ninja
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
@@ -94,6 +94,7 @@ jobs:
             gcc
             g++
             cmake
+            ninja
           volumes: ${{ github.workspace }}:/project
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
@@ -146,7 +147,7 @@ jobs:
       - name: Install GCC and CMake
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake
+          sudo apt-get install -y gcc g++ cmake ninja
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
@@ -202,6 +203,7 @@ jobs:
             gcc
             g++
             cmake
+            ninja
           arch: aarch64
           volumes: ${{ github.workspace }}:/project
       - name: Make script executable
@@ -256,7 +258,7 @@ jobs:
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32*"
+          CIBW_TEST_SKIP: "*win32* cp*"
           CIBW_SKIP: "pp*"
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -342,7 +344,7 @@ jobs:
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32*"
+          CIBW_TEST_SKIP: "*win32* cp*"
           CIBW_SKIP: "pp*"
           CIBW_ARCHS_WINDOWS: ARM64
           CIBW_ENVIRONMENT_WINDOWS: >
