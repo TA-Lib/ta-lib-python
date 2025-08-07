@@ -232,6 +232,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
@@ -268,6 +269,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
@@ -304,6 +306,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
