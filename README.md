@@ -141,7 +141,7 @@ Supported platforms:
 * Windows 32-bit
 * Windows ARM64
 * macOS x86_64
-* macOS arm64
+* macOS ARM64
 * Linux 64-bit
 * Linux ARM64
 

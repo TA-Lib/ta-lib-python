@@ -1,7 +1,7 @@
 0.6.6
 =====
 
-TBD
+- [FIX]: Silence project.license warnings when building.
 
 0.6.5
 =====
