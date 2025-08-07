@@ -7,14 +7,14 @@ CMAKE_BUILD_TYPE=Release
 CMAKE_CONFIGURATION_TYPES=Release
 
 # Download TA-Lib C Library
-curl -L -o talib-c.zip https://github.com/TA-Lib/ta-lib/archive/refs/tags/v${TALIB_C_VER}.zip
+curl -L -o talib-${TALIB_C_VER}.zip https://github.com/TA-Lib/ta-lib/archive/refs/tags/v${TALIB_C_VER}.zip
 if [ $? -ne 0 ]; then
     echo "Failed to download TA-Lib C library"
     exit 1
 fi
 
 # Unzip TA-Lib C
-unzip -q talib-c.zip
+unzip -q talib-${TALIB_C_VER}.zip
 if [ $? -ne 0 ]; then
     echo "Failed to extract TA-Lib C library"
     exit 1
