@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TA-Lib"
-version = "0.6.5"
+version = "0.6.6"
 description = "Python wrapper for TA-Lib"
 readme = "README.md"
 license = { text = "BSD-2-Clause" }
