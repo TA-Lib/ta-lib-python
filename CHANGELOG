@@ -3,7 +3,7 @@
 
 - [FIX]: Support PEP-517 style installation
 
-- [NEW]: Upgrade to Cython 3.1.1
+- [NEW]: Upgrade to Cython 3.1.2
 
 - [NEW]: Build binary wheels for Windows, macOS, and Linux.
 
