@@ -1,6 +1,5 @@
 
-name: Build wheels
-run-name: Build wheels
+name: Wheels
 on:
   push:
     tags:
