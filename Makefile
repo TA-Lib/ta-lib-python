@@ -17,6 +17,9 @@ generate: talib/_func.pxi talib/_stream.pxi
 cython:
 	cython talib/_ta_lib.pyx
 
+annotate:
+	cython -a talib/_ta_lib.pyx
+
 clean:
 	rm -rf build talib/_ta_lib.so talib/*.pyc
 
