@@ -79,7 +79,7 @@ jobs:
       - name: Setup latest Alpine Linux
         uses: jirutka/setup-alpine@v1
         with:
-          branch: v3.15
+          branch: v3.19
           packages: >
             build-base
             bash
@@ -178,7 +178,7 @@ jobs:
       - name: Setup latest Alpine Linux
         uses: jirutka/setup-alpine@v1
         with:
-          branch: v3.15
+          branch: v3.19
           packages: >
             build-base
             bash
