@@ -22,14 +22,6 @@ jobs:
       matrix:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-      CIBW_SKIP: "pp* cp*-musllinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,6 +37,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_SKIP: "pp* cp*-musllinux*"
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -68,14 +65,6 @@ jobs:
       matrix:
         os: ["ubuntu-22.04-arm"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-      CIBW_SKIP: "pp* cp*-musllinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -91,6 +80,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
+          CIBW_SKIP: "pp* cp*-musllinux*"
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -114,14 +108,6 @@ jobs:
       matrix:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-      CIBW_SKIP: "pp* cp*-manylinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -148,6 +134,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
+          CIBW_SKIP: "pp* cp*-manylinux*"
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
@@ -171,14 +162,6 @@ jobs:
       matrix:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
-    env:
-      CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_I686_IMAGE: musllinux_1_2
-      CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-      CIBW_SKIP: "pp* cp*-manylinux*"
-      CIBW_TEST_COMMAND: >
-        cd .. &&
-        pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -206,6 +189,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
+          CIBW_SKIP: "pp* cp*-manylinux*"
+          CIBW_TEST_COMMAND: >
+            cd .. &&
+            pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
