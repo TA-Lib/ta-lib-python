@@ -170,7 +170,7 @@ jobs:
     name: Build MuslLinux arm64 wheels
     strategy:
       matrix:
-        os: ["ubuntu-22.04-arm"]
+        os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
       CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
