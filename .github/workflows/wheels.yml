@@ -11,7 +11,7 @@ env:
   TALIB_PY_VER: ${{ github.ref_name }}
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
-  CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
+  CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja maturin && pip install -U numpy
   CIBW_TEST_REQUIRES: pytest pandas polars
   CIBW_SKIP: "pp*"
 
