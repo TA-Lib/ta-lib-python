@@ -26,7 +26,7 @@ jobs:
         pip install --upgrade pip wheel setuptools
         pip install -r requirements_test.txt
         pip install flake8
-        ./tools/build_talib_linux.sh
+        bash ./tools/build_talib_linux.sh
 
     - name: Build cython modules in-place
       run: |
