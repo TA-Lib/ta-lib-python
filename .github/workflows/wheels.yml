@@ -49,8 +49,8 @@ jobs:
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-linux_x86_64"
-  build_manylinux_arm64:
-    name: Build ManyLinux arm64 wheels
+  build_linux_arm64:
+    name: Build Linux arm64 wheels
     strategy:
       matrix:
         os: ["ubuntu-22.04-arm"]
@@ -58,73 +58,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install GCC and CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake ninja-build
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: bash
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
+          CIBW_BEFORE_ALL: |
+              bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-          CIBW_SKIP: "pp* cp*-musllinux*"
-          CIBW_TEST_COMMAND: >
-            cd .. &&
-            pytest -k "not RSI and not threading" {project}/tests
-          CIBW_ARCHS_LINUX: aarch64
-          CIBW_BUILD_FRONTEND: build
-          CIBW_ENVIRONMENT_LINUX : >
-            TA_LIBRARY_PATH="ta-lib-install/lib"
-            TA_INCLUDE_PATH="ta-lib-install/include"
-            PIP_NO_BUILD_ISOLATION=false
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
-            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
-            auditwheel repair -w {dest_dir} {wheel}
-      - name: Upload wheels
-        uses: actions/upload-artifact@v4
-        with:
-          path: ./wheelhouse/*.whl
-          name: "ta_lib-${{ github.ref_name }}-manylinux_aarch64"
-  build_musllinux_aarch64:
-    name: Build MuslLinux arm64 wheels
-    strategy:
-      matrix:
-        os: ["ubuntu-22.04"]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup latest Alpine Linux
-        uses: jirutka/setup-alpine@v1
-        with:
-          branch: v3.15
-          packages: >
-            build-base
-            bash
-            curl
-            unzip
-            gcc
-            g++
-            cmake
-            ninja
-            rust
-          arch: aarch64
-          volumes: ${{ github.workspace }}:/project
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: alpine.sh {0}
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23.3
-        env:
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-          CIBW_TEST_SKIP: "cp*"
-          CIBW_SKIP: "pp* cp*-manylinux*"
+          CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
@@ -141,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
-          name: "ta_lib-${{ github.ref_name }}-musllinux_aarch64"
+          name: "ta_lib-${{ github.ref_name }}-linux_arm64"
   build_windows_amd64:
     name: Build Windows amd64 wheels
     strategy:
