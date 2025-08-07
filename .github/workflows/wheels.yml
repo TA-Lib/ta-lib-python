@@ -11,7 +11,10 @@ env:
   TALIB_PY_VER: ${{ github.ref_name }}
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
-  CIBW_BUILD_VERBOSITY: 2
+  CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
+  CIBW_TEST_REQUIRES: pytest pandas polars
+  CIBW_TEST_SKIP: "*win32* cp*"
+  CIBW_SKIP: "pp* cp*"
 
 jobs:
   build_manylinux_x86_64:
@@ -25,13 +28,9 @@ jobs:
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-      CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
         pytest -k "not RSI and not threading" {project}/tests
-      CIBW_TEST_SKIP: "*win32 cp*"
-      CIBW_SKIP: "pp* cp*-musllinux*"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -71,13 +70,9 @@ jobs:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-      CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
         pytest -k "not RSI and not threading" {project}/tests
-      CIBW_TEST_SKIP: "*win32 cp*"
-      CIBW_SKIP: "pp* cp*-manylinux*"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -132,13 +127,9 @@ jobs:
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-      CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
         pytest -k "not RSI and not threading" {project}/tests
-      CIBW_TEST_SKIP: "*win32 cp*"
-      CIBW_SKIP: "pp* cp*-musllinux*"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -178,13 +169,9 @@ jobs:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
-      CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-      CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
         cd .. &&
         pytest -k "not RSI and not threading" {project}/tests
-      CIBW_TEST_SKIP: "*win32 cp*"
-      CIBW_SKIP: "pp* cp*-manylinux*"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -235,8 +222,6 @@ jobs:
       matrix:
         os: ["windows-2022"]
     runs-on: ${{ matrix.os }}
-    env:
-      MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -250,13 +235,10 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-          CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32* cp*"
-          CIBW_SKIP: "pp*"
+          MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
             TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
@@ -276,8 +258,6 @@ jobs:
       matrix:
         os: ["windows-2022"]
     runs-on: ${{ matrix.os }}
-    env:
-      MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -291,13 +271,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-          CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32 cp*"
-          CIBW_SKIP: "pp*"
           MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -318,8 +294,6 @@ jobs:
       matrix:
         os: ["windows-11-arm"]
     runs-on: ${{ matrix.os }}
-    env:
-      MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -333,16 +307,10 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          PIP_NO_VERIFY: 0
-          PIP_VERBOSE: 1
-          CIBW_BUILD_VERBOSITY: 2
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-          CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32* cp*"
-          CIBW_SKIP: "pp*"
+          MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: ARM64
           CIBW_ENVIRONMENT_WINDOWS: >
             TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
@@ -373,13 +341,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-          CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32 cp*"
-          CIBW_SKIP: "pp*"
           CIBW_ARCHS_MACOS: x86_64
           CIBW_ENVIRONMENT_MACOS : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
@@ -414,13 +378,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
-          CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
-          CIBW_TEST_SKIP: "*win32 cp*"
-          CIBW_SKIP: "pp*"
           CIBW_ARCHS_MACOS: arm64
           CIBW_ENVIRONMENT_MACOS : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
