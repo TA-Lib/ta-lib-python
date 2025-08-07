@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  TALIB_C_VER: 0.6.4
-  TALIB_PY_VER: ${{ github.ref_name }}
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
@@ -26,10 +24,10 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_BEFORE_ALL: |
-              TALIB_C_VER=${{env.TALIB_C_VER}} bash ./tools/build_talib_linux.sh
+              bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-          CIBW_SKIP: "pp* cp*-musllinux*"
+          CIBW_SKIP: "pp*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
@@ -42,12 +40,9 @@ jobs:
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
             export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
             auditwheel repair -w {dest_dir} {wheel}
-      - name: Set wheel name
-        run: |
-          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_x86_64" >> $GITHUB_ENV
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
-          name: ${{ env.WHEEL_NAME }}
+          name: "ta_lib-${{ github.ref_name }}-manylinux_x86_64"
 
