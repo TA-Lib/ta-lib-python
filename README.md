@@ -131,6 +131,30 @@ $ sudo make install
 Note: if your directory path includes spaces, the installation will probably
 fail with ``No such file or directory`` errors.
 
+### Wheels
+
+We build binary TA-Lib wheels for Python using GitHub Actions.
+
+Supported platforms:
+
+* Windows 64-bit
+* Windows 32-bit
+* Windows ARM64
+* macOS x86_64
+* macOS arm64
+* Linux 64-bit
+* Linux ARM64
+
+Supported Python versions:
+
+* 3.9
+* 3.10
+* 3.11
+* 3.12
+* 3.13
+
+These will be available when new [releases](https://github.com/ta-lib/ta-lib-python/releases) are generated.
+
 ### Troubleshooting
 
 If you get a warning that looks like this:
