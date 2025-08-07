@@ -133,8 +133,8 @@ fail with ``No such file or directory`` errors.
 
 ### Wheels
 
-We build binary wheels for Python using GitHub Actions which include the
-underlying TA-Lib C library and are easy to install.
+For convenience, we build binary wheels for Python using GitHub Actions
+which include the underlying TA-Lib C library and are easy to install.
 
 Supported platforms:
 
@@ -153,6 +153,10 @@ Supported Python versions:
 * 3.11
 * 3.12
 * 3.13
+
+In the event that your OS, architecture, or python version are not available
+as a binary wheel, it is fairly easy to install from source using the
+instructions above.
 
 ### Troubleshooting
 
