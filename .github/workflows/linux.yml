@@ -8,14 +8,13 @@ env:
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
   CIBW_TEST_REQUIRES: pytest pandas maturin polars
-  CIBW_SKIP: "pp*"
 
 jobs:
-  build_linux_x86_64:
-    name: Build Linux x86_64 wheels
+  build_linux_arm64:
+    name: Build Linux arm64 wheels
     strategy:
       matrix:
-        os: ["ubuntu-22.04"]
+        os: ["ubuntu-22.04-arm"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -25,13 +24,13 @@ jobs:
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-          CIBW_SKIP: "pp*"
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
+          CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
+          CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
-          CIBW_ARCHS_LINUX: x86_64
+          CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
@@ -44,5 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
-          name: "ta_lib-${{ github.ref_name }}-manylinux_x86_64"
-
+          name: "ta_lib-${{ github.ref_name }}-linux_arm64"
