@@ -135,8 +135,8 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_BEFORE_ALL: |
-            echo $(cwd)
-            ls
+            echo $(pwd)
+            ls -l
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           CIBW_TEST_SKIP: "cp*"
           CIBW_SKIP: "pp* cp*-manylinux*"
