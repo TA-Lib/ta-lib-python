@@ -39,7 +39,7 @@ jobs:
       - name: Install GCC and CMake
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake
+          sudo apt-get install -y gcc g++ cmake ninja-build
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
@@ -94,7 +94,7 @@ jobs:
             gcc
             g++
             cmake
-            ninja-build
+            ninja
           volumes: ${{ github.workspace }}:/project
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
@@ -147,7 +147,7 @@ jobs:
       - name: Install GCC and CMake
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake
+          sudo apt-get install -y gcc g++ cmake ninja-build
       - name: Make script executable
         run: chmod +x ./tools/build_wheel_linux.sh
       - name: Build TA-Lib
@@ -203,7 +203,7 @@ jobs:
             gcc
             g++
             cmake
-            ninja-build
+            ninja
           arch: aarch64
           volumes: ${{ github.workspace }}:/project
       - name: Make script executable
