@@ -24,29 +24,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-      CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
-      CIBW_SKIP: "pp* cp*-musllinux*"
+      CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
       CIBW_TEST_COMMAND: >
         cd .. &&
         pytest -k "not RSI and not threading" {project}/tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install GCC and CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake ninja-build
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: bash
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
+          CIBW_BEFORE_ALL_LINUX: |
+            apt-get install -y cmake ninja-build
+            chmod +x ./tools/build_talib_linux.sh
+            ./tools/build_talib_linux.sh
           CIBW_ENVIRONMENT_LINUX : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
             TA_INCLUDE_PATH="ta-lib-install/include"
@@ -79,20 +72,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install GCC and CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ cmake ninja-build
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: bash
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
+          CIBW_BEFORE_ALL_LINUX: |
+            apt-get install -y cmake ninja-build
+            chmod +x ./tools/build_talib_linux.sh
+            ./tools/build_talib_linux.sh
           CIBW_ENVIRONMENT_LINUX : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
             TA_INCLUDE_PATH="ta-lib-install/include"
@@ -125,31 +113,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup latest Alpine Linux
-        uses: jirutka/setup-alpine@v1
-        with:
-          branch: v3.15
-          packages: >
-            build-base
-            bash
-            curl
-            unzip
-            gcc
-            g++
-            cmake
-            ninja
-            rust
-          volumes: ${{ github.workspace }}:/project
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: alpine.sh {0}
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
+          CIBW_BEFORE_ALL_LINUX: |
+            apk add --no-cache build-base bash curl unzip cmake ninja
+            chmod +x ./tools/build_talib_linux.sh
+            ./tools/build_talib_linux.sh
           CIBW_ENVIRONMENT_LINUX : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
             TA_INCLUDE_PATH="ta-lib-install/include"
@@ -182,32 +154,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup latest Alpine Linux
-        uses: jirutka/setup-alpine@v1
-        with:
-          branch: v3.15
-          packages: >
-            build-base
-            bash
-            curl
-            unzip
-            gcc
-            g++
-            cmake
-            ninja
-            rust
-          arch: aarch64
-          volumes: ${{ github.workspace }}:/project
-      - name: Make script executable
-        run: chmod +x ./tools/build_talib_linux.sh
-      - name: Build TA-Lib C Library
-        run: ./tools/build_talib_linux.sh
-        shell: alpine.sh {0}
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
+          CIBW_BEFORE_ALL_LINUX: |
+            apk add --no-cache build-base bash curl unzip cmake ninja
+            chmod +x ./tools/build_talib_linux.sh
+            ./tools/build_talib_linux.sh
           CIBW_ENVIRONMENT_LINUX : >
             TA_LIBRARY_PATH="ta-lib-install/lib"
             TA_INCLUDE_PATH="ta-lib-install/include"
