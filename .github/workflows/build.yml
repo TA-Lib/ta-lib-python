@@ -126,6 +126,121 @@ jobs:
         with:
           path: ./wheelhouse/*.whl
           name: ${{ env.WHEEL_NAME }}
+  build_manylinux_arm64:
+    name: Build ManyLinux arm64 wheels
+    strategy:
+      matrix:
+        os: ["ubuntu-22.04-arm"]
+    runs-on: ${{ matrix.os }}
+    env:
+      PIP_NO_VERIFY: 0
+      PIP_VERBOSE: 1
+      CIBW_BUILD_VERBOSITY: 2
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
+      CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_28
+      CIBW_BEFORE_BUILD: pip install setuptools==58.0.1&&pip install -U Cython&&pip install -U wheel numpy
+      CIBW_BEFORE_TEST: pip install -U Cython
+      CIBW_TEST_REQUIRES: pytest pandas polars
+      CIBW_TEST_COMMAND: >
+        cd .. &&
+        pytest -k "not RSI and not threading" {project}/tests
+      CIBW_TEST_SKIP: "*win32 cp*"
+      CIBW_SKIP: "pp* cp*-musllinux*"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install GCC and CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc g++ cmake
+      - name: Make script executable
+        run: chmod +x ./tools/build_wheel_linux.sh
+      - name: Build TA-Lib
+        run: ./tools/build_wheel_linux.sh
+        shell: bash
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS_LINUX: aarch64
+          CIBW_BUILD_FRONTEND: build
+          CIBW_ENVIRONMENT_LINUX : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
+            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
+            auditwheel repair -w {dest_dir} {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-manylinux_aarch64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
+  build_musllinux_aarch64:
+    name: Build MuslLinux arm64 wheels
+    strategy:
+      matrix:
+        os: ["ubuntu-22.04"]
+    runs-on: ${{ matrix.os }}
+    env:
+      PIP_NO_VERIFY: 0
+      PIP_VERBOSE: 1
+      CIBW_BUILD_VERBOSITY: 2
+      CIBW_BEFORE_BUILD: pip install setuptools==58.0.1&&pip install Cython==0.29.37&&pip install -U wheel numpy
+      CIBW_BEFORE_TEST: apk add bash&&bash setup_rust.sh&&. "$HOME/.cargo/env"&&pip install Cython==0.29.37&&pip install -U maturin&&pip install -U polars
+      CIBW_TEST_REQUIRES: pytest pandas polars
+      CIBW_TEST_COMMAND: >
+        cd .. &&
+        pytest -k "not RSI and not threading" {project}/tests
+      CIBW_TEST_SKIP: "*win32 cp*"
+      CIBW_SKIP: "pp* cp*-manylinux*"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup latest Alpine Linux
+        uses: jirutka/setup-alpine@v1
+        with:
+          branch: v3.15
+          packages: >
+            build-base
+            bash
+            curl
+            unzip
+            gcc
+            g++
+            cmake
+          arch: aarch64
+          volumes: ${{ github.workspace }}:/project
+      - name: Make script executable
+        run: chmod +x ./tools/build_wheel_linux.sh
+      - name: Build TA-Lib
+        run: |
+          ./tools/build_wheel_linux.sh
+        shell: alpine.sh {0}
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_ARCHS_LINUX: x86_64
+          CIBW_BUILD_FRONTEND: build
+          CIBW_ENVIRONMENT_LINUX : >
+            TA_LIBRARY_PATH="ta-lib-install/lib"
+            TA_INCLUDE_PATH="ta-lib-install/include"
+            PIP_NO_BUILD_ISOLATION=false
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
+            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
+            auditwheel repair -w {dest_dir} {wheel}
+      - name: Set wheel name
+        run: |
+          echo "WHEEL_NAME=ta_lib-${{env.TALIB_PY_VER}}-musllinux_aarch64" >> $GITHUB_ENV
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: ${{ env.WHEEL_NAME }}
   build_windows_amd64:
     name: Build Windows amd64 wheels
     strategy:
