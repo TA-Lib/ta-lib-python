@@ -210,7 +210,7 @@ jobs:
       - name: Build TA-Lib
         run: |
           ./tools/build_wheel_linux.sh
-        shellrm: alpine.sh {0}
+        shell: alpine.sh {0}
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
