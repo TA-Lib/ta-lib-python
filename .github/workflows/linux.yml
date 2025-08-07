@@ -25,7 +25,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BUILD_ALL: |
+          CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_SKIP: "pp* cp*-musllinux*"
