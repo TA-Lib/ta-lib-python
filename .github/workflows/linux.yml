@@ -13,8 +13,8 @@ env:
   CIBW_SKIP: "pp*"
 
 jobs:
-  build_manylinux_x86_64:
-    name: Build ManyLinux x86_64 wheels
+  build_linux_x86_64:
+    name: Build Linux x86_64 wheels
     strategy:
       matrix:
         os: ["ubuntu-22.04"]
@@ -26,9 +26,9 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_BEFORE_ALL: |
-              chmod +x ./tools/build_talib_linux.sh
-              ./tools/build_talib_linux.sh
+              TALIB_C_VER=${{env.TALIB_C_VER}} bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           CIBW_SKIP: "pp* cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
