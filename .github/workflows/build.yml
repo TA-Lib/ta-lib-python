@@ -47,7 +47,7 @@ jobs:
         run: ./tools/build_wheel_linux.sh
         shell: bash
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
@@ -90,7 +90,7 @@ jobs:
       - name: Setup latest Alpine Linux
         uses: jirutka/setup-alpine@v1
         with:
-          branch: v3.15
+          branch: v2.15
           packages: >
             build-base
             bash
@@ -107,7 +107,7 @@ jobs:
           ./tools/build_wheel_linux.sh
         shell: alpine.sh {0}
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
@@ -161,7 +161,7 @@ jobs:
         run: ./tools/build_wheel_linux.sh
         shell: bash
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
@@ -204,7 +204,7 @@ jobs:
       - name: Setup latest Alpine Linux
         uses: jirutka/setup-alpine@v1
         with:
-          branch: v3.15
+          branch: v2.15
           packages: >
             build-base
             bash
@@ -222,7 +222,7 @@ jobs:
           ./tools/build_wheel_linux.sh
         shell: alpine.sh {0}
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
@@ -260,7 +260,7 @@ jobs:
         run: tools/build_wheel_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
@@ -304,7 +304,7 @@ jobs:
         run: tools/build_wheel_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
@@ -349,7 +349,7 @@ jobs:
         run: tools/build_wheel_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
@@ -389,7 +389,7 @@ jobs:
         run: ./tools/build_wheel_macos.sh
         shell: bash
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
@@ -433,7 +433,7 @@ jobs:
         run: ./tools/build_wheel_macos.sh
         shell: bash
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
+        uses: pypa/cibuildwheel@v2
         env:
           PIP_NO_VERIFY: 0
           PIP_VERBOSE: 1
