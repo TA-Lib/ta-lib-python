@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
     - uses: actions/checkout@v3
 
@@ -26,18 +26,14 @@ jobs:
         pip install --upgrade pip wheel setuptools
         pip install -r requirements_test.txt
         pip install flake8
-        ./tools/build_talib_from_source.bash $DEPS_PATH
-      env:
-        DEPS_PATH: ${{ github.workspace }}/dependencies
-        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/include
-        TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
+        ./tools/build_talib_linux.sh
 
     - name: Build cython modules in-place
       run: |
-        python setup.py build_ext --inplace --include-dirs=$TA_INCLUDE_PATH --library-dirs=$TA_LIBRARY_PATH
+        python setup.py build_ext --inplace
       env:
-        TA_INCLUDE_PATH: ${{ github.workspace }}/dependencies/include
-        TA_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
+        TA_INCLUDE_PATH: "ta-lib-install/include"
+        TA_LIBRARY_PATH: "ta-lib-install/lib"
 
     - name: Lint with flake8
       run: |
@@ -50,4 +46,4 @@ jobs:
       run: |
         PYTHONPATH=. pytest
       env:
-        LD_LIBRARY_PATH: ${{ github.workspace }}/dependencies/lib
+        LD_LIBRARY_PATH: "ta-lib-install/lib"
