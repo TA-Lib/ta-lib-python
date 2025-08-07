@@ -10,6 +10,9 @@ on:
 env:
   TALIB_C_VER: 0.6.4
   TALIB_PY_VER: ${{ github.ref_name }}
+  PIP_NO_VERIFY: 0
+  PIP_VERBOSE: 1
+  CIBW_BUILD_VERBOSITY: 2
 
 jobs:
   build_manylinux_x86_64:
@@ -19,9 +22,6 @@ jobs:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
-      PIP_NO_VERIFY: 0
-      PIP_VERBOSE: 1
-      CIBW_BUILD_VERBOSITY: 2
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
@@ -72,9 +72,6 @@ jobs:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
-      PIP_NO_VERIFY: 0
-      PIP_VERBOSE: 1
-      CIBW_BUILD_VERBOSITY: 2
       CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
       CIBW_TEST_REQUIRES: pytest pandas polars
       CIBW_TEST_COMMAND: >
@@ -131,9 +128,6 @@ jobs:
         os: ["ubuntu-22.04-arm"]
     runs-on: ${{ matrix.os }}
     env:
-      PIP_NO_VERIFY: 0
-      PIP_VERBOSE: 1
-      CIBW_BUILD_VERBOSITY: 2
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_28
@@ -185,9 +179,6 @@ jobs:
         os: ["ubuntu-22.04"]
     runs-on: ${{ matrix.os }}
     env:
-      PIP_NO_VERIFY: 0
-      PIP_VERBOSE: 1
-      CIBW_BUILD_VERBOSITY: 2
       CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
       CIBW_BEFORE_TEST: apk add bash&&bash setup_rust.sh&&. "$HOME/.cargo/env"&&pip install Cython&&pip install -U maturin&&pip install -U polars
       CIBW_TEST_REQUIRES: pytest pandas polars
@@ -260,9 +251,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          PIP_NO_VERIFY: 0
-          PIP_VERBOSE: 1
-          CIBW_BUILD_VERBOSITY: 2
           CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
@@ -304,9 +292,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          PIP_NO_VERIFY: 0
-          PIP_VERBOSE: 1
-          CIBW_BUILD_VERBOSITY: 2
           CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
@@ -389,9 +374,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          PIP_NO_VERIFY: 0
-          PIP_VERBOSE: 1
-          CIBW_BUILD_VERBOSITY: 2
           CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
@@ -433,9 +415,6 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
-          PIP_NO_VERIFY: 0
-          PIP_VERBOSE: 1
-          CIBW_BUILD_VERBOSITY: 2
           CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python && pip install -U numpy
           CIBW_TEST_REQUIRES: pytest pandas polars
           CIBW_TEST_COMMAND: >
