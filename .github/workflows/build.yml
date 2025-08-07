@@ -1,6 +1,6 @@
 
-name: TA-Lib-python GitHub Actions to build wheels
-run-name: TA-Lib-python GitHub Actions to build wheels
+name: Build wheels
+run-name: Build wheels
 on:
   push:
     tags:
