@@ -1,8 +1,9 @@
 cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
 title: ta-lib-python
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+version: 0.6.5
+date-released: 2025-08-07
+url: "https://github.com/ta-lib/ta-lib-python"
 type: software
 authors:
   - given-names: John
