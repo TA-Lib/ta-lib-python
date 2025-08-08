@@ -140,13 +140,16 @@ install.
 
 Supported platforms:
 
-* Linux x86_64
-* Linux arm64
-* macOS x86_64
-* macOS arm64
-* Windows x86_64
-* Windows x86
-* Windows arm64
+* Linux
+  * x86_64
+  * arm64
+* macOS
+  * x86_64
+  * arm64
+* Windows
+  * x86_64
+  * x86
+  * arm64
 
 Supported Python versions:
 
