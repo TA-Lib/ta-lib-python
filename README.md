@@ -156,9 +156,9 @@ Supported Python versions:
 * 3.12
 * 3.13
 
-In the event that your OS, architecture, or python version are not available
-as a binary wheel, it is fairly easy to install from source using the
-instructions above.
+In the event that your operating system, architecture, or Python version are
+not available as a binary wheel, it is fairly easy to install from source
+using the instructions above.
 
 ### Troubleshooting
 
