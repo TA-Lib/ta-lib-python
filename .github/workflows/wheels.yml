@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 
 env:
+  TALIB_C_VER: 0.6.4
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
