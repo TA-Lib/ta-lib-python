@@ -6,7 +6,8 @@ import os.path
 import warnings
 
 from setuptools import setup, Extension
-from setuptools.dist import Distribution
+
+import numpy
 
 platform_supported = False
 
@@ -56,12 +57,6 @@ if 'TA_LIBRARY_PATH' in os.environ:
 if not platform_supported:
     raise NotImplementedError(sys.platform)
 
-try:
-    from Cython.Distutils import build_ext as cython_build_ext
-    has_cython = True
-except ImportError:
-    has_cython = False
-
 for path in library_dirs:
     try:
         files = os.listdir(path)
@@ -72,14 +67,13 @@ for path in library_dirs:
 else:
     warnings.warn('Cannot find ta-lib library, installation may fail.')
 
-
-import numpy
-
 # Get the Cython build_ext or fall back to setuptools build_ext
-if has_cython:
+try:
     from Cython.Distutils import build_ext
-else:
+    has_cython = True
+except ImportError:
     from setuptools.command.build_ext import build_ext
+    has_cython = False
 
 class NumpyBuildExt(build_ext):
     """
