@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import numpy
 import talib
+import time
 import sys
 
 TEST_LEN = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
@@ -12,7 +13,6 @@ data = numpy.random.random(TEST_LEN)
 if False: # fill array with nans
     data[:-1] = numpy.nan
 
-import time
 t0 = time.time()
 for _ in range(LOOPS):
     talib.MA(data)
