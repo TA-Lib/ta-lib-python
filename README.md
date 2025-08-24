@@ -1,6 +1,11 @@
 # TA-Lib
 
+<!-- Badges -->
 ![Tests](https://github.com/ta-lib/ta-lib-python/actions/workflows/tests.yml/badge.svg)
+[![Release](https://img.shields.io/github/v/release/ta-lib/ta-lib-python?label=Release)](https://github.com/ta-lib/ta-lib-python/releases)
+[![PyPI](https://img.shields.io/pypi/v/TA-Lib?label=PyPI)](https://pypi.org/project/TA-Lib/)
+[![Wheels](https://img.shields.io/pypi/wheel/TA-Lib?label=Wheels)](https://pypi.org/project/TA-Lib/#files)
+[![Python Versions](https://img.shields.io/pypi/pyversions/TA-Lib?label=Python)](https://pypi.org/project/TA-Lib/)
 
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
@@ -49,8 +54,7 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
-It also appears possible to install via 
-[Conda Forge](https://anaconda.org/conda-forge/ta-lib):
+It also appears possible to install via [Conda Forge](https://anaconda.org/conda-forge/ta-lib):
 
 ```
 $ conda install -c conda-forge ta-lib
@@ -571,6 +575,7 @@ for group, names in talib.get_function_groups().items():
 * Pattern Recognition
 
 ##### Overlap Studies
+
 ```
 BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
@@ -592,6 +597,7 @@ WMA                  Weighted Moving Average
 ```
 
 ##### Momentum Indicators
+
 ```
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
@@ -626,6 +632,7 @@ WILLR                Williams' %R
 ```
 
 ##### Volume Indicators
+
 ```
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
@@ -633,6 +640,7 @@ OBV                  On Balance Volume
 ```
 
 ##### Cycle Indicators
+
 ```
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
@@ -642,6 +650,7 @@ HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 ```
 
 ##### Price Transform
+
 ```
 AVGPRICE             Average Price
 MEDPRICE             Median Price
@@ -650,6 +659,7 @@ WCLPRICE             Weighted Close Price
 ```
 
 ##### Volatility Indicators
+
 ```
 ATR                  Average True Range
 NATR                 Normalized Average True Range
@@ -657,6 +667,7 @@ TRANGE               True Range
 ```
 
 ##### Pattern Recognition
+
 ```
 CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
@@ -722,6 +733,7 @@ CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 ```
 
 ##### Statistic Functions
+
 ```
 BETA                 Beta
 CORREL               Pearson's Correlation Coefficient (r)
