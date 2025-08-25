@@ -1,4 +1,4 @@
-# TA-Lib
+# TA-Lib :chart_with_upwards_trend:
 
 <!-- Badges -->
 ![Tests](https://github.com/ta-lib/ta-lib-python/actions/workflows/tests.yml/badge.svg)
@@ -23,45 +23,49 @@ The original Python bindings included with TA-Lib use
 [SWIG](http://swig.org) which unfortunately are difficult to install and
 aren't as efficient as they could be. Therefore this project uses
 [Cython](https://cython.org) and [Numpy](https://numpy.org) to efficiently
-and cleanly bind to TA-Lib -- producing results 2-4 times faster than the
+and cleanly bind to TA-Lib - producing results 2-4 times faster than the
 SWIG interface.
 
 In addition, this project also supports the use of the
 [Polars](https://www.pola.rs) and [Pandas](https://pandas.pydata.org)
 libraries.
 
-## Versions
+## Versions :card_index_dividers:
 
 The upstream TA-Lib C library released version 0.6.1 and changed the library
-name to ``-lta-lib`` from ``-lta_lib``. After trying to support both via
+name to `-lta-lib` from `-lta_lib`. After trying to support both via
 autodetect and having some issues, we have decided to currently support three
 feature branches:
 
-* ``ta-lib-python`` 0.4.x (supports ``ta-lib`` 0.4.x and ``numpy`` 1)
-* ``ta-lib-python`` 0.5.x (supports ``ta-lib`` 0.4.x and ``numpy`` 2)
-* ``ta-lib-python`` 0.6.x (supports ``ta-lib`` 0.6.x and ``numpy`` 2)
+* `ta-lib-python` 0.4.x (supports `ta-lib` 0.4.x and `numpy` 1)
+* `ta-lib-python` 0.5.x (supports `ta-lib` 0.4.x and `numpy` 2)
+* `ta-lib-python` 0.6.x (supports `ta-lib` 0.6.x and `numpy` 2)
 
-## Installation
+## Installation :floppy_disk:
 
 You can install from PyPI:
 
-```
-$ python -m pip install TA-Lib
+```shell
+python -m pip install TA-Lib
 ```
 
-Or checkout the sources and run ``setup.py`` yourself:
+Or checkout the sources and run `setup.py` yourself:
 
-```
-$ python setup.py install
+```shell
+python setup.py install
 ```
 
 It also appears possible to install via [Conda Forge](https://anaconda.org/conda-forge/ta-lib):
 
-```
-$ conda install -c conda-forge ta-lib
+```shell
+conda install -c conda-forge ta-lib
 ```
 
-### Dependencies
+```shell
+conda install -c conda-forge ta-lib
+```
+
+### Dependencies :jigsaw:
 
 To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
 already installed. You should probably follow their [installation
@@ -73,42 +77,42 @@ suggestions are included below for reference.
 >
 > ``$ conda install -c conda-forge libta-lib``
 
-##### Mac OS X
+#### Mac OS X
 
 You can simply install using Homebrew:
 
-```
-$ brew install ta-lib
+```shell
+brew install ta-lib
 ```
 
 If you are using Apple Silicon, such as the M1 processors, and building mixed
 architecture Homebrew projects, you might want to make sure it's being built
 for your architecture:
 
-```
-$ arch -arm64 brew install ta-lib
+```shell
+arch -arm64 brew install ta-lib
 ```
 
-And perhaps you can set these before installing with ``pip``:
+And perhaps you can set these before installing with `pip`:
 
-```
-$ export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
-$ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+```shell
+export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
 ```
 
 You might also find this helpful, particularly if you have tried several
 different installations without success:
 
-```
-$ your-arm64-python -m pip install --no-cache-dir ta-lib
+```shell
+your-arm64-python -m pip install --no-cache-dir ta-lib
 ```
 
-##### Windows
+#### Windows
 
 For 64-bit Windows, the easiest way is to get the *executable installer*:
 
 1. Download [ta-lib-0.6.4-windows-x86_64.msi](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_64.msi).
-2. Run the Installer or run ``msiexec`` [from the command-line](https://learn.microsoft.com/en-us/windows/win32/msi/standard-installer-command-line-options).
+2. Run the Installer or run `msiexec` [from the command-line](https://learn.microsoft.com/en-us/windows/win32/msi/standard-installer-command-line-options).
 
 Alternatively, if you prefer to get the libraries without installing, or
 would like to use the 32-bit version:
@@ -116,27 +120,27 @@ would like to use the 32-bit version:
 * Intel/AMD 64-bit [ta-lib-0.6.4-windows-x86_64.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_64.zip)
 * Intel/AMD 32-bit [ta-lib-0.6.4-windows-x86_32.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-windows-x86_32.zip)
 
-##### Linux
+#### Linux
 
 Download
 [ta-lib-0.6.4-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-src.tar.gz)
 and:
 
-```
-$ tar -xzf ta-lib-0.6.4-src.tar.gz
-$ cd ta-lib-0.6.4/
-$ ./configure --prefix=/usr
-$ make
-$ sudo make install
+```shell
+tar -xzf ta-lib-0.6.4-src.tar.gz
+cd ta-lib-0.6.4/
+./configure --prefix=/usr
+make
+sudo make install
 ```
 
-> If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
+> If you build `TA-Lib` using `make -jX` it will fail but that's OK!
 > Simply rerun ``make -jX`` followed by ``[sudo] make install``.
 
 Note: if your directory path includes spaces, the installation will probably
 fail with ``No such file or directory`` errors.
 
-### Wheels
+### Wheels :gear:
 
 For convenience, and starting with version 0.6.5, we now build binary wheels
 for different operating systems, architectures, and Python versions using
@@ -168,37 +172,37 @@ In the event that your operating system, architecture, or Python version are
 not available as a binary wheel, it is fairly easy to install from source
 using the instructions above.
 
-### Troubleshooting
+### Troubleshooting :hammer_and_wrench:
 
 If you get a warning that looks like this:
 
-```
+```shell
 setup.py:79: UserWarning: Cannot find ta-lib library, installation may fail.
 warnings.warn('Cannot find ta-lib library, installation may fail.')
 ```
 
-This typically means ``setup.py`` can't find the underlying ``TA-Lib``
+This typically means `setup.py` can't find the underlying `TA-Lib`
 library, a dependency which needs to be installed.
 
 ---
 
-If you installed the underlying ``TA-Lib`` library with a custom prefix
-(e.g., with ``./configure --prefix=$PREFIX``), then when you go to install
+If you installed the underlying `TA-Lib` library with a custom prefix
+(e.g., with `./configure --prefix=$PREFIX`), then when you go to install
 this python wrapper you can specify additional search paths to find the
-library and include files for the underlying ``TA-Lib`` library using the
-``TA_LIBRARY_PATH`` and ``TA_INCLUDE_PATH`` environment variables:
+library and include files for the underlying `TA-Lib` library using the
+`TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
 
-```sh
-$ export TA_LIBRARY_PATH=$PREFIX/lib
-$ export TA_INCLUDE_PATH=$PREFIX/include
-$ python setup.py install # or pip install ta-lib
+```shell
+export TA_LIBRARY_PATH=$PREFIX/lib
+export TA_INCLUDE_PATH=$PREFIX/include
+python setup.py install # or pip install ta-lib
 ```
 
 ---
 
 Sometimes installation will produce build errors like this:
 
-```
+```shell
 talib/_ta_lib.c:601:10: fatal error: ta-lib/ta_defs.h: No such file or directory
   601 | #include "ta-lib/ta_defs.h"
       |          ^~~~~~~~~~~~~~~~~~
@@ -207,7 +211,7 @@ compilation terminated.
 
 or:
 
-```
+```shell
 common.obj : error LNK2001: unresolved external symbol TA_SetUnstablePeriod
 common.obj : error LNK2001: unresolved external symbol TA_Shutdown
 common.obj : error LNK2001: unresolved external symbol TA_Initialize
@@ -215,16 +219,16 @@ common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
 common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
 ```
 
-This typically means that it can't find the underlying ``TA-Lib`` library, a
+This typically means that it can't find the underlying `TA-Lib` library, a
 dependency which needs to be installed.  On Windows, this could be caused by
-installing the 32-bit binary distribution of the underlying ``TA-Lib`` library,
+installing the 32-bit binary distribution of the underlying `TA-Lib` library,
 but trying to use it with 64-bit Python.
 
 ---
 
 Sometimes installation will fail with errors like this:
 
-```
+```shell
 talib/common.c:8:22: fatal error: pyconfig.h: No such file or directory
  #include "pyconfig.h"
                       ^
@@ -235,31 +239,31 @@ error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
 This typically means that you need the Python headers, and should run
 something like:
 
-```
-$ sudo apt-get install python3-dev
+```shell
+sudo apt-get install python3-dev
 ```
 
 ---
 
-Sometimes building the underlying ``TA-Lib`` library has errors running
-``make`` that look like this:
+Sometimes building the underlying `TA-Lib` library has errors running
+`make` that look like this:
 
-```
+```shell
 ../libtool: line 1717: cd: .libs/libta_lib.lax/libta_abstract.a: No such file or directory
 make[2]: *** [libta_lib.la] Error 1
 make[1]: *** [all-recursive] Error 1
 make: *** [all-recursive] Error 1
 ```
 
-This might mean that the directory path to the underlying ``TA-Lib`` library
+This might mean that the directory path to the underlying `TA-Lib` library
 has spaces in the directory names.  Try putting it in a path that does not have
 any spaces and trying again.
 
 ---
 
-Sometimes you might get this error running ``setup.py``:
+Sometimes you might get this error running `setup.py`:
 
-```
+```shell
 /usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory
 #include <bits/libc-header-start.h>
          ^~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -273,7 +277,7 @@ first answer to [this question](https://stackoverflow.com/questions/54082459/fat
 
 If you get an error on macOS like this:
 
-```
+```shell
 code signature in <141BC883-189B-322C-AE90-CBF6B5206F67>
 'python3.9/site-packages/talib/_ta_lib.cpython-39-darwin.so' not valid for
 use in process: Trying to load an unsigned library)
@@ -284,9 +288,9 @@ and use ``xcrun codesign`` to fix it.
 
 ---
 
-If you wonder why ``STOCHRSI`` gives you different results than you expect,
-probably you want ``STOCH`` applied to ``RSI``, which is a little different
-than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
+If you wonder why `STOCHRSI` gives you different results than you expect,
+probably you want `STOCH` applied to `RSI`, which is a little different
+than the `STOCHRSI` which is `STOCHF` applied to `RSI`:
 
 ```python
 >>> import talib
@@ -307,16 +311,15 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 
 ---
 
-If the build appears to hang, you might be running on a VM with not enough
-memory -- try 1 GB or 2 GB.
+If the build appears to hang, you might be running on a VM with not enough memory - try 1 GB or 2 GB.
 
 It has also been reported that using a swapfile could help, for example:
 
-```
-$ sudo fallocate -l 1G /swapfile
-$ sudo chmod 600 /swapfile
-$ sudo mkswap /swapfile
-$ sudo swapon /swapfile
+```shell
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 ```
 
 ---
@@ -325,7 +328,7 @@ If you get "permission denied" errors such as this, you might need to give
 your user access to the location where the underlying TA-Lib C library is
 installed -- or install it to a user-accessible location.
 
-```
+```shell
 talib/_ta_lib.c:747:28: fatal error: /usr/include/ta-lib/ta_defs.h: Permission denied
  #include "ta-lib/ta-defs.h"
                             ^
@@ -337,24 +340,24 @@ error: command 'gcc' failed with exit status 1
 
 If you're having trouble compiling the underlying TA-Lib C library on ARM64,
 you might need to configure it with an explicit build type before running
-``make`` and ``make install``, for example:
+`make` and `make install`, for example:
 
-```
-$ ./configure --build=aarch64-unknown-linux-gnu
+```shell
+./configure --build=aarch64-unknown-linux-gnu
 ```
 
-This is caused by old ``config.guess`` file, so another way to solve this is
+This is caused by old `config.guess` file, so another way to solve this is
 to copy a newer version of config.guess into the underlying TA-Lib C library
 sources:
 
-```
-$ cp /usr/share/automake-1.16/config.guess /path/to/extracted/ta-lib/config.guess
+```shell
+cp /usr/share/automake-1.16/config.guess /path/to/extracted/ta-lib/config.guess
 ```
 
 And then re-run configure:
 
-```
-$ ./configure
+```shell
+./configure
 ```
 
 ---
@@ -362,34 +365,33 @@ $ ./configure
 If you're having trouble using [PyInstaller](https://pyinstaller.org) and
 get an error that looks like this:
 
-```
+```shell
 ...site-packages\PyInstaller\loader\pyimod03_importers.py", line 493, in exec_module
     exec(bytecode, module.__dict__)
   File "talib\__init__.py", line 72, in <module>
 ModuleNotFoundError: No module named 'talib.stream'
 ```
 
-Then, perhaps you can use the ``--hidden-import`` argument to fix this:
+Then, perhaps you can use the `--hidden-import` argument to fix this:
 
-```
-$ pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
+```shell
+pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
 ```
 
 ---
 
-If you want to use ``numpy<2``, then you should use ``ta-lib<0.5``.
+If you want to use `numpy<2`, then you should use `ta-lib<0.5`.
 
-If you want to use ``numpy>=2``, then you should use ``ta-lib>=0.5``.
+If you want to use `numpy>=2`, then you should use `ta-lib>=0.5`.
 
 ---
 
 If you have trouble getting the code autocompletions to work in Visual
-Studio Code, a suggestion was made to look for the ``Python`` extension
-settings, and an option for ``Language Server``, and change it from
-``Default`` (which means ``Pylance if it is installed, Jedi otherwise``, to
-manually set ``Jedi`` and the completions should work. It is possible that
-you might need to [install it
-manually](https://github.com/pappasam/jedi-language-server) for this to
+Studio Code, a suggestion was made to look for the `Python` extension
+settings, and an option for `Language Server`, and change it from
+`Default` (which means `Pylance if it is installed, Jedi otherwise`), to
+manually set `Jedi` and the completions should work. It is possible that
+you might need to [install it manually](https://github.com/pappasam/jedi-language-server) for this to
 work.
 
 ## Function API
@@ -400,10 +402,10 @@ exposed TA-Lib indicators.
 Each function returns an output array and have default values for their
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
-before an output is generated) set to ``NaN``.
+before an output is generated) set to `NaN`.
 
-For convenience, the Function API supports both ``numpy.ndarray`` and
-``pandas.Series`` and ``polars.Series`` inputs.
+For convenience, the Function API supports both `numpy.ndarray` and
+`pandas.Series` and `polars.Series` inputs.
 
 All of the following examples use the Function API:
 
@@ -434,7 +436,7 @@ Calculating momentum of the close prices, with a time period of 5:
 output = talib.MOM(close, timeperiod=5)
 ```
 
-##### NaN's
+### NaN's
 
 The underlying TA-Lib C library handles NaN's in a sometimes surprising manner
 by typically propagating NaN's to the end of the output, for example:
@@ -545,10 +547,10 @@ latest = stream.SMA(close)
 assert (output[-1] - latest) < 0.00001
 ```
 
-## Supported Indicators and Functions
+## Supported Indicators and Functions :clipboard:
 
-We can show all the TA functions supported by TA-Lib, either as a ``list`` or
-as a ``dict`` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
+We can show all the TA functions supported by TA-Lib, either as a `list` or
+as a `dict` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
 etc):
 
 ```python
@@ -565,7 +567,7 @@ for group, names in talib.get_function_groups().items():
         print(f"  {name}")
 ```
 
-### Indicator Groups
+### Indicator Groups :label:
 
 * Overlap Studies
 * Momentum Indicators
@@ -575,9 +577,9 @@ for group, names in talib.get_function_groups().items():
 * Cycle Indicators
 * Pattern Recognition
 
-##### Overlap Studies
+#### Overlap Studies
 
-```
+```text
 BBANDS               Bollinger Bands
 DEMA                 Double Exponential Moving Average
 EMA                  Exponential Moving Average
@@ -597,9 +599,9 @@ TRIMA                Triangular Moving Average
 WMA                  Weighted Moving Average
 ```
 
-##### Momentum Indicators
+#### Momentum Indicators
 
-```
+```text
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
 APO                  Absolute Price Oscillator
@@ -632,17 +634,17 @@ ULTOSC               Ultimate Oscillator
 WILLR                Williams' %R
 ```
 
-##### Volume Indicators
+#### Volume Indicators
 
-```
+```text
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
 OBV                  On Balance Volume
 ```
 
-##### Cycle Indicators
+#### Cycle Indicators
 
-```
+```text
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
 HT_PHASOR            Hilbert Transform - Phasor Components
@@ -650,26 +652,26 @@ HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
 ```
 
-##### Price Transform
+#### Price Transform
 
-```
+```text
 AVGPRICE             Average Price
 MEDPRICE             Median Price
 TYPPRICE             Typical Price
 WCLPRICE             Weighted Close Price
 ```
 
-##### Volatility Indicators
+#### Volatility Indicators
 
-```
+```text
 ATR                  Average True Range
 NATR                 Normalized Average True Range
 TRANGE               True Range
 ```
 
-##### Pattern Recognition
+#### Pattern Recognition
 
-```
+```text
 CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
 CDL3INSIDE           Three Inside Up/Down
@@ -733,9 +735,9 @@ CDLUPSIDEGAP2CROWS   Upside Gap Two Crows
 CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 ```
 
-##### Statistic Functions
+#### Statistic Functions
 
-```
+```text
 BETA                 Beta
 CORREL               Pearson's Correlation Coefficient (r)
 LINEARREG            Linear Regression
