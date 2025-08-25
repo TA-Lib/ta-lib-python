@@ -6,6 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/TA-Lib?label=PyPI)](https://pypi.org/project/TA-Lib/)
 [![Wheels](https://img.shields.io/pypi/wheel/TA-Lib?label=Wheels)](https://pypi.org/project/TA-Lib/#files)
 [![Python Versions](https://img.shields.io/pypi/pyversions/TA-Lib?label=Python)](https://pypi.org/project/TA-Lib/)
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
