@@ -1,4 +1,4 @@
-# TA-Lib :chart_with_upwards_trend:
+# TA-Lib 📈
 
 <!-- Badges -->
 ![Tests](https://github.com/ta-lib/ta-lib-python/actions/workflows/tests.yml/badge.svg)
@@ -30,7 +30,7 @@ In addition, this project also supports the use of the
 [Polars](https://www.pola.rs) and [Pandas](https://pandas.pydata.org)
 libraries.
 
-## Versions :card_index_dividers:
+## Versions 🗂️
 
 The upstream TA-Lib C library released version 0.6.1 and changed the library
 name to `-lta-lib` from `-lta_lib`. After trying to support both via
@@ -41,7 +41,7 @@ feature branches:
 * `ta-lib-python` 0.5.x (supports `ta-lib` 0.4.x and `numpy` 2)
 * `ta-lib-python` 0.6.x (supports `ta-lib` 0.6.x and `numpy` 2)
 
-## Installation :floppy_disk:
+## Installation 💾
 
 You can install from PyPI:
 
@@ -65,7 +65,7 @@ conda install -c conda-forge ta-lib
 conda install -c conda-forge ta-lib
 ```
 
-### Dependencies :jigsaw:
+### Dependencies 🧩
 
 To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
 already installed. You should probably follow their [installation
@@ -140,7 +140,7 @@ sudo make install
 Note: if your directory path includes spaces, the installation will probably
 fail with ``No such file or directory`` errors.
 
-### Wheels :gear:
+### Wheels ⚙️
 
 For convenience, and starting with version 0.6.5, we now build binary wheels
 for different operating systems, architectures, and Python versions using
@@ -172,7 +172,7 @@ In the event that your operating system, architecture, or Python version are
 not available as a binary wheel, it is fairly easy to install from source
 using the instructions above.
 
-### Troubleshooting :hammer_and_wrench:
+### Troubleshooting 🛠️
 
 If you get a warning that looks like this:
 
@@ -547,7 +547,7 @@ latest = stream.SMA(close)
 assert (output[-1] - latest) < 0.00001
 ```
 
-## Supported Indicators and Functions :clipboard:
+## Supported Indicators and Functions 📋
 
 We can show all the TA functions supported by TA-Lib, either as a `list` or
 as a `dict` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
@@ -567,7 +567,7 @@ for group, names in talib.get_function_groups().items():
         print(f"  {name}")
 ```
 
-### Indicator Groups :label:
+### Indicator Groups 🏷️
 
 * Overlap Studies
 * Momentum Indicators
