@@ -3,6 +3,8 @@
 
 - [FIX]: Silence project.license warnings when building.
 
+- [FIX]: Fix regression in abstract function parameters not coercing integers
+
 0.6.5
 =====
 

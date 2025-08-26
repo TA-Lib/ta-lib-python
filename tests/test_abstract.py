@@ -20,6 +20,11 @@ def assert_array_not_equal(x, y):
     assert_raises(AssertionError, assert_array_equal, x, y)
 
 
+def test_pararmeters():
+    parameters = abstract.MACD.parameters
+    assert all(type(v) == int for k, v in parameters.items())
+
+
 def test_pandas(ford_2012):
     import pandas
     input_df = pandas.DataFrame(ford_2012)
