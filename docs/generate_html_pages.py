@@ -13,8 +13,6 @@ To list available style names (at python prompt)
 # default, lovelace and xcode are "normal" styles
 """
 
-from __future__ import print_function
-
 import os
 import sys
 import talib
@@ -103,10 +101,7 @@ def get_doc_links():
         with open(html_file_path, 'r') as f:
             html = f.read()
     else:
-        if sys.version_info < (2, 8):
-            from urllib2 import urlopen
-        else:
-            from urllib.request import urlopen
+        from urllib.request import urlopen
 
         html = urlopen(tadoc_homepage).read()
         with open(html_file_path, 'wb') as f:
