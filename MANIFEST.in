@@ -3,5 +3,6 @@ include COPYRIGHT
 include README.md
 include talib/*.c
 include talib/*.pyx
+include talib/*.pxd
 include talib/*.pxi
 include tests/*.py
