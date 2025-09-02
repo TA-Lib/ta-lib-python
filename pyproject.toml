@@ -37,7 +37,6 @@ dependencies = [
     "build",
     "cython",
     "numpy",
-    "pip",
 ]
 requires-python = '>=3.9'
 
