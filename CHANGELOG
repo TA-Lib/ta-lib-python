@@ -3,6 +3,10 @@
 
 - [NEW]: Upgrade to Cython 3.1.3
 
+- [FIX]: Include .pxd files in the source .tar.gz
+
+- [FIX]: Don't require pip, it's not needed
+
 0.6.6
 =====
 
