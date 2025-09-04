@@ -7,6 +7,8 @@
 
 - [FIX]: Don't require pip, it's not needed
 
+- [FIX]: Add back some import compat for backtrader
+
 0.6.6
 =====
 
