@@ -35,7 +35,6 @@ classifiers = [
 ]
 dependencies = [
     "build",
-    "cython",
     "numpy",
 ]
 requires-python = '>=3.9'
