@@ -189,7 +189,7 @@ jobs:
     name: Build MacOS x86_64 wheels
     strategy:
       matrix:
-        os: [macos-14]
+        os: [macos-13]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
