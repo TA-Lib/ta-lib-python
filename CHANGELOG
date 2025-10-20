@@ -1,3 +1,10 @@
+0.6.8
+=====
+
+- [FIX]: Remove accidental cython dependency.
+
+- [NEW]: Release binaries for Python 3.14
+
 0.6.7
 =====
 
