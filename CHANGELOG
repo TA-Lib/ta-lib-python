@@ -3,6 +3,8 @@
 
 - [FIX]: Remove accidental cython dependency.
 
+- [NEW]: Upgrade to Cython 3.1.5
+
 - [NEW]: Release binaries for Python 3.14
 
 0.6.7
