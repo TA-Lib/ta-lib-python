@@ -19,7 +19,7 @@ jobs:
     name: Build Linux x86_64 wheels
     strategy:
       matrix:
-        os: ["ubuntu-22.04"]
+        os: ["ubuntu-24.04"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -53,7 +53,7 @@ jobs:
     name: Build Linux arm64 wheels
     strategy:
       matrix:
-        os: ["ubuntu-22.04-arm"]
+        os: ["ubuntu-24.04-arm"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -189,7 +189,7 @@ jobs:
     name: Build MacOS x86_64 wheels
     strategy:
       matrix:
-        os: [macos-13]
+        os: [macos-14]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
