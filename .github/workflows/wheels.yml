@@ -12,7 +12,7 @@ env:
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
   CIBW_TEST_REQUIRES: pytest pandas maturin polars
-  CIBW_SKIP: "pp*"
+  CIBW_SKIP: "pp* cp313t* cp314t*"
 
 jobs:
   build_linux_x86_64:
