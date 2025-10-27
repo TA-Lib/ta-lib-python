@@ -11,7 +11,7 @@ def test_talib_version():
 
 
 def test_num_functions():
-    assert len(talib.get_functions()) == 158
+    assert len(talib.get_functions()) == 161
 
 
 def test_input_wrong_type():
