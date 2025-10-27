@@ -1,4 +1,9 @@
 # Overlap Studies Functions
+### ACCBANDS - Acceleration Bands
+```python
+upperband, middleband, lowerband = ACCBANDS(high, low, close, timeperiod=20)
+```
+
 ### BBANDS - Bollinger Bands
 ```python
 upperband, middleband, lowerband = BBANDS(real, timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
