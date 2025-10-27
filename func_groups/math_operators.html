@@ -34,37 +34,37 @@
         <section id="main_content" class="inner">
 <h1>Math Operator Functions</h1>
 <h3>ADD - Vector Arithmetic Add</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADD</span><span class="highlight p">(</span><span class="highlight n">real0</span><span class="highlight p">,</span> <span class="highlight n">real1</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADD</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
 </pre></div>
 <h3>DIV - Vector Arithmetic Div</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DIV</span><span class="highlight p">(</span><span class="highlight n">real0</span><span class="highlight p">,</span> <span class="highlight n">real1</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DIV</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MAX - Highest value over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MAX</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MAX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MAXINDEX - Index of highest value over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MAXINDEX</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MAXINDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MIN - Lowest value over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIN</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIN</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MININDEX - Index of lowest value over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MININDEX</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">integer</span> <span class="highlight o">=</span> <span class="highlight n">MININDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MINMAX - Lowest and highest values over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight nb">min</span><span class="highlight p">,</span> <span class="highlight nb">max</span> <span class="highlight o">=</span> <span class="highlight n">MINMAX</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight nb">min</span><span class="highlight p">,</span> <span class="highlight nb">max</span> <span class="highlight o">=</span> <span class="highlight n">MINMAX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MINMAXINDEX - Indexes of lowest and highest values over a specified period</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">minidx</span><span class="highlight p">,</span> <span class="highlight n">maxidx</span> <span class="highlight o">=</span> <span class="highlight n">MINMAXINDEX</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">minidx</span><span class="highlight p">,</span> <span class="highlight n">maxidx</span> <span class="highlight o">=</span> <span class="highlight n">MINMAXINDEX</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MULT - Vector Arithmetic Mult</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MULT</span><span class="highlight p">(</span><span class="highlight n">real0</span><span class="highlight p">,</span> <span class="highlight n">real1</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MULT</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
 </pre></div>
 <h3>SUB - Vector Arithmetic Subtraction</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUB</span><span class="highlight p">(</span><span class="highlight n">real0</span><span class="highlight p">,</span> <span class="highlight n">real1</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUB</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">)</span>
 </pre></div>
 <h3>SUM - Summation</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUM</span><span class="highlight p">(</span><span class="highlight n">real</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SUM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <p><a href="../doc_index.html">Documentation Index</a>
 <a class="float-right" href="../funcs.html">All Function Groups</a></p>

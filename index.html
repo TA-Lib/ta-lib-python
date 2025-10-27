@@ -60,8 +60,8 @@ parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial &quot;lookback&quot; period (a required number of observations
 before an output is generated) set to <code>NaN</code>.</p>
 <p>All of the following examples use the function API:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span>
-<span class="highlight kn">import</span> <span class="highlight nn">talib</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">numpy</span>
+<span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">talib</span>
 
 <span class="highlight n">close</span> <span class="highlight o">=</span> <span class="highlight n">numpy</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
 </pre></div>
@@ -69,7 +69,7 @@ before an output is generated) set to <code>NaN</code>.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
 </pre></div>
 <p>Calculating bollinger bands, with triple exponential moving average:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span><span class="highlight w"> </span><span class="highlight nn">talib</span><span class="highlight w"> </span><span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
 
 <span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight n">MA_Type</span><span class="highlight o">.</span><span class="highlight n">T3</span><span class="highlight p">)</span>
 </pre></div>
@@ -80,7 +80,7 @@ before an output is generated) set to <code>NaN</code>.</p>
 <p>If you're already familiar with using the function API, you should feel right
 at home using the abstract API. Every function takes the same input, passed
 as a dictionary of Numpy arrays:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span> <span class="highlight k">as</span> <span class="highlight nn">np</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">numpy</span><span class="highlight w"> </span><span class="highlight k">as</span><span class="highlight w"> </span><span class="highlight nn">np</span>
 <span class="highlight c1"># note that all ndarrays must be the same length!</span>
 <span class="highlight n">inputs</span> <span class="highlight o">=</span> <span class="highlight p">{</span>
     <span class="highlight s1">&#39;open&#39;</span><span class="highlight p">:</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">),</span>
@@ -91,12 +91,12 @@ as a dictionary of Numpy arrays:</p>
 <span class="highlight p">}</span>
 </pre></div>
 <p>Functions can either be imported directly or instantiated by name:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">abstract</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span><span class="highlight w"> </span><span class="highlight nn">talib</span><span class="highlight w"> </span><span class="highlight kn">import</span> <span class="highlight n">abstract</span>
 <span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">SMA</span>
 <span class="highlight n">sma</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">&#39;sma&#39;</span><span class="highlight p">)</span>
 </pre></div>
 <p>From there, calling functions is basically the same as the function API:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib.abstract</span> <span class="highlight kn">import</span> <span class="highlight o">*</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span><span class="highlight w"> </span><span class="highlight nn">talib.abstract</span><span class="highlight w"> </span><span class="highlight kn">import</span> <span class="highlight o">*</span>
 <span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on close prices by default</span>
 <span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">,</span> <span class="highlight n">price</span><span class="highlight o">=</span><span class="highlight s1">&#39;open&#39;</span><span class="highlight p">)</span> <span class="highlight c1"># calculate on opens</span>
 <span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">input_arrays</span><span class="highlight p">,</span> <span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight mi">2</span><span class="highlight p">)</span>
@@ -108,7 +108,7 @@ as a dictionary of Numpy arrays:</p>
 <p>We can show all the TA functions supported by TA-Lib, either as a <code>list</code> or
 as a <code>dict</code> sorted by group (e.g. &quot;Overlap Studies&quot;, &quot;Momentum Indicators&quot;,
 etc):</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">talib</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">talib</span>
 
 <span class="highlight nb">print</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">get_functions</span><span class="highlight p">()</span>
 <span class="highlight nb">print</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">get_function_groups</span><span class="highlight p">()</span>

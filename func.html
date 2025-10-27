@@ -40,8 +40,8 @@ parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial &quot;lookback&quot; period (a required number of observations
 before an output is generated) set to <code>NaN</code>.</p>
 <p>All of the following examples use the function API:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">import</span> <span class="highlight nn">numpy</span>
-<span class="highlight kn">import</span> <span class="highlight nn">talib</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">numpy</span>
+<span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">talib</span>
 
 <span class="highlight n">close</span> <span class="highlight o">=</span> <span class="highlight n">numpy</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight o">.</span><span class="highlight n">random</span><span class="highlight p">(</span><span class="highlight mi">100</span><span class="highlight p">)</span>
 </pre></div>
@@ -49,7 +49,7 @@ before an output is generated) set to <code>NaN</code>.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
 </pre></div>
 <p>Calculating bollinger bands, with triple exponential moving average:</p>
-<div class="highlight"><pre><span></span><span class="highlight kn">from</span> <span class="highlight nn">talib</span> <span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
+<div class="highlight"><pre><span></span><span class="highlight kn">from</span><span class="highlight w"> </span><span class="highlight nn">talib</span><span class="highlight w"> </span><span class="highlight kn">import</span> <span class="highlight n">MA_Type</span>
 
 <span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight n">MA_Type</span><span class="highlight o">.</span><span class="highlight n">T3</span><span class="highlight p">)</span>
 </pre></div>
