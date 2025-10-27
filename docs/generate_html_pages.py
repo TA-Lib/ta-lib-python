@@ -109,7 +109,7 @@ def get_doc_links():
 
     # find every link that's for an indicator and convert to absolute urls
     soup = BeautifulSoup(html, 'html.parser')
-    links = [a for a in soup.findAll('a') if 'indicator' in a['href']]
+    links = [a for a in soup.find_all('a') if 'indicator' in a['href']]
     ret = {}
     for a in links:
         url = ''.join([tadoc_homepage, a['href']])
