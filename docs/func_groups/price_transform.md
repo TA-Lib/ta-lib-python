@@ -1,4 +1,9 @@
 # Price Transform Functions
+### AVGDEV - Average Deviation
+```python
+real = AVGDEV(real, timeperiod=14)
+```
+
 ### AVGPRICE - Average Price
 ```python
 real = AVGPRICE(open, high, low, close)
@@ -21,5 +26,4 @@ real = WCLPRICE(high, low, close)
 
 
 [Documentation Index](../doc_index.md)
-
 [FLOAT_RIGHTAll Function Groups](../funcs.md)
