@@ -48,6 +48,12 @@ NOTE: The ``DX`` function has an unstable period.
 real = DX(high, low, close, timeperiod=14)
 ```
 
+### IMI - Intraday Momentum Index
+NOTE: The ``IMI`` function has an unstable period.
+```python
+real = IMI(open, close, timeperiod=14)
+```
+
 ### MACD - Moving Average Convergence/Divergence
 ```python
 macd, macdsignal, macdhist = MACD(real, fastperiod=12, slowperiod=26, signalperiod=9)
