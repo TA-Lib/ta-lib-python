@@ -132,7 +132,7 @@ for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names)
     setattr(stream, func_name, wrapped_func)
     globals()[stream_func_name] = wrapped_func
 
-__version__ = '0.6.8'
+__version__ = '0.6.9'
 
 # In order to use this python library, talib (i.e. this __file__) will be
 # imported at some point, either explicitly or indirectly via talib.func

@@ -1,3 +1,10 @@
+0.6.9
+=====
+
+- [FIX]: Adding ACCBANDS, AVGDEV, IMI to get_func_groups()
+
+- [FIX]: Adding ACCBANDS, AVGDEV, IMI to docs pages
+
 0.6.8
 =====
 
