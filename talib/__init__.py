@@ -192,6 +192,7 @@ __function_groups__ = {
         'CCI',
         'CMO',
         'DX',
+        'IMI',
         'MACD',
         'MACDEXT',
         'MACDFIX',
@@ -215,6 +216,7 @@ __function_groups__ = {
         'WILLR',
         ],
     'Overlap Studies': [
+        'ACCBANDS',
         'BBANDS',
         'DEMA',
         'EMA',
@@ -297,6 +299,7 @@ __function_groups__ = {
         'CDLXSIDEGAP3METHODS',
         ],
     'Price Transform': [
+        'AVGDEV',
         'AVGPRICE',
         'MEDPRICE',
         'TYPPRICE',
