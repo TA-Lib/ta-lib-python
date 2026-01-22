@@ -3,86 +3,86 @@
 cdef extern from "ta-lib/ta_defs.h":
 
     ctypedef int TA_RetCode
-    TA_RetCode TA_SUCCESS = 0
-    TA_RetCode TA_LIB_NOT_INITIALIZE = 1
-    TA_RetCode TA_BAD_PARAM = 2
-    TA_RetCode TA_ALLOC_ERR = 3
-    TA_RetCode TA_GROUP_NOT_FOUND = 4
-    TA_RetCode TA_FUNC_NOT_FOUND = 5
-    TA_RetCode TA_INVALID_HANDLE = 6
-    TA_RetCode TA_INVALID_PARAM_HOLDER = 7
-    TA_RetCode TA_INVALID_PARAM_HOLDER_TYPE = 8
-    TA_RetCode TA_INVALID_PARAM_FUNCTION = 9
-    TA_RetCode TA_INPUT_NOT_ALL_INITIALIZE = 10
-    TA_RetCode TA_OUTPUT_NOT_ALL_INITIALIZE = 11
-    TA_RetCode TA_OUT_OF_RANGE_START_INDEX = 12
-    TA_RetCode TA_OUT_OF_RANGE_END_INDEX = 13
-    TA_RetCode TA_INVALID_LIST_TYPE = 14
-    TA_RetCode TA_BAD_OBJECT = 15
-    TA_RetCode TA_NOT_SUPPORTED = 16
-    TA_RetCode TA_INTERNAL_ERROR = 5000
-    TA_RetCode TA_UNKNOWN_ERR = 0xffff
+    const TA_RetCode TA_SUCCESS = 0
+    const TA_RetCode TA_LIB_NOT_INITIALIZE = 1
+    const TA_RetCode TA_BAD_PARAM = 2
+    const TA_RetCode TA_ALLOC_ERR = 3
+    const TA_RetCode TA_GROUP_NOT_FOUND = 4
+    const TA_RetCode TA_FUNC_NOT_FOUND = 5
+    const TA_RetCode TA_INVALID_HANDLE = 6
+    const TA_RetCode TA_INVALID_PARAM_HOLDER = 7
+    const TA_RetCode TA_INVALID_PARAM_HOLDER_TYPE = 8
+    const TA_RetCode TA_INVALID_PARAM_FUNCTION = 9
+    const TA_RetCode TA_INPUT_NOT_ALL_INITIALIZE = 10
+    const TA_RetCode TA_OUTPUT_NOT_ALL_INITIALIZE = 11
+    const TA_RetCode TA_OUT_OF_RANGE_START_INDEX = 12
+    const TA_RetCode TA_OUT_OF_RANGE_END_INDEX = 13
+    const TA_RetCode TA_INVALID_LIST_TYPE = 14
+    const TA_RetCode TA_BAD_OBJECT = 15
+    const TA_RetCode TA_NOT_SUPPORTED = 16
+    const TA_RetCode TA_INTERNAL_ERROR = 5000
+    const TA_RetCode TA_UNKNOWN_ERR = 0xffff
 
     ctypedef int TA_Compatibility
-    TA_Compatibility TA_COMPATIBILITY_DEFAULT = 0
-    TA_Compatibility TA_COMPATIBILITY_METASTOCK = 1
+    const TA_Compatibility TA_COMPATIBILITY_DEFAULT = 0
+    const TA_Compatibility TA_COMPATIBILITY_METASTOCK = 1
 
     ctypedef int TA_MAType
-    TA_MAType TA_MAType_SMA = 0
-    TA_MAType TA_MAType_EMA = 1
-    TA_MAType TA_MAType_WMA = 2
-    TA_MAType TA_MAType_DEMA = 3
-    TA_MAType TA_MAType_TEMA = 4
-    TA_MAType TA_MAType_TRIMA = 5
-    TA_MAType TA_MAType_KAMA = 6
-    TA_MAType TA_MAType_MAMA = 7
-    TA_MAType TA_MAType_T3 = 8
+    const TA_MAType TA_MAType_SMA = 0
+    const TA_MAType TA_MAType_EMA = 1
+    const TA_MAType TA_MAType_WMA = 2
+    const TA_MAType TA_MAType_DEMA = 3
+    const TA_MAType TA_MAType_TEMA = 4
+    const TA_MAType TA_MAType_TRIMA = 5
+    const TA_MAType TA_MAType_KAMA = 6
+    const TA_MAType TA_MAType_MAMA = 7
+    const TA_MAType TA_MAType_T3 = 8
 
     ctypedef int TA_FuncUnstId
-    TA_FuncUnstId TA_FUNC_UNST_ADX = 0
-    TA_FuncUnstId TA_FUNC_UNST_ADXR = 1
-    TA_FuncUnstId TA_FUNC_UNST_ATR = 2
-    TA_FuncUnstId TA_FUNC_UNST_CMO = 3
-    TA_FuncUnstId TA_FUNC_UNST_DX = 4
-    TA_FuncUnstId TA_FUNC_UNST_EMA = 5
-    TA_FuncUnstId TA_FUNC_UNST_HT_DCPERIOD = 6
-    TA_FuncUnstId TA_FUNC_UNST_HT_DCPHASE = 7
-    TA_FuncUnstId TA_FUNC_UNST_HD_PHASOR = 8
-    TA_FuncUnstId TA_FUNC_UNST_HT_SINE = 9
-    TA_FuncUnstId TA_FUNC_UNST_HT_TRENDLINE = 10
-    TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE = 11
-    TA_FuncUnstId TA_FUNC_UNST_KAMA = 12
-    TA_FuncUnstId TA_FUNC_UNST_MAMA = 13
-    TA_FuncUnstId TA_FUNC_UNST_MFI = 14
-    TA_FuncUnstId TA_FUNC_UNST_MINUS_DI = 15
-    TA_FuncUnstId TA_FUNC_UNST_MINUS_DM = 16
-    TA_FuncUnstId TA_FUNC_UNST_NATR = 17
-    TA_FuncUnstId TA_FUNC_UNST_PLUS_DI = 18
-    TA_FuncUnstId TA_FUNC_UNST_PLUS_DM = 19
-    TA_FuncUnstId TA_FUNC_UNST_RSI = 20
-    TA_FuncUnstId TA_FUNC_UNST_STOCHRSI = 21
-    TA_FuncUnstId TA_FUNC_UNST_T3 = 21
-    TA_FuncUnstId TA_FUNC_UNST_ALL = 22
-    TA_FuncUnstId TA_FUNC_UNST_NONE = -1
+    const TA_FuncUnstId TA_FUNC_UNST_ADX = 0
+    const TA_FuncUnstId TA_FUNC_UNST_ADXR = 1
+    const TA_FuncUnstId TA_FUNC_UNST_ATR = 2
+    const TA_FuncUnstId TA_FUNC_UNST_CMO = 3
+    const TA_FuncUnstId TA_FUNC_UNST_DX = 4
+    const TA_FuncUnstId TA_FUNC_UNST_EMA = 5
+    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPERIOD = 6
+    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPHASE = 7
+    const TA_FuncUnstId TA_FUNC_UNST_HD_PHASOR = 8
+    const TA_FuncUnstId TA_FUNC_UNST_HT_SINE = 9
+    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDLINE = 10
+    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE = 11
+    const TA_FuncUnstId TA_FUNC_UNST_KAMA = 12
+    const TA_FuncUnstId TA_FUNC_UNST_MAMA = 13
+    const TA_FuncUnstId TA_FUNC_UNST_MFI = 14
+    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DI = 15
+    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DM = 16
+    const TA_FuncUnstId TA_FUNC_UNST_NATR = 17
+    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DI = 18
+    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DM = 19
+    const TA_FuncUnstId TA_FUNC_UNST_RSI = 20
+    const TA_FuncUnstId TA_FUNC_UNST_STOCHRSI = 21
+    const TA_FuncUnstId TA_FUNC_UNST_T3 = 21
+    const TA_FuncUnstId TA_FUNC_UNST_ALL = 22
+    const TA_FuncUnstId TA_FUNC_UNST_NONE = -1
 
     ctypedef int TA_RangeType
-    TA_RangeType TA_RangeType_RealBody = 0
-    TA_RangeType TA_RangeType_HighLow = 1
-    TA_RangeType TA_RangeType_Shadows = 2
+    const TA_RangeType TA_RangeType_RealBody = 0
+    const TA_RangeType TA_RangeType_HighLow = 1
+    const TA_RangeType TA_RangeType_Shadows = 2
 
     ctypedef int TA_CandleSettingType
-    TA_CandleSettingType TA_BodyLong = 0
-    TA_CandleSettingType TA_BodyVeryLong = 1
-    TA_CandleSettingType TA_BodyShort = 2
-    TA_CandleSettingType TA_BodyDoji = 3
-    TA_CandleSettingType TA_ShadowLong = 4
-    TA_CandleSettingType TA_ShadowVeryLong = 5
-    TA_CandleSettingType TA_ShadowShort = 6
-    TA_CandleSettingType TA_ShadowVeryShort = 7
-    TA_CandleSettingType TA_Near = 8
-    TA_CandleSettingType TA_Far = 9
-    TA_CandleSettingType TA_Equal = 10
-    TA_CandleSettingType TA_AllCandleSettings = 11
+    const TA_CandleSettingType TA_BodyLong = 0
+    const TA_CandleSettingType TA_BodyVeryLong = 1
+    const TA_CandleSettingType TA_BodyShort = 2
+    const TA_CandleSettingType TA_BodyDoji = 3
+    const TA_CandleSettingType TA_ShadowLong = 4
+    const TA_CandleSettingType TA_ShadowVeryLong = 5
+    const TA_CandleSettingType TA_ShadowShort = 6
+    const TA_CandleSettingType TA_ShadowVeryShort = 7
+    const TA_CandleSettingType TA_Near = 8
+    const TA_CandleSettingType TA_Far = 9
+    const TA_CandleSettingType TA_Equal = 10
+    const TA_CandleSettingType TA_AllCandleSettings = 11
 
 cdef extern from "ta-lib/ta_common.h":
     const char *TA_GetVersionString()
@@ -135,19 +135,19 @@ cdef extern from "ta-lib/ta_abstract.h":
     TA_RetCode TA_GetFuncInfo(const TA_FuncHandle *handle, const TA_FuncInfo **funcInfo)
 
     ctypedef int TA_InputParameterType
-    TA_InputParameterType TA_Input_Price = 0
-    TA_InputParameterType TA_Input_Real = 1
-    TA_InputParameterType TA_Input_Integer = 2
+    const TA_InputParameterType TA_Input_Price = 0
+    const TA_InputParameterType TA_Input_Real = 1
+    const TA_InputParameterType TA_Input_Integer = 2
 
     ctypedef int TA_OptInputParameterType
-    TA_OptInputParameterType TA_OptInput_RealRange = 0
-    TA_OptInputParameterType TA_OptInput_RealList = 1
-    TA_OptInputParameterType TA_OptInput_IntegerRange = 2
-    TA_OptInputParameterType TA_OptInput_IntegerList = 3
+    const TA_OptInputParameterType TA_OptInput_RealRange = 0
+    const TA_OptInputParameterType TA_OptInput_RealList = 1
+    const TA_OptInputParameterType TA_OptInput_IntegerRange = 2
+    const TA_OptInputParameterType TA_OptInput_IntegerList = 3
 
     ctypedef int TA_OutputParameterType
-    TA_OutputParameterType TA_Output_Real = 0
-    TA_OutputParameterType TA_Output_Integer = 1
+    const TA_OutputParameterType TA_Output_Real = 0
+    const TA_OutputParameterType TA_Output_Integer = 1
 
     ctypedef int TA_InputFlags
     ctypedef int TA_OptInputFlags
