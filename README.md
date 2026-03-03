@@ -61,10 +61,6 @@ It also appears possible to install via [Conda Forge](https://anaconda.org/conda
 conda install -c conda-forge ta-lib
 ```
 
-```shell
-conda install -c conda-forge ta-lib
-```
-
 ### Dependencies 🧩
 
 To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
