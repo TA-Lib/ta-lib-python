@@ -41,4 +41,4 @@ requires-python = '>=3.9'
 
 [tool.setuptools]
 packages = ["talib"]
-package-data = {"talib" = ["_ta_lib.pyi", "py.typed"]}
+package-data = {"talib" = ["_ta_lib.pyi", "py.typed", "abstract.pyi"]}
