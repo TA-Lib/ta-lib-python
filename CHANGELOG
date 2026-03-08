@@ -7,6 +7,8 @@
 
 - [FIX]: Adding ACCBANDS, AVGDEV, IMI to docs pages
 
+- [NEW]: Adding an ``abstract.pyi`` for typing
+
 0.6.8
 =====
 
