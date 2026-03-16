@@ -15,6 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Set up TA-Lib
+      uses: actions/setup-ta-lib@v1
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -26,14 +29,10 @@ jobs:
         pip install --upgrade pip wheel setuptools
         pip install -r requirements_test.txt
         pip install flake8
-        bash ./tools/build_talib_linux.sh
 
     - name: Build cython modules in-place
       run: |
         python setup.py build_ext --inplace
-      env:
-        TA_INCLUDE_PATH: "ta-lib-install/include"
-        TA_LIBRARY_PATH: "ta-lib-install/lib"
 
     - name: Lint with flake8
       run: |
@@ -45,5 +44,3 @@ jobs:
     - name: Test with pytest
       run: |
         PYTHONPATH=. pytest
-      env:
-        LD_LIBRARY_PATH: "ta-lib-install/lib"
