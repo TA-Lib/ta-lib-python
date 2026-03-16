@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Set up TA-Lib
-      uses: TA-Lib/setup-ta-lib@v1
+      uses: TA-Lib/setup-ta-lib@v1.0.1
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
