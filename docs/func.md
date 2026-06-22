@@ -8,6 +8,10 @@ parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to ``NaN``.
 
+The lookback is function-specific and may be larger than the `timeperiod`
+parameter. For example, ``RSI(timeperiod=14)`` needs 15 price observations,
+because the first RSI value is derived from 14 consecutive price changes.
+
 All of the following examples use the function API:
 
 ```python
@@ -36,6 +40,10 @@ Calculating momentum of the close prices, with a time period of 5:
 ```python
 output = talib.MOM(close, timeperiod=5)
 ```
+
+Functions documented as having an unstable period start with that extra
+unstable-period setting at ``0``. ``get_unstable_period()`` only returns a
+non-zero value after you set one explicitly with ``set_unstable_period()``.
 
 Documentation for all functions:
 
