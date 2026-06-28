@@ -12,8 +12,8 @@ _func_obj_mapping = {
 
 class _FunctionProxy:
     def __init__(self, func_name, func_obj):
-        self._func_name = func_name
-        self._func_obj = func_obj
+        object.__setattr__(self, '_func_name', func_name)
+        object.__setattr__(self, '_func_obj', func_obj)
 
     def __call__(self, *args, **kwargs):
         if self._func_name in ('MACD', 'MACDFIX') and kwargs.get('signalperiod') == 1:
@@ -25,6 +25,12 @@ class _FunctionProxy:
 
     def __getattr__(self, item):
         return getattr(self._func_obj, item)
+
+    def __setattr__(self, key, value):
+        if key in {'_func_name', '_func_obj'}:
+            object.__setattr__(self, key, value)
+            return
+        setattr(self._func_obj, key, value)
 
 
 def Function(function_name, *args, **kwargs):
