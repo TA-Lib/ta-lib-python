@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from talib import stream
 
@@ -64,3 +65,13 @@ def test_MAXINDEX():
     a = np.array([1., 2, 3, 4, 5, 6, 7, 8, 7, 7, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 15])
     r = stream.MAXINDEX(a, 10)
     assert r == 21
+
+
+def test_stream_macd_signalperiod_one_rejected():
+    values = np.linspace(1.0, 100.0, 100, dtype=float)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACD"):
+        stream.MACD(values, signalperiod=1)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACDFIX"):
+        stream.MACDFIX(values, signalperiod=1)

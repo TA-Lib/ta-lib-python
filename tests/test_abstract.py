@@ -25,6 +25,16 @@ def test_pararmeters():
     assert all(type(v) == int for k, v in parameters.items())
 
 
+def test_macd_signalperiod_one_rejected():
+    values = np.linspace(1.0, 100.0, 100, dtype=float)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACD"):
+        abstract.MACD(values, signalperiod=1)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACDFIX"):
+        abstract.MACDFIX(values, signalperiod=1)
+
+
 def test_pandas(ford_2012):
     import pandas
     input_df = pandas.DataFrame(ford_2012)

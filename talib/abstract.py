@@ -10,13 +10,31 @@ _func_obj_mapping = {
 }
 
 
+class _FunctionProxy:
+    def __init__(self, func_name, func_obj):
+        self._func_name = func_name
+        self._func_obj = func_obj
+
+    def __call__(self, *args, **kwargs):
+        if self._func_name in ('MACD', 'MACDFIX') and kwargs.get('signalperiod') == 1:
+            raise ValueError(
+                f"signalperiod=1 is not supported for {self._func_name} because the underlying TA-Lib "
+                "implementation can produce look-ahead affected results; use signalperiod >= 2 instead."
+            )
+        return self._func_obj(*args, **kwargs)
+
+    def __getattr__(self, item):
+        return getattr(self._func_obj, item)
+
+
 def Function(function_name, *args, **kwargs):
     func_name = function_name.upper()
     if func_name not in _func_obj_mapping:
         raise Exception('%s not supported by TA-LIB.' % func_name)
 
-    return _Function(
-        func_name, _func_obj_mapping[func_name], *args, **kwargs
+    return _FunctionProxy(
+        func_name,
+        _Function(func_name, _func_obj_mapping[func_name], *args, **kwargs)
     )
 
 

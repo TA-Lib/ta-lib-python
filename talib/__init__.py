@@ -106,6 +106,24 @@ else:
     _wrapper = lambda x: x
 
 
+def _validate_macd_signalperiod(func_name, kwargs):
+    signalperiod = kwargs.get('signalperiod')
+    if signalperiod == 1:
+        raise ValueError(
+            f"signalperiod=1 is not supported for {func_name} because the underlying TA-Lib "
+            "implementation can produce look-ahead affected results; use signalperiod >= 2 instead."
+        )
+
+
+def _macd_wrapper(func_name, func):
+    @wraps(func)
+    def wrapper(*args, **kwds):
+        _validate_macd_signalperiod(func_name, kwds)
+        return func(*args, **kwds)
+
+    return wrapper
+
+
 from ._ta_lib import (
     _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
     _ta_set_unstable_period as set_unstable_period,
@@ -122,6 +140,8 @@ from ._ta_lib import *
 func = __import__("_ta_lib", globals(), locals(), __TA_FUNCTION_NAMES__, level=1)
 for func_name in __TA_FUNCTION_NAMES__:
     wrapped_func = _wrapper(getattr(func, func_name))
+    if func_name in ('MACD', 'MACDFIX'):
+        wrapped_func = _macd_wrapper(func_name, wrapped_func)
     setattr(func, func_name, wrapped_func)
     globals()[func_name] = wrapped_func
 
@@ -129,6 +149,8 @@ stream_func_names = ['stream_%s' % fname for fname in __TA_FUNCTION_NAMES__]
 stream = __import__("stream", globals(), locals(), stream_func_names, level=1)
 for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names):
     wrapped_func = _wrapper(getattr(stream, func_name))
+    if func_name in ('MACD', 'MACDFIX'):
+        wrapped_func = _macd_wrapper(func_name, wrapped_func)
     setattr(stream, func_name, wrapped_func)
     globals()[stream_func_name] = wrapped_func
 

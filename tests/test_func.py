@@ -63,6 +63,19 @@ def test_unstable_period():
     talib.set_unstable_period('EMA', 0)
 
 
+def test_macd_signalperiod_one_rejected():
+    values = np.linspace(1.0, 100.0, 100, dtype=float)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACD"):
+        talib.MACD(values, signalperiod=1)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACD"):
+        func.MACD(values, signalperiod=1)
+
+    with pytest.raises(ValueError, match="signalperiod=1 is not supported for MACDFIX"):
+        talib.MACDFIX(values, signalperiod=1)
+
+
 def test_compatibility():
     a = np.arange(10, dtype=float)
     talib.set_compatibility(0)
