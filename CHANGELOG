@@ -1,7 +1,7 @@
 0.6.9
 =====
 
-- [NEW]: Upgrade to Cython 3.2.4
+- [NEW]: Upgrade to Cython 3.2.8
 
 - [FIX]: Adding ACCBANDS, AVGDEV, IMI to get_func_groups()
 
