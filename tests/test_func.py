@@ -7,7 +7,7 @@ from talib import func
 
 
 def test_talib_version():
-    assert talib.__ta_version__[:5] == b'0.6.4'
+    assert talib.__ta_version__[:5] == b'0.7.1'
 
 
 def test_num_functions():
