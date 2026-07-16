@@ -1,3 +1,8 @@
+0.7.1
+=====
+
+- [FIX]: Fix wheels to build with TA-Lib C 0.7.1 properly.
+
 0.7.0
 =====
 
