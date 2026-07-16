@@ -31,6 +31,7 @@ jobs:
               bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
+          CIBW_ENVIRONMENT_PASS_LINUX: TALIB_C_VER
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
@@ -65,6 +66,7 @@ jobs:
               bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
+          CIBW_ENVIRONMENT_PASS_LINUX: TALIB_C_VER
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
