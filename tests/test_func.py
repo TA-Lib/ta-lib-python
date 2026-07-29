@@ -63,6 +63,104 @@ def test_unstable_period():
     talib.set_unstable_period('EMA', 0)
 
 
+# One entry per real unstable-period id in TA-Lib C.  Each id is named after
+# the function it controls, so every case simply calls that same function.
+def _unstable_period_cases():
+    n = 400
+    rs = np.random.RandomState(1)
+    close = np.cumsum(rs.randn(n)) + 100.0
+    high = close + rs.rand(n) + 0.5
+    low = close - rs.rand(n) - 0.5
+    return {
+        'ADX': lambda: func.ADX(high, low, close),
+        'ATR': lambda: func.ATR(high, low, close),
+        'CMO': lambda: func.CMO(close),
+        'DX': lambda: func.DX(high, low, close),
+        'EMA': lambda: func.EMA(close),
+        'HT_DCPERIOD': lambda: func.HT_DCPERIOD(close),
+        'HT_DCPHASE': lambda: func.HT_DCPHASE(close),
+        'HT_PHASOR': lambda: func.HT_PHASOR(close)[0],
+        'HT_SINE': lambda: func.HT_SINE(close)[0],
+        'HT_TRENDLINE': lambda: func.HT_TRENDLINE(close),
+        'HT_TRENDMODE': lambda: func.HT_TRENDMODE(close),
+        'KAMA': lambda: func.KAMA(close),
+        'MAMA': lambda: func.MAMA(close)[0],
+        'MINUS_DI': lambda: func.MINUS_DI(high, low, close),
+        'MINUS_DM': lambda: func.MINUS_DM(high, low),
+        'NATR': lambda: func.NATR(high, low, close),
+        'PLUS_DI': lambda: func.PLUS_DI(high, low, close),
+        'PLUS_DM': lambda: func.PLUS_DM(high, low),
+        'RSI': lambda: func.RSI(close),
+        'T3': lambda: func.T3(close),
+    }
+
+
+UNSTABLE_PERIOD_CASES = _unstable_period_cases()
+
+
+def _leading_unset(result):
+    # TA-Lib writes nothing before its lookback: real outputs stay NaN there,
+    # the one integer output (HT_TRENDMODE) stays 0.
+    valid = ~np.isnan(result) if result.dtype.kind == 'f' else result != 0
+    assert valid.any(), 'no valid output to measure'
+    return int(np.argmax(valid))
+
+
+# NOTE: this has to be a behavioural test.  set_unstable_period() and
+# get_unstable_period() look the id up in the same table, so a wrong id
+# round-trips perfectly -- which is how ta-lib-python shipped a table that
+# pointed 'RSI' at PLUS_DM for two years (issue #752).  Only checking that the
+# setting moves THAT function's own output can catch it.  Please do not
+# "simplify" this into a get/set assertion.
+@pytest.mark.parametrize('name', sorted(UNSTABLE_PERIOD_CASES))
+def test_unstable_period_moves_its_own_function(name):
+    call = UNSTABLE_PERIOD_CASES[name]
+    talib.set_unstable_period(name, 0)
+    unshifted = call()
+    baseline = _leading_unset(unshifted)
+    assert baseline > 0, 'nothing to shift'
+    try:
+        talib.set_unstable_period(name, 5)
+        shifted = call()
+        assert _leading_unset(shifted) == baseline + 5
+        # an unstable period only discards warm-up bars, so whatever both runs
+        # do emit has to be identical -- this pins the shift to a pure delay
+        assert_array_equal(shifted[baseline + 5:], unshifted[baseline + 5:])
+    finally:
+        talib.set_unstable_period(name, 0)
+    assert _leading_unset(call()) == baseline
+
+
+def test_unstable_period_all():
+    talib.set_unstable_period('ALL', 0)
+    baseline = {name: _leading_unset(call())
+                for name, call in UNSTABLE_PERIOD_CASES.items()}
+    try:
+        talib.set_unstable_period('ALL', 3)
+        for name, call in UNSTABLE_PERIOD_CASES.items():
+            assert _leading_unset(call()) == baseline[name] + 3, name
+    finally:
+        talib.set_unstable_period('ALL', 0)
+    for name, call in UNSTABLE_PERIOD_CASES.items():
+        assert _leading_unset(call()) == baseline[name], name
+
+
+# These three are accepted for backwards compatibility only: TA-Lib C retired
+# their unstable-period slots.  They must stay no-ops -- aliasing them to the
+# inner ADX/RSI would give them side effects on every other function.
+@pytest.mark.parametrize('name', ['ADXR', 'MFI', 'STOCHRSI'])
+def test_unstable_period_retired_is_a_warning_and_a_noop(name):
+    talib.set_unstable_period('ALL', 0)
+    before = {n: _leading_unset(call())
+              for n, call in UNSTABLE_PERIOD_CASES.items()}
+    with pytest.deprecated_call():
+        talib.set_unstable_period(name, 5)
+    with pytest.deprecated_call():
+        assert talib.get_unstable_period(name) == 0
+    for n, call in UNSTABLE_PERIOD_CASES.items():
+        assert _leading_unset(call()) == before[n], n
+
+
 def test_compatibility():
     a = np.arange(10, dtype=float)
     talib.set_compatibility(0)
