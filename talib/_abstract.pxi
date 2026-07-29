@@ -1,7 +1,6 @@
 '''
 This file Copyright (c) 2013 Brian A Cappello <briancappello at gmail>
 '''
-import math
 import threading
 try:
     from collections import OrderedDict
@@ -592,30 +591,23 @@ def __get_flags(int flag, dict flags_lookup_dict):
     This function returns the flags from flag found in the provided
     flags_lookup_dict.
     """
-    value_range = flags_lookup_dict.keys()
-    if not isinstance(value_range, list):
-        value_range = list(value_range)
-    min_int = int(math.log(min(value_range), 2))
-    max_int = int(math.log(max(value_range), 2))
-
-    # if the flag we got is out-of-range, it just means no extra info provided
-    if flag < 1 or flag > 2**max_int:
+    # A bit with no description means the installed ta-lib is newer than this
+    # build knows about; skip it rather than raising.
+    if flag < 1:
         return None
-
-    # In this loop, i is essentially the bit-position, which represents an
-    # input from flags_lookup_dict. We loop through as many flags_lookup_dict
-    # bit-positions as we need to check, bitwise-ANDing each with flag for a hit.
-    ret = []
-    for i in xrange(min_int, max_int+1):
-        if 2**i & flag:
-            ret.append(flags_lookup_dict[2**i])
-    return ret
+    return [description
+            for bit, description in sorted(flags_lookup_dict.items())
+            if bit & flag]
 
 TA_FUNC_FLAGS = {
+    1: 'A period of 1 performs no smoothing',
     16777216: 'Output scale same as input',
+    33554432: 'Function has a streaming API',
     67108864: 'Output is over volume',
     134217728: 'Function has an unstable period',
-    268435456: 'Output is a candlestick'
+    268435456: 'Output is a candlestick',
+    536870912: 'Output is path-dependent',
+    1073741824: 'Output can be NaN or infinite',
 }
 
 # when flag is 0, the function (should) work on any reasonable input ndarray
@@ -642,7 +634,8 @@ TA_OUTPUT_FLAGS = {
     512: 'Output can be negative',
     1024: 'Output can be zero',
     2048: 'Values represent an upper limit',
-    4096: 'Values represent a lower limit'
+    4096: 'Values represent a lower limit',
+    8192: 'Output is optional (nullable)',
 }
 
 def _ta_getFuncInfo(char *function_name):
@@ -754,13 +747,14 @@ def _get_defaults_and_docs(func_info):
         docs.append('    %s: %s' % (param, params[param]))
         func_args.append('[%s=%s]' % (param, params[param]))
         defaults[param] = params[param]
-        if param == 'matype':
+        if param.endswith('matype'):
             docs[-1] = ' '.join([docs[-1], '(%s)' % MA_Type[params[param]]])
 
     outputs = func_info['output_names']
+    candlestick = 'Output is a candlestick' in (func_info['function_flags'] or [])
     docs.append('Outputs:')
     for output in outputs:
-        if output == 'integer':
+        if output == 'integer' and candlestick:
             output = 'integer (values are -100, 0 or 100)'
         docs.append('    %s' % output)
 

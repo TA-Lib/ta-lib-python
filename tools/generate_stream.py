@@ -61,6 +61,10 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_S_')]
 functions = [s for s in functions if not s.startswith('TA_RetCode TA_Set')]
 functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
+# strip TA-Lib C's own streaming API (ta-lib >= 0.8.1). Those declarations take
+# an opaque TA_<FUNC>_Stream handle, not the batch argument shape parsed below.
+functions = [s for s in functions if '_Stream' not in s]
+
 # print headers
 print("""\
 cimport numpy as np
@@ -142,7 +146,9 @@ for f in functions:
                 else:
                     print('int %s=-2**31' % var, end=' ')   # TA_INTEGER_DEFAULT
             elif arg.startswith('TA_MAType'):
-                print('int %s=%s' % (var, defaults.get('matype', 0)), end=' ') # TA_MAType_SMA
+                # abstract lowercases the whole name, and a prefixed one (KDJ's
+                # slowk_matype) is not spelled 'matype'.
+                print('int %s=%s' % (var, defaults.get(default_arg.lower(), 11)), end=' ') # TA_MAType_DEFAULT
             else:
                 assert False, arg
             if '[, ' not in docs:

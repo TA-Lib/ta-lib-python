@@ -13,12 +13,17 @@ class MA_Type(Enum):
     KAMA = 6
     MAMA = 7
     T3 = 8
+    HMA = 9
+    DISABLED = 10
+    DEFAULT = 11
+    ZLEMA = 12
+    RMA = 13
 
 #Overlap Studies Functions
 
 def BBANDS(
         real: NDArray[np.float64],  
-        timeperiod: int= 5, 
+        timeperiod: int= 20, 
         nbdevup: float= 2, 
         nbdevdn: float= 2, 
         matype: MA_Type = MA_Type.SMA
@@ -29,9 +34,20 @@ def DEMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def DONCHIAN(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
+
 def EMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
+def HMA(
+        real: NDArray[np.float64], 
+        timeperiod: int= 20
         )-> NDArray[np.float64]: ...
 
 def HT_TRENDLINE(real: NDArray[np.float64])-> NDArray[np.float64]: ...
@@ -40,6 +56,15 @@ def KAMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
+
+def KC(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 20,
+        atrperiod: int= 10,
+        nbdev: float= 2.0
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def MA(
         real: NDArray[np.float64], 
@@ -72,6 +97,11 @@ def MIDPRICE(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def RMA(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def SAR(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
@@ -97,6 +127,14 @@ def SMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def SUPERTREND(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10,
+        multiplier: float= 3.0
+        )-> Tuple[NDArray[np.float64], NDArray[np.int32]]: ...
+
 def T3(
         real: NDArray[np.float64], 
         timeperiod: int= 5, 
@@ -113,12 +151,31 @@ def TRIMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def VWMA(
+        real: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def WMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def ZLEMA(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 #Momentum Indicator Functions
+
+def AC(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 5,
+        slowperiod: int= 34,
+        signalperiod: int= 5
+        )-> NDArray[np.float64]: ...
 
 def ADX(
         high: NDArray[np.float64], 
@@ -134,11 +191,18 @@ def ADXR(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def AO(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 5,
+        slowperiod: int= 34
+        )-> NDArray[np.float64]: ...
+
 def APO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def AROON(
@@ -172,12 +236,64 @@ def CMO(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def CMOU(
+        real: NDArray[np.float64], 
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def COPPOCK(
+        real: NDArray[np.float64],
+        wmaperiod: int= 10,
+        roc1period: int= 11,
+        roc2period: int= 14
+        )-> NDArray[np.float64]: ...
+
+def DPO(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
 def DX(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
+
+def ER(
+        real: NDArray[np.float64],
+        timeperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def ERI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 13
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def FOSC(
+        real: NDArray[np.float64],
+        timeperiod: int= 5
+        )-> NDArray[np.float64]: ...
+
+def FRACTAL(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        leftbars: int= 2,
+        rightbars: int= 2
+        )-> Tuple[NDArray[np.int32], NDArray[np.int32]]: ...
+
+def KDJ(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        fastk_period: int= 9,
+        slowk_period: int= 3,
+        slowk_matype: MA_Type = MA_Type.RMA,
+        slowd_period: int= 3,
+        slowd_matype: MA_Type = MA_Type.RMA
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def MACD(
         real: NDArray[np.float64], 
@@ -244,7 +360,13 @@ def PPO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
+        )-> NDArray[np.float64]: ...
+
+def QSTICK(
+        open: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10
         )-> NDArray[np.float64]: ...
 
 def ROC(
@@ -271,6 +393,16 @@ def RSI(
         real: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
+
+def SMI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 13,
+        fastperiod: int= 2,
+        slowperiod: int= 25,
+        signalperiod: int= 9
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 
 def STOCH(
         high: NDArray[np.float64], 
@@ -305,6 +437,12 @@ def TRIX(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def TSI(
+        real: NDArray[np.float64],
+        firstperiod: int= 25,
+        secondperiod: int= 13
+        )-> NDArray[np.float64]: ...
+
 def ULTOSC(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
@@ -312,6 +450,24 @@ def ULTOSC(
         timeperiod1: int= 7, 
         timeperiod2: int= 14, 
         timeperiod3: int= 28
+        )-> NDArray[np.float64]: ...
+
+def VHF(
+        real: NDArray[np.float64],
+        timeperiod: int= 28
+        )-> NDArray[np.float64]: ...
+
+def VORTEX(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def WAD(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
 def WILLR(
@@ -339,12 +495,72 @@ def ADOSC(
         slowperiod: int= 10
         )-> NDArray[np.float64]: ...
 
+def CMF(
+        high: NDArray[np.float64], 
+        low: NDArray[np.float64], 
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def EFI(
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64],
+        timeperiod: int= 13
+        )-> NDArray[np.float64]: ...
+
+def MARKETFI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def NVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 def OBV(
         close: NDArray[np.float64], 
         volume: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
+def PVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def PVO(
+        volume: NDArray[np.float64], 
+        fastperiod: int= 12, 
+        slowperiod: int= 26, 
+        matype: int= 1
+        )-> NDArray[np.float64]: ...
+
+def PVT(
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def RVOL(
+        volume: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def VWAP(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 #Volatility Indicator Functions
+
+def ADR(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
 
 def ATR(
         high: NDArray[np.float64], 
@@ -353,11 +569,31 @@ def ATR(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def CVI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 10,
+        rocperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def MASSI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 9,
+        slowperiod: int= 25
+        )-> NDArray[np.float64]: ...
+
 def NATR(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64], 
         timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def RVI(
+        real: NDArray[np.float64],
+        timeperiod: int= 14,
+        stddevperiod: int= 10
         )-> NDArray[np.float64]: ...
 
 def TRANGE(
@@ -374,6 +610,13 @@ def AVGPRICE(
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
+
+def HA(
+        open: NDArray[np.float64],
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64]
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def MEDPRICE(
         high: NDArray[np.float64], 
@@ -874,6 +1117,17 @@ def LINEARREG_SLOPE(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def PERCENTILE(
+        real: NDArray[np.float64],
+        timeperiod: int= 30,
+        percentile: float= 50.0
+        )-> NDArray[np.float64]: ...
+
+def PERCENTRANK(
+        real: NDArray[np.float64],
+        timeperiod: int= 100
+        )-> NDArray[np.float64]: ...
+
 def STDDEV(
         real: NDArray[np.float64], 
         timeperiod: int= 5, 
@@ -928,6 +1182,10 @@ def TANH(real: NDArray[np.float64])-> NDArray[np.float64]: ...
 def ADD(
         real0: NDArray[np.float64], 
         real1: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def CUMSUM(
+        real: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
 def DIV(
@@ -1002,7 +1260,7 @@ def IMI(
 
 def stream_BBANDS(
         real: NDArray[np.float64],  
-        timeperiod: int= 5, 
+        timeperiod: int= 20, 
         nbdevup: float= 2, 
         nbdevdn: float= 2, 
         matype: MA_Type = MA_Type.SMA
@@ -1013,9 +1271,20 @@ def stream_DEMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_DONCHIAN(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
+
 def stream_EMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
+def stream_HMA(
+        real: NDArray[np.float64], 
+        timeperiod: int= 20
         )-> NDArray[np.float64]: ...
 
 def stream_HT_TRENDLINE(real: NDArray[np.float64])-> NDArray[np.float64]: ...
@@ -1024,6 +1293,15 @@ def stream_KAMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
+
+def stream_KC(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 20,
+        atrperiod: int= 10,
+        nbdev: float= 2.0
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def stream_MA(
         real: NDArray[np.float64], 
@@ -1056,6 +1334,11 @@ def stream_MIDPRICE(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def stream_RMA(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def stream_SAR(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
@@ -1081,6 +1364,14 @@ def stream_SMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_SUPERTREND(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10,
+        multiplier: float= 3.0
+        )-> Tuple[NDArray[np.float64], NDArray[np.int32]]: ...
+
 def stream_T3(
         real: NDArray[np.float64], 
         timeperiod: int= 5, 
@@ -1097,12 +1388,31 @@ def stream_TRIMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_VWMA(
+        real: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def stream_WMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_ZLEMA(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 #Momentum Indicator Functions
+
+def stream_AC(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 5,
+        slowperiod: int= 34,
+        signalperiod: int= 5
+        )-> NDArray[np.float64]: ...
 
 def stream_ADX(
         high: NDArray[np.float64], 
@@ -1118,11 +1428,18 @@ def stream_ADXR(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def stream_AO(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 5,
+        slowperiod: int= 34
+        )-> NDArray[np.float64]: ...
+
 def stream_APO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def stream_AROON(
@@ -1156,12 +1473,64 @@ def stream_CMO(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def stream_CMOU(
+        real: NDArray[np.float64], 
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def stream_COPPOCK(
+        real: NDArray[np.float64],
+        wmaperiod: int= 10,
+        roc1period: int= 11,
+        roc2period: int= 14
+        )-> NDArray[np.float64]: ...
+
+def stream_DPO(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
 def stream_DX(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
+
+def stream_ER(
+        real: NDArray[np.float64],
+        timeperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def stream_ERI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 13
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def stream_FOSC(
+        real: NDArray[np.float64],
+        timeperiod: int= 5
+        )-> NDArray[np.float64]: ...
+
+def stream_FRACTAL(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        leftbars: int= 2,
+        rightbars: int= 2
+        )-> Tuple[NDArray[np.int32], NDArray[np.int32]]: ...
+
+def stream_KDJ(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        fastk_period: int= 9,
+        slowk_period: int= 3,
+        slowk_matype: MA_Type = MA_Type.RMA,
+        slowd_period: int= 3,
+        slowd_matype: MA_Type = MA_Type.RMA
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def stream_MACD(
         real: NDArray[np.float64], 
@@ -1228,7 +1597,13 @@ def stream_PPO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
+        )-> NDArray[np.float64]: ...
+
+def stream_QSTICK(
+        open: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10
         )-> NDArray[np.float64]: ...
 
 def stream_ROC(
@@ -1255,6 +1630,16 @@ def stream_RSI(
         real: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
+
+def stream_SMI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 13,
+        fastperiod: int= 2,
+        slowperiod: int= 25,
+        signalperiod: int= 9
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 
 def stream_STOCH(
         high: NDArray[np.float64], 
@@ -1289,6 +1674,12 @@ def stream_TRIX(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_TSI(
+        real: NDArray[np.float64],
+        firstperiod: int= 25,
+        secondperiod: int= 13
+        )-> NDArray[np.float64]: ...
+
 def stream_ULTOSC(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
@@ -1296,6 +1687,24 @@ def stream_ULTOSC(
         timeperiod1: int= 7, 
         timeperiod2: int= 14, 
         timeperiod3: int= 28
+        )-> NDArray[np.float64]: ...
+
+def stream_VHF(
+        real: NDArray[np.float64],
+        timeperiod: int= 28
+        )-> NDArray[np.float64]: ...
+
+def stream_VORTEX(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def stream_WAD(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
 def stream_WILLR(
@@ -1323,12 +1732,72 @@ def stream_ADOSC(
         slowperiod: int= 10
         )-> NDArray[np.float64]: ...
 
+def stream_CMF(
+        high: NDArray[np.float64], 
+        low: NDArray[np.float64], 
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def stream_EFI(
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64],
+        timeperiod: int= 13
+        )-> NDArray[np.float64]: ...
+
+def stream_MARKETFI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_NVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 def stream_OBV(
         close: NDArray[np.float64], 
         volume: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
+def stream_PVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_PVO(
+        volume: NDArray[np.float64], 
+        fastperiod: int= 12, 
+        slowperiod: int= 26, 
+        matype: int= 1
+        )-> NDArray[np.float64]: ...
+
+def stream_PVT(
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_RVOL(
+        volume: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def stream_VWAP(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 #Volatility Indicator Functions
+
+def stream_ADR(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
 
 def stream_ATR(
         high: NDArray[np.float64], 
@@ -1337,11 +1806,31 @@ def stream_ATR(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def stream_CVI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 10,
+        rocperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def stream_MASSI(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        fastperiod: int= 9,
+        slowperiod: int= 25
+        )-> NDArray[np.float64]: ...
+
 def stream_NATR(
         high: NDArray[np.float64], 
         low: NDArray[np.float64], 
         close: NDArray[np.float64], 
         timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def stream_RVI(
+        real: NDArray[np.float64],
+        timeperiod: int= 14,
+        stddevperiod: int= 10
         )-> NDArray[np.float64]: ...
 
 def stream_TRANGE(
@@ -1358,6 +1847,13 @@ def stream_AVGPRICE(
         low: NDArray[np.float64], 
         close: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
+
+def stream_HA(
+        open: NDArray[np.float64],
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64]
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 
 def stream_MEDPRICE(
         high: NDArray[np.float64], 
@@ -1858,6 +2354,17 @@ def stream_LINEARREG_SLOPE(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def stream_PERCENTILE(
+        real: NDArray[np.float64],
+        timeperiod: int= 30,
+        percentile: float= 50.0
+        )-> NDArray[np.float64]: ...
+
+def stream_PERCENTRANK(
+        real: NDArray[np.float64],
+        timeperiod: int= 100
+        )-> NDArray[np.float64]: ...
+
 def stream_STDDEV(
         real: NDArray[np.float64], 
         timeperiod: int= 5, 
@@ -1912,6 +2419,10 @@ def stream_TANH(real: NDArray[np.float64])-> NDArray[np.float64]: ...
 def stream_ADD(
         real0: NDArray[np.float64], 
         real1: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_CUMSUM(
+        real: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
 def stream_DIV(

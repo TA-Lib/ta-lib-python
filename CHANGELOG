@@ -1,3 +1,34 @@
+0.8.0
+=====
+
+- [NEW]: Support TA-Lib C 0.8.1, which is now the minimum required version.
+
+- [NEW]: The 40 functions TA-Lib C added since 0.7.1: AC, ADR, AO, CMF, CMOU,
+  COPPOCK, CUMSUM, CVI, DONCHIAN, DPO, EFI, ER, ERI, FOSC, FRACTAL, HA, HMA,
+  KC, KDJ, MARKETFI, MASSI, NVI, PERCENTILE, PERCENTRANK, PVI, PVO, PVT,
+  QSTICK, RMA, RVI, RVOL, SMI, SUPERTREND, TSI, VHF, VORTEX, VWAP, VWMA, WAD,
+  ZLEMA.
+
+- [NEW]: New moving averages: ``MA_Type.HMA``, ``MA_Type.DISABLED``,
+  ``MA_Type.DEFAULT``, ``MA_Type.ZLEMA`` and ``MA_Type.RMA``.
+
+- [NEW]: ``set_unstable_period()`` and ``get_unstable_period()`` accept
+  ``'RMA'``, ``'HA'`` and ``'RVI'``.
+
+- [FIX]: ``abstract`` raised ``KeyError`` on function and output flags added
+  after this wrapper was written; unknown flag bits are now ignored.
+
+- [FIX]: A moving-average parameter not spelled exactly ``matype`` -- ``KDJ``'s
+  ``slowk_matype`` -- defaulted to SMA rather than to the function's own
+  documented default.
+
+- [FIX]: An ``integer`` output is documented as the candlestick -100/0/100
+  convention only for candlestick functions; ``SUPERTREND``'s is a trend
+  direction.
+
+- [CHANGE]: ``APO`` and ``PPO`` now default ``matype`` to EMA, and ``BBANDS``
+  defaults ``timeperiod`` to 20, following TA-Lib C 0.8.1.
+
 0.7.1
 =====
 

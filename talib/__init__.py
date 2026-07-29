@@ -106,14 +106,30 @@ else:
     _wrapper = lambda x: x
 
 
-from ._ta_lib import (
-    _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
-    _ta_set_unstable_period as set_unstable_period,
-    _ta_get_unstable_period as get_unstable_period,
-    _ta_set_compatibility as set_compatibility,
-    _ta_get_compatibility as get_compatibility,
-    __TA_FUNCTION_NAMES__
-)
+# The TA-Lib C library this wrapper is built against
+TA_LIB_C_REQUIRED = '0.8.1'
+
+try:
+    from ._ta_lib import (
+        _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
+        _ta_set_unstable_period as set_unstable_period,
+        _ta_get_unstable_period as get_unstable_period,
+        _ta_set_compatibility as set_compatibility,
+        _ta_get_compatibility as get_compatibility,
+        __TA_FUNCTION_NAMES__
+    )
+except ImportError as error:
+    # Loading the extension resolves its symbols against whatever TA-Lib C is
+    # installed. Linking never catches a too-old library -- a shared object may
+    # keep undefined symbols -- so a missing function shows up here instead, as
+    # "undefined symbol: TA_CMF_Lookback" or the macOS/Windows equivalent.
+    raise ImportError(
+        '%s\n\n'
+        'talib could not load its extension module. This build requires the '
+        'TA-Lib C library %s or later; an older one is missing functions this '
+        'wrapper calls. See https://ta-lib.org/install/'
+        % (error, TA_LIB_C_REQUIRED)
+    ) from error
 
 # import all the func and stream functions
 from ._ta_lib import *
@@ -154,6 +170,7 @@ __function_groups__ = {
         ],
     'Math Operators': [
         'ADD',
+        'CUMSUM',
         'DIV',
         'MAX',
         'MAXINDEX',
@@ -183,16 +200,26 @@ __function_groups__ = {
         'TANH',
         ],
     'Momentum Indicators': [
+        'AC',
         'ADX',
         'ADXR',
+        'AO',
         'APO',
         'AROON',
         'AROONOSC',
         'BOP',
         'CCI',
         'CMO',
+        'CMOU',
+        'COPPOCK',
+        'DPO',
         'DX',
+        'ER',
+        'ERI',
+        'FOSC',
+        'FRACTAL',
         'IMI',
+        'KDJ',
         'MACD',
         'MACDEXT',
         'MACDFIX',
@@ -203,37 +230,50 @@ __function_groups__ = {
         'PLUS_DI',
         'PLUS_DM',
         'PPO',
+        'QSTICK',
         'ROC',
         'ROCP',
         'ROCR',
         'ROCR100',
         'RSI',
+        'SMI',
         'STOCH',
         'STOCHF',
         'STOCHRSI',
         'TRIX',
+        'TSI',
         'ULTOSC',
+        'VHF',
+        'VORTEX',
+        'WAD',
         'WILLR',
         ],
     'Overlap Studies': [
         'ACCBANDS',
         'BBANDS',
         'DEMA',
+        'DONCHIAN',
         'EMA',
+        'HMA',
         'HT_TRENDLINE',
         'KAMA',
+        'KC',
         'MA',
         'MAMA',
         'MAVP',
         'MIDPOINT',
         'MIDPRICE',
+        'RMA',
         'SAR',
         'SAREXT',
         'SMA',
+        'SUPERTREND',
         'T3',
         'TEMA',
         'TRIMA',
+        'VWMA',
         'WMA',
+        'ZLEMA',
         ],
     'Pattern Recognition': [
         'CDL2CROWS',
@@ -301,6 +341,7 @@ __function_groups__ = {
     'Price Transform': [
         'AVGDEV',
         'AVGPRICE',
+        'HA',
         'MEDPRICE',
         'TYPPRICE',
         'WCLPRICE',
@@ -312,19 +353,34 @@ __function_groups__ = {
         'LINEARREG_ANGLE',
         'LINEARREG_INTERCEPT',
         'LINEARREG_SLOPE',
+        'PERCENTILE',
+        'PERCENTRANK',
         'STDDEV',
         'TSF',
         'VAR',
         ],
     'Volatility Indicators': [
+        'ADR',
         'ATR',
+        'CVI',
+        'MASSI',
         'NATR',
+        'RVI',
         'TRANGE',
         ],
     'Volume Indicators': [
         'AD',
         'ADOSC',
-        'OBV'
+        'CMF',
+        'EFI',
+        'MARKETFI',
+        'NVI',
+        'OBV',
+        'PVI',
+        'PVO',
+        'PVT',
+        'RVOL',
+        'VWAP',
         ],
     }
 
