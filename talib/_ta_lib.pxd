@@ -39,31 +39,31 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_MAType TA_MAType_T3 = 8
 
     ctypedef int TA_FuncUnstId
-    const TA_FuncUnstId TA_FUNC_UNST_ADX = 0
-    const TA_FuncUnstId TA_FUNC_UNST_ADXR = 1
-    const TA_FuncUnstId TA_FUNC_UNST_ATR = 2
-    const TA_FuncUnstId TA_FUNC_UNST_CMO = 3
-    const TA_FuncUnstId TA_FUNC_UNST_DX = 4
-    const TA_FuncUnstId TA_FUNC_UNST_EMA = 5
-    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPERIOD = 6
-    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPHASE = 7
-    const TA_FuncUnstId TA_FUNC_UNST_HD_PHASOR = 8
-    const TA_FuncUnstId TA_FUNC_UNST_HT_SINE = 9
-    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDLINE = 10
-    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE = 11
-    const TA_FuncUnstId TA_FUNC_UNST_KAMA = 12
-    const TA_FuncUnstId TA_FUNC_UNST_MAMA = 13
-    const TA_FuncUnstId TA_FUNC_UNST_MFI = 14
-    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DI = 15
-    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DM = 16
-    const TA_FuncUnstId TA_FUNC_UNST_NATR = 17
-    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DI = 18
-    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DM = 19
-    const TA_FuncUnstId TA_FUNC_UNST_RSI = 20
-    const TA_FuncUnstId TA_FUNC_UNST_STOCHRSI = 21
-    const TA_FuncUnstId TA_FUNC_UNST_T3 = 21
-    const TA_FuncUnstId TA_FUNC_UNST_ALL = 22
-    const TA_FuncUnstId TA_FUNC_UNST_NONE = -1
+    # No values here on purpose.  Cython takes the value of a `cdef extern`
+    # const from the C header at build time and ignores anything written on
+    # the right-hand side, so a literal would be decoration that goes stale
+    # without ever failing a build.
+    const TA_FuncUnstId TA_FUNC_UNST_ADX
+    const TA_FuncUnstId TA_FUNC_UNST_ATR
+    const TA_FuncUnstId TA_FUNC_UNST_CMO
+    const TA_FuncUnstId TA_FUNC_UNST_DX
+    const TA_FuncUnstId TA_FUNC_UNST_EMA
+    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPERIOD
+    const TA_FuncUnstId TA_FUNC_UNST_HT_DCPHASE
+    const TA_FuncUnstId TA_FUNC_UNST_HT_PHASOR
+    const TA_FuncUnstId TA_FUNC_UNST_HT_SINE
+    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDLINE
+    const TA_FuncUnstId TA_FUNC_UNST_HT_TRENDMODE
+    const TA_FuncUnstId TA_FUNC_UNST_KAMA
+    const TA_FuncUnstId TA_FUNC_UNST_MAMA
+    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DI
+    const TA_FuncUnstId TA_FUNC_UNST_MINUS_DM
+    const TA_FuncUnstId TA_FUNC_UNST_NATR
+    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DI
+    const TA_FuncUnstId TA_FUNC_UNST_PLUS_DM
+    const TA_FuncUnstId TA_FUNC_UNST_RSI
+    const TA_FuncUnstId TA_FUNC_UNST_T3
+    const TA_FuncUnstId TA_FUNC_UNST_ALL
 
     ctypedef int TA_RangeType
     const TA_RangeType TA_RangeType_RealBody = 0
