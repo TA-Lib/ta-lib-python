@@ -20,6 +20,7 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_RetCode TA_INVALID_LIST_TYPE = 14
     const TA_RetCode TA_BAD_OBJECT = 15
     const TA_RetCode TA_NOT_SUPPORTED = 16
+    const TA_RetCode TA_INSUFFICIENT_HISTORY = 17
     const TA_RetCode TA_INTERNAL_ERROR = 5000
     const TA_RetCode TA_UNKNOWN_ERR = 0xffff
 
@@ -37,6 +38,11 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_MAType TA_MAType_KAMA = 6
     const TA_MAType TA_MAType_MAMA = 7
     const TA_MAType TA_MAType_T3 = 8
+    const TA_MAType TA_MAType_HMA = 9
+    const TA_MAType TA_MAType_DISABLED = 10
+    const TA_MAType TA_MAType_DEFAULT = 11
+    const TA_MAType TA_MAType_ZLEMA = 12
+    const TA_MAType TA_MAType_RMA = 13
 
     ctypedef int TA_FuncUnstId
     # No values here on purpose.  Cython takes the value of a `cdef extern`
@@ -63,6 +69,9 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_FuncUnstId TA_FUNC_UNST_PLUS_DM
     const TA_FuncUnstId TA_FUNC_UNST_RSI
     const TA_FuncUnstId TA_FUNC_UNST_T3
+    const TA_FuncUnstId TA_FUNC_UNST_RMA
+    const TA_FuncUnstId TA_FUNC_UNST_HA
+    const TA_FuncUnstId TA_FUNC_UNST_RVI
     const TA_FuncUnstId TA_FUNC_UNST_ALL
 
     ctypedef int TA_RangeType
@@ -193,6 +202,8 @@ cdef extern from "ta-lib/ta_abstract.h":
     char* TA_FunctionDescriptionXML()
 
 cdef extern from "ta-lib/ta_func.h":
+    TA_RetCode TA_AC(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_AC_Lookback(int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod)
     TA_RetCode TA_ACCBANDS(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])
     int TA_ACCBANDS_Lookback(int optInTimePeriod)
     TA_RetCode TA_ACOS(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
@@ -203,10 +214,14 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_ADD_Lookback()
     TA_RetCode TA_ADOSC(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int optInFastPeriod, int optInSlowPeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ADOSC_Lookback(int optInFastPeriod, int optInSlowPeriod)
+    TA_RetCode TA_ADR(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_ADR_Lookback(int optInTimePeriod)
     TA_RetCode TA_ADX(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ADX_Lookback(int optInTimePeriod)
     TA_RetCode TA_ADXR(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ADXR_Lookback(int optInTimePeriod)
+    TA_RetCode TA_AO(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInFastPeriod, int optInSlowPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_AO_Lookback(int optInFastPeriod, int optInSlowPeriod)
     TA_RetCode TA_APO(int startIdx, int endIdx, const double inReal[], int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_APO_Lookback(int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType)
     TA_RetCode TA_AROON(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outAroonDown[], double outAroonUp[])
@@ -219,10 +234,10 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_ATAN_Lookback()
     TA_RetCode TA_ATR(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ATR_Lookback(int optInTimePeriod)
-    TA_RetCode TA_AVGPRICE(int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[])
-    int TA_AVGPRICE_Lookback()
     TA_RetCode TA_AVGDEV(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_AVGDEV_Lookback(int optInTimePeriod)
+    TA_RetCode TA_AVGPRICE(int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_AVGPRICE_Lookback()
     TA_RetCode TA_BBANDS(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])
     int TA_BBANDS_Lookback(int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType)
     TA_RetCode TA_BETA(int startIdx, int endIdx, const double inReal0[], const double inReal1[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
@@ -355,26 +370,54 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_CDLXSIDEGAP3METHODS_Lookback()
     TA_RetCode TA_CEIL(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_CEIL_Lookback()
+    TA_RetCode TA_CMF(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_CMF_Lookback(int optInTimePeriod)
     TA_RetCode TA_CMO(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_CMO_Lookback(int optInTimePeriod)
+    TA_RetCode TA_CMOU(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_CMOU_Lookback(int optInTimePeriod)
+    TA_RetCode TA_COPPOCK(int startIdx, int endIdx, const double inReal[], int optInWMAPeriod, int optInROC1Period, int optInROC2Period, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_COPPOCK_Lookback(int optInWMAPeriod, int optInROC1Period, int optInROC2Period)
     TA_RetCode TA_CORREL(int startIdx, int endIdx, const double inReal0[], const double inReal1[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_CORREL_Lookback(int optInTimePeriod)
     TA_RetCode TA_COS(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_COS_Lookback()
     TA_RetCode TA_COSH(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_COSH_Lookback()
+    TA_RetCode TA_CUMSUM(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_CUMSUM_Lookback()
+    TA_RetCode TA_CVI(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int optInROCPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_CVI_Lookback(int optInTimePeriod, int optInROCPeriod)
     TA_RetCode TA_DEMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_DEMA_Lookback(int optInTimePeriod)
     TA_RetCode TA_DIV(int startIdx, int endIdx, const double inReal0[], const double inReal1[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_DIV_Lookback()
+    TA_RetCode TA_DONCHIAN(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])
+    int TA_DONCHIAN_Lookback(int optInTimePeriod)
+    TA_RetCode TA_DPO(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_DPO_Lookback(int optInTimePeriod)
     TA_RetCode TA_DX(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_DX_Lookback(int optInTimePeriod)
+    TA_RetCode TA_EFI(int startIdx, int endIdx, const double inClose[], const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_EFI_Lookback(int optInTimePeriod)
     TA_RetCode TA_EMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_EMA_Lookback(int optInTimePeriod)
+    TA_RetCode TA_ER(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_ER_Lookback(int optInTimePeriod)
+    TA_RetCode TA_ERI(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outBullPower[], double outBearPower[])
+    int TA_ERI_Lookback(int optInTimePeriod)
     TA_RetCode TA_EXP(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_EXP_Lookback()
     TA_RetCode TA_FLOOR(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_FLOOR_Lookback()
+    TA_RetCode TA_FOSC(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_FOSC_Lookback(int optInTimePeriod)
+    TA_RetCode TA_FRACTAL(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInLeftBars, int optInRightBars, int *outBegIdx, int *outNBElement, int outSwingHigh[], int outSwingLow[])
+    int TA_FRACTAL_Lookback(int optInLeftBars, int optInRightBars)
+    TA_RetCode TA_HA(int startIdx, int endIdx, const double inOpen[], const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outHAOpen[], double outHAHigh[], double outHALow[], double outHAClose[])
+    int TA_HA_Lookback()
+    TA_RetCode TA_HMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_HMA_Lookback(int optInTimePeriod)
     TA_RetCode TA_HT_DCPERIOD(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_HT_DCPERIOD_Lookback()
     TA_RetCode TA_HT_DCPHASE(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
@@ -391,6 +434,10 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_IMI_Lookback(int optInTimePeriod)
     TA_RetCode TA_KAMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_KAMA_Lookback(int optInTimePeriod)
+    TA_RetCode TA_KC(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int optInATRPeriod, double optInNbDev, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])
+    int TA_KC_Lookback(int optInTimePeriod, int optInATRPeriod, double optInNbDev)
+    TA_RetCode TA_KDJ(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInFastK_Period, int optInSlowK_Period, TA_MAType optInSlowK_MAType, int optInSlowD_Period, TA_MAType optInSlowD_MAType, int *outBegIdx, int *outNBElement, double outK[], double outD[], double outJ[])
+    int TA_KDJ_Lookback(int optInFastK_Period, int optInSlowK_Period, TA_MAType optInSlowK_MAType, int optInSlowD_Period, TA_MAType optInSlowD_MAType)
     TA_RetCode TA_LINEARREG(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_LINEARREG_Lookback(int optInTimePeriod)
     TA_RetCode TA_LINEARREG_ANGLE(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
@@ -413,6 +460,10 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_MACDFIX_Lookback(int optInSignalPeriod)
     TA_RetCode TA_MAMA(int startIdx, int endIdx, const double inReal[], double optInFastLimit, double optInSlowLimit, int *outBegIdx, int *outNBElement, double outMAMA[], double outFAMA[])
     int TA_MAMA_Lookback(double optInFastLimit, double optInSlowLimit)
+    TA_RetCode TA_MARKETFI(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_MARKETFI_Lookback()
+    TA_RetCode TA_MASSI(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInFastPeriod, int optInSlowPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_MASSI_Lookback(int optInFastPeriod, int optInSlowPeriod)
     TA_RetCode TA_MAVP(int startIdx, int endIdx, const double inReal[], const double inPeriods[], int optInMinPeriod, int optInMaxPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_MAVP_Lookback(int optInMinPeriod, int optInMaxPeriod, TA_MAType optInMAType)
     TA_RetCode TA_MAX(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
@@ -445,14 +496,30 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_MULT_Lookback()
     TA_RetCode TA_NATR(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_NATR_Lookback(int optInTimePeriod)
+    TA_RetCode TA_NVI(int startIdx, int endIdx, const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_NVI_Lookback()
     TA_RetCode TA_OBV(int startIdx, int endIdx, const double inReal[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_OBV_Lookback()
+    TA_RetCode TA_PERCENTILE(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInPercentile, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_PERCENTILE_Lookback(int optInTimePeriod, double optInPercentile)
+    TA_RetCode TA_PERCENTRANK(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_PERCENTRANK_Lookback(int optInTimePeriod)
     TA_RetCode TA_PLUS_DI(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_PLUS_DI_Lookback(int optInTimePeriod)
     TA_RetCode TA_PLUS_DM(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_PLUS_DM_Lookback(int optInTimePeriod)
     TA_RetCode TA_PPO(int startIdx, int endIdx, const double inReal[], int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_PPO_Lookback(int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType)
+    TA_RetCode TA_PVI(int startIdx, int endIdx, const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_PVI_Lookback()
+    TA_RetCode TA_PVO(int startIdx, int endIdx, const double inVolume[], int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_PVO_Lookback(int optInFastPeriod, int optInSlowPeriod, TA_MAType optInMAType)
+    TA_RetCode TA_PVT(int startIdx, int endIdx, const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_PVT_Lookback()
+    TA_RetCode TA_QSTICK(int startIdx, int endIdx, const double inOpen[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_QSTICK_Lookback(int optInTimePeriod)
+    TA_RetCode TA_RMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_RMA_Lookback(int optInTimePeriod)
     TA_RetCode TA_ROC(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ROC_Lookback(int optInTimePeriod)
     TA_RetCode TA_ROCP(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
@@ -463,6 +530,10 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_ROCR100_Lookback(int optInTimePeriod)
     TA_RetCode TA_RSI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[]) nogil
     int TA_RSI_Lookback(int optInTimePeriod) nogil
+    TA_RetCode TA_RVI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int optInStdDevPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_RVI_Lookback(int optInTimePeriod, int optInStdDevPeriod)
+    TA_RetCode TA_RVOL(int startIdx, int endIdx, const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_RVOL_Lookback(int optInTimePeriod)
     TA_RetCode TA_SAR(int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInAcceleration, double optInMaximum, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SAR_Lookback(double optInAcceleration, double optInMaximum)
     TA_RetCode TA_SAREXT(int startIdx, int endIdx, const double inHigh[], const double inLow[], double optInStartValue, double optInOffsetOnReverse, double optInAccelerationInitLong, double optInAccelerationLong, double optInAccelerationMaxLong, double optInAccelerationInitShort, double optInAccelerationShort, double optInAccelerationMaxShort, int *outBegIdx, int *outNBElement, double outReal[])
@@ -473,6 +544,8 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_SINH_Lookback()
     TA_RetCode TA_SMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SMA_Lookback(int optInTimePeriod)
+    TA_RetCode TA_SMI(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outSMI[], double outSMISignal[])
+    int TA_SMI_Lookback(int optInTimePeriod, int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod)
     TA_RetCode TA_SQRT(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SQRT_Lookback()
     TA_RetCode TA_STDDEV(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDev, int *outBegIdx, int *outNBElement, double outReal[])
@@ -487,6 +560,8 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_SUB_Lookback()
     TA_RetCode TA_SUM(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SUM_Lookback(int optInTimePeriod)
+    TA_RetCode TA_SUPERTREND(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, double optInMultiplier, int *outBegIdx, int *outNBElement, double outReal[], int outInteger[])
+    int TA_SUPERTREND_Lookback(int optInTimePeriod, double optInMultiplier)
     TA_RetCode TA_T3(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInVFactor, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_T3_Lookback(int optInTimePeriod, double optInVFactor)
     TA_RetCode TA_TAN(int startIdx, int endIdx, const double inReal[], int *outBegIdx, int *outNBElement, double outReal[])
@@ -503,18 +578,32 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_TRIX_Lookback(int optInTimePeriod)
     TA_RetCode TA_TSF(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_TSF_Lookback(int optInTimePeriod)
+    TA_RetCode TA_TSI(int startIdx, int endIdx, const double inReal[], int optInFirstPeriod, int optInSecondPeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_TSI_Lookback(int optInFirstPeriod, int optInSecondPeriod)
     TA_RetCode TA_TYPPRICE(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_TYPPRICE_Lookback()
     TA_RetCode TA_ULTOSC(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ULTOSC_Lookback(int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3)
     TA_RetCode TA_VAR(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInNbDev, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_VAR_Lookback(int optInTimePeriod, double optInNbDev)
+    TA_RetCode TA_VHF(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_VHF_Lookback(int optInTimePeriod)
+    TA_RetCode TA_VORTEX(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outPlusVI[], double outMinusVI[])
+    int TA_VORTEX_Lookback(int optInTimePeriod)
+    TA_RetCode TA_VWAP(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], const double inVolume[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_VWAP_Lookback()
+    TA_RetCode TA_VWMA(int startIdx, int endIdx, const double inReal[], const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_VWMA_Lookback(int optInTimePeriod)
+    TA_RetCode TA_WAD(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_WAD_Lookback()
     TA_RetCode TA_WCLPRICE(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int *outBegIdx, int *outNBElement, double outReal[])
     int TA_WCLPRICE_Lookback()
     TA_RetCode TA_WILLR(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_WILLR_Lookback(int optInTimePeriod)
     TA_RetCode TA_WMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_WMA_Lookback(int optInTimePeriod)
+    TA_RetCode TA_ZLEMA(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_ZLEMA_Lookback(int optInTimePeriod)
 
     # TALIB functions for TA_SetUnstablePeriod
     TA_RetCode TA_SetUnstablePeriod(TA_FuncUnstId id, unsigned int unstablePeriod)

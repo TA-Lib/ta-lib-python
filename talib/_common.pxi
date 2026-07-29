@@ -40,6 +40,8 @@ cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
         description = 'Bad Object (TA_BAD_OBJECT)'
     elif ret_code == 16:
         description = 'Not Supported (TA_NOT_SUPPORTED)'
+    elif ret_code == 17:
+        description = 'Insufficient History (TA_INSUFFICIENT_HISTORY)'
     elif ret_code == 5000:
         description = 'Internal Error (TA_INTERNAL_ERROR)'
     elif ret_code == 65535:
@@ -60,7 +62,8 @@ def _ta_shutdown():
     _ta_check_success('TA_Shutdown', ret_code)
 
 class MA_Type(object):
-    SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
+    SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, HMA, DISABLED, DEFAULT, \
+        ZLEMA, RMA = range(14)
 
     def __init__(self):
         self._lookup = {
@@ -73,6 +76,11 @@ class MA_Type(object):
             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
             MA_Type.MAMA: 'MESA Adaptive Moving Average',
             MA_Type.T3: 'Triple Generalized Double Exponential Moving Average',
+            MA_Type.HMA: 'Hull Moving Average',
+            MA_Type.DISABLED: 'No Moving Average (identity)',
+            MA_Type.DEFAULT: "The Function's Own Default Moving Average",
+            MA_Type.ZLEMA: 'Zero-Lag Exponential Moving Average',
+            MA_Type.RMA: "Wilder's Smoothed Moving Average",
             }
 
     def __getitem__(self, type_):
@@ -107,6 +115,9 @@ _ta_func_unst_ids = {
     'PLUS_DM': lib.TA_FUNC_UNST_PLUS_DM,
     'RSI': lib.TA_FUNC_UNST_RSI,
     'T3': lib.TA_FUNC_UNST_T3,
+    'RMA': lib.TA_FUNC_UNST_RMA,
+    'HA': lib.TA_FUNC_UNST_HA,
+    'RVI': lib.TA_FUNC_UNST_RVI,
     'ALL': lib.TA_FUNC_UNST_ALL,
 }
 

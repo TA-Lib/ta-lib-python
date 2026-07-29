@@ -3,15 +3,22 @@ from numpy.testing import assert_array_equal, assert_array_almost_equal
 import pytest
 
 import talib
-from talib import func
+from talib import abstract, func
 
 
 def test_talib_version():
-    assert talib.__ta_version__[:5] == b'0.7.1'
+    assert talib.__ta_version__[:5] == b'0.8.1'
 
 
 def test_num_functions():
-    assert len(talib.get_functions()) == 161
+    assert len(talib.get_functions()) == 201
+    assert len(talib.__TA_FUNCTION_NAMES__) == 201
+
+
+def test_every_grouped_function_is_bound():
+    # get_functions() reads the hand-written group dict; __TA_FUNCTION_NAMES__
+    # comes from the C header. A count on one side cannot see a hole in the other.
+    assert set(talib.get_functions()) == set(talib.__TA_FUNCTION_NAMES__)
 
 
 def test_input_wrong_type():
@@ -71,6 +78,7 @@ def _unstable_period_cases():
     close = np.cumsum(rs.randn(n)) + 100.0
     high = close + rs.rand(n) + 0.5
     low = close - rs.rand(n) - 0.5
+    open_ = close + rs.rand(n) - 0.5
     return {
         'ADX': lambda: func.ADX(high, low, close),
         'ATR': lambda: func.ATR(high, low, close),
@@ -92,6 +100,9 @@ def _unstable_period_cases():
         'PLUS_DM': lambda: func.PLUS_DM(high, low),
         'RSI': lambda: func.RSI(close),
         'T3': lambda: func.T3(close),
+        'RMA': lambda: func.RMA(close),
+        'HA': lambda: func.HA(open_, high, low, close)[0],
+        'RVI': lambda: func.RVI(close),
     }
 
 
@@ -118,7 +129,7 @@ def test_unstable_period_moves_its_own_function(name):
     talib.set_unstable_period(name, 0)
     unshifted = call()
     baseline = _leading_unset(unshifted)
-    assert baseline > 0, 'nothing to shift'
+    assert baseline > 0 or name == 'HA'  # HA is the one case with no lookback
     try:
         talib.set_unstable_period(name, 5)
         shifted = call()
@@ -293,3 +304,54 @@ def test_MAXINDEX():
     d = np.array([1., 2, 3])
     e = func.MAXINDEX(d, 10)
     assert_array_equal(e, [0,0,0])
+
+
+# The func API bakes each parameter's default into its own signature, while the
+# abstract API reads them from the library. They have to agree, for all 201.
+def test_func_and_abstract_agree():
+    n = 200
+    rs = np.random.RandomState(4)
+    close = np.cumsum(rs.randn(n)) + 100.0
+    inputs = {
+        'open': close + rs.rand(n) - 0.5,
+        'high': close + rs.rand(n) + 0.5,
+        'low': close - rs.rand(n) - 0.5,
+        'close': close,
+        'volume': rs.rand(n) * 1e6 + 1e5,
+        'real': close,
+        'real0': close,
+        'real1': close + rs.rand(n),
+        'periods': np.full(n, 10.0),
+    }
+    for name in talib.__TA_FUNCTION_NAMES__:
+        function = abstract.Function(name)
+        args = []
+        for series in function.input_names.values():
+            args += [inputs[s] for s in series] if isinstance(series, list) else [inputs[series]]
+        got = getattr(func, name)(*args)
+        want = function(inputs)
+        got = list(got) if isinstance(got, tuple) else [got]
+        want = want if isinstance(want, list) else [want]
+        assert len(got) == len(want), name
+        for a, b in zip(got, want):
+            assert len(a) == n, name
+            assert_array_equal(a, b, err_msg=name)
+
+
+# The moving averages TA-Lib C 0.8.1 added to TA_MAType.
+@pytest.mark.parametrize('matype,name', [
+    (talib.MA_Type.HMA, 'HMA'),
+    (talib.MA_Type.ZLEMA, 'ZLEMA'),
+    (talib.MA_Type.RMA, 'RMA'),
+])
+def test_MA_dispatches_to_the_new_types(matype, name):
+    a = np.cumsum(np.random.RandomState(3).randn(200)) + 100.0
+    assert_array_equal(func.MA(a, 20, matype), getattr(func, name)(a, 20))
+
+
+def test_MA_DISABLED_and_DEFAULT():
+    a = np.cumsum(np.random.RandomState(3).randn(200)) + 100.0
+    assert_array_equal(func.MA(a, 20, talib.MA_Type.DISABLED), a)
+    # MA's own default is SMA, so it cannot tell DEFAULT from SMA. APO's is EMA.
+    assert_array_equal(func.APO(a, matype=talib.MA_Type.DEFAULT),
+                       func.APO(a, matype=talib.MA_Type.EMA))
