@@ -1,3 +1,18 @@
+0.8.0
+=====
+
+- [NEW]: Support TA-Lib C 0.8.1, which is now the minimum required version.
+
+- [NEW]: New functions from TA-Lib C 0.8.1: CMF, CMOU, HMA, NVI, PVI, PVO, VWMA.
+
+- [NEW]: New moving averages ``MA_Type.HMA`` and ``MA_Type.DISABLED``.
+
+- [FIX]: ``abstract`` raised ``KeyError`` on function and output flags added
+  after this wrapper was written; unknown flag bits are now ignored.
+
+- [CHANGE]: ``APO`` and ``PPO`` now default ``matype`` to EMA, and ``BBANDS``
+  defaults ``timeperiod`` to 20, following TA-Lib C 0.8.1.
+
 0.7.1
 =====
 

@@ -61,6 +61,13 @@ functions = [s for s in functions if not s.startswith('TA_RetCode TA_S_')]
 functions = [s for s in functions if not s.startswith('TA_RetCode TA_Set')]
 functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
 
+# strip TA-Lib C's own streaming API (ta-lib >= 0.8.1), which declares
+# TA_<FUNC>_Open/_OpenAndFill/_Update/_Peek/_Close taking an opaque stream
+# handle. talib's stream_* wrappers are generated from the batch functions
+# instead, so these declarations are not usable here.
+functions = [s for s in functions
+             if not re.match(r'TA_RetCode TA_\w+_(Open|OpenAndFill|Update|Peek|Close)\s*\(', s)]
+
 # print headers
 print("""\
 cimport numpy as np

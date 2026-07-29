@@ -7,11 +7,11 @@ from talib import func
 
 
 def test_talib_version():
-    assert talib.__ta_version__[:5] == b'0.7.1'
+    assert talib.__ta_version__[:5] == b'0.8.1'
 
 
 def test_num_functions():
-    assert len(talib.get_functions()) == 161
+    assert len(talib.get_functions()) == 168
 
 
 def test_input_wrong_type():
@@ -293,3 +293,36 @@ def test_MAXINDEX():
     d = np.array([1., 2, 3])
     e = func.MAXINDEX(d, 10)
     assert_array_equal(e, [0,0,0])
+
+
+# Functions added in TA-Lib C 0.8.1. Just a smoke test: shape, dtype and a
+# plausible lookback, so a wiring mistake in _func.pxi/_ta_lib.pxd is caught.
+@pytest.mark.parametrize('name,args,kwargs', [
+    ('CMF', ('high', 'low', 'close', 'volume'), {}),
+    ('CMOU', ('real',), {}),
+    ('HMA', ('real',), {}),
+    ('NVI', ('close', 'volume'), {}),
+    ('PVI', ('close', 'volume'), {}),
+    ('PVO', ('volume',), {}),
+    ('VWMA', ('real', 'volume'), {}),
+])
+def test_0_8_1_functions(name, args, kwargs):
+    n = 200
+    rs = np.random.RandomState(2)
+    series = {
+        'real': np.cumsum(rs.randn(n)) + 100.0,
+        'volume': rs.rand(n) * 1e6 + 1e5,
+    }
+    series['close'] = series['real']
+    series['high'] = series['real'] + 1.0
+    series['low'] = series['real'] - 1.0
+    result = getattr(func, name)(*[series[a] for a in args], **kwargs)
+    assert result.dtype == np.float64
+    assert len(result) == n
+    assert np.isfinite(result[-1])
+
+
+def test_MA_HMA():
+    # TA_MAType_HMA (9) is new in TA-Lib C 0.8.1
+    a = np.cumsum(np.random.RandomState(3).randn(200)) + 100.0
+    assert_array_equal(func.MA(a, 20, talib.MA_Type.HMA), func.HMA(a, 20))

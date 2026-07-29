@@ -134,7 +134,7 @@ def test_info():
     stochrsi.parameters = {'fastd_matype': talib.MA_Type.EMA}
     expected = {
         'display_name': 'Stochastic Relative Strength Index',
-        'function_flags': ['Function has an unstable period'],
+        'function_flags': ['Function has a streaming API'],
         'group': 'Momentum Indicators',
         'input_names': OrderedDict([('price', 'open')]),
         'name': 'STOCHRSI',
@@ -154,7 +154,8 @@ def test_info():
 
     expected = {
         'display_name': 'Bollinger Bands',
-        'function_flags': ['Output scale same as input'],
+        'function_flags': ['Output scale same as input',
+                           'Function has a streaming API'],
         'group': 'Overlap Studies',
         'input_names': OrderedDict([('price', 'close')]),
         'name': 'BBANDS',
@@ -165,7 +166,7 @@ def test_info():
             ]),
         'output_names': ['upperband', 'middleband', 'lowerband'],
         'parameters': OrderedDict([
-            ('timeperiod', 5),
+            ('timeperiod', 20),
             ('nbdevup', 2),
             ('nbdevdn', 2),
             ('matype', 0),

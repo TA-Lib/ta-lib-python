@@ -467,13 +467,13 @@ Inputs:
 Parameters:
     fastperiod: 12
     slowperiod: 26
-    matype: 0 (Simple Moving Average)
+    matype: 1 (Exponential Moving Average)
 Outputs:
     real"""
 @overload
-def APO(real: Union[pd.Series, np.ndarray], fastperiod=12, slowperiod=26, matype=0) -> np.ndarray: ...
+def APO(real: Union[pd.Series, np.ndarray], fastperiod=12, slowperiod=26, matype=1) -> np.ndarray: ...
 @overload
-def APO(real: pd.DataFrame, fastperiod=12, slowperiod=26, matype=0) -> pd.Series: ...
+def APO(real: pd.DataFrame, fastperiod=12, slowperiod=26, matype=1) -> pd.Series: ...
 
 """AROON(high, low[, timeperiod=?])
 
@@ -549,6 +549,12 @@ def CMO(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
 @overload
 def CMO(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
 
+"""CMOU(real[, timeperiod=?])"""
+@overload
+def CMOU(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
+@overload
+def CMOU(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
+
 """DX(high, low, close[, timeperiod=?])
 
 Directional Movement Index (Momentum Indicators)
@@ -563,6 +569,21 @@ Outputs:
 def DX(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
 @overload
 def DX(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
+
+"""IMI(open, close[, timeperiod=?])
+
+Intraday Momentum Index (Momentum Indicators)
+
+Inputs:
+    prices: ['open', 'close']
+Parameters:
+    timeperiod: 14
+Outputs:
+    real"""
+@overload
+def IMI(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
+@overload
+def IMI(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
 
 """MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
@@ -721,13 +742,13 @@ Inputs:
 Parameters:
     fastperiod: 12
     slowperiod: 26
-    matype: 0 (Simple Moving Average)
+    matype: 1 (Exponential Moving Average)
 Outputs:
     real"""
 @overload
-def PPO(real: Union[pd.Series, np.ndarray], fastperiod=12, slowperiod=26, matype=0) -> np.ndarray: ...
+def PPO(real: Union[pd.Series, np.ndarray], fastperiod=12, slowperiod=26, matype=1) -> np.ndarray: ...
 @overload
-def PPO(real: pd.DataFrame, fastperiod=12, slowperiod=26, matype=0) -> pd.Series: ...
+def PPO(real: pd.DataFrame, fastperiod=12, slowperiod=26, matype=1) -> pd.Series: ...
 
 """ROC(real[, timeperiod=?])
 
@@ -908,6 +929,23 @@ def WILLR(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
 @overload
 def WILLR(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
 
+"""ACCBANDS(high, low, close[, timeperiod=?])
+
+Acceleration Bands (Overlap Studies)
+
+Inputs:
+    prices: ['high', 'low', 'close']
+Parameters:
+    timeperiod: 20
+Outputs:
+    upperband
+    middleband
+    lowerband"""
+@overload
+def ACCBANDS(real: Union[pd.Series, np.ndarray], timeperiod=20) -> Tuple[np.ndarray, np.ndarray, np.ndarray]: ...
+@overload
+def ACCBANDS(real: pd.DataFrame, timeperiod=20) -> pd.DataFrame: ...
+
 """BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
 Bollinger Bands (Overlap Studies)
@@ -915,7 +953,7 @@ Bollinger Bands (Overlap Studies)
 Inputs:
     real: (any ndarray)
 Parameters:
-    timeperiod: 5
+    timeperiod: 20
     nbdevup: 2.0
     nbdevdn: 2.0
     matype: 0 (Simple Moving Average)
@@ -924,9 +962,9 @@ Outputs:
     middleband
     lowerband"""
 @overload
-def BBANDS(real: Union[pd.Series, np.ndarray], timeperiod=5, nbdevup=2.0, nbdevdn=2.0, matype=0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]: ...
+def BBANDS(real: Union[pd.Series, np.ndarray], timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]: ...
 @overload
-def BBANDS(real: pd.DataFrame, timeperiod=5, nbdevup=2.0, nbdevdn=2.0, matype=0) -> pd.DataFrame: ...
+def BBANDS(real: pd.DataFrame, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0) -> pd.DataFrame: ...
 
 """DEMA(real[, timeperiod=?])
 
@@ -957,6 +995,12 @@ Outputs:
 def EMA(real: Union[pd.Series, np.ndarray], timeperiod=30) -> np.ndarray: ...
 @overload
 def EMA(real: pd.DataFrame, timeperiod=30) -> pd.Series: ...
+
+"""HMA(real[, timeperiod=?])"""
+@overload
+def HMA(real: Union[pd.Series, np.ndarray], timeperiod=20) -> np.ndarray: ...
+@overload
+def HMA(real: pd.DataFrame, timeperiod=20) -> pd.Series: ...
 
 """HT_TRENDLINE(real)
 
@@ -1166,6 +1210,12 @@ def TRIMA(real: Union[pd.Series, np.ndarray], timeperiod=30) -> np.ndarray: ...
 @overload
 def TRIMA(real: pd.DataFrame, timeperiod=30) -> pd.Series: ...
 
+"""VWMA(real, volume[, timeperiod=?])"""
+@overload
+def VWMA(real: Union[pd.Series, np.ndarray], timeperiod=30) -> np.ndarray: ...
+@overload
+def VWMA(real: pd.DataFrame, timeperiod=30) -> pd.Series: ...
+
 """WMA(real[, timeperiod=?])
 
 Weighted Moving Average (Overlap Studies)
@@ -1222,7 +1272,7 @@ def CDL3INSIDE(real: pd.DataFrame) -> pd.Series: ...
 
 """CDL3LINESTRIKE(open, high, low, close)
 
-Three-Line Strike  (Pattern Recognition)
+Three-Line Strike (Pattern Recognition)
 
 Inputs:
     prices: ['open', 'high', 'low', 'close']
@@ -1988,6 +2038,21 @@ def CDLXSIDEGAP3METHODS(real: Union[pd.Series, np.ndarray]) -> np.ndarray: ...
 @overload
 def CDLXSIDEGAP3METHODS(real: pd.DataFrame) -> pd.Series: ...
 
+"""AVGDEV(real[, timeperiod=?])
+
+Average Deviation (Price Transform)
+
+Inputs:
+    real: (any ndarray)
+Parameters:
+    timeperiod: 14
+Outputs:
+    real"""
+@overload
+def AVGDEV(real: Union[pd.Series, np.ndarray], timeperiod=14) -> np.ndarray: ...
+@overload
+def AVGDEV(real: pd.DataFrame, timeperiod=14) -> pd.Series: ...
+
 """AVGPRICE(open, high, low, close)
 
 Average Price (Price Transform)
@@ -2251,6 +2316,18 @@ def ADOSC(real: Union[pd.Series, np.ndarray], fastperiod=3, slowperiod=10) -> np
 @overload
 def ADOSC(real: pd.DataFrame, fastperiod=3, slowperiod=10) -> pd.Series: ...
 
+"""CMF(high, low, close, volume[, timeperiod=?])"""
+@overload
+def CMF(real: Union[pd.Series, np.ndarray], timeperiod=20) -> np.ndarray: ...
+@overload
+def CMF(real: pd.DataFrame, timeperiod=20) -> pd.Series: ...
+
+"""NVI(close, volume)"""
+@overload
+def NVI(real: Union[pd.Series, np.ndarray]) -> np.ndarray: ...
+@overload
+def NVI(real: pd.DataFrame) -> pd.Series: ...
+
 """OBV(real, volume)
 
 On Balance Volume (Volume Indicators)
@@ -2264,4 +2341,16 @@ Outputs:
 def OBV(real: Union[pd.Series, np.ndarray]) -> np.ndarray: ...
 @overload
 def OBV(real: pd.DataFrame) -> pd.Series: ...
+
+"""PVI(close, volume)"""
+@overload
+def PVI(real: Union[pd.Series, np.ndarray]) -> np.ndarray: ...
+@overload
+def PVI(real: pd.DataFrame) -> pd.Series: ...
+
+"""PVO(volume[, fastperiod=?, slowperiod=?, matype=?])"""
+@overload
+def PVO(real: Union[pd.Series, np.ndarray], fastperiod=12, slowperiod=26, matype=1) -> np.ndarray: ...
+@overload
+def PVO(real: pd.DataFrame, fastperiod=12, slowperiod=26, matype=1) -> pd.Series: ...
 
