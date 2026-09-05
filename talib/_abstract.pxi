@@ -599,23 +599,29 @@ def __get_flags(int flag, dict flags_lookup_dict):
     max_int = int(math.log(max(value_range), 2))
 
     # if the flag we got is out-of-range, it just means no extra info provided
-    if flag < 1 or flag > 2**max_int:
+    if flag < 1:
         return None
 
     # In this loop, i is essentially the bit-position, which represents an
     # input from flags_lookup_dict. We loop through as many flags_lookup_dict
     # bit-positions as we need to check, bitwise-ANDing each with flag for a hit.
+    # A bit we have no description for means the installed ta-lib is newer than
+    # this build knows about; skip it rather than raising.
     ret = []
-    for i in xrange(min_int, max_int+1):
+    for i in xrange(min_int, max(max_int, int(math.log(flag, 2))) + 1):
         if 2**i & flag:
-            ret.append(flags_lookup_dict[2**i])
+            description = flags_lookup_dict.get(2**i)
+            if description is not None:
+                ret.append(description)
     return ret
 
 TA_FUNC_FLAGS = {
     16777216: 'Output scale same as input',
+    33554432: 'Function has a streaming API',
     67108864: 'Output is over volume',
     134217728: 'Function has an unstable period',
-    268435456: 'Output is a candlestick'
+    268435456: 'Output is a candlestick',
+    536870912: 'Output is path-dependent',
 }
 
 # when flag is 0, the function (should) work on any reasonable input ndarray
@@ -642,7 +648,8 @@ TA_OUTPUT_FLAGS = {
     512: 'Output can be negative',
     1024: 'Output can be zero',
     2048: 'Values represent an upper limit',
-    4096: 'Values represent a lower limit'
+    4096: 'Values represent a lower limit',
+    8192: 'Output is optional (nullable)',
 }
 
 def _ta_getFuncInfo(char *function_name):

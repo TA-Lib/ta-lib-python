@@ -106,14 +106,30 @@ else:
     _wrapper = lambda x: x
 
 
-from ._ta_lib import (
-    _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
-    _ta_set_unstable_period as set_unstable_period,
-    _ta_get_unstable_period as get_unstable_period,
-    _ta_set_compatibility as set_compatibility,
-    _ta_get_compatibility as get_compatibility,
-    __TA_FUNCTION_NAMES__
-)
+# The TA-Lib C library this wrapper is built against
+TA_LIB_C_REQUIRED = '0.8.1'
+
+try:
+    from ._ta_lib import (
+        _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
+        _ta_set_unstable_period as set_unstable_period,
+        _ta_get_unstable_period as get_unstable_period,
+        _ta_set_compatibility as set_compatibility,
+        _ta_get_compatibility as get_compatibility,
+        __TA_FUNCTION_NAMES__
+    )
+except ImportError as error:
+    # Loading the extension resolves its symbols against whatever TA-Lib C is
+    # installed. Linking never catches a too-old library -- a shared object may
+    # keep undefined symbols -- so a missing function shows up here instead, as
+    # "undefined symbol: TA_CMF_Lookback" or the macOS/Windows equivalent.
+    raise ImportError(
+        '%s\n\n'
+        'talib could not load its extension module. This build requires the '
+        'TA-Lib C library %s or later; an older one is missing functions this '
+        'wrapper calls. See https://ta-lib.org/install/'
+        % (error, TA_LIB_C_REQUIRED)
+    ) from error
 
 # import all the func and stream functions
 from ._ta_lib import *
@@ -191,6 +207,7 @@ __function_groups__ = {
         'BOP',
         'CCI',
         'CMO',
+        'CMOU',
         'DX',
         'IMI',
         'MACD',
@@ -220,6 +237,7 @@ __function_groups__ = {
         'BBANDS',
         'DEMA',
         'EMA',
+        'HMA',
         'HT_TRENDLINE',
         'KAMA',
         'MA',
@@ -233,6 +251,7 @@ __function_groups__ = {
         'T3',
         'TEMA',
         'TRIMA',
+        'VWMA',
         'WMA',
         ],
     'Pattern Recognition': [
@@ -324,7 +343,11 @@ __function_groups__ = {
     'Volume Indicators': [
         'AD',
         'ADOSC',
-        'OBV'
+        'CMF',
+        'NVI',
+        'OBV',
+        'PVI',
+        'PVO',
         ],
     }
 

@@ -60,7 +60,7 @@ def _ta_shutdown():
     _ta_check_success('TA_Shutdown', ret_code)
 
 class MA_Type(object):
-    SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3 = range(9)
+    SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, HMA, DISABLED = range(11)
 
     def __init__(self):
         self._lookup = {
@@ -73,6 +73,8 @@ class MA_Type(object):
             MA_Type.KAMA: 'Kaufman Adaptive Moving Average',
             MA_Type.MAMA: 'MESA Adaptive Moving Average',
             MA_Type.T3: 'Triple Generalized Double Exponential Moving Average',
+            MA_Type.HMA: 'Hull Moving Average',
+            MA_Type.DISABLED: 'No Moving Average (identity)',
             }
 
     def __getitem__(self, type_):

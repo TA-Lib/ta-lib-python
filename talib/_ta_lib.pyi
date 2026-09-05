@@ -13,6 +13,8 @@ class MA_Type(Enum):
     KAMA = 6
     MAMA = 7
     T3 = 8
+    HMA = 9
+    DISABLED = 10
 
 #Overlap Studies Functions
 
@@ -32,6 +34,11 @@ def DEMA(
 def EMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
+def HMA(
+        real: NDArray[np.float64], 
+        timeperiod: int= 20
         )-> NDArray[np.float64]: ...
 
 def HT_TRENDLINE(real: NDArray[np.float64])-> NDArray[np.float64]: ...
@@ -113,6 +120,12 @@ def TRIMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def VWMA(
+        real: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def WMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
@@ -138,7 +151,7 @@ def APO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def AROON(
@@ -168,6 +181,11 @@ def CCI(
         )-> NDArray[np.float64]: ...
 
 def CMO(
+        real: NDArray[np.float64], 
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def CMOU(
         real: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
@@ -244,7 +262,7 @@ def PPO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def ROC(
@@ -339,9 +357,34 @@ def ADOSC(
         slowperiod: int= 10
         )-> NDArray[np.float64]: ...
 
+def CMF(
+        high: NDArray[np.float64], 
+        low: NDArray[np.float64], 
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def NVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 def OBV(
         close: NDArray[np.float64], 
         volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def PVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def PVO(
+        volume: NDArray[np.float64], 
+        fastperiod: int= 12, 
+        slowperiod: int= 26, 
+        matype: int= 1
         )-> NDArray[np.float64]: ...
 
 #Volatility Indicator Functions
@@ -1018,6 +1061,11 @@ def stream_EMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_HMA(
+        real: NDArray[np.float64], 
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
 def stream_HT_TRENDLINE(real: NDArray[np.float64])-> NDArray[np.float64]: ...
 
 def stream_KAMA(
@@ -1097,6 +1145,12 @@ def stream_TRIMA(
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
+def stream_VWMA(
+        real: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
 def stream_WMA(
         real: NDArray[np.float64], 
         timeperiod: int= 30
@@ -1122,7 +1176,7 @@ def stream_APO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def stream_AROON(
@@ -1152,6 +1206,11 @@ def stream_CCI(
         )-> NDArray[np.float64]: ...
 
 def stream_CMO(
+        real: NDArray[np.float64], 
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def stream_CMOU(
         real: NDArray[np.float64], 
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
@@ -1228,7 +1287,7 @@ def stream_PPO(
         real: NDArray[np.float64], 
         fastperiod: int= 12, 
         slowperiod: int= 26, 
-        matype: MA_Type = MA_Type.SMA
+        matype: MA_Type = MA_Type.EMA
         )-> NDArray[np.float64]: ...
 
 def stream_ROC(
@@ -1323,9 +1382,34 @@ def stream_ADOSC(
         slowperiod: int= 10
         )-> NDArray[np.float64]: ...
 
+def stream_CMF(
+        high: NDArray[np.float64], 
+        low: NDArray[np.float64], 
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64], 
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def stream_NVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
 def stream_OBV(
         close: NDArray[np.float64], 
         volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_PVI(
+        close: NDArray[np.float64], 
+        volume: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def stream_PVO(
+        volume: NDArray[np.float64], 
+        fastperiod: int= 12, 
+        slowperiod: int= 26, 
+        matype: int= 1
         )-> NDArray[np.float64]: ...
 
 #Volatility Indicator Functions

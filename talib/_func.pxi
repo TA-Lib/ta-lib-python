@@ -373,7 +373,7 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=1 ):
     """ APO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Absolute Price Oscillator (Momentum Indicators)
@@ -383,7 +383,7 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     Parameters:
         fastperiod: 12
         slowperiod: 26
-        matype: 0 (Simple Moving Average)
+        matype: 1 (Exponential Moving Average)
     Outputs:
         real
     """
@@ -564,6 +564,37 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ AVGDEV(real[, timeperiod=?])
+
+    Average Deviation (Price Transform)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_AVGDEV_Lookback( timeperiod )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_AVGDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_AVGDEV", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """ AVGPRICE(open, high, low, close)
 
@@ -596,37 +627,6 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
-    """ AVGDEV(real[, timeperiod=?])
-
-    Average Deviation (Price Transform)
-
-    Inputs:
-        real: (any ndarray)
-    Parameters:
-        timeperiod: 14
-    Outputs:
-        real
-    """
-    cdef:
-        np.npy_intp length
-        int begidx, endidx, lookback
-        TA_RetCode retCode
-        int outbegidx
-        int outnbelement
-        np.ndarray outreal
-    real = check_array(real)
-    length = real.shape[0]
-    begidx = check_begidx1(length, <double*>(real.data))
-    endidx = <int>length - begidx - 1
-    lookback = begidx + lib.TA_AVGDEV_Lookback( timeperiod )
-    outreal = make_double_array(length, lookback)
-    retCode = lib.TA_AVGDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
-    _ta_check_success("TA_AVGDEV", retCode)
-    return outreal 
-
-@wraparound(False)  # turn off relative indexing from end of lists
-@boundscheck(False) # turn off bounds-checking for entire function
 def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
     """ BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
@@ -635,7 +635,7 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     Inputs:
         real: (any ndarray)
     Parameters:
-        timeperiod: 5
+        timeperiod: 20
         nbdevup: 2.0
         nbdevdn: 2.0
         matype: 0 (Simple Moving Average)
@@ -864,7 +864,7 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
 def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """ CDL3LINESTRIKE(open, high, low, close)
 
-    Three-Line Strike  (Pattern Recognition)
+    Three-Line Strike (Pattern Recognition)
 
     Inputs:
         prices: ['open', 'high', 'low', 'close']
@@ -2760,6 +2760,30 @@ def CEIL( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def CMF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=-2**31 ):
+    """ CMF(high, low, close, volume[, timeperiod=?])"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    volume = check_array(volume)
+    length = check_length4(high, low, close, volume)
+    begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_CMF_Lookback( timeperiod )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_CMF( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_CMF", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     """ CMO(real[, timeperiod=?])
 
@@ -2787,6 +2811,27 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     outreal = make_double_array(length, lookback)
     retCode = lib.TA_CMO( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
     _ta_check_success("TA_CMO", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def CMOU( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ CMOU(real[, timeperiod=?])"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_CMOU_Lookback( timeperiod )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_CMOU( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_CMOU", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -3062,6 +3107,27 @@ def FLOOR( np.ndarray real not None ):
     outreal = make_double_array(length, lookback)
     retCode = lib.TA_FLOOR( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
     _ta_check_success("TA_FLOOR", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def HMA( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ HMA(real[, timeperiod=?])"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_HMA_Lookback( timeperiod )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_HMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_HMA", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -4202,6 +4268,28 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def NVI( np.ndarray close not None , np.ndarray volume not None ):
+    """ NVI(close, volume)"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    close = check_array(close)
+    volume = check_array(volume)
+    length = check_length2(close, volume)
+    begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_NVI_Lookback( )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_NVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_NVI", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def OBV( np.ndarray real not None , np.ndarray volume not None ):
     """ OBV(real, volume)
 
@@ -4298,7 +4386,7 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
-def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=1 ):
     """ PPO(real[, fastperiod=?, slowperiod=?, matype=?])
 
     Percentage Price Oscillator (Momentum Indicators)
@@ -4308,7 +4396,7 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     Parameters:
         fastperiod: 12
         slowperiod: 26
-        matype: 0 (Simple Moving Average)
+        matype: 1 (Exponential Moving Average)
     Outputs:
         real
     """
@@ -4327,6 +4415,49 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     outreal = make_double_array(length, lookback)
     retCode = lib.TA_PPO( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
     _ta_check_success("TA_PPO", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def PVI( np.ndarray close not None , np.ndarray volume not None ):
+    """ PVI(close, volume)"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    close = check_array(close)
+    volume = check_array(volume)
+    length = check_length2(close, volume)
+    begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_PVI_Lookback( )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_PVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_PVI", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def PVO( np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int matype=0 ):
+    """ PVO(volume[, fastperiod=?, slowperiod=?, matype=?])"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    volume = check_array(volume)
+    length = volume.shape[0]
+    begidx = check_begidx1(length, <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_PVO_Lookback( fastperiod , slowperiod , matype )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_PVO( 0 , endidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_PVO", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -5228,6 +5359,28 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def VWMA( np.ndarray real not None , np.ndarray volume not None , int timeperiod=-2**31 ):
+    """ VWMA(real, volume[, timeperiod=?])"""
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    volume = check_array(volume)
+    length = check_length2(real, volume)
+    begidx = check_begidx2(length, <double*>(real.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    lookback = begidx + lib.TA_VWMA_Lookback( timeperiod )
+    outreal = make_double_array(length, lookback)
+    retCode = lib.TA_VWMA( 0 , endidx , <double *>(real.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    _ta_check_success("TA_VWMA", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """ WCLPRICE(high, low, close)
 
@@ -5321,4 +5474,4 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_WMA", retCode)
     return outreal 
 
-__TA_FUNCTION_NAMES__ = ["ACCBANDS","ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGPRICE","AVGDEV","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMO","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","IMI","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","OBV","PLUS_DI","PLUS_DM","PPO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","WCLPRICE","WILLR","WMA"]
+__TA_FUNCTION_NAMES__ = ["ACCBANDS","ACOS","AD","ADD","ADOSC","ADX","ADXR","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGDEV","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMF","CMO","CMOU","CORREL","COS","COSH","DEMA","DIV","DX","EMA","EXP","FLOOR","HMA","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","IMI","KAMA","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","NVI","OBV","PLUS_DI","PLUS_DM","PPO","PVI","PVO","ROC","ROCP","ROCR","ROCR100","RSI","SAR","SAREXT","SIN","SINH","SMA","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TYPPRICE","ULTOSC","VAR","VWMA","WCLPRICE","WILLR","WMA"]
