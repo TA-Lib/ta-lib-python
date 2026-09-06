@@ -1,0 +1,81 @@
+name: Tests (dev)
+
+# The dev branch tracks TA-Lib C's dev branch, which has no release yet, so this
+# builds the C library from source and the two dev lines move together. master
+# is tests.yml, which installs the published release; the steps after the C
+# build are that file's, and are meant to stay in step with it.
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      TA_INCLUDE_PATH: ${{ github.workspace }}/ta-lib-c/include
+      TA_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
+      LD_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
+    steps:
+    - uses: actions/checkout@v3
+
+    # git, not api.github.com: the API is rate limited per runner IP and its 403
+    # would redden a job for a reason unrelated to the code under test.
+    - name: Resolve TA-Lib C dev
+      id: talib_c
+      run: |
+        set -euo pipefail
+        SHA=$(git ls-remote https://github.com/TA-Lib/ta-lib.git refs/heads/dev | cut -f1)
+        [ -n "$SHA" ] || { echo "::error::cannot resolve ta-lib dev"; exit 1; }
+        echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+    - name: Cache TA-Lib C
+      id: talib_c_cache
+      uses: actions/cache@v4
+      with:
+        path: ta-lib-c
+        key: ta-lib-c-${{ runner.os }}-${{ steps.talib_c.outputs.sha }}
+
+    - name: Build TA-Lib C
+      if: steps.talib_c_cache.outputs.cache-hit != 'true'
+      run: |
+        set -euo pipefail
+        # the exact commit the cache key names, so a cache hit and a build agree
+        git init -q ta-lib-c-src
+        git -C ta-lib-c-src remote add origin https://github.com/TA-Lib/ta-lib.git
+        git -C ta-lib-c-src fetch -q --depth 1 origin ${{ steps.talib_c.outputs.sha }}
+        git -C ta-lib-c-src checkout -q FETCH_HEAD
+        cmake -S ta-lib-c-src -B ta-lib-c-build -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_DEV_TOOLS=OFF -DCMAKE_INSTALL_PREFIX="$PWD/ta-lib-c"
+        cmake --build ta-lib-c-build -j"$(nproc)"
+        cmake --install ta-lib-c-build
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip wheel setuptools
+        pip install -r requirements_test.txt
+        pip install flake8
+
+    - name: Build cython modules in-place
+      run: |
+        python setup.py build_ext --inplace
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 talib --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Test with pytest
+      run: |
+        PYTHONPATH=. pytest

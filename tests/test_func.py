@@ -173,14 +173,13 @@ def test_unstable_period_retired_is_a_warning_and_a_noop(name):
 
 
 def test_compatibility():
+    # Only the default is pinned: TA-Lib C retired the Metastock behaviour and
+    # made the setter inert, so asserting what it used to change would pass on
+    # one C release and fail on the next.
     a = np.arange(10, dtype=float)
     talib.set_compatibility(0)
     r = func.EMA(a, 3)
     assert_array_equal(r, [np.nan, np.nan, 1, 2, 3, 4, 5, 6, 7, 8])
-    talib.set_compatibility(1)
-    r = func.EMA(a, 3)
-    assert_array_equal(r, [np.nan, np.nan,1.25,2.125,3.0625,4.03125,5.015625,6.0078125,7.00390625,8.001953125])
-    talib.set_compatibility(0)
 
 
 def test_MIN(series):
