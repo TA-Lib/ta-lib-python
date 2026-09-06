@@ -4,11 +4,9 @@ import sys
 
 from talib import abstract
 
-# FIXME: initialize once, then shutdown at the end, rather than each call?
-# FIXME: should we pass startIdx and endIdx into function?
-# FIXME: don't return number of elements since it always equals allocation?
+VERBS = ('OpenAndFill', 'Open', 'Update', 'Peek', 'Value', 'Clone', 'Close',
+         'OutRange', 'Advance')
 
-functions = []
 if sys.platform == 'win32':
     include_dirs = [
         r"c:\ta-lib\c\include",
@@ -37,46 +35,30 @@ for path in include_dirs:
 if not header_found:
     print('Error: ta-lib/ta_func.h not found', file=sys.stderr)
     sys.exit(1)
+
 with open(ta_func_header) as f:
-    tmp = []
-    for line in f:
-        if line.startswith('TA_LIB_API'):
-            line = line[10:]
-        line = line.strip()
-        if tmp or \
-            line.startswith('TA_RetCode TA_') or \
-            line.startswith('int TA_'):
-            line = re.sub(r'/\*[^\*]+\*/', '', line) # strip comments
-            tmp.append(line)
-            if not line:
-                s = ' '.join(tmp)
-                s = re.sub(r'\s+', ' ', s)
-                functions.append(s)
-                tmp = []
+    source = re.sub(r'/\*.*?\*/', '', f.read(), flags=re.S)
 
-# strip "float" functions
-functions = [s for s in functions if not s.startswith('TA_RetCode TA_S_')]
+# One entry per TA_<NAME>_<verb> declaration; the argument lists never nest
+# parentheses, so splitting on commas is enough.
+declarations = {}
+pattern = r'TA_LIB_API\s+TA_RetCode\s+TA_(\w+)_(%s)\s*\(([^;]*)\)\s*;' % '|'.join(VERBS)
+for name, verb, args in re.findall(pattern, source):
+    args = [re.sub(r'\s+', ' ', a).strip() for a in args.split(',')]
+    declarations.setdefault(name, {})[verb] = args
 
-# strip non-indicators
-functions = [s for s in functions if not s.startswith('TA_RetCode TA_Set')]
-functions = [s for s in functions if not s.startswith('TA_RetCode TA_Restore')]
+if not declarations:
+    print('Error: %s declares no streaming API; TA-Lib C 0.8.1 or later is required'
+          % ta_func_header, file=sys.stderr)
+    sys.exit(1)
 
-# strip TA-Lib C's own streaming API (ta-lib >= 0.8.1). Those declarations take
-# an opaque TA_<FUNC>_Stream handle, not the batch argument shape parsed below.
-functions = [s for s in functions if '_Stream' not in s]
+for name, decls in declarations.items():
+    missing = [verb for verb in VERBS if verb not in decls]
+    if missing:
+        print('Error: TA_%s is missing %s' % (name, ', '.join(missing)), file=sys.stderr)
+        sys.exit(1)
 
-# print headers
-print("""\
-cimport numpy as np
-from cython import boundscheck, wraparound
-cimport _ta_lib as lib
-from _ta_lib cimport TA_RetCode
-# NOTE: _ta_check_success, NaN are defined in common.pxi
 
-np.import_array() # Initialize the NumPy C API
-""")
-
-# cleanup variable names to make them more pythonic
 def cleanup(name):
     if name.startswith('in'):
         return name[2:].lower()
@@ -85,215 +67,422 @@ def cleanup(name):
     else:
         return name.lower()
 
-# print functions
-names = []
-for f in functions:
-    if 'Lookback' in f: # skip lookback functions
-        continue
 
-    i = f.index('(')
-    name = f[:i].split()[1]
-    args = f[i:].split(',')
-    args = [re.sub(r'[\(\);]', '', s).strip() for s in args]
+def split_arg(arg):
+    """'const double inReal[]' -> ('const double', 'inReal', 0, True)"""
+    array = arg.endswith('[]')
+    if array:
+        arg = arg[:-2]
+    ctype, _, var = arg.rpartition(' ')
+    stars = len(var) - len(var.lstrip('*'))
+    return ctype.strip(), var[stars:], stars, array
 
-    shortname = name[3:]
-    names.append(shortname)
-    try:
-        func_info = abstract.Function(shortname).info
-        defaults, documentation = abstract._get_defaults_and_docs(func_info)
-    except:
-        print("cannot find defaults and docs for", shortname, file=sys.stderr)
-        defaults, documentation = {}, ""
 
-    print('@wraparound(False)  # turn off relative indexing from end of lists')
-    print('@boundscheck(False) # turn off bounds-checking for entire function')
-    print('def stream_%s(' % shortname, end=' ')
-    docs = [' %s(' % shortname]
-    i = 0
-    for arg in args:
-        var = arg.split()[-1]
+def declare(name, decls):
+    yield '    ctypedef struct TA_%s_Stream:' % name
+    yield '        pass'
+    for verb in VERBS:
+        args = []
+        for arg in decls[verb]:
+            ctype, var, stars, array = split_arg(arg)
+            args.append('%s%s %s' % (ctype, '*' * (stars + array), var))
+        yield '    TA_RetCode TA_%s_%s(%s)' % (name, verb, ', '.join(args))
 
-        if var in ('startIdx', 'endIdx'):
+
+def parse(name, decls, defaults, output_names):
+    open_args = decls['Open']
+    history = open_args.index('int historyLen')
+    inputs, params, outputs = [], [], []
+    for arg in open_args[1:history]:
+        ctype, var, stars, array = split_arg(arg)
+        assert (ctype, array) == ('const double', True), arg
+        inputs.append(cleanup(var))
+    for arg in open_args[history + 1:]:
+        ctype, var, stars, array = split_arg(arg)
+        if var.startswith('out'):
+            spelled = (output_names[len(outputs)] if output_names
+                       else cleanup(var)[len('out'):])
+            outputs.append((ctype, 'out%s' % spelled))
             continue
+        key = var[len('optIn'):]
+        key = key[0].lower() + key[1:]
+        if ctype == 'double':
+            default = defaults.get(key, '-4e37')             # TA_REAL_DEFAULT
+        elif ctype == 'int':
+            default = defaults.get(key, '-2**31')            # TA_INTEGER_DEFAULT
+        else:
+            assert ctype == 'TA_MAType', arg
+            # abstract lowercases the whole name, and a prefixed one (KDJ's
+            # slowk_matype) is not spelled 'matype'.
+            default = defaults.get(key.lower(), 11)          # TA_MAType_DEFAULT
+        params.append(('double' if ctype == 'double' else 'int',
+                       cleanup(var), default))
+    assert output_names is None or len(outputs) == len(output_names), name
+    return {'name': name, 'inputs': inputs, 'params': params, 'outputs': outputs}
 
-        elif 'out' in var:
-            break
 
-        if i > 0:
-            print(',', end=' ')
-        i += 1
+PREAMBLE = '''\
+cimport cython
+cimport numpy as np
+import numpy
+from collections import namedtuple
 
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            assert arg.startswith('const double'), arg
-            print('np.ndarray %s not None' % var, end=' ')
-            docs.append(var)
-            docs.append(', ')
+cimport _ta_lib as lib
+from _ta_lib cimport TA_RetCode, TA_MAType, TA_BAD_PARAM
+# NOTE: _ta_check_success and InsufficientHistory come from _common.pxi,
+# check_array / make_*_array from _func.pxi, and __PANDAS_SERIES /
+# __POLARS_SERIES from _abstract.pxi.
 
-        elif var.startswith('opt'):
-            var = cleanup(var)
-            default_arg = arg.split()[-1][len('optIn'):] # chop off typedef and 'optIn'
-            default_arg = default_arg[0].lower() + default_arg[1:] # lowercase first letter
+np.import_array() # Initialize the NumPy C API
+'''
 
-            if arg.startswith('double'):
-                if default_arg in defaults:
-                    print('double %s=%s' % (var, defaults[default_arg]), end=' ')
-                else:
-                    print('double %s=-4e37' % var, end=' ') # TA_REAL_DEFAULT
-            elif arg.startswith('int'):
-                if default_arg in defaults:
-                    print('int %s=%s' % (var, defaults[default_arg]), end=' ')
-                else:
-                    print('int %s=-2**31' % var, end=' ')   # TA_INTEGER_DEFAULT
-            elif arg.startswith('TA_MAType'):
-                # abstract lowercases the whole name, and a prefixed one (KDJ's
-                # slowk_matype) is not spelled 'matype'.
-                print('int %s=%s' % (var, defaults.get(default_arg.lower(), 11)), end=' ') # TA_MAType_DEFAULT
-            else:
-                assert False, arg
-            if '[, ' not in docs:
-                docs[-1] = ('[, ')
-            docs.append('%s=?' % var)
-            docs.append(', ')
+ARRAYS = '''\
+cdef np.npy_intp check_length(tuple arrays) except -1:
+    cdef np.npy_intp length = (<np.ndarray>arrays[0]).shape[0]
+    for other in arrays[1:]:
+        if length != (<np.ndarray>other).shape[0]:
+            raise Exception("input array lengths are different")
+    return length
 
+
+cdef int check_begidx(np.npy_intp length, tuple arrays) except -2:
+    """The first bar that is not NaN in any input, as the batch tier reads it."""
+    cdef double* data[8]
+    cdef np.npy_intp i
+    cdef int k, count = len(arrays)
+    if count > 8:
+        raise Exception("too many input arrays")
+    for k in range(count):
+        data[k] = <double*>(<np.ndarray>arrays[k]).data
+    for i in range(length):
+        for k in range(count):
+            if data[k][i] != data[k][i]:
+                break
+        else:
+            return <int>i
+    return <int>length - 1
+
+
+'''
+
+HELPERS = '''\
+OutRange = namedtuple("OutRange", "begidx nbelement", module=__name__)
+
+
+cdef np.ndarray _stream_input(object values):
+    """What the Function API accepts, through the same checks."""
+    if isinstance(values, np.ndarray):
+        return check_array(values)
+    for series in (__PANDAS_SERIES, __POLARS_SERIES):
+        if series is not None and isinstance(values, series):
+            return check_array(values.to_numpy().astype(float))
+    raise TypeError("input must be a numpy array or a pandas or polars Series, "
+                    "not %s" % type(values).__name__)
+
+
+cdef int _stream_history(np.npy_intp length, int begidx) except -1:
+    if begidx < 0:
+        raise InsufficientHistory("no history: the input array is empty")
+    return <int>(length - begidx)
+
+
+cdef _stream_open_failed(str function_name, TA_RetCode retCode, int historylen, int need):
+    if retCode == 17:
+        if need <= historylen:
+            need = historylen + 1   # a seeding that wants more than the lookback
+        raise InsufficientHistory(
+            "%s: %d bars of history, at least %d needed (a leading bar that is "
+            "NaN in any input is not history)" % (function_name, historylen, need))
+    _ta_check_success(function_name, retCode)
+
+
+cdef _stream_like(tuple sources, object result):
+    pandas = [s for s in sources
+              if __PANDAS_SERIES is not None and isinstance(s, __PANDAS_SERIES)]
+    polars = [s for s in sources
+              if __POLARS_SERIES is not None and isinstance(s, __POLARS_SERIES)]
+    if pandas and polars:
+        raise Exception("Cannot mix polars and pandas")
+    if pandas:
+        return __PANDAS_SERIES(result, index=pandas[0].index)
+    if polars:
+        return __POLARS_SERIES(result)
+    return result
+
+
+cdef class Stream:
+    """Base class of every talib.stream handle.
+
+    Carries what does not depend on the function: the opaque C handle, and the
+    offset of the first history bar the batch tier would have used."""
+    cdef void* _handle
+    cdef int _begidx
+    cdef object __weakref__
+
+    def __cinit__(self):
+        self._handle = NULL
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
+        return TA_BAD_PARAM
+
+    cdef TA_RetCode _advance(self):
+        return TA_BAD_PARAM
+
+    @property
+    def out_range(self):
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_RetCode retCode = self._out_range(&outbegidx, &outnbelement)
+        if retCode != 0:
+            _ta_check_success("%s.out_range" % type(self).__name__, retCode)
+        return OutRange(outbegidx + self._begidx, outnbelement)
+
+    @cython.binding(False)
+    def advance(self):
+        cdef TA_RetCode retCode = self._advance()
+        if retCode != 0:
+            _ta_check_success("%s.advance" % type(self).__name__, retCode)
+
+    def __copy__(self):
+        return self.copy()
+
+    def __deepcopy__(self, memo):
+        return self.copy()
+
+    def __reduce__(self):
+        raise TypeError(
+            "cannot pickle %s: a stream handle points into the TA-Lib C library, "
+            "and does not cross a process boundary" % type(self).__name__)
+'''
+
+
+def emit(func, docstring):
+    name, inputs = func['name'], func['inputs']
+    params, outputs = func['params'], func['outputs']
+    handle, cls = 'TA_%s_Stream' % name, '%s_Stream' % name
+    arguments = inputs + ['%s %s=%s' % p for p in params]
+    out_ptrs = ['&%s' % py for _, py in outputs]
+    # An index output counts from the first bar the stream opened on; the batch
+    # tier reports it in the caller's coordinates, so shift it back the same way.
+    shift = ' + self._begidx' if 'INDEX' in name else ''
+    value = (outputs[0][1] + shift if len(outputs) == 1 else '%s_Value(%s)' % (
+        name, ', '.join(py + shift for _, py in outputs)))
+    live = '<%s*>self._handle' % handle
+    lookback_args = ', '.join(py for _, py, _ in params)
+    out = []
+
+    def call(verb, *args):
+        return 'TA_%s_%s(%s)' % (name, verb, ', '.join(args))
+
+    def emit_call(verb, *args):
+        out.append('        cdef TA_RetCode retCode = %s' % call(verb, *args))
+        out.append('        if retCode != 0:')
+        out.append('            _ta_check_success("TA_%s_%s", retCode)' % (name, verb))
+
+    def emit_history():
+        """Read the inputs as the batch tier does: leading bars that are NaN in
+        any input are not history, and the stream opens past them."""
+        for py in inputs:
+            out.append('        cdef np.ndarray a_%s = _stream_input(%s)' % (py, py))
+        out.append('        cdef tuple arrays = (%s,)'
+                   % ', '.join('a_%s' % py for py in inputs))
+        out.append('        cdef np.npy_intp length = check_length(arrays)')
+        out.append('        cdef int begidx = check_begidx(length, arrays)')
+        out.append('        cdef int historylen = _stream_history(length, begidx)')
+
+    def opened(*tail):
+        return (['&handle'] + ['<double*>a_%s.data + begidx' % py for py in inputs]
+                + ['historylen'] + [py for _, py, _ in params] + list(tail))
+
+    if len(outputs) > 1:
+        out.append('%s_Value = namedtuple("%s_Value", "%s", module=__name__)\n'
+                   % (name, name, ' '.join(py[3:] for _, py in outputs)))
+    out.append('cdef class %s(Stream):' % cls)
+    out.append('    """%s"""' % docstring)
+    out.append('')
+    out.append('    def __dealloc__(self):')
+    out.append('        if self._handle is not NULL:')
+    out.append('            %s' % call('Close', live))
+    out.append('            self._handle = NULL')
+    out.append('')
+    out.append('    def __init__(self, %s):' % ', '.join(arguments))
+    emit_history()
+    out.append('        cdef %s* handle = NULL' % handle)
+    out.extend('        cdef %s %s' % o for o in outputs)
+    out.append('        cdef TA_RetCode retCode = %s' % call('Open', *opened(*out_ptrs)))
+    out.append('        if retCode != 0:')
+    out.append('            _stream_open_failed("TA_%s_Open", retCode, historylen, '
+               'lib.TA_%s_Lookback(%s) + 1)' % (name, name, lookback_args))
+    out.append('        if self._handle is not NULL:')
+    out.append('            %s' % call('Close', live))
+    out.append('        self._handle = <void*>handle')
+    out.append('        self._begidx = begidx')
+    out.append('')
+    out.append('    @staticmethod')
+    out.append('    def open_and_fill(%s):' % ', '.join(arguments))
+    emit_history()
+    out.append('        cdef int lookback = begidx + lib.TA_%s_Lookback(%s)'
+               % (name, lookback_args))
+    out.extend('        cdef np.ndarray %s = make_%s_array(length, lookback)' % (py, ctype)
+               for ctype, py in outputs)
+    out.append('        cdef int outbegidx')
+    out.append('        cdef int outnbelement')
+    out.append('        cdef %s* handle = NULL' % handle)
+    out.append('        cdef TA_RetCode retCode = %s' % call('OpenAndFill', *opened(
+        '&outbegidx', '&outnbelement',
+        *['<%s*>%s.data + lookback' % o for o in outputs])))
+    out.append('        if retCode != 0:')
+    out.append('            _stream_open_failed("TA_%s_OpenAndFill", retCode, historylen, '
+               'lookback - begidx + 1)' % name)
+    if shift:
+        out.append('        cdef np.npy_intp i')
+        for ctype, py in outputs:
+            out.append('        cdef %s* %s_data = <%s*>%s.data' % (ctype, py, ctype, py))
+            out.append('        for i in range(lookback, length):')
+            out.append('            %s_data[i] += begidx' % py)
+    out.append('        cdef %s stream = %s.__new__(%s)' % (cls, cls, cls))
+    out.append('        stream._handle = <void*>handle')
+    out.append('        stream._begidx = begidx')
+    filled = ['_stream_like((%s,), %s)' % (', '.join(inputs), py) for _, py in outputs]
+    out.append('        return stream, %s' % (
+        filled[0] if len(outputs) == 1
+        else '%s_Value(%s)' % (name, ', '.join(filled))))
+    for verb in ('Update', 'Peek'):
+        out.append('')
+        out.append('    @cython.binding(False)')
+        out.append('    def %s(self, %s):'
+                   % (verb.lower(), ', '.join('double %s' % py for py in inputs)))
+        out.extend('        cdef %s %s' % o for o in outputs)
+        emit_call(verb, *([live] + inputs + out_ptrs))
+        out.append('        return %s' % value)
+    out.append('')
+    out.append('    @property')
+    out.append('    def value(self):')
+    out.extend('        cdef %s %s' % o for o in outputs)
+    emit_call('Value', *([live] + out_ptrs))
+    out.append('        return %s' % value)
+    out.append('')
+    out.append('    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):')
+    out.append('        return %s' % call('OutRange', live, 'outbegidx', 'outnbelement'))
+    out.append('')
+    out.append('    cdef TA_RetCode _advance(self):')
+    out.append('        return %s' % call('Advance', live))
+    out.append('')
+    out.append('    @cython.binding(False)')
+    out.append('    def copy(self):')
+    out.append('        cdef %s* clone = NULL' % handle)
+    out.append('        cdef TA_RetCode retCode = %s' % call('Clone', live, '&clone'))
+    out.append('        if retCode != 0:')
+    out.append('            _ta_check_success("TA_%s_Clone", retCode)' % name)
+    out.append('        cdef %s stream = %s.__new__(type(self))' % (cls, cls))
+    out.append('        stream._handle = <void*>clone')
+    out.append('        stream._begidx = self._begidx')
+    out.append('        return stream')
+    return '\n'.join(out)
+
+
+STUB = '''\
+from typing import NamedTuple, Tuple
+
+import numpy as np
+from numpy.typing import NDArray
+
+
+class OutRange(NamedTuple):
+    begidx: int
+    nbelement: int
+
+
+class Stream:
+    @property
+    def out_range(self) -> OutRange: ...
+    def advance(self) -> None: ...
+'''
+
+
+def emit_stub(func, documented):
+    """The talib/stream.pyi entry, defaults spelled as the documentation does."""
+    name, inputs, params, outputs = (func['name'], func['inputs'],
+                                     func['params'], func['outputs'])
+    args = ', '.join(['%s: NDArray[np.float64]' % py for py in inputs]
+                     + ['%s: %s = %r' % (py, 'float' if ctype == 'double' else 'int',
+                                         documented[py]) for ctype, py, _ in params])
+    scalars = ['float' if ctype == 'double' else 'int' for ctype, _ in outputs]
+    arrays = ['NDArray[np.float64]' if ctype == 'double' else 'NDArray[np.int32]'
+              for ctype, _ in outputs]
+    out = []
+    if len(outputs) > 1:
+        out.append('class %s_Value(NamedTuple):' % name)
+        out.extend('    %s: %s' % (py[3:], t) for (_, py), t in zip(outputs, scalars))
+        out.append('')
+        value, filled = '%s_Value' % name, 'Tuple[%s]' % ', '.join(arrays)
+    else:
+        value, filled = scalars[0], arrays[0]
+    bars = ', '.join('%s: float' % py for py in inputs)
+    out.append('class %s(Stream):' % name)
+    out.append('    def __init__(self, %s) -> None: ...' % args)
+    out.append('    @staticmethod')
+    out.append('    def open_and_fill(%s) -> Tuple["%s", %s]: ...' % (args, name, filled))
+    out.append('    def update(self, %s) -> %s: ...' % (bars, value))
+    out.append('    def peek(self, %s) -> %s: ...' % (bars, value))
+    out.append('    @property')
+    out.append('    def value(self) -> %s: ...' % value)
+    out.append('    def copy(self) -> "%s": ...' % name)
+    return '\n'.join(out)
+
+
+def docstring_for(func, documentation):
+    """The batch function's docstring, verbatim: same call, same defaults."""
+    docs = [' %s(' % func['name']]
+    for py in func['inputs']:
+        docs.append(py)
+        docs.append(', ')
+    for _, py, _ in func['params']:
+        if '[, ' not in docs:
+            docs[-1] = '[, '
+        docs.append('%s=?' % py)
+        docs.append(', ')
     docs[-1] = '])' if '[, ' in docs else ')'
     if documentation:
-        tmp_docs = []
-        lower_case = False
-        documentation = documentation.split('\n')[2:] # discard abstract calling definition
-        for line in documentation:
+        lines = []
+        for line in documentation.split('\n')[2:]:  # discard the calling definition
             line = line.replace('Substraction', 'Subtraction')
             if 'prices' not in line and 'price' in line:
                 line = line.replace('price', 'real')
-            if not line or line.isspace():
-                tmp_docs.append('')
-            else:
-                tmp_docs.append('    %s' % line) # add an indent of 4 spaces
+            lines.append('' if not line or line.isspace() else '    %s' % line)
         docs.append('\n\n')
-        docs.append('\n'.join(tmp_docs))
+        docs.append('\n'.join(lines))
         docs.append('\n    ')
-    print('):')
-    print('    """%s"""' % ''.join(docs))
-    print('    cdef:')
-    print('        np.npy_intp length')
-    print('        TA_RetCode retCode')
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'double' in arg:
-                print('        double* %s_data' % var)
-            elif 'int' in arg:
-                print('        int* %s_data' % var)
-            else:
-                assert False, args
+    return ''.join(docs)
 
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' not in var:
-            continue
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'double' in arg:
-                print('        double %s' % var)
-            elif 'int' in arg:
-                print('        int %s' % var)
-            else:
-                assert False, args
-        elif var.startswith('*'):
-            var = cleanup(var[1:])
-            print('        int %s' % var)
-        else:
-            assert False, arg
 
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'double' in arg:
-                cast = '<double*>'
-            else:
-                assert False, arg
-            print('    %s = check_array(%s)' % (var, var))
-            print('    %s_data = %s%s.data' % (var, cast, var))
+stub = '--stub' in sys.argv
 
-    # check all input array lengths are the same
-    inputs = []
-    for arg in args:
-        var = arg.split()[-1]
-        if 'out' in var:
-            break
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            inputs.append(var)
+if not stub:
+    print(PREAMBLE)
+    print('cdef extern from "ta-lib/ta_func.h":')
+    for name in sorted(declarations):
+        print()
+        for line in declare(name, declarations[name]):
+            print(line)
+    print()
+    print(ARRAYS)
+    print(HELPERS)
+else:
+    print(STUB)
 
-    if len(inputs) == 1:
-        print('    length = %s.shape[0]' % inputs[0])
+for name in sorted(declarations):
+    try:
+        info = abstract.Function(name).info
+        defaults, documentation = abstract._get_defaults_and_docs(info)
+    except Exception:
+        print("cannot find defaults and docs for", name, file=sys.stderr)
+        info = {'output_names': None, 'parameters': {}}
+        defaults, documentation = {}, ""
+    func = parse(name, declarations[name], defaults, info['output_names'])
+    print()
+    if stub:
+        print(emit_stub(func, info['parameters']))
     else:
-        print('    length = check_length%s(%s)' % (len(inputs), ', '.join(inputs)))
-
-    for arg in args:
-        var = arg.split()[-1]
-
-        if 'out' not in var:
-            continue
-
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'double' in arg:
-                print('    %s = NaN' % var)
-            elif 'int' in arg:
-                print('    %s = 0' % var)
-            else:
-                assert False, args
-
-    print('    retCode = lib.%s(' % name, end=' ')
-
-    for i, arg in enumerate(args):
-        if i > 0:
-            print(',', end=' ')
-        var = arg.split()[-1]
-
-        if var.endswith('[]'):
-            var = cleanup(var[:-2])
-            if 'out' in var:
-                print('&%s' % var, end=' ')
-            else:
-                print('%s_data' % var, end=' ')
-
-        elif var.startswith('*'):
-            var = cleanup(var[1:])
-            print('&%s' % var, end=' ')
-
-        elif var in ('startIdx', 'endIdx'):
-            print('<int>(length) - 1', end= ' ')
-
-        else:
-            cleaned = cleanup(var)
-            print(cleaned, end=' ')
-
-    print(')')
-    print('    _ta_check_success("%s", retCode)' % name)
-    print('    return ', end='')
-    i = 0
-    for arg in args:
-        var = arg.split()[-1]
-        if var.endswith('[]'):
-            var = var[:-2]
-        elif var.startswith('*'):
-            var = var[1:]
-        if var.startswith('out'):
-            if var not in ("outNBElement", "outBegIdx"):
-                if i > 0:
-                    print(',', end=' ')
-                i += 1
-                print(cleanup(var), end=' ')
-        else:
-            assert re.match('.*(void|startIdx|endIdx|opt|in)/*', arg), arg
-    print('')
-    print('')
-
+        print(emit(func, docstring_for(func, documentation)))
+        print()

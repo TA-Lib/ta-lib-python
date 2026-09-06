@@ -3,6 +3,24 @@
 
 - [NEW]: Support TA-Lib C 0.8.1, which is now the minimum required version.
 
+- [CHANGE]: ``talib.stream`` is now the real streaming API of TA-Lib C 0.8.1:
+  ``stream.SMA(close)`` returns a handle, not a value.  ``handle.value`` is the
+  value at the last history bar, ``handle.update(bar)`` costs O(1) and returns
+  that bar's value, ``handle.peek(bar)`` evaluates a forming bar without
+  committing it, and ``handle.copy()`` forks it.  ``stream.SMA.open_and_fill()``
+  returns the handle and the Function API's series in one pass.  A multi-output
+  function answers with a named tuple.  The old last-value functions --
+  ``talib.stream.SMA``, ``talib.stream_SMA``, and their ``_ta_lib.pyi`` stubs --
+  are gone; ``talib/stream.pyi`` types the handles instead.
+
+  Migrating is ``stream.X(...)`` -> ``stream.X(...).value``, and the compiler
+  cannot find the sites for you: ``if stream.CDLDOJI(o, h, l, c):`` used to test
+  the pattern and now tests a handle, which is always true.
+
+- [NEW]: ``talib.InsufficientHistory``, raised when a stream is opened with
+  too little history.  It is the library's one recoverable error, so it is
+  catchable on its own rather than as a bare ``Exception``.
+
 - [NEW]: The 40 functions TA-Lib C added since 0.7.1: AC, ADR, AO, CMF, CMOU,
   COPPOCK, CUMSUM, CVI, DONCHIAN, DPO, EFI, ER, ERI, FOSC, FRACTAL, HA, HMA,
   KC, KDJ, MARKETFI, MASSI, NVI, PERCENTILE, PERCENTRANK, PVI, PVO, PVT,
