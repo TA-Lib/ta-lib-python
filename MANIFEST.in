@@ -5,4 +5,5 @@ include talib/*.c
 include talib/*.pyx
 include talib/*.pxd
 include talib/*.pxi
+include talib/*.pyi
 include tests/*.py

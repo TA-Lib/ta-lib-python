@@ -5,6 +5,13 @@ from _ta_lib cimport TA_RetCode, TA_FuncUnstId
 
 __ta_version__ = lib.TA_GetVersionString()
 
+
+class InsufficientHistory(Exception):
+    """Not enough history to open a stream (TA_INSUFFICIENT_HISTORY).
+
+    Recoverable: collect more bars and try again."""
+
+
 cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
     if ret_code == 0:
         return True
@@ -48,7 +55,8 @@ cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
         description = 'Unknown Error (TA_UNKNOWN_ERR)'
     else:
         description = 'Unknown Error'
-    raise Exception('%s function failed with error code %s: %s' % (
+    error = InsufficientHistory if ret_code == 17 else Exception
+    raise error('%s function failed with error code %s: %s' % (
         function_name, ret_code, description))
 
 def _ta_initialize():
