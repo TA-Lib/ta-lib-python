@@ -3,7 +3,7 @@ from numpy.testing import assert_array_equal
 import polars as pl
 
 import talib
-from talib import abstract
+from talib import abstract, stream
 
 def test_MOM():
     values = pl.Series([90.0,88.0,89.0])
@@ -86,3 +86,14 @@ def test_AVR():
     low = df['low']
     close = df['close']
     atr = talib.ATR(high, low, close, timeperiod=14)
+
+
+def test_stream_MOM():
+    values = pl.Series([90.0, 88.0, 89.0])
+    assert stream.MOM(values, timeperiod=1).value == 1
+    assert stream.MOM(values, timeperiod=2).update(94.0) == 6
+
+    handle, filled = stream.MOM.open_and_fill(values, timeperiod=1)
+    assert isinstance(filled, pl.Series)
+    assert_array_equal(filled.to_numpy(), talib.MOM(values, timeperiod=1).to_numpy())
+    assert handle.value == filled[-1]
