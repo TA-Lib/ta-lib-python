@@ -6,8 +6,8 @@ from collections import namedtuple
 cimport _ta_lib as lib
 from _ta_lib cimport TA_RetCode, TA_MAType, TA_BAD_PARAM
 # NOTE: _ta_check_success and InsufficientHistory come from _common.pxi,
-# check_array / make_*_array from _func.pxi, and __PANDAS_SERIES /
-# __POLARS_SERIES from _abstract.pxi.
+# check_array / make_*_array from _func.pxi, and _PANDAS_SERIES /
+# _POLARS_SERIES from _abstract.pxi.
 
 np.import_array() # Initialize the NumPy C API
 
@@ -2459,7 +2459,7 @@ cdef np.ndarray _stream_input(object values):
     """What the Function API accepts, through the same checks."""
     if isinstance(values, np.ndarray):
         return check_array(values)
-    for series in (__PANDAS_SERIES, __POLARS_SERIES):
+    for series in (_PANDAS_SERIES, _POLARS_SERIES):
         if series is not None and isinstance(values, series):
             return check_array(values.to_numpy().astype(float))
     raise TypeError("input must be a numpy array or a pandas or polars Series, "
@@ -2484,15 +2484,15 @@ cdef _stream_open_failed(str function_name, TA_RetCode retCode, int historylen, 
 
 cdef _stream_like(tuple sources, object result):
     pandas = [s for s in sources
-              if __PANDAS_SERIES is not None and isinstance(s, __PANDAS_SERIES)]
+              if _PANDAS_SERIES is not None and isinstance(s, _PANDAS_SERIES)]
     polars = [s for s in sources
-              if __POLARS_SERIES is not None and isinstance(s, __POLARS_SERIES)]
+              if _POLARS_SERIES is not None and isinstance(s, _POLARS_SERIES)]
     if pandas and polars:
         raise Exception("Cannot mix polars and pandas")
     if pandas:
-        return __PANDAS_SERIES(result, index=pandas[0].index)
+        return _PANDAS_SERIES(result, index=pandas[0].index)
     if polars:
-        return __POLARS_SERIES(result)
+        return _POLARS_SERIES(result)
     return result
 
 

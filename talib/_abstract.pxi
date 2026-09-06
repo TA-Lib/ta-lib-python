@@ -17,22 +17,22 @@ cimport _ta_lib as lib
 np.import_array() # Initialize the NumPy C API
 
 # lookup for TALIB input parameters which don't define expected price series inputs
-__INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
-                                 'price0':  'high',
-                                 'price1':  'low',
-                                 'periods': 'periods', # only used by MAVP; not a price series!
-                                 }
+_INPUT_PRICE_SERIES_DEFAULTS = {'price':   'close',
+                                'price0':  'high',
+                                'price1':  'low',
+                                'periods': 'periods', # only used by MAVP; not a price series!
+                                }
 
-__INPUT_ARRAYS_TYPES = [dict]
-__ARRAY_TYPES = [np.ndarray]
+_INPUT_ARRAYS_TYPES = [dict]
+_ARRAY_TYPES = [np.ndarray]
 
 # allow use of pandas.DataFrame for input arrays
 try:
     import pandas
-    __INPUT_ARRAYS_TYPES.append(pandas.DataFrame)
-    __ARRAY_TYPES.append(pandas.Series)
-    __PANDAS_DATAFRAME = pandas.DataFrame
-    __PANDAS_SERIES = pandas.Series
+    _INPUT_ARRAYS_TYPES.append(pandas.DataFrame)
+    _ARRAY_TYPES.append(pandas.Series)
+    _PANDAS_DATAFRAME = pandas.DataFrame
+    _PANDAS_SERIES = pandas.Series
 except ImportError as import_error:
     try:
         if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'pandas':
@@ -42,16 +42,16 @@ except ImportError as import_error:
     except NameError:
         pass
 
-    __PANDAS_DATAFRAME = None
-    __PANDAS_SERIES = None
+    _PANDAS_DATAFRAME = None
+    _PANDAS_SERIES = None
 
 # allow use of polars.DataFrame for input arrays
 try:
     import polars
-    __INPUT_ARRAYS_TYPES.append(polars.DataFrame)
-    __ARRAY_TYPES.append(polars.Series)
-    __POLARS_DATAFRAME = polars.DataFrame
-    __POLARS_SERIES = polars.Series
+    _INPUT_ARRAYS_TYPES.append(polars.DataFrame)
+    _ARRAY_TYPES.append(polars.Series)
+    _POLARS_DATAFRAME = polars.DataFrame
+    _POLARS_SERIES = polars.Series
 except ImportError as import_error:
     try:
         if not isinstance(import_error, ModuleNotFoundError) or import_error.name != 'polars':
@@ -61,11 +61,11 @@ except ImportError as import_error:
     except NameError:
         pass
 
-    __POLARS_DATAFRAME = None
-    __POLARS_SERIES = None
+    _POLARS_DATAFRAME = None
+    _POLARS_SERIES = None
 
-__INPUT_ARRAYS_TYPES = tuple(__INPUT_ARRAYS_TYPES)
-__ARRAY_TYPES = tuple(__ARRAY_TYPES)
+_INPUT_ARRAYS_TYPES = tuple(_INPUT_ARRAYS_TYPES)
+_ARRAY_TYPES = tuple(_ARRAY_TYPES)
 
 
 if sys.version >= '3':
@@ -147,7 +147,7 @@ class Function(object):
                 info = _ta_getInputParameterInfo(self.__name, i)
                 input_name = info['name']
                 if info['price_series'] is None:
-                    info['price_series'] = __INPUT_PRICE_SERIES_DEFAULTS[input_name]
+                    info['price_series'] = _INPUT_PRICE_SERIES_DEFAULTS[input_name]
                 local.input_names[input_name] = info
             local.info['input_names'] = self.input_names
 
@@ -217,8 +217,8 @@ class Function(object):
         Returns a copy of the dict of input arrays in use.
         """
         local = self.__local
-        if __POLARS_DATAFRAME is not None \
-            and isinstance(local.input_arrays, __POLARS_DATAFRAME):
+        if _POLARS_DATAFRAME is not None \
+            and isinstance(local.input_arrays, _POLARS_DATAFRAME):
             return local.input_arrays.clone()
         else:
             return local.input_arrays.copy()
@@ -249,11 +249,11 @@ class Function(object):
                 return False
         """
         local = self.__local
-        if isinstance(input_arrays, __INPUT_ARRAYS_TYPES):
+        if isinstance(input_arrays, _INPUT_ARRAYS_TYPES):
             missing_keys = []
             for key in self.__input_price_series_names():
-                if __POLARS_DATAFRAME is not None \
-                    and isinstance(input_arrays, __POLARS_DATAFRAME):
+                if _POLARS_DATAFRAME is not None \
+                    and isinstance(input_arrays, _POLARS_DATAFRAME):
                     missing = key not in input_arrays.columns
                 else:
                     missing = key not in input_arrays
@@ -376,22 +376,22 @@ class Function(object):
         ret = local.outputs.values()
         if not isinstance(ret, list):
             ret = list(ret)
-        if __PANDAS_DATAFRAME is not None and \
-                isinstance(local.input_arrays, __PANDAS_DATAFRAME):
+        if _PANDAS_DATAFRAME is not None and \
+                isinstance(local.input_arrays, _PANDAS_DATAFRAME):
             index = local.input_arrays.index
             if len(ret) == 1:
-                return __PANDAS_SERIES(ret[0], index=index)
+                return _PANDAS_SERIES(ret[0], index=index)
             else:
-                return __PANDAS_DATAFRAME(numpy.column_stack(ret),
-                                          index=index,
-                                          columns=self.output_names)
-        elif __POLARS_DATAFRAME is not None and \
-                isinstance(local.input_arrays, __POLARS_DATAFRAME):
+                return _PANDAS_DATAFRAME(numpy.column_stack(ret),
+                                         index=index,
+                                         columns=self.output_names)
+        elif _POLARS_DATAFRAME is not None and \
+                isinstance(local.input_arrays, _POLARS_DATAFRAME):
             if len(ret) == 1:
-                return __POLARS_SERIES(ret[0])
+                return _POLARS_SERIES(ret[0])
             else:
-                return __POLARS_DATAFRAME(numpy.column_stack(ret),
-                                          schema=self.output_names)
+                return _POLARS_DATAFRAME(numpy.column_stack(ret),
+                                         schema=self.output_names)
         else:
             return ret[0] if len(ret) == 1 else ret
 
@@ -425,9 +425,9 @@ class Function(object):
         args = list(args)
         input_arrays = {}
         input_price_series_names = self.__input_price_series_names()
-        if args and not isinstance(args[0], __INPUT_ARRAYS_TYPES):
+        if args and not isinstance(args[0], _INPUT_ARRAYS_TYPES):
             for i, arg in enumerate(args):
-                if not isinstance(arg, __ARRAY_TYPES):
+                if not isinstance(arg, _ARRAY_TYPES):
                     break
 
                 try:
@@ -438,11 +438,11 @@ class Function(object):
                         ', '.join(input_price_series_names))
                     raise TypeError(msg)
 
-        if __PANDAS_DATAFRAME is not None \
-                and isinstance(local.input_arrays, __PANDAS_DATAFRAME):
+        if _PANDAS_DATAFRAME is not None \
+                and isinstance(local.input_arrays, _PANDAS_DATAFRAME):
             no_existing_input_arrays = local.input_arrays.empty
-        elif __POLARS_DATAFRAME is not None \
-                and isinstance(local.input_arrays, __POLARS_DATAFRAME):
+        elif _POLARS_DATAFRAME is not None \
+                and isinstance(local.input_arrays, _POLARS_DATAFRAME):
             no_existing_input_arrays = local.input_arrays.is_empty()
         else:
             no_existing_input_arrays = not bool(local.input_arrays)
@@ -451,7 +451,7 @@ class Function(object):
             self.set_input_arrays(input_arrays)
             args = args[len(input_arrays):]
         elif len(input_arrays) or (no_existing_input_arrays and (
-                not len(args) or not isinstance(args[0], __INPUT_ARRAYS_TYPES))):
+                not len(args) or not isinstance(args[0], _INPUT_ARRAYS_TYPES))):
             msg = 'Not enough price arguments: expected %d (%s)' % (
                 len(input_price_series_names),
                 ', '.join(input_price_series_names))
@@ -481,7 +481,7 @@ class Function(object):
             if isinstance(price_series, list): # TALIB-supplied input names
                 for name in price_series:
                     input_price_series_names.append(name)
-            else: # name came from __INPUT_PRICE_SERIES_DEFAULTS
+            else: # name came from _INPUT_PRICE_SERIES_DEFAULTS
                 input_price_series_names.append(price_series)
         return input_price_series_names
 
@@ -493,11 +493,11 @@ class Function(object):
         args = []
         for price_series in input_price_series_names:
             series = local.input_arrays[price_series]
-            if __PANDAS_SERIES is not None and \
-                    isinstance(series, __PANDAS_SERIES):
+            if _PANDAS_SERIES is not None and \
+                    isinstance(series, _PANDAS_SERIES):
                 series = series.values.astype(float)
-            elif __POLARS_SERIES is not None and \
-                    isinstance(series, __POLARS_SERIES):
+            elif _POLARS_SERIES is not None and \
+                    isinstance(series, _POLARS_SERIES):
                 series = series.to_numpy().astype(float)
             args.append(series)
         for opt_input in local.opt_inputs:
