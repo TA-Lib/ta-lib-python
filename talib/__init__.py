@@ -79,12 +79,6 @@ if _pl_Series is not None or _pd_Series is not None:
 
             result = func(*_args, **_kwds)
 
-            # check to see if we got a streaming result
-            first_result = result[0] if isinstance(result, tuple) else result
-            is_streaming_fn_result = not hasattr(first_result, '__len__')
-            if is_streaming_fn_result:
-                return result
-
             # Series was passed in, Series gets out
             if use_pl:
                 if isinstance(result, tuple):
@@ -116,6 +110,7 @@ try:
         _ta_get_unstable_period as get_unstable_period,
         _ta_set_compatibility as set_compatibility,
         _ta_get_compatibility as get_compatibility,
+        InsufficientHistory,
         __TA_FUNCTION_NAMES__
     )
 except ImportError as error:
@@ -141,12 +136,7 @@ for func_name in __TA_FUNCTION_NAMES__:
     setattr(func, func_name, wrapped_func)
     globals()[func_name] = wrapped_func
 
-stream_func_names = ['stream_%s' % fname for fname in __TA_FUNCTION_NAMES__]
-stream = __import__("stream", globals(), locals(), stream_func_names, level=1)
-for func_name, stream_func_name in zip(__TA_FUNCTION_NAMES__, stream_func_names):
-    wrapped_func = _wrapper(getattr(stream, func_name))
-    setattr(stream, func_name, wrapped_func)
-    globals()[stream_func_name] = wrapped_func
+from . import stream
 
 __version__ = '0.7.1'
 
@@ -400,4 +390,4 @@ def get_function_groups():
     """
     return __function_groups__.copy()
 
-__all__ = ['get_functions', 'get_function_groups'] + __TA_FUNCTION_NAMES__ + ["stream_%s" % name for name in __TA_FUNCTION_NAMES__]
+__all__ = ['get_functions', 'get_function_groups', 'InsufficientHistory', 'stream'] + __TA_FUNCTION_NAMES__

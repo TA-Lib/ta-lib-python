@@ -3,6 +3,7 @@ from numpy.testing import assert_array_equal
 import pandas as pd
 
 import talib
+from talib import stream
 
 
 def test_MOM():
@@ -49,3 +50,25 @@ def test_MAVP():
     assert_array_equal(sma3.index, range(10, 20))
     assert_array_equal(result.values[2::2], sma2.values[2::2])
     assert_array_equal(result.values[3::2], sma3.values[3::2])
+
+
+def test_stream_MOM():
+    values = pd.Series([90.0, 88.0, 89.0], index=[10, 20, 30])
+    assert stream.MOM(values, timeperiod=1).value == 1
+    assert stream.MOM(values, timeperiod=2).update(94.0) == 6
+
+    handle, filled = stream.MOM.open_and_fill(values, timeperiod=1)
+    assert isinstance(filled, pd.Series)
+    assert_array_equal(filled.values, talib.MOM(values, timeperiod=1).values)
+    assert_array_equal(filled.index, [10, 20, 30])
+    assert handle.value == filled.iloc[-1]
+
+
+def test_stream_MAVP():
+    a = pd.Series([1, 5, 3, 4, 7, 3, 8, 1, 4, 6], index=range(10, 20), dtype=float)
+    b = pd.Series([2, 4, 2, 4, 2, 4, 2, 4, 2, 4], index=range(20, 30), dtype=float)
+    handle, filled = stream.MAVP.open_and_fill(a, b, minperiod=2, maxperiod=4)
+    assert isinstance(filled, pd.Series)
+    assert_array_equal(filled.values, talib.MAVP(a, b, minperiod=2, maxperiod=4).values)
+    assert_array_equal(filled.index, range(10, 20))
+    assert handle.value == filled.iloc[-1]

@@ -532,26 +532,81 @@ slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 
 ## Streaming API
 
-An experimental Streaming API was added that allows users to compute the latest
-value of an indicator.  This can be faster than using the Function API, for
-example in an application that receives streaming data, and wants to know just
-the most recent updated indicator value.
+The Streaming API keeps a handle per indicator instead of recomputing from the
+whole array. Opening one costs a pass over the history; every bar after that is
+O(1), and each value it produces is identical to the one the Function API
+reports for that bar.
 
 ```python
 import talib
 from talib import stream
 
-close = np.random.random(100)
-
-# the Function API
+# the Function API: the whole series, from the whole array
 output = talib.SMA(close)
 
-# the Streaming API
-latest = stream.SMA(close)
+# the Streaming API: a handle, positioned at the end of the history
+s = stream.SMA(close)
+assert s.value == output[-1]
 
-# the latest value is the same as the last output value
-assert (output[-1] - latest) < 0.00001
+for price in feed:
+    latest = s.update(price)      # one closed bar in, its value out
+
+s.peek(forming)                   # what update would return, committing nothing
+fork = s.copy()                   # an independent handle at the same bar
 ```
+
+`stream.SMA` takes exactly the arguments `talib.SMA` takes. A single-output
+function answers with a `float` (an `int` where the Function API returns an
+integer array); a multi-output one with a named tuple that still unpacks like
+the Function API's tuple:
+
+```python
+m = stream.MACD(close)
+macd, macdsignal, macdhist = m.update(price)
+m.value.macdhist
+```
+
+Opening needs at least `lookback + 1` bars, which `abstract` knows, and a little
+more where a function's seeding does -- so rather than computing the number,
+treat a short history as "not yet":
+
+```python
+from talib import abstract
+
+need = abstract.Function('RSI', timeperiod=14).lookback + 1   # 15, usually enough
+
+try:
+    s = stream.RSI(history, timeperiod=14)
+except talib.InsufficientHistory:
+    ...                                                       # collect more bars
+```
+
+Leading bars that are NaN in any input are not history. They are skipped, as the
+Function API skips them, and do not count toward the warm-up. A NaN or an
+infinity anywhere else in the history is undefined behaviour in TA-Lib C, and
+for a few window functions a handle and the Function API do then disagree.
+
+A bar that is not finite is likewise rejected: `update` raises and the handle is
+left exactly as it was, neither its value nor its range moved. For a bar you
+mean to skip rather than re-feed, say so with `advance()`, or two handles on one
+feed drift a bar apart.
+
+If you want the series over the history as well, one pass gives both:
+
+```python
+s, rsi = stream.RSI.open_and_fill(history, timeperiod=14)     # rsi == talib.RSI(history)
+```
+
+A handle also reports the range it has an output for, in the input series'
+coordinates, and can be told about a bar it was not fed:
+
+```python
+s.out_range                       # (begidx, nbelement), as the Function API's output
+s.advance()                       # count a skipped bar: the range moves, the value holds
+```
+
+A handle points into the TA-Lib C library, so it cannot be pickled or shared
+with another process. Keep the history and re-open instead.
 
 ## Supported Indicators and Functions 📋
 
