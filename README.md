@@ -8,6 +8,16 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/TA-Lib?label=Python)](https://pypi.org/project/TA-Lib/)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
+<!-- Keep these links. Translations will automatically update with the README. -->
+[Deutsch](https://zdoc.app/de/TA-Lib/ta-lib-python) | 
+[Español](https://zdoc.app/es/TA-Lib/ta-lib-python) | 
+[français](https://zdoc.app/fr/TA-Lib/ta-lib-python) | 
+[日本語](https://zdoc.app/ja/TA-Lib/ta-lib-python) | 
+[한국어](https://zdoc.app/ko/TA-Lib/ta-lib-python) | 
+[Português](https://zdoc.app/pt/TA-Lib/ta-lib-python) | 
+[Русский](https://zdoc.app/ru/TA-Lib/ta-lib-python) | 
+[中文](https://zdoc.app/zh/TA-Lib/ta-lib-python)
+
 This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
 instead of SWIG. From the homepage:
 
