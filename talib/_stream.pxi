@@ -2641,8 +2641,6 @@ cdef class AC_Stream(Stream):
         return stream
 
 
-ACCBANDS_Value = namedtuple("ACCBANDS_Value", "upperband middleband lowerband", module=__name__)
-
 cdef class ACCBANDS_Stream(Stream):
     """ ACCBANDS(high, low, close[, timeperiod=?])
 
@@ -2705,7 +2703,7 @@ cdef class ACCBANDS_Stream(Stream):
         cdef ACCBANDS_Stream stream = ACCBANDS_Stream.__new__(ACCBANDS_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, ACCBANDS_Value(_stream_like((high, low, close,), outupperband), _stream_like((high, low, close,), outmiddleband), _stream_like((high, low, close,), outlowerband))
+        return stream, (_stream_like((high, low, close,), outupperband), _stream_like((high, low, close,), outmiddleband), _stream_like((high, low, close,), outlowerband))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -2715,7 +2713,7 @@ cdef class ACCBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_ACCBANDS_Update(<TA_ACCBANDS_Stream*>self._handle, high, low, close, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_ACCBANDS_Update", retCode)
-        return ACCBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -2725,7 +2723,7 @@ cdef class ACCBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_ACCBANDS_Peek(<TA_ACCBANDS_Stream*>self._handle, high, low, close, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_ACCBANDS_Peek", retCode)
-        return ACCBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @property
     def value(self):
@@ -2735,7 +2733,7 @@ cdef class ACCBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_ACCBANDS_Value(<TA_ACCBANDS_Stream*>self._handle, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_ACCBANDS_Value", retCode)
-        return ACCBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_ACCBANDS_OutRange(<TA_ACCBANDS_Stream*>self._handle, outbegidx, outnbelement)
@@ -3644,8 +3642,6 @@ cdef class APO_Stream(Stream):
         return stream
 
 
-AROON_Value = namedtuple("AROON_Value", "aroondown aroonup", module=__name__)
-
 cdef class AROON_Stream(Stream):
     """ AROON(high, low[, timeperiod=?])
 
@@ -3703,7 +3699,7 @@ cdef class AROON_Stream(Stream):
         cdef AROON_Stream stream = AROON_Stream.__new__(AROON_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, AROON_Value(_stream_like((high, low,), outaroondown), _stream_like((high, low,), outaroonup))
+        return stream, (_stream_like((high, low,), outaroondown), _stream_like((high, low,), outaroonup))
 
     @cython.binding(False)
     def update(self, double high, double low):
@@ -3712,7 +3708,7 @@ cdef class AROON_Stream(Stream):
         cdef TA_RetCode retCode = TA_AROON_Update(<TA_AROON_Stream*>self._handle, high, low, &outaroondown, &outaroonup)
         if retCode != 0:
             _ta_check_success("TA_AROON_Update", retCode)
-        return AROON_Value(outaroondown, outaroonup)
+        return (outaroondown, outaroonup)
 
     @cython.binding(False)
     def peek(self, double high, double low):
@@ -3721,7 +3717,7 @@ cdef class AROON_Stream(Stream):
         cdef TA_RetCode retCode = TA_AROON_Peek(<TA_AROON_Stream*>self._handle, high, low, &outaroondown, &outaroonup)
         if retCode != 0:
             _ta_check_success("TA_AROON_Peek", retCode)
-        return AROON_Value(outaroondown, outaroonup)
+        return (outaroondown, outaroonup)
 
     @property
     def value(self):
@@ -3730,7 +3726,7 @@ cdef class AROON_Stream(Stream):
         cdef TA_RetCode retCode = TA_AROON_Value(<TA_AROON_Stream*>self._handle, &outaroondown, &outaroonup)
         if retCode != 0:
             _ta_check_success("TA_AROON_Value", retCode)
-        return AROON_Value(outaroondown, outaroonup)
+        return (outaroondown, outaroonup)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_AROON_OutRange(<TA_AROON_Stream*>self._handle, outbegidx, outnbelement)
@@ -4332,8 +4328,6 @@ cdef class AVGPRICE_Stream(Stream):
         return stream
 
 
-BBANDS_Value = namedtuple("BBANDS_Value", "upperband middleband lowerband", module=__name__)
-
 cdef class BBANDS_Stream(Stream):
     """ BBANDS(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
 
@@ -4395,7 +4389,7 @@ cdef class BBANDS_Stream(Stream):
         cdef BBANDS_Stream stream = BBANDS_Stream.__new__(BBANDS_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, BBANDS_Value(_stream_like((real,), outupperband), _stream_like((real,), outmiddleband), _stream_like((real,), outlowerband))
+        return stream, (_stream_like((real,), outupperband), _stream_like((real,), outmiddleband), _stream_like((real,), outlowerband))
 
     @cython.binding(False)
     def update(self, double real):
@@ -4405,7 +4399,7 @@ cdef class BBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_BBANDS_Update(<TA_BBANDS_Stream*>self._handle, real, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_BBANDS_Update", retCode)
-        return BBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -4415,7 +4409,7 @@ cdef class BBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_BBANDS_Peek(<TA_BBANDS_Stream*>self._handle, real, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_BBANDS_Peek", retCode)
-        return BBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @property
     def value(self):
@@ -4425,7 +4419,7 @@ cdef class BBANDS_Stream(Stream):
         cdef TA_RetCode retCode = TA_BBANDS_Value(<TA_BBANDS_Stream*>self._handle, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_BBANDS_Value", retCode)
-        return BBANDS_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_BBANDS_OutRange(<TA_BBANDS_Stream*>self._handle, outbegidx, outnbelement)
@@ -12017,8 +12011,6 @@ cdef class DIV_Stream(Stream):
         return stream
 
 
-DONCHIAN_Value = namedtuple("DONCHIAN_Value", "upperband middleband lowerband", module=__name__)
-
 cdef class DONCHIAN_Stream(Stream):
     """ DONCHIAN(high, low[, timeperiod=?])
 
@@ -12079,7 +12071,7 @@ cdef class DONCHIAN_Stream(Stream):
         cdef DONCHIAN_Stream stream = DONCHIAN_Stream.__new__(DONCHIAN_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, DONCHIAN_Value(_stream_like((high, low,), outupperband), _stream_like((high, low,), outmiddleband), _stream_like((high, low,), outlowerband))
+        return stream, (_stream_like((high, low,), outupperband), _stream_like((high, low,), outmiddleband), _stream_like((high, low,), outlowerband))
 
     @cython.binding(False)
     def update(self, double high, double low):
@@ -12089,7 +12081,7 @@ cdef class DONCHIAN_Stream(Stream):
         cdef TA_RetCode retCode = TA_DONCHIAN_Update(<TA_DONCHIAN_Stream*>self._handle, high, low, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_DONCHIAN_Update", retCode)
-        return DONCHIAN_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @cython.binding(False)
     def peek(self, double high, double low):
@@ -12099,7 +12091,7 @@ cdef class DONCHIAN_Stream(Stream):
         cdef TA_RetCode retCode = TA_DONCHIAN_Peek(<TA_DONCHIAN_Stream*>self._handle, high, low, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_DONCHIAN_Peek", retCode)
-        return DONCHIAN_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @property
     def value(self):
@@ -12109,7 +12101,7 @@ cdef class DONCHIAN_Stream(Stream):
         cdef TA_RetCode retCode = TA_DONCHIAN_Value(<TA_DONCHIAN_Stream*>self._handle, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_DONCHIAN_Value", retCode)
-        return DONCHIAN_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_DONCHIAN_OutRange(<TA_DONCHIAN_Stream*>self._handle, outbegidx, outnbelement)
@@ -12615,8 +12607,6 @@ cdef class ER_Stream(Stream):
         return stream
 
 
-ERI_Value = namedtuple("ERI_Value", "bullpower bearpower", module=__name__)
-
 cdef class ERI_Stream(Stream):
     """ ERI(high, low, close[, timeperiod=?])
 
@@ -12676,7 +12666,7 @@ cdef class ERI_Stream(Stream):
         cdef ERI_Stream stream = ERI_Stream.__new__(ERI_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, ERI_Value(_stream_like((high, low, close,), outbullpower), _stream_like((high, low, close,), outbearpower))
+        return stream, (_stream_like((high, low, close,), outbullpower), _stream_like((high, low, close,), outbearpower))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -12685,7 +12675,7 @@ cdef class ERI_Stream(Stream):
         cdef TA_RetCode retCode = TA_ERI_Update(<TA_ERI_Stream*>self._handle, high, low, close, &outbullpower, &outbearpower)
         if retCode != 0:
             _ta_check_success("TA_ERI_Update", retCode)
-        return ERI_Value(outbullpower, outbearpower)
+        return (outbullpower, outbearpower)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -12694,7 +12684,7 @@ cdef class ERI_Stream(Stream):
         cdef TA_RetCode retCode = TA_ERI_Peek(<TA_ERI_Stream*>self._handle, high, low, close, &outbullpower, &outbearpower)
         if retCode != 0:
             _ta_check_success("TA_ERI_Peek", retCode)
-        return ERI_Value(outbullpower, outbearpower)
+        return (outbullpower, outbearpower)
 
     @property
     def value(self):
@@ -12703,7 +12693,7 @@ cdef class ERI_Stream(Stream):
         cdef TA_RetCode retCode = TA_ERI_Value(<TA_ERI_Stream*>self._handle, &outbullpower, &outbearpower)
         if retCode != 0:
             _ta_check_success("TA_ERI_Value", retCode)
-        return ERI_Value(outbullpower, outbearpower)
+        return (outbullpower, outbearpower)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_ERI_OutRange(<TA_ERI_Stream*>self._handle, outbegidx, outnbelement)
@@ -13007,8 +12997,6 @@ cdef class FOSC_Stream(Stream):
         return stream
 
 
-FRACTAL_Value = namedtuple("FRACTAL_Value", "swinghigh swinglow", module=__name__)
-
 cdef class FRACTAL_Stream(Stream):
     """ FRACTAL(high, low[, leftbars=?, rightbars=?])
 
@@ -13067,7 +13055,7 @@ cdef class FRACTAL_Stream(Stream):
         cdef FRACTAL_Stream stream = FRACTAL_Stream.__new__(FRACTAL_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, FRACTAL_Value(_stream_like((high, low,), outswinghigh), _stream_like((high, low,), outswinglow))
+        return stream, (_stream_like((high, low,), outswinghigh), _stream_like((high, low,), outswinglow))
 
     @cython.binding(False)
     def update(self, double high, double low):
@@ -13076,7 +13064,7 @@ cdef class FRACTAL_Stream(Stream):
         cdef TA_RetCode retCode = TA_FRACTAL_Update(<TA_FRACTAL_Stream*>self._handle, high, low, &outswinghigh, &outswinglow)
         if retCode != 0:
             _ta_check_success("TA_FRACTAL_Update", retCode)
-        return FRACTAL_Value(outswinghigh, outswinglow)
+        return (outswinghigh, outswinglow)
 
     @cython.binding(False)
     def peek(self, double high, double low):
@@ -13085,7 +13073,7 @@ cdef class FRACTAL_Stream(Stream):
         cdef TA_RetCode retCode = TA_FRACTAL_Peek(<TA_FRACTAL_Stream*>self._handle, high, low, &outswinghigh, &outswinglow)
         if retCode != 0:
             _ta_check_success("TA_FRACTAL_Peek", retCode)
-        return FRACTAL_Value(outswinghigh, outswinglow)
+        return (outswinghigh, outswinglow)
 
     @property
     def value(self):
@@ -13094,7 +13082,7 @@ cdef class FRACTAL_Stream(Stream):
         cdef TA_RetCode retCode = TA_FRACTAL_Value(<TA_FRACTAL_Stream*>self._handle, &outswinghigh, &outswinglow)
         if retCode != 0:
             _ta_check_success("TA_FRACTAL_Value", retCode)
-        return FRACTAL_Value(outswinghigh, outswinglow)
+        return (outswinghigh, outswinglow)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_FRACTAL_OutRange(<TA_FRACTAL_Stream*>self._handle, outbegidx, outnbelement)
@@ -13113,8 +13101,6 @@ cdef class FRACTAL_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-HA_Value = namedtuple("HA_Value", "haopen hahigh halow haclose", module=__name__)
 
 cdef class HA_Stream(Stream):
     """ HA(open, high, low, close)
@@ -13181,7 +13167,7 @@ cdef class HA_Stream(Stream):
         cdef HA_Stream stream = HA_Stream.__new__(HA_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, HA_Value(_stream_like((open, high, low, close,), outhaopen), _stream_like((open, high, low, close,), outhahigh), _stream_like((open, high, low, close,), outhalow), _stream_like((open, high, low, close,), outhaclose))
+        return stream, (_stream_like((open, high, low, close,), outhaopen), _stream_like((open, high, low, close,), outhahigh), _stream_like((open, high, low, close,), outhalow), _stream_like((open, high, low, close,), outhaclose))
 
     @cython.binding(False)
     def update(self, double open, double high, double low, double close):
@@ -13192,7 +13178,7 @@ cdef class HA_Stream(Stream):
         cdef TA_RetCode retCode = TA_HA_Update(<TA_HA_Stream*>self._handle, open, high, low, close, &outhaopen, &outhahigh, &outhalow, &outhaclose)
         if retCode != 0:
             _ta_check_success("TA_HA_Update", retCode)
-        return HA_Value(outhaopen, outhahigh, outhalow, outhaclose)
+        return (outhaopen, outhahigh, outhalow, outhaclose)
 
     @cython.binding(False)
     def peek(self, double open, double high, double low, double close):
@@ -13203,7 +13189,7 @@ cdef class HA_Stream(Stream):
         cdef TA_RetCode retCode = TA_HA_Peek(<TA_HA_Stream*>self._handle, open, high, low, close, &outhaopen, &outhahigh, &outhalow, &outhaclose)
         if retCode != 0:
             _ta_check_success("TA_HA_Peek", retCode)
-        return HA_Value(outhaopen, outhahigh, outhalow, outhaclose)
+        return (outhaopen, outhahigh, outhalow, outhaclose)
 
     @property
     def value(self):
@@ -13214,7 +13200,7 @@ cdef class HA_Stream(Stream):
         cdef TA_RetCode retCode = TA_HA_Value(<TA_HA_Stream*>self._handle, &outhaopen, &outhahigh, &outhalow, &outhaclose)
         if retCode != 0:
             _ta_check_success("TA_HA_Value", retCode)
-        return HA_Value(outhaopen, outhahigh, outhalow, outhaclose)
+        return (outhaopen, outhahigh, outhalow, outhaclose)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_HA_OutRange(<TA_HA_Stream*>self._handle, outbegidx, outnbelement)
@@ -13518,8 +13504,6 @@ cdef class HT_DCPHASE_Stream(Stream):
         return stream
 
 
-HT_PHASOR_Value = namedtuple("HT_PHASOR_Value", "inphase quadrature", module=__name__)
-
 cdef class HT_PHASOR_Stream(Stream):
     """ HT_PHASOR(real)
 
@@ -13573,7 +13557,7 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef HT_PHASOR_Stream stream = HT_PHASOR_Stream.__new__(HT_PHASOR_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, HT_PHASOR_Value(_stream_like((real,), outinphase), _stream_like((real,), outquadrature))
+        return stream, (_stream_like((real,), outinphase), _stream_like((real,), outquadrature))
 
     @cython.binding(False)
     def update(self, double real):
@@ -13582,7 +13566,7 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_PHASOR_Update(<TA_HT_PHASOR_Stream*>self._handle, real, &outinphase, &outquadrature)
         if retCode != 0:
             _ta_check_success("TA_HT_PHASOR_Update", retCode)
-        return HT_PHASOR_Value(outinphase, outquadrature)
+        return (outinphase, outquadrature)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -13591,7 +13575,7 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_PHASOR_Peek(<TA_HT_PHASOR_Stream*>self._handle, real, &outinphase, &outquadrature)
         if retCode != 0:
             _ta_check_success("TA_HT_PHASOR_Peek", retCode)
-        return HT_PHASOR_Value(outinphase, outquadrature)
+        return (outinphase, outquadrature)
 
     @property
     def value(self):
@@ -13600,7 +13584,7 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_PHASOR_Value(<TA_HT_PHASOR_Stream*>self._handle, &outinphase, &outquadrature)
         if retCode != 0:
             _ta_check_success("TA_HT_PHASOR_Value", retCode)
-        return HT_PHASOR_Value(outinphase, outquadrature)
+        return (outinphase, outquadrature)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_HT_PHASOR_OutRange(<TA_HT_PHASOR_Stream*>self._handle, outbegidx, outnbelement)
@@ -13619,8 +13603,6 @@ cdef class HT_PHASOR_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-HT_SINE_Value = namedtuple("HT_SINE_Value", "sine leadsine", module=__name__)
 
 cdef class HT_SINE_Stream(Stream):
     """ HT_SINE(real)
@@ -13675,7 +13657,7 @@ cdef class HT_SINE_Stream(Stream):
         cdef HT_SINE_Stream stream = HT_SINE_Stream.__new__(HT_SINE_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, HT_SINE_Value(_stream_like((real,), outsine), _stream_like((real,), outleadsine))
+        return stream, (_stream_like((real,), outsine), _stream_like((real,), outleadsine))
 
     @cython.binding(False)
     def update(self, double real):
@@ -13684,7 +13666,7 @@ cdef class HT_SINE_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_SINE_Update(<TA_HT_SINE_Stream*>self._handle, real, &outsine, &outleadsine)
         if retCode != 0:
             _ta_check_success("TA_HT_SINE_Update", retCode)
-        return HT_SINE_Value(outsine, outleadsine)
+        return (outsine, outleadsine)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -13693,7 +13675,7 @@ cdef class HT_SINE_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_SINE_Peek(<TA_HT_SINE_Stream*>self._handle, real, &outsine, &outleadsine)
         if retCode != 0:
             _ta_check_success("TA_HT_SINE_Peek", retCode)
-        return HT_SINE_Value(outsine, outleadsine)
+        return (outsine, outleadsine)
 
     @property
     def value(self):
@@ -13702,7 +13684,7 @@ cdef class HT_SINE_Stream(Stream):
         cdef TA_RetCode retCode = TA_HT_SINE_Value(<TA_HT_SINE_Stream*>self._handle, &outsine, &outleadsine)
         if retCode != 0:
             _ta_check_success("TA_HT_SINE_Value", retCode)
-        return HT_SINE_Value(outsine, outleadsine)
+        return (outsine, outleadsine)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_HT_SINE_OutRange(<TA_HT_SINE_Stream*>self._handle, outbegidx, outnbelement)
@@ -14104,8 +14086,6 @@ cdef class KAMA_Stream(Stream):
         return stream
 
 
-KC_Value = namedtuple("KC_Value", "upperband middleband lowerband", module=__name__)
-
 cdef class KC_Stream(Stream):
     """ KC(high, low, close[, timeperiod=?, atrperiod=?, nbdev=?])
 
@@ -14170,7 +14150,7 @@ cdef class KC_Stream(Stream):
         cdef KC_Stream stream = KC_Stream.__new__(KC_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, KC_Value(_stream_like((high, low, close,), outupperband), _stream_like((high, low, close,), outmiddleband), _stream_like((high, low, close,), outlowerband))
+        return stream, (_stream_like((high, low, close,), outupperband), _stream_like((high, low, close,), outmiddleband), _stream_like((high, low, close,), outlowerband))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -14180,7 +14160,7 @@ cdef class KC_Stream(Stream):
         cdef TA_RetCode retCode = TA_KC_Update(<TA_KC_Stream*>self._handle, high, low, close, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_KC_Update", retCode)
-        return KC_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -14190,7 +14170,7 @@ cdef class KC_Stream(Stream):
         cdef TA_RetCode retCode = TA_KC_Peek(<TA_KC_Stream*>self._handle, high, low, close, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_KC_Peek", retCode)
-        return KC_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     @property
     def value(self):
@@ -14200,7 +14180,7 @@ cdef class KC_Stream(Stream):
         cdef TA_RetCode retCode = TA_KC_Value(<TA_KC_Stream*>self._handle, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _ta_check_success("TA_KC_Value", retCode)
-        return KC_Value(outupperband, outmiddleband, outlowerband)
+        return (outupperband, outmiddleband, outlowerband)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_KC_OutRange(<TA_KC_Stream*>self._handle, outbegidx, outnbelement)
@@ -14219,8 +14199,6 @@ cdef class KC_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-KDJ_Value = namedtuple("KDJ_Value", "k d j", module=__name__)
 
 cdef class KDJ_Stream(Stream):
     """ KDJ(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
@@ -14288,7 +14266,7 @@ cdef class KDJ_Stream(Stream):
         cdef KDJ_Stream stream = KDJ_Stream.__new__(KDJ_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, KDJ_Value(_stream_like((high, low, close,), outk), _stream_like((high, low, close,), outd), _stream_like((high, low, close,), outj))
+        return stream, (_stream_like((high, low, close,), outk), _stream_like((high, low, close,), outd), _stream_like((high, low, close,), outj))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -14298,7 +14276,7 @@ cdef class KDJ_Stream(Stream):
         cdef TA_RetCode retCode = TA_KDJ_Update(<TA_KDJ_Stream*>self._handle, high, low, close, &outk, &outd, &outj)
         if retCode != 0:
             _ta_check_success("TA_KDJ_Update", retCode)
-        return KDJ_Value(outk, outd, outj)
+        return (outk, outd, outj)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -14308,7 +14286,7 @@ cdef class KDJ_Stream(Stream):
         cdef TA_RetCode retCode = TA_KDJ_Peek(<TA_KDJ_Stream*>self._handle, high, low, close, &outk, &outd, &outj)
         if retCode != 0:
             _ta_check_success("TA_KDJ_Peek", retCode)
-        return KDJ_Value(outk, outd, outj)
+        return (outk, outd, outj)
 
     @property
     def value(self):
@@ -14318,7 +14296,7 @@ cdef class KDJ_Stream(Stream):
         cdef TA_RetCode retCode = TA_KDJ_Value(<TA_KDJ_Stream*>self._handle, &outk, &outd, &outj)
         if retCode != 0:
             _ta_check_success("TA_KDJ_Value", retCode)
-        return KDJ_Value(outk, outd, outj)
+        return (outk, outd, outj)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_KDJ_OutRange(<TA_KDJ_Stream*>self._handle, outbegidx, outnbelement)
@@ -15007,8 +14985,6 @@ cdef class MA_Stream(Stream):
         return stream
 
 
-MACD_Value = namedtuple("MACD_Value", "macd macdsignal macdhist", module=__name__)
-
 cdef class MACD_Stream(Stream):
     """ MACD(real[, fastperiod=?, slowperiod=?, signalperiod=?])
 
@@ -15069,7 +15045,7 @@ cdef class MACD_Stream(Stream):
         cdef MACD_Stream stream = MACD_Stream.__new__(MACD_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MACD_Value(_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
+        return stream, (_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
 
     @cython.binding(False)
     def update(self, double real):
@@ -15079,7 +15055,7 @@ cdef class MACD_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACD_Update(<TA_MACD_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACD_Update", retCode)
-        return MACD_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -15089,7 +15065,7 @@ cdef class MACD_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACD_Peek(<TA_MACD_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACD_Peek", retCode)
-        return MACD_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @property
     def value(self):
@@ -15099,7 +15075,7 @@ cdef class MACD_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACD_Value(<TA_MACD_Stream*>self._handle, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACD_Value", retCode)
-        return MACD_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MACD_OutRange(<TA_MACD_Stream*>self._handle, outbegidx, outnbelement)
@@ -15118,8 +15094,6 @@ cdef class MACD_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-MACDEXT_Value = namedtuple("MACDEXT_Value", "macd macdsignal macdhist", module=__name__)
 
 cdef class MACDEXT_Stream(Stream):
     """ MACDEXT(real[, fastperiod=?, fastmatype=?, slowperiod=?, slowmatype=?, signalperiod=?, signalmatype=?])
@@ -15184,7 +15158,7 @@ cdef class MACDEXT_Stream(Stream):
         cdef MACDEXT_Stream stream = MACDEXT_Stream.__new__(MACDEXT_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MACDEXT_Value(_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
+        return stream, (_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
 
     @cython.binding(False)
     def update(self, double real):
@@ -15194,7 +15168,7 @@ cdef class MACDEXT_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDEXT_Update(<TA_MACDEXT_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDEXT_Update", retCode)
-        return MACDEXT_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -15204,7 +15178,7 @@ cdef class MACDEXT_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDEXT_Peek(<TA_MACDEXT_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDEXT_Peek", retCode)
-        return MACDEXT_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @property
     def value(self):
@@ -15214,7 +15188,7 @@ cdef class MACDEXT_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDEXT_Value(<TA_MACDEXT_Stream*>self._handle, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDEXT_Value", retCode)
-        return MACDEXT_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MACDEXT_OutRange(<TA_MACDEXT_Stream*>self._handle, outbegidx, outnbelement)
@@ -15233,8 +15207,6 @@ cdef class MACDEXT_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-MACDFIX_Value = namedtuple("MACDFIX_Value", "macd macdsignal macdhist", module=__name__)
 
 cdef class MACDFIX_Stream(Stream):
     """ MACDFIX(real[, signalperiod=?])
@@ -15294,7 +15266,7 @@ cdef class MACDFIX_Stream(Stream):
         cdef MACDFIX_Stream stream = MACDFIX_Stream.__new__(MACDFIX_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MACDFIX_Value(_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
+        return stream, (_stream_like((real,), outmacd), _stream_like((real,), outmacdsignal), _stream_like((real,), outmacdhist))
 
     @cython.binding(False)
     def update(self, double real):
@@ -15304,7 +15276,7 @@ cdef class MACDFIX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDFIX_Update(<TA_MACDFIX_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDFIX_Update", retCode)
-        return MACDFIX_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -15314,7 +15286,7 @@ cdef class MACDFIX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDFIX_Peek(<TA_MACDFIX_Stream*>self._handle, real, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDFIX_Peek", retCode)
-        return MACDFIX_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     @property
     def value(self):
@@ -15324,7 +15296,7 @@ cdef class MACDFIX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MACDFIX_Value(<TA_MACDFIX_Stream*>self._handle, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _ta_check_success("TA_MACDFIX_Value", retCode)
-        return MACDFIX_Value(outmacd, outmacdsignal, outmacdhist)
+        return (outmacd, outmacdsignal, outmacdhist)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MACDFIX_OutRange(<TA_MACDFIX_Stream*>self._handle, outbegidx, outnbelement)
@@ -15343,8 +15315,6 @@ cdef class MACDFIX_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-MAMA_Value = namedtuple("MAMA_Value", "mama fama", module=__name__)
 
 cdef class MAMA_Stream(Stream):
     """ MAMA(real[, fastlimit=?, slowlimit=?])
@@ -15402,7 +15372,7 @@ cdef class MAMA_Stream(Stream):
         cdef MAMA_Stream stream = MAMA_Stream.__new__(MAMA_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MAMA_Value(_stream_like((real,), outmama), _stream_like((real,), outfama))
+        return stream, (_stream_like((real,), outmama), _stream_like((real,), outfama))
 
     @cython.binding(False)
     def update(self, double real):
@@ -15411,7 +15381,7 @@ cdef class MAMA_Stream(Stream):
         cdef TA_RetCode retCode = TA_MAMA_Update(<TA_MAMA_Stream*>self._handle, real, &outmama, &outfama)
         if retCode != 0:
             _ta_check_success("TA_MAMA_Update", retCode)
-        return MAMA_Value(outmama, outfama)
+        return (outmama, outfama)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -15420,7 +15390,7 @@ cdef class MAMA_Stream(Stream):
         cdef TA_RetCode retCode = TA_MAMA_Peek(<TA_MAMA_Stream*>self._handle, real, &outmama, &outfama)
         if retCode != 0:
             _ta_check_success("TA_MAMA_Peek", retCode)
-        return MAMA_Value(outmama, outfama)
+        return (outmama, outfama)
 
     @property
     def value(self):
@@ -15429,7 +15399,7 @@ cdef class MAMA_Stream(Stream):
         cdef TA_RetCode retCode = TA_MAMA_Value(<TA_MAMA_Stream*>self._handle, &outmama, &outfama)
         if retCode != 0:
             _ta_check_success("TA_MAMA_Value", retCode)
-        return MAMA_Value(outmama, outfama)
+        return (outmama, outfama)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MAMA_OutRange(<TA_MAMA_Stream*>self._handle, outbegidx, outnbelement)
@@ -16531,8 +16501,6 @@ cdef class MININDEX_Stream(Stream):
         return stream
 
 
-MINMAX_Value = namedtuple("MINMAX_Value", "min max", module=__name__)
-
 cdef class MINMAX_Stream(Stream):
     """ MINMAX(real[, timeperiod=?])
 
@@ -16588,7 +16556,7 @@ cdef class MINMAX_Stream(Stream):
         cdef MINMAX_Stream stream = MINMAX_Stream.__new__(MINMAX_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MINMAX_Value(_stream_like((real,), outmin), _stream_like((real,), outmax))
+        return stream, (_stream_like((real,), outmin), _stream_like((real,), outmax))
 
     @cython.binding(False)
     def update(self, double real):
@@ -16597,7 +16565,7 @@ cdef class MINMAX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAX_Update(<TA_MINMAX_Stream*>self._handle, real, &outmin, &outmax)
         if retCode != 0:
             _ta_check_success("TA_MINMAX_Update", retCode)
-        return MINMAX_Value(outmin, outmax)
+        return (outmin, outmax)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -16606,7 +16574,7 @@ cdef class MINMAX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAX_Peek(<TA_MINMAX_Stream*>self._handle, real, &outmin, &outmax)
         if retCode != 0:
             _ta_check_success("TA_MINMAX_Peek", retCode)
-        return MINMAX_Value(outmin, outmax)
+        return (outmin, outmax)
 
     @property
     def value(self):
@@ -16615,7 +16583,7 @@ cdef class MINMAX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAX_Value(<TA_MINMAX_Stream*>self._handle, &outmin, &outmax)
         if retCode != 0:
             _ta_check_success("TA_MINMAX_Value", retCode)
-        return MINMAX_Value(outmin, outmax)
+        return (outmin, outmax)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MINMAX_OutRange(<TA_MINMAX_Stream*>self._handle, outbegidx, outnbelement)
@@ -16634,8 +16602,6 @@ cdef class MINMAX_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-MINMAXINDEX_Value = namedtuple("MINMAXINDEX_Value", "minidx maxidx", module=__name__)
 
 cdef class MINMAXINDEX_Stream(Stream):
     """ MINMAXINDEX(real[, timeperiod=?])
@@ -16699,7 +16665,7 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef MINMAXINDEX_Stream stream = MINMAXINDEX_Stream.__new__(MINMAXINDEX_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, MINMAXINDEX_Value(_stream_like((real,), outminidx), _stream_like((real,), outmaxidx))
+        return stream, (_stream_like((real,), outminidx), _stream_like((real,), outmaxidx))
 
     @cython.binding(False)
     def update(self, double real):
@@ -16708,7 +16674,7 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAXINDEX_Update(<TA_MINMAXINDEX_Stream*>self._handle, real, &outminidx, &outmaxidx)
         if retCode != 0:
             _ta_check_success("TA_MINMAXINDEX_Update", retCode)
-        return MINMAXINDEX_Value(outminidx + self._begidx, outmaxidx + self._begidx)
+        return (outminidx + self._begidx, outmaxidx + self._begidx)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -16717,7 +16683,7 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAXINDEX_Peek(<TA_MINMAXINDEX_Stream*>self._handle, real, &outminidx, &outmaxidx)
         if retCode != 0:
             _ta_check_success("TA_MINMAXINDEX_Peek", retCode)
-        return MINMAXINDEX_Value(outminidx + self._begidx, outmaxidx + self._begidx)
+        return (outminidx + self._begidx, outmaxidx + self._begidx)
 
     @property
     def value(self):
@@ -16726,7 +16692,7 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_MINMAXINDEX_Value(<TA_MINMAXINDEX_Stream*>self._handle, &outminidx, &outmaxidx)
         if retCode != 0:
             _ta_check_success("TA_MINMAXINDEX_Value", retCode)
-        return MINMAXINDEX_Value(outminidx + self._begidx, outmaxidx + self._begidx)
+        return (outminidx + self._begidx, outmaxidx + self._begidx)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_MINMAXINDEX_OutRange(<TA_MINMAXINDEX_Stream*>self._handle, outbegidx, outnbelement)
@@ -19564,8 +19530,6 @@ cdef class SMA_Stream(Stream):
         return stream
 
 
-SMI_Value = namedtuple("SMI_Value", "smi smisignal", module=__name__)
-
 cdef class SMI_Stream(Stream):
     """ SMI(high, low, close[, timeperiod=?, fastperiod=?, slowperiod=?, signalperiod=?])
 
@@ -19628,7 +19592,7 @@ cdef class SMI_Stream(Stream):
         cdef SMI_Stream stream = SMI_Stream.__new__(SMI_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, SMI_Value(_stream_like((high, low, close,), outsmi), _stream_like((high, low, close,), outsmisignal))
+        return stream, (_stream_like((high, low, close,), outsmi), _stream_like((high, low, close,), outsmisignal))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -19637,7 +19601,7 @@ cdef class SMI_Stream(Stream):
         cdef TA_RetCode retCode = TA_SMI_Update(<TA_SMI_Stream*>self._handle, high, low, close, &outsmi, &outsmisignal)
         if retCode != 0:
             _ta_check_success("TA_SMI_Update", retCode)
-        return SMI_Value(outsmi, outsmisignal)
+        return (outsmi, outsmisignal)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -19646,7 +19610,7 @@ cdef class SMI_Stream(Stream):
         cdef TA_RetCode retCode = TA_SMI_Peek(<TA_SMI_Stream*>self._handle, high, low, close, &outsmi, &outsmisignal)
         if retCode != 0:
             _ta_check_success("TA_SMI_Peek", retCode)
-        return SMI_Value(outsmi, outsmisignal)
+        return (outsmi, outsmisignal)
 
     @property
     def value(self):
@@ -19655,7 +19619,7 @@ cdef class SMI_Stream(Stream):
         cdef TA_RetCode retCode = TA_SMI_Value(<TA_SMI_Stream*>self._handle, &outsmi, &outsmisignal)
         if retCode != 0:
             _ta_check_success("TA_SMI_Value", retCode)
-        return SMI_Value(outsmi, outsmisignal)
+        return (outsmi, outsmisignal)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_SMI_OutRange(<TA_SMI_Stream*>self._handle, outbegidx, outnbelement)
@@ -19866,8 +19830,6 @@ cdef class STDDEV_Stream(Stream):
         return stream
 
 
-STOCH_Value = namedtuple("STOCH_Value", "slowk slowd", module=__name__)
-
 cdef class STOCH_Stream(Stream):
     """ STOCH(high, low, close[, fastk_period=?, slowk_period=?, slowk_matype=?, slowd_period=?, slowd_matype=?])
 
@@ -19931,7 +19893,7 @@ cdef class STOCH_Stream(Stream):
         cdef STOCH_Stream stream = STOCH_Stream.__new__(STOCH_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, STOCH_Value(_stream_like((high, low, close,), outslowk), _stream_like((high, low, close,), outslowd))
+        return stream, (_stream_like((high, low, close,), outslowk), _stream_like((high, low, close,), outslowd))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -19940,7 +19902,7 @@ cdef class STOCH_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCH_Update(<TA_STOCH_Stream*>self._handle, high, low, close, &outslowk, &outslowd)
         if retCode != 0:
             _ta_check_success("TA_STOCH_Update", retCode)
-        return STOCH_Value(outslowk, outslowd)
+        return (outslowk, outslowd)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -19949,7 +19911,7 @@ cdef class STOCH_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCH_Peek(<TA_STOCH_Stream*>self._handle, high, low, close, &outslowk, &outslowd)
         if retCode != 0:
             _ta_check_success("TA_STOCH_Peek", retCode)
-        return STOCH_Value(outslowk, outslowd)
+        return (outslowk, outslowd)
 
     @property
     def value(self):
@@ -19958,7 +19920,7 @@ cdef class STOCH_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCH_Value(<TA_STOCH_Stream*>self._handle, &outslowk, &outslowd)
         if retCode != 0:
             _ta_check_success("TA_STOCH_Value", retCode)
-        return STOCH_Value(outslowk, outslowd)
+        return (outslowk, outslowd)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_STOCH_OutRange(<TA_STOCH_Stream*>self._handle, outbegidx, outnbelement)
@@ -19977,8 +19939,6 @@ cdef class STOCH_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-STOCHF_Value = namedtuple("STOCHF_Value", "fastk fastd", module=__name__)
 
 cdef class STOCHF_Stream(Stream):
     """ STOCHF(high, low, close[, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -20041,7 +20001,7 @@ cdef class STOCHF_Stream(Stream):
         cdef STOCHF_Stream stream = STOCHF_Stream.__new__(STOCHF_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, STOCHF_Value(_stream_like((high, low, close,), outfastk), _stream_like((high, low, close,), outfastd))
+        return stream, (_stream_like((high, low, close,), outfastk), _stream_like((high, low, close,), outfastd))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -20050,7 +20010,7 @@ cdef class STOCHF_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHF_Update(<TA_STOCHF_Stream*>self._handle, high, low, close, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHF_Update", retCode)
-        return STOCHF_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -20059,7 +20019,7 @@ cdef class STOCHF_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHF_Peek(<TA_STOCHF_Stream*>self._handle, high, low, close, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHF_Peek", retCode)
-        return STOCHF_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     @property
     def value(self):
@@ -20068,7 +20028,7 @@ cdef class STOCHF_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHF_Value(<TA_STOCHF_Stream*>self._handle, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHF_Value", retCode)
-        return STOCHF_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_STOCHF_OutRange(<TA_STOCHF_Stream*>self._handle, outbegidx, outnbelement)
@@ -20087,8 +20047,6 @@ cdef class STOCHF_Stream(Stream):
         stream._begidx = self._begidx
         return stream
 
-
-STOCHRSI_Value = namedtuple("STOCHRSI_Value", "fastk fastd", module=__name__)
 
 cdef class STOCHRSI_Stream(Stream):
     """ STOCHRSI(real[, timeperiod=?, fastk_period=?, fastd_period=?, fastd_matype=?])
@@ -20148,7 +20106,7 @@ cdef class STOCHRSI_Stream(Stream):
         cdef STOCHRSI_Stream stream = STOCHRSI_Stream.__new__(STOCHRSI_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, STOCHRSI_Value(_stream_like((real,), outfastk), _stream_like((real,), outfastd))
+        return stream, (_stream_like((real,), outfastk), _stream_like((real,), outfastd))
 
     @cython.binding(False)
     def update(self, double real):
@@ -20157,7 +20115,7 @@ cdef class STOCHRSI_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHRSI_Update(<TA_STOCHRSI_Stream*>self._handle, real, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHRSI_Update", retCode)
-        return STOCHRSI_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     @cython.binding(False)
     def peek(self, double real):
@@ -20166,7 +20124,7 @@ cdef class STOCHRSI_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHRSI_Peek(<TA_STOCHRSI_Stream*>self._handle, real, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHRSI_Peek", retCode)
-        return STOCHRSI_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     @property
     def value(self):
@@ -20175,7 +20133,7 @@ cdef class STOCHRSI_Stream(Stream):
         cdef TA_RetCode retCode = TA_STOCHRSI_Value(<TA_STOCHRSI_Stream*>self._handle, &outfastk, &outfastd)
         if retCode != 0:
             _ta_check_success("TA_STOCHRSI_Value", retCode)
-        return STOCHRSI_Value(outfastk, outfastd)
+        return (outfastk, outfastd)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_STOCHRSI_OutRange(<TA_STOCHRSI_Stream*>self._handle, outbegidx, outnbelement)
@@ -20388,8 +20346,6 @@ cdef class SUM_Stream(Stream):
         return stream
 
 
-SUPERTREND_Value = namedtuple("SUPERTREND_Value", "supertrend trend", module=__name__)
-
 cdef class SUPERTREND_Stream(Stream):
     """ SUPERTREND(high, low, close[, timeperiod=?, multiplier=?])
 
@@ -20450,7 +20406,7 @@ cdef class SUPERTREND_Stream(Stream):
         cdef SUPERTREND_Stream stream = SUPERTREND_Stream.__new__(SUPERTREND_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, SUPERTREND_Value(_stream_like((high, low, close,), outsupertrend), _stream_like((high, low, close,), outtrend))
+        return stream, (_stream_like((high, low, close,), outsupertrend), _stream_like((high, low, close,), outtrend))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -20459,7 +20415,7 @@ cdef class SUPERTREND_Stream(Stream):
         cdef TA_RetCode retCode = TA_SUPERTREND_Update(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Update", retCode)
-        return SUPERTREND_Value(outsupertrend, outtrend)
+        return (outsupertrend, outtrend)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -20468,7 +20424,7 @@ cdef class SUPERTREND_Stream(Stream):
         cdef TA_RetCode retCode = TA_SUPERTREND_Peek(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Peek", retCode)
-        return SUPERTREND_Value(outsupertrend, outtrend)
+        return (outsupertrend, outtrend)
 
     @property
     def value(self):
@@ -20477,7 +20433,7 @@ cdef class SUPERTREND_Stream(Stream):
         cdef TA_RetCode retCode = TA_SUPERTREND_Value(<TA_SUPERTREND_Stream*>self._handle, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Value", retCode)
-        return SUPERTREND_Value(outsupertrend, outtrend)
+        return (outsupertrend, outtrend)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_SUPERTREND_OutRange(<TA_SUPERTREND_Stream*>self._handle, outbegidx, outnbelement)
@@ -21754,8 +21710,6 @@ cdef class VHF_Stream(Stream):
         return stream
 
 
-VORTEX_Value = namedtuple("VORTEX_Value", "plusvi minusvi", module=__name__)
-
 cdef class VORTEX_Stream(Stream):
     """ VORTEX(high, low, close[, timeperiod=?])
 
@@ -21815,7 +21769,7 @@ cdef class VORTEX_Stream(Stream):
         cdef VORTEX_Stream stream = VORTEX_Stream.__new__(VORTEX_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, VORTEX_Value(_stream_like((high, low, close,), outplusvi), _stream_like((high, low, close,), outminusvi))
+        return stream, (_stream_like((high, low, close,), outplusvi), _stream_like((high, low, close,), outminusvi))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
@@ -21824,7 +21778,7 @@ cdef class VORTEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_VORTEX_Update(<TA_VORTEX_Stream*>self._handle, high, low, close, &outplusvi, &outminusvi)
         if retCode != 0:
             _ta_check_success("TA_VORTEX_Update", retCode)
-        return VORTEX_Value(outplusvi, outminusvi)
+        return (outplusvi, outminusvi)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
@@ -21833,7 +21787,7 @@ cdef class VORTEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_VORTEX_Peek(<TA_VORTEX_Stream*>self._handle, high, low, close, &outplusvi, &outminusvi)
         if retCode != 0:
             _ta_check_success("TA_VORTEX_Peek", retCode)
-        return VORTEX_Value(outplusvi, outminusvi)
+        return (outplusvi, outminusvi)
 
     @property
     def value(self):
@@ -21842,7 +21796,7 @@ cdef class VORTEX_Stream(Stream):
         cdef TA_RetCode retCode = TA_VORTEX_Value(<TA_VORTEX_Stream*>self._handle, &outplusvi, &outminusvi)
         if retCode != 0:
             _ta_check_success("TA_VORTEX_Value", retCode)
-        return VORTEX_Value(outplusvi, outminusvi)
+        return (outplusvi, outminusvi)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_VORTEX_OutRange(<TA_VORTEX_Stream*>self._handle, outbegidx, outnbelement)

@@ -265,8 +265,8 @@ def emit(func, docstring):
     # An index output counts from the first bar the stream opened on; the batch
     # tier reports it in the caller's coordinates, so shift it back the same way.
     shift = ' + self._begidx' if 'INDEX' in name else ''
-    value = (outputs[0][1] + shift if len(outputs) == 1 else '%s_Value(%s)' % (
-        name, ', '.join(py + shift for _, py in outputs)))
+    value = (outputs[0][1] + shift if len(outputs) == 1
+             else '(%s)' % ', '.join(py + shift for _, py in outputs))
     live = '<%s*>self._handle' % handle
     lookback_args = ', '.join(py for _, py, _ in params)
     out = []
@@ -294,9 +294,6 @@ def emit(func, docstring):
         return (['&handle'] + ['<double*>a_%s.data + begidx' % py for py in inputs]
                 + ['historylen'] + [py for _, py, _ in params] + list(tail))
 
-    if len(outputs) > 1:
-        out.append('%s_Value = namedtuple("%s_Value", "%s", module=__name__)\n'
-                   % (name, name, ' '.join(py[3:] for _, py in outputs)))
     out.append('cdef class %s(Stream):' % cls)
     out.append('    """%s"""' % docstring)
     out.append('')
@@ -345,8 +342,7 @@ def emit(func, docstring):
     out.append('        stream._begidx = begidx')
     filled = ['_stream_like((%s,), %s)' % (', '.join(inputs), py) for _, py in outputs]
     out.append('        return stream, %s' % (
-        filled[0] if len(outputs) == 1
-        else '%s_Value(%s)' % (name, ', '.join(filled))))
+        filled[0] if len(outputs) == 1 else '(%s)' % ', '.join(filled)))
     for verb in ('Update', 'Peek'):
         out.append('')
         out.append('    @cython.binding(False)')
@@ -412,10 +408,8 @@ def emit_stub(func, documented):
               for ctype, _ in outputs]
     out = []
     if len(outputs) > 1:
-        out.append('class %s_Value(NamedTuple):' % name)
-        out.extend('    %s: %s' % (py[3:], t) for (_, py), t in zip(outputs, scalars))
-        out.append('')
-        value, filled = '%s_Value' % name, 'Tuple[%s]' % ', '.join(arrays)
+        value = 'Tuple[%s]' % ', '.join(scalars)
+        filled = 'Tuple[%s]' % ', '.join(arrays)
     else:
         value, filled = scalars[0], arrays[0]
     bars = ', '.join('%s: float' % py for py in inputs)
