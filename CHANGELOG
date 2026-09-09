@@ -9,9 +9,10 @@
   that bar's value, ``handle.peek(bar)`` evaluates a forming bar without
   committing it, and ``handle.copy()`` forks it.  ``stream.SMA.open_and_fill()``
   returns the handle and the Function API's series in one pass.  A multi-output
-  function answers with a named tuple.  The old last-value functions --
-  ``talib.stream.SMA``, ``talib.stream_SMA``, and their ``_ta_lib.pyi`` stubs --
-  are gone; ``talib/stream.pyi`` types the handles instead.
+  function answers with the same tuple the Function API returns.  The old
+  last-value functions -- ``talib.stream.SMA``, ``talib.stream_SMA``, and their
+  ``_ta_lib.pyi`` stubs -- are gone; ``talib/stream.pyi`` types the handles
+  instead.
 
   Migrating is ``stream.X(...)`` -> ``stream.X(...).value``, and the compiler
   cannot find the sites for you: ``if stream.CDLDOJI(o, h, l, c):`` used to test

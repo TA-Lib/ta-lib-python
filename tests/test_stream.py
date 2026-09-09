@@ -204,7 +204,14 @@ def test_open_and_fill_matches_batch(name, datasets):
         assert repr(got) == repr(want[-1].item())
     assert handle.out_range == (lookback(name), len(data['close']) - lookback(name))
     if len(expected) > 1:
-        assert handle.value._fields == tuple(abstract.Function(name).output_names)
+        # a multi-output handle answers with a plain tuple, the type and arity
+        # the batch tier already returns; the loops above pin the order
+        assert type(handle.value) is tuple
+        assert len(handle.value) == len(expected)
+        assert type(filled) is tuple
+        assert len(filled) == len(expected)
+    else:
+        assert not isinstance(handle.value, tuple)
 
 
 @pytest.mark.parametrize('name', FUNCTIONS)
@@ -286,11 +293,19 @@ def test_the_corpus_is_what_the_library_says_streams():
     assert all(isinstance(getattr(stream, name), type) for name in FUNCTIONS)
 
 
-def test_multi_output_is_a_named_tuple(datasets):
-    handle = stream.MACD(datasets[0]['close'])
-    macd, macdsignal, macdhist = handle.value
-    assert (handle.value.macd, handle.value.macdsignal, handle.value.macdhist) \
-        == (macd, macdsignal, macdhist)
+def test_multi_output_is_a_plain_tuple(datasets):
+    """A handle answers with the tuple the Function API returns: same type, same
+    arity, same order. Order is the whole contract of a positional result, so
+    pin it against the batch tier rather than against a field name."""
+    close = datasets[0]['close']
+    value = stream.MACD(close).value
+    assert type(value) is tuple
+    macd, macdsignal, macdhist = value
+    batch = talib.MACD(close)
+    assert type(batch) is tuple
+    assert len(value) == len(batch)
+    for got, want in zip(value, batch):
+        assert repr(got) == repr(want[-1].item())
 
 
 def test_single_output_is_a_scalar(datasets):

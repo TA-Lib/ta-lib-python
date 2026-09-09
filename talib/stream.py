@@ -45,9 +45,9 @@ series over the history as well -- one pass gives both:
 
     s, rsi = stream.RSI.open_and_fill(history, timeperiod=14)
 
-A multi-output function answers with a named tuple whose fields are the output
-names in the function's docstring; a single-output one with a bare float (or
-int). Handles cannot be pickled.
+A multi-output function answers with a plain tuple, in the order the Function
+API returns and named by ``abstract.Function(name).output_names``; a
+single-output one with a bare float (or int). Handles cannot be pickled.
 """
 import talib._ta_lib as _ta_lib
 from talib._ta_lib import OutRange, Stream, __TA_FUNCTION_NAMES__
@@ -57,9 +57,3 @@ __all__ = ['Stream', 'OutRange']
 for func_name in __TA_FUNCTION_NAMES__:
     globals()[func_name] = getattr(_ta_lib, '%s_Stream' % func_name)
     __all__.append(func_name)
-    # the named tuple a multi-output handle answers with
-    value_name = '%s_Value' % func_name
-    value_type = getattr(_ta_lib, value_name, None)
-    if value_type is not None:
-        globals()[value_name] = value_type
-        __all__.append(value_name)
