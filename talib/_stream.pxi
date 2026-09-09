@@ -2163,11 +2163,11 @@ cdef extern from "ta-lib/ta_func.h":
 
     ctypedef struct TA_SUPERTREND_Stream:
         pass
-    TA_RetCode TA_SUPERTREND_OpenAndFill(TA_SUPERTREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, int* outBegIdx, int* outNBElement, double* outReal, int* outInteger)
-    TA_RetCode TA_SUPERTREND_Open(TA_SUPERTREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, double* outReal, int* outInteger)
-    TA_RetCode TA_SUPERTREND_Update(TA_SUPERTREND_Stream* stream, double inHigh, double inLow, double inClose, double* outReal, int* outInteger)
-    TA_RetCode TA_SUPERTREND_Peek(const TA_SUPERTREND_Stream* stream, double inHigh, double inLow, double inClose, double* outReal, int* outInteger)
-    TA_RetCode TA_SUPERTREND_Value(const TA_SUPERTREND_Stream* stream, double* outReal, int* outInteger)
+    TA_RetCode TA_SUPERTREND_OpenAndFill(TA_SUPERTREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, int* outBegIdx, int* outNBElement, double* outSupertrend, int* outTrend)
+    TA_RetCode TA_SUPERTREND_Open(TA_SUPERTREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, double* outSupertrend, int* outTrend)
+    TA_RetCode TA_SUPERTREND_Update(TA_SUPERTREND_Stream* stream, double inHigh, double inLow, double inClose, double* outSupertrend, int* outTrend)
+    TA_RetCode TA_SUPERTREND_Peek(const TA_SUPERTREND_Stream* stream, double inHigh, double inLow, double inClose, double* outSupertrend, int* outTrend)
+    TA_RetCode TA_SUPERTREND_Value(const TA_SUPERTREND_Stream* stream, double* outSupertrend, int* outTrend)
     TA_RetCode TA_SUPERTREND_Clone(const TA_SUPERTREND_Stream* stream, TA_SUPERTREND_Stream** clone)
     TA_RetCode TA_SUPERTREND_Close(TA_SUPERTREND_Stream* stream)
     TA_RetCode TA_SUPERTREND_OutRange(const TA_SUPERTREND_Stream* stream, int* outBegIdx, int* outNBElement)
@@ -20388,7 +20388,7 @@ cdef class SUM_Stream(Stream):
         return stream
 
 
-SUPERTREND_Value = namedtuple("SUPERTREND_Value", "real integer", module=__name__)
+SUPERTREND_Value = namedtuple("SUPERTREND_Value", "supertrend trend", module=__name__)
 
 cdef class SUPERTREND_Stream(Stream):
     """ SUPERTREND(high, low, close[, timeperiod=?, multiplier=?])
@@ -20401,8 +20401,8 @@ cdef class SUPERTREND_Stream(Stream):
         timeperiod: 10
         multiplier: 3.0
     Outputs:
-        real
-        integer
+        supertrend
+        trend
     """
 
     def __dealloc__(self):
@@ -20419,9 +20419,9 @@ cdef class SUPERTREND_Stream(Stream):
         cdef int begidx = check_begidx(length, arrays)
         cdef int historylen = _stream_history(length, begidx)
         cdef TA_SUPERTREND_Stream* handle = NULL
-        cdef double outreal
-        cdef int outinteger
-        cdef TA_RetCode retCode = TA_SUPERTREND_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outreal, &outinteger)
+        cdef double outsupertrend
+        cdef int outtrend
+        cdef TA_RetCode retCode = TA_SUPERTREND_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outsupertrend, &outtrend)
         if retCode != 0:
             _stream_open_failed("TA_SUPERTREND_Open", retCode, historylen, lib.TA_SUPERTREND_Lookback(timeperiod, multiplier) + 1)
         if self._handle is not NULL:
@@ -20439,45 +20439,45 @@ cdef class SUPERTREND_Stream(Stream):
         cdef int begidx = check_begidx(length, arrays)
         cdef int historylen = _stream_history(length, begidx)
         cdef int lookback = begidx + lib.TA_SUPERTREND_Lookback(timeperiod, multiplier)
-        cdef np.ndarray outreal = make_double_array(length, lookback)
-        cdef np.ndarray outinteger = make_int_array(length, lookback)
+        cdef np.ndarray outsupertrend = make_double_array(length, lookback)
+        cdef np.ndarray outtrend = make_int_array(length, lookback)
         cdef int outbegidx
         cdef int outnbelement
         cdef TA_SUPERTREND_Stream* handle = NULL
-        cdef TA_RetCode retCode = TA_SUPERTREND_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outbegidx, &outnbelement, <double*>outreal.data + lookback, <int*>outinteger.data + lookback)
+        cdef TA_RetCode retCode = TA_SUPERTREND_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outbegidx, &outnbelement, <double*>outsupertrend.data + lookback, <int*>outtrend.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SUPERTREND_OpenAndFill", retCode, historylen, lookback - begidx + 1)
         cdef SUPERTREND_Stream stream = SUPERTREND_Stream.__new__(SUPERTREND_Stream)
         stream._handle = <void*>handle
         stream._begidx = begidx
-        return stream, SUPERTREND_Value(_stream_like((high, low, close,), outreal), _stream_like((high, low, close,), outinteger))
+        return stream, SUPERTREND_Value(_stream_like((high, low, close,), outsupertrend), _stream_like((high, low, close,), outtrend))
 
     @cython.binding(False)
     def update(self, double high, double low, double close):
-        cdef double outreal
-        cdef int outinteger
-        cdef TA_RetCode retCode = TA_SUPERTREND_Update(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outreal, &outinteger)
+        cdef double outsupertrend
+        cdef int outtrend
+        cdef TA_RetCode retCode = TA_SUPERTREND_Update(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Update", retCode)
-        return SUPERTREND_Value(outreal, outinteger)
+        return SUPERTREND_Value(outsupertrend, outtrend)
 
     @cython.binding(False)
     def peek(self, double high, double low, double close):
-        cdef double outreal
-        cdef int outinteger
-        cdef TA_RetCode retCode = TA_SUPERTREND_Peek(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outreal, &outinteger)
+        cdef double outsupertrend
+        cdef int outtrend
+        cdef TA_RetCode retCode = TA_SUPERTREND_Peek(<TA_SUPERTREND_Stream*>self._handle, high, low, close, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Peek", retCode)
-        return SUPERTREND_Value(outreal, outinteger)
+        return SUPERTREND_Value(outsupertrend, outtrend)
 
     @property
     def value(self):
-        cdef double outreal
-        cdef int outinteger
-        cdef TA_RetCode retCode = TA_SUPERTREND_Value(<TA_SUPERTREND_Stream*>self._handle, &outreal, &outinteger)
+        cdef double outsupertrend
+        cdef int outtrend
+        cdef TA_RetCode retCode = TA_SUPERTREND_Value(<TA_SUPERTREND_Stream*>self._handle, &outsupertrend, &outtrend)
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Value", retCode)
-        return SUPERTREND_Value(outreal, outinteger)
+        return SUPERTREND_Value(outsupertrend, outtrend)
 
     cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
         return TA_SUPERTREND_OutRange(<TA_SUPERTREND_Stream*>self._handle, outbegidx, outnbelement)
