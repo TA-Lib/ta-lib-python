@@ -1900,8 +1900,8 @@ class SUM(Stream):
     def copy(self) -> "SUM": ...
 
 class SUPERTREND_Value(NamedTuple):
-    real: float
-    integer: int
+    supertrend: float
+    trend: int
 
 class SUPERTREND(Stream):
     def __init__(self, high: NDArray[np.float64], low: NDArray[np.float64], close: NDArray[np.float64], timeperiod: int = 10, multiplier: float = 3.0) -> None: ...
