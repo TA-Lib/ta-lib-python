@@ -557,13 +557,14 @@ fork = s.copy()                   # an independent handle at the same bar
 
 `stream.SMA` takes exactly the arguments `talib.SMA` takes. A single-output
 function answers with a `float` (an `int` where the Function API returns an
-integer array); a multi-output one with a named tuple that still unpacks like
-the Function API's tuple:
+integer array); a multi-output one with the same tuple the Function API returns:
 
 ```python
 m = stream.MACD(close)
 macd, macdsignal, macdhist = m.update(price)
-m.value.macdhist
+m.value[2]                                    # the histogram, last bar
+
+abstract.Function('MACD').output_names        # ['macd', 'macdsignal', 'macdhist']
 ```
 
 Opening needs at least `lookback + 1` bars, which `abstract` knows, and a little
