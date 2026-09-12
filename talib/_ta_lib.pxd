@@ -201,7 +201,7 @@ cdef extern from "ta-lib/ta_abstract.h":
 
     char* TA_FunctionDescriptionXML()
 
-cdef extern from "ta-lib/ta_func.h":
+cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_AC(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_AC_Lookback(int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod)
     TA_RetCode TA_ACCBANDS(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])
@@ -528,8 +528,8 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_ROCR_Lookback(int optInTimePeriod)
     TA_RetCode TA_ROCR100(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_ROCR100_Lookback(int optInTimePeriod)
-    TA_RetCode TA_RSI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[]) nogil
-    int TA_RSI_Lookback(int optInTimePeriod) nogil
+    TA_RetCode TA_RSI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
+    int TA_RSI_Lookback(int optInTimePeriod)
     TA_RetCode TA_RVI(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int optInStdDevPeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_RVI_Lookback(int optInTimePeriod, int optInStdDevPeriod)
     TA_RetCode TA_RVOL(int startIdx, int endIdx, const double inVolume[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])

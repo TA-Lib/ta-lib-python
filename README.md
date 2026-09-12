@@ -611,6 +611,18 @@ s.advance()                       # count a skipped bar: the range moves, the va
 A handle points into the TA-Lib C library, so it cannot be pickled or shared
 with another process. Keep the history and re-open instead.
 
+## Threads
+
+The indicator functions release the GIL while the C code runs, so calls from several
+threads run concurrently. This applies to the Function API, the Streaming API and the
+Abstract API, which calls the same functions.
+
+Initialization, shutdown and the global settings stay under the GIL:
+`set_unstable_period`, `set_compatibility`, `_ta_set_candle_settings` and
+`_ta_restore_candle_default_settings`. Changing a setting while indicator calls are running
+in other threads is undefined behavior. Change settings when no call is in progress,
+and the next calls in every thread see the new value.
+
 ## Supported Indicators and Functions 📋
 
 We can show all the TA functions supported by TA-Lib, either as a `list` or
