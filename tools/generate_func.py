@@ -372,7 +372,8 @@ for f in functions:
             else:
                 assert False, args
 
-    print('    retCode = lib.%s(' % name, end=' ')
+    print('    with nogil:')
+    print('        retCode = lib.%s(' % name, end=' ')
 
     for i, arg in enumerate(args):
         if i > 0:
