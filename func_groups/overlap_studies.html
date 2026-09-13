@@ -37,14 +37,20 @@
 <div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">ACCBANDS</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
 <h3>BBANDS - Bollinger Bands</h3>
-<div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">nbdevup</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">nbdevdn</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+<div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">nbdevup</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">nbdevdn</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
 <h3>DEMA - Double Exponential Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DEMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<h3>DONCHIAN - Donchian Channels</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">DONCHIAN</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
+</pre></div>
 <h3>EMA - Exponential Moving Average</h3>
 <p>NOTE: The <code>EMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">EMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>HMA - Hull Moving Average</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">HMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
 <h3>HT_TRENDLINE - Hilbert Transform - Instantaneous Trendline</h3>
 <p>NOTE: The <code>HT_TRENDLINE</code> function has an unstable period.</p>
@@ -53,6 +59,9 @@
 <h3>KAMA - Kaufman Adaptive Moving Average</h3>
 <p>NOTE: The <code>KAMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">KAMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>KC - Keltner Channels</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">KC</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">atrperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">nbdev</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MA - Moving average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
@@ -70,6 +79,10 @@
 <h3>MIDPRICE - Midpoint Price over period</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIDPRICE</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<h3>RMA - Wilder's Smoothed Moving Average</h3>
+<p>NOTE: The <code>RMA</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
 <h3>SAR - Parabolic SAR</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SAR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">acceleration</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">maximum</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
@@ -78,6 +91,9 @@
 </pre></div>
 <h3>SMA - Simple Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>SUPERTREND - SuperTrend</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">supertrend</span><span class="highlight p">,</span> <span class="highlight n">trend</span> <span class="highlight o">=</span> <span class="highlight n">SUPERTREND</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">multiplier</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">)</span>
 </pre></div>
 <h3>T3 - Triple Exponential Moving Average (T3)</h3>
 <p>NOTE: The <code>T3</code> function has an unstable period.</p>
@@ -89,8 +105,14 @@
 <h3>TRIMA - Triangular Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TRIMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<h3>VWMA - Volume Weighted Moving Average</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">VWMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">volume</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
 <h3>WMA - Weighted Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">WMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<h3>ZLEMA - Zero-Lag Exponential Moving Average</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ZLEMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
 <p><a href="../doc_index.html">Documentation Index</a>
 <a class="float-right" href="../funcs.html">All Function Groups</a></p>

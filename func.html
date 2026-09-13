@@ -39,6 +39,9 @@ the exposed TA-Lib indicators.</p>
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial &quot;lookback&quot; period (a required number of observations
 before an output is generated) set to <code>NaN</code>.</p>
+<p>The lookback is function-specific and may be larger than the <code>timeperiod</code>
+parameter. For example, <code>RSI(timeperiod=14)</code> needs 15 price observations,
+because the first RSI value is derived from 14 consecutive price changes.</p>
 <p>All of the following examples use the function API:</p>
 <div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">numpy</span>
 <span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">talib</span>
@@ -56,6 +59,9 @@ before an output is generated) set to <code>NaN</code>.</p>
 <p>Calculating momentum of the close prices, with a time period of 5:</p>
 <div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">MOM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">)</span>
 </pre></div>
+<p>Functions documented as having an unstable period start with that extra
+unstable-period setting at <code>0</code>. <code>get_unstable_period()</code> only returns a
+non-zero value after you set one explicitly with <code>set_unstable_period()</code>.</p>
 <p>Documentation for all functions:</p>
 <ul>
 <li><a href="func_groups/overlap_studies.html">Overlap Studies</a></li>

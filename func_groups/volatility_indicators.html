@@ -33,13 +33,26 @@
     <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
 <h1>Volatility Indicator Functions</h1>
+<h3>ADR - Average Day Range</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
+</pre></div>
 <h3>ATR - Average True Range</h3>
 <p>NOTE: The <code>ATR</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ATR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<h3>CVI - Chaikin's Volatility</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">CVI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">rocperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MASSI - Mass Index</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MASSI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span>
+</pre></div>
 <h3>NATR - Normalized Average True Range</h3>
 <p>NOTE: The <code>NATR</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">NATR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
+</pre></div>
+<h3>RVI - Relative Volatility Index</h3>
+<p>NOTE: The <code>RVI</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RVI</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">,</span> <span class="highlight n">stddevperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
 <h3>TRANGE - True Range</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TRANGE</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">)</span>
