@@ -29,6 +29,14 @@
 - [CHANGE]: ``APO`` and ``PPO`` now default ``matype`` to EMA, and ``BBANDS``
   defaults ``timeperiod`` to 20, following TA-Lib C 0.8.1.
 
+- [FIX]: ``set_unstable_period()`` targeted the wrong function for every id
+  after ``IMI`` (e.g. ``'RSI'`` set ``PLUS_DM``); ids now come from the C
+  header. ``'ADXR'``, ``'MFI'`` and ``'STOCHRSI'`` are no-ops that emit a
+  ``DeprecationWarning``.
+
+- [CHANGE]: Remove the unnecessary ``build`` runtime dependency and ``wheel``
+  build dependency.
+
 0.7.1
 =====
 
