@@ -1,60 +1,64 @@
 # Math Operator Functions
 ### ADD - Vector Arithmetic Add
 ```python
-real = ADD(real0, real1)
+real = ADD(high, low)
+```
+
+### CUMSUM - Cumulative Sum
+```python
+real = CUMSUM(close)
 ```
 
 ### DIV - Vector Arithmetic Div
 ```python
-real = DIV(real0, real1)
+real = DIV(high, low)
 ```
 
 ### MAX - Highest value over a specified period
 ```python
-real = MAX(real, timeperiod=30)
+real = MAX(close, timeperiod=30)
 ```
 
 ### MAXINDEX - Index of highest value over a specified period
 ```python
-integer = MAXINDEX(real, timeperiod=30)
+integer = MAXINDEX(close, timeperiod=30)
 ```
 
 ### MIN - Lowest value over a specified period
 ```python
-real = MIN(real, timeperiod=30)
+real = MIN(close, timeperiod=30)
 ```
 
 ### MININDEX - Index of lowest value over a specified period
 ```python
-integer = MININDEX(real, timeperiod=30)
+integer = MININDEX(close, timeperiod=30)
 ```
 
 ### MINMAX - Lowest and highest values over a specified period
 ```python
-min, max = MINMAX(real, timeperiod=30)
+min, max = MINMAX(close, timeperiod=30)
 ```
 
 ### MINMAXINDEX - Indexes of lowest and highest values over a specified period
 ```python
-minidx, maxidx = MINMAXINDEX(real, timeperiod=30)
+minidx, maxidx = MINMAXINDEX(close, timeperiod=30)
 ```
 
 ### MULT - Vector Arithmetic Mult
 ```python
-real = MULT(real0, real1)
+real = MULT(high, low)
 ```
 
 ### SUB - Vector Arithmetic Subtraction
 ```python
-real = SUB(real0, real1)
+real = SUB(high, low)
 ```
 
 ### SUM - Summation
 ```python
-real = SUM(real, timeperiod=30)
+real = SUM(close, timeperiod=30)
 ```
 
 
 [Documentation Index](../doc_index.md)
-
 [FLOAT_RIGHTAll Function Groups](../funcs.md)
