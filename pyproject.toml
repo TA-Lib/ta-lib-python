@@ -41,3 +41,8 @@ requires-python = '>=3.9'
 [tool.setuptools]
 packages = ["talib"]
 package-data = {"talib" = ["_ta_lib.pyi", "py.typed", "abstract.pyi", "stream.pyi"]}
+
+# The TA-Lib C release this wrapper builds against. setup.py copies it, and
+# [project] version, into every file that repeats them.
+[tool.ta-lib]
+c-version = "0.8.1"

@@ -7,7 +7,10 @@ from talib import abstract, func
 
 
 def test_talib_version():
-    assert talib.__ta_version__[:5] == b'0.8.1'
+    # at least, not equal: the dev branch builds against TA-Lib C's dev branch
+    installed = talib.__ta_version__.split()[0].decode()
+    required = talib.TA_LIB_C_REQUIRED
+    assert [int(x) for x in installed.split('.')] >= [int(x) for x in required.split('.')]
 
 
 def test_num_functions():

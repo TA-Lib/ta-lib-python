@@ -3,11 +3,83 @@
 import sys
 import os
 import os.path
+import re
 import warnings
 
 from setuptools import setup, Extension
 
 import numpy
+
+
+def sync_versions(root):
+    """
+    Copy the versions in pyproject.toml into the files that repeat them.
+
+    Only in a git checkout: a local build updates the copies, a CI build
+    (GITHUB_ACTIONS) fails on a stale one, and a build from an sdist or a
+    PyPI install does nothing.
+    """
+    if not os.path.exists(os.path.join(root, '.git')):
+        return
+    try:
+        import tomllib
+    except ImportError:     # Python < 3.11
+        return
+
+    with open(os.path.join(root, 'pyproject.toml'), 'rb') as f:
+        pyproject = tomllib.load(f)
+    version = pyproject['project']['version']
+    c_version = pyproject['tool']['ta-lib']['c-version']
+    if not re.fullmatch(r'\d+\.\d+\.\d+', c_version):
+        sys.exit('setup.py: [tool.ta-lib] c-version must look like 0.8.1, got %r'
+                 % c_version)
+
+    # (file, pattern whose group 1 is the version, value, match count; 0 = any)
+    build_script = r'^TALIB_C_VER="\$\{TALIB_C_VER:=([^}]*)\}"'
+    copies = [
+        ('talib/__init__.py', r"^__version__ = '([^']*)'", version, 1),
+        ('talib/__init__.py', r"^TA_LIB_C_REQUIRED = '([^']*)'", c_version, 1),
+        ('.github/workflows/tests.yml', r'^ +version: "([^"]*)"', c_version, 1),
+        ('.github/workflows/wheels.yml', r'^  TALIB_C_VER: (\S+)', c_version, 1),
+        ('tools/build_talib_linux.sh', build_script, c_version, 1),
+        ('tools/build_talib_macos.sh', build_script, c_version, 1),
+        ('tools/build_talib_windows.cmd',
+         r'^if not defined TALIB_C_VER set TALIB_C_VER=(\S+)', c_version, 1),
+        ('README.md', r'\bta-lib-(\d+\.\d+\.\d+)', c_version, 0),
+        ('README.md', r'/download/v(\d+\.\d+\.\d+)/', c_version, 0),
+    ]
+
+    stale = []
+    for name in dict.fromkeys(path for path, _, _, _ in copies):
+        path = os.path.join(root, name)
+        with open(path, encoding='utf-8', newline='') as f:
+            text = f.read()
+        new = text
+        for _, pattern, value, count in (c for c in copies if c[0] == name):
+            parts, pos, found = [], 0, 0
+            for m in re.finditer(pattern, new, re.MULTILINE):
+                parts += [new[pos:m.start(1)], value]
+                pos = m.end(1)
+                found += 1
+            if found == 0 or (count and found != count):
+                sys.exit('setup.py: expected %s match(es) of %r in %s, found %d'
+                         % (count or 'some', pattern, name, found))
+            new = ''.join(parts) + new[pos:]
+        if new == text:
+            continue
+        stale.append(name)
+        if os.environ.get('GITHUB_ACTIONS') != 'true':
+            with open(path, 'w', encoding='utf-8', newline='') as f:
+                f.write(new)
+            print('setup.py: updated %s from pyproject.toml' % name)
+
+    if stale and os.environ.get('GITHUB_ACTIONS') == 'true':
+        sys.exit('setup.py: out of date with pyproject.toml: %s\n'
+                 'Run a local build with Python 3.11+ (e.g. "make build") '
+                 'and commit the result.' % ', '.join(stale))
+
+
+sync_versions(os.path.dirname(os.path.abspath(__file__)))
 
 platform_supported = False
 
