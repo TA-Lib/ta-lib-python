@@ -40,6 +40,8 @@ feature branches:
 * `ta-lib-python` 0.4.x (supports `ta-lib` 0.4.x and `numpy` 1)
 * `ta-lib-python` 0.5.x (supports `ta-lib` 0.4.x and `numpy` 2)
 * `ta-lib-python` 0.6.x (supports `ta-lib` 0.6.x and `numpy` 2)
+* `ta-lib-python` 0.7.x (supports `ta-lib` 0.7.x and `numpy` 2)
+* `ta-lib-python` 0.8.x (supports `ta-lib` 0.8.x and `numpy` 2)
 
 ## Installation 💾
 
