@@ -6,56 +6,77 @@ upperband, middleband, lowerband = ACCBANDS(high, low, close, timeperiod=20)
 
 ### BBANDS - Bollinger Bands
 ```python
-upperband, middleband, lowerband = BBANDS(real, timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
+upperband, middleband, lowerband = BBANDS(close, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
 ```
 
 ### DEMA - Double Exponential Moving Average
 ```python
-real = DEMA(real, timeperiod=30)
+real = DEMA(close, timeperiod=30)
+```
+
+### DONCHIAN - Donchian Channels
+```python
+upperband, middleband, lowerband = DONCHIAN(high, low, timeperiod=20)
 ```
 
 ### EMA - Exponential Moving Average
 NOTE: The ``EMA`` function has an unstable period.  
 ```python
-real = EMA(real, timeperiod=30)
+real = EMA(close, timeperiod=30)
+```
+
+### HMA - Hull Moving Average
+```python
+real = HMA(close, timeperiod=20)
 ```
 
 ### HT_TRENDLINE - Hilbert Transform - Instantaneous Trendline
 NOTE: The ``HT_TRENDLINE`` function has an unstable period.  
 ```python
-real = HT_TRENDLINE(real)
+real = HT_TRENDLINE(close)
 ```
 
 ### KAMA - Kaufman Adaptive Moving Average
 NOTE: The ``KAMA`` function has an unstable period.  
 ```python
-real = KAMA(real, timeperiod=30)
+real = KAMA(close, timeperiod=30)
+```
+
+### KC - Keltner Channels
+```python
+upperband, middleband, lowerband = KC(high, low, close, timeperiod=20, atrperiod=10, nbdev=2)
 ```
 
 ### MA - Moving average
 ```python
-real = MA(real, timeperiod=30, matype=0)
+real = MA(close, timeperiod=30, matype=0)
 ```
 
 ### MAMA - MESA Adaptive Moving Average
 NOTE: The ``MAMA`` function has an unstable period.  
 ```python
-mama, fama = MAMA(real, fastlimit=0, slowlimit=0)
+mama, fama = MAMA(close, fastlimit=0, slowlimit=0)
 ```
 
 ### MAVP - Moving average with variable period
 ```python
-real = MAVP(real, periods, minperiod=2, maxperiod=30, matype=0)
+real = MAVP(close, periods, minperiod=2, maxperiod=30, matype=0)
 ```
 
 ### MIDPOINT - MidPoint over period
 ```python
-real = MIDPOINT(real, timeperiod=14)
+real = MIDPOINT(close, timeperiod=14)
 ```
 
 ### MIDPRICE - Midpoint Price over period
 ```python
 real = MIDPRICE(high, low, timeperiod=14)
+```
+
+### RMA - Wilder's Smoothed Moving Average
+NOTE: The ``RMA`` function has an unstable period.  
+```python
+real = RMA(close, timeperiod=30)
 ```
 
 ### SAR - Parabolic SAR
@@ -70,30 +91,45 @@ real = SAREXT(high, low, startvalue=0, offsetonreverse=0, accelerationinitlong=0
 
 ### SMA - Simple Moving Average
 ```python
-real = SMA(real, timeperiod=30)
+real = SMA(close, timeperiod=30)
+```
+
+### SUPERTREND - SuperTrend
+```python
+supertrend, trend = SUPERTREND(high, low, close, timeperiod=10, multiplier=3)
 ```
 
 ### T3 - Triple Exponential Moving Average (T3)
 NOTE: The ``T3`` function has an unstable period.  
 ```python
-real = T3(real, timeperiod=5, vfactor=0)
+real = T3(close, timeperiod=5, vfactor=0)
 ```
 
 ### TEMA - Triple Exponential Moving Average
 ```python
-real = TEMA(real, timeperiod=30)
+real = TEMA(close, timeperiod=30)
 ```
 
 ### TRIMA - Triangular Moving Average
 ```python
-real = TRIMA(real, timeperiod=30)
+real = TRIMA(close, timeperiod=30)
+```
+
+### VWMA - Volume Weighted Moving Average
+```python
+real = VWMA(close, volume, timeperiod=30)
 ```
 
 ### WMA - Weighted Moving Average
 ```python
-real = WMA(real, timeperiod=30)
+real = WMA(close, timeperiod=30)
 ```
 
-[Documentation Index](../doc_index.md)
+### ZLEMA - Zero-Lag Exponential Moving Average
+```python
+real = ZLEMA(close, timeperiod=30)
+```
 
+
+[Documentation Index](../doc_index.md)
 [FLOAT_RIGHTAll Function Groups](../funcs.md)
