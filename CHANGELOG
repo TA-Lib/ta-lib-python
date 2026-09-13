@@ -37,6 +37,8 @@
 - [CHANGE]: Remove the unnecessary ``build`` runtime dependency and ``wheel``
   build dependency.
 
+- [NEW]: Upgrade to Cython 3.3.0
+
 0.7.1
 =====
 
