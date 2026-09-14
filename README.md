@@ -613,15 +613,20 @@ with another process. Keep the history and re-open instead.
 
 ## Threads
 
-The indicator functions release the GIL while the C code runs, so calls from several
-threads run concurrently. This applies to the Function API, the Streaming API and the
-Abstract API, which calls the same functions.
+The Function API releases the GIL while TA-Lib computes on 30,000 bars or
+more, not counting leading NaN bars, so indicator calls from several threads
+run in parallel, `abstract.Function` calls included. Below that, for most
+indicators, handing the GIL over between threads costs more than it saves, and
+a call keeps it.
 
-Initialization, shutdown and the global settings stay under the GIL:
-`set_unstable_period`, `set_compatibility`, `_ta_set_candle_settings` and
-`_ta_restore_candle_default_settings`. Changing a setting while indicator calls are running
-in other threads is undefined behavior. Change settings when no call is in progress,
-and the next calls in every thread see the new value.
+In the Streaming API, opening a handle (the constructor and `open_and_fill`)
+releases the GIL the same way. Everything else on a handle (`update`, `peek`,
+`advance`, `copy`, and the `value` and `out_range` properties) keeps it, so
+threads feeding their own handles take turns.
+
+Set the global settings, such as `set_unstable_period()`, before starting the
+threads. Changing one while an indicator call is running in another thread is
+undefined behaviour, as it is in TA-Lib C.
 
 ## Supported Indicators and Functions 📋
 

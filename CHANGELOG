@@ -24,6 +24,17 @@
   ``real`` and ``integer``; they are ``supertrend`` and ``trend``, the names
   ``abstract.Function('SUPERTREND').output_names`` already reported.
 
+- [NEW]: The Function API releases the GIL while TA-Lib computes on 30,000
+  bars or more, so indicator calls from several threads run in parallel,
+  ``abstract.Function`` calls included, and so does opening a stream handle.
+  Set ``set_unstable_period()`` before starting the threads: changing it while
+  a call is running in another thread is undefined behaviour, as in TA-Lib C.
+  Thanks @meet-brad-ch (#763).
+
+- [FIX]: A function without a lookback, such as ``talib.ACOS``, given an empty
+  array wrote one element outside its buffers and could crash the interpreter
+  later.  It returns an empty array.
+
 0.8.0
 =====
 
