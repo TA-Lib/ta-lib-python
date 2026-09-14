@@ -1,7 +1,5 @@
-0.8.0
+0.8.1
 =====
-
-- [NEW]: Support TA-Lib C 0.8.1, which is now the minimum required version.
 
 - [CHANGE]: ``talib.stream`` is now the real streaming API of TA-Lib C 0.8.1:
   ``stream.SMA(close)`` returns a handle, not a value.  ``handle.value`` is the
@@ -21,6 +19,11 @@
 - [NEW]: ``talib.InsufficientHistory``, raised when a stream is opened with
   too little history.  It is the library's one recoverable error, so it is
   catchable on its own rather than as a bare ``Exception``.
+
+0.8.0
+=====
+
+- [NEW]: Support TA-Lib C 0.8.1, which is now the minimum required version.
 
 - [NEW]: The 40 functions TA-Lib C added since 0.7.1: AC, ADR, AO, CMF, CMOU,
   COPPOCK, CUMSUM, CVI, DONCHIAN, DPO, EFI, ER, ERI, FOSC, FRACTAL, HA, HMA,
