@@ -1499,8 +1499,8 @@ Parameters:
     timeperiod: 10
     multiplier: 3.0
 Outputs:
-    real
-    integer"""
+    supertrend
+    trend"""
 @overload
 def SUPERTREND(real: Union[pd.Series, np.ndarray], timeperiod=10, multiplier=3.0) -> Tuple[np.ndarray, np.ndarray]: ...
 @overload

@@ -20,6 +20,10 @@
   too little history.  It is the library's one recoverable error, so it is
   catchable on its own rather than as a bare ``Exception``.
 
+- [FIX]: ``help(talib.SUPERTREND)`` and the ``abstract`` stub named the outputs
+  ``real`` and ``integer``; they are ``supertrend`` and ``trend``, the names
+  ``abstract.Function('SUPERTREND').output_names`` already reported.
+
 0.8.0
 =====
 

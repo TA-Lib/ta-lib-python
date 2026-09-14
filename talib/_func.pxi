@@ -5961,8 +5961,8 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
         timeperiod: 10
         multiplier: 3.0
     Outputs:
-        real
-        integer
+        supertrend
+        trend
     """
     cdef:
         np.npy_intp length
@@ -5970,8 +5970,8 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
         TA_RetCode retCode
         int outbegidx
         int outnbelement
-        np.ndarray outreal
-        np.ndarray outinteger
+        np.ndarray outsupertrend
+        np.ndarray outtrend
     high = check_array(high)
     low = check_array(low)
     close = check_array(close)
@@ -5979,11 +5979,11 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUPERTREND_Lookback( timeperiod , multiplier )
-    outreal = make_double_array(length, lookback)
-    outinteger = make_int_array(length, lookback)
-    retCode = lib.TA_SUPERTREND( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , multiplier , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback , <int *>(outinteger.data)+lookback )
+    outsupertrend = make_double_array(length, lookback)
+    outtrend = make_int_array(length, lookback)
+    retCode = lib.TA_SUPERTREND( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , multiplier , &outbegidx , &outnbelement , <double *>(outsupertrend.data)+lookback , <int *>(outtrend.data)+lookback )
     _ta_check_success("TA_SUPERTREND", retCode)
-    return outreal , outinteger 
+    return outsupertrend , outtrend 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
