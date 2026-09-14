@@ -378,12 +378,8 @@ for f in functions:
             else:
                 assert False, args
 
-    print('    with nogil:')
-    print('        retCode = lib.%s(' % name, end=' ')
-
-    for i, arg in enumerate(args):
-        if i > 0:
-            print(',', end=' ')
+    call_args = []
+    for arg in args:
         var = arg.split()[-1]
 
         if var.endswith('[]'):
@@ -393,21 +389,25 @@ for f in functions:
             else:
                 data = '(%s.data)+begidx' % var
             if 'double' in arg:
-                print('<double *>%s' % data, end=' ')
+                call_args.append('<double *>%s' % data)
             elif 'int' in arg:
-                print('<int *>%s' % data, end=' ')
+                call_args.append('<int *>%s' % data)
             else:
                 assert False, arg
 
         elif var.startswith('*'):
-            var = cleanup(var[1:])
-            print('&%s' % var, end=' ')
+            call_args.append('&%s' % cleanup(var[1:]))
 
         else:
-            cleaned = cleanup(var) if var != 'startIdx' else '0'
-            print(cleaned, end=' ')
+            call_args.append(cleanup(var) if var != 'startIdx' else '0')
 
-    print(')')
+    # An empty input has begidx -1, so the call would read and write one element
+    # before the buffers.
+    print('    if length > 0:')
+    print('        with nogil:')
+    print('            retCode = lib.%s( %s )' % (name, ' , '.join(call_args)))
+    print('    else:')
+    print('        retCode = lib.TA_SUCCESS')
     print('    _ta_check_success("%s", retCode)' % name)
     if 'INDEX' in f:
         for arg in args:

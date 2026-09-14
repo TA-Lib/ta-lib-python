@@ -169,8 +169,11 @@ def AC( np.ndarray high not None , np.ndarray low not None , int fastperiod=-2**
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AC_Lookback( fastperiod , slowperiod , signalperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AC", retCode)
     return outreal 
 
@@ -209,8 +212,11 @@ def ACCBANDS( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     outrealupperband = make_double_array(length, lookback)
     outrealmiddleband = make_double_array(length, lookback)
     outreallowerband = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ACCBANDS( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ACCBANDS( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ACCBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
 
@@ -239,8 +245,11 @@ def ACOS( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ACOS_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ACOS( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ACOS( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ACOS", retCode)
     return outreal 
 
@@ -272,8 +281,11 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AD_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AD( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AD( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AD", retCode)
     return outreal 
 
@@ -304,8 +316,11 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADD_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ADD( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ADD( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ADD", retCode)
     return outreal 
 
@@ -340,8 +355,11 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADOSC_Lookback( fastperiod , slowperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ADOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ADOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ADOSC", retCode)
     return outreal 
 
@@ -373,8 +391,11 @@ def ADR( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2*
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ADR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ADR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ADR", retCode)
     return outreal 
 
@@ -407,8 +428,11 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADX_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ADX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ADX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ADX", retCode)
     return outreal 
 
@@ -441,8 +465,11 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADXR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ADXR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ADXR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ADXR", retCode)
     return outreal 
 
@@ -475,8 +502,11 @@ def AO( np.ndarray high not None , np.ndarray low not None , int fastperiod=-2**
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AO_Lookback( fastperiod , slowperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AO( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AO( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AO", retCode)
     return outreal 
 
@@ -509,8 +539,11 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_APO_Lookback( fastperiod , slowperiod , matype )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_APO( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_APO( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_APO", retCode)
     return outreal 
 
@@ -545,8 +578,11 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     lookback = begidx + lib.TA_AROON_Lookback( timeperiod )
     outaroondown = make_double_array(length, lookback)
     outaroonup = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AROON( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown.data)+lookback , <double *>(outaroonup.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AROON( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outaroondown.data)+lookback , <double *>(outaroonup.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AROON", retCode)
     return outaroondown , outaroonup 
 
@@ -578,8 +614,11 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AROONOSC_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AROONOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AROONOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AROONOSC", retCode)
     return outreal 
 
@@ -608,8 +647,11 @@ def ASIN( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ASIN_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ASIN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ASIN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ASIN", retCode)
     return outreal 
 
@@ -638,8 +680,11 @@ def ATAN( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ATAN_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ATAN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ATAN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ATAN", retCode)
     return outreal 
 
@@ -672,8 +717,11 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ATR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ATR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ATR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ATR", retCode)
     return outreal 
 
@@ -704,8 +752,11 @@ def AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AVGDEV_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AVGDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AVGDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AVGDEV", retCode)
     return outreal 
 
@@ -737,8 +788,11 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AVGPRICE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_AVGPRICE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_AVGPRICE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_AVGPRICE", retCode)
     return outreal 
 
@@ -778,8 +832,11 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
     outrealupperband = make_double_array(length, lookback)
     outrealmiddleband = make_double_array(length, lookback)
     outreallowerband = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_BBANDS( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_BBANDS( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_BBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
 
@@ -812,8 +869,11 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_BETA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_BETA( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_BETA( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_BETA", retCode)
     return outreal 
 
@@ -845,8 +905,11 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_BOP_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_BOP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_BOP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_BOP", retCode)
     return outreal 
 
@@ -879,8 +942,11 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CCI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CCI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CCI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CCI", retCode)
     return outreal 
 
@@ -912,8 +978,11 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL2CROWS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL2CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL2CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL2CROWS", retCode)
     return outinteger 
 
@@ -945,8 +1014,11 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3BLACKCROWS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3BLACKCROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3BLACKCROWS", retCode)
     return outinteger 
 
@@ -978,8 +1050,11 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3INSIDE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3INSIDE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3INSIDE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3INSIDE", retCode)
     return outinteger 
 
@@ -1011,8 +1086,11 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3LINESTRIKE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3LINESTRIKE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3LINESTRIKE", retCode)
     return outinteger 
 
@@ -1044,8 +1122,11 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3OUTSIDE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3OUTSIDE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3OUTSIDE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3OUTSIDE", retCode)
     return outinteger 
 
@@ -1077,8 +1158,11 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3STARSINSOUTH_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3STARSINSOUTH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3STARSINSOUTH", retCode)
     return outinteger 
 
@@ -1110,8 +1194,11 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3WHITESOLDIERS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDL3WHITESOLDIERS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDL3WHITESOLDIERS", retCode)
     return outinteger 
 
@@ -1145,8 +1232,11 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLABANDONEDBABY_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLABANDONEDBABY( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLABANDONEDBABY", retCode)
     return outinteger 
 
@@ -1178,8 +1268,11 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLADVANCEBLOCK_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLADVANCEBLOCK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLADVANCEBLOCK", retCode)
     return outinteger 
 
@@ -1211,8 +1304,11 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLBELTHOLD_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLBELTHOLD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLBELTHOLD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLBELTHOLD", retCode)
     return outinteger 
 
@@ -1244,8 +1340,11 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLBREAKAWAY_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLBREAKAWAY( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLBREAKAWAY( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLBREAKAWAY", retCode)
     return outinteger 
 
@@ -1277,8 +1376,11 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCLOSINGMARUBOZU_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLCLOSINGMARUBOZU( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLCLOSINGMARUBOZU", retCode)
     return outinteger 
 
@@ -1310,8 +1412,11 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCONCEALBABYSWALL_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLCONCEALBABYSWALL( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLCONCEALBABYSWALL", retCode)
     return outinteger 
 
@@ -1343,8 +1448,11 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCOUNTERATTACK_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLCOUNTERATTACK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLCOUNTERATTACK", retCode)
     return outinteger 
 
@@ -1378,8 +1486,11 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDARKCLOUDCOVER_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLDARKCLOUDCOVER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLDARKCLOUDCOVER", retCode)
     return outinteger 
 
@@ -1411,8 +1522,11 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDOJI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLDOJI", retCode)
     return outinteger 
 
@@ -1444,8 +1558,11 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDOJISTAR_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLDOJISTAR", retCode)
     return outinteger 
 
@@ -1477,8 +1594,11 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDRAGONFLYDOJI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLDRAGONFLYDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLDRAGONFLYDOJI", retCode)
     return outinteger 
 
@@ -1510,8 +1630,11 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLENGULFING_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLENGULFING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLENGULFING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLENGULFING", retCode)
     return outinteger 
 
@@ -1545,8 +1668,11 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLEVENINGDOJISTAR_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLEVENINGDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLEVENINGDOJISTAR", retCode)
     return outinteger 
 
@@ -1580,8 +1706,11 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLEVENINGSTAR_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLEVENINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLEVENINGSTAR", retCode)
     return outinteger 
 
@@ -1613,8 +1742,11 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLGAPSIDESIDEWHITE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLGAPSIDESIDEWHITE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLGAPSIDESIDEWHITE", retCode)
     return outinteger 
 
@@ -1646,8 +1778,11 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLGRAVESTONEDOJI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLGRAVESTONEDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLGRAVESTONEDOJI", retCode)
     return outinteger 
 
@@ -1679,8 +1814,11 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHAMMER_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHAMMER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHAMMER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHAMMER", retCode)
     return outinteger 
 
@@ -1712,8 +1850,11 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHANGINGMAN_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHANGINGMAN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHANGINGMAN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHANGINGMAN", retCode)
     return outinteger 
 
@@ -1745,8 +1886,11 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHARAMI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHARAMI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHARAMI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHARAMI", retCode)
     return outinteger 
 
@@ -1778,8 +1922,11 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHARAMICROSS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHARAMICROSS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHARAMICROSS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHARAMICROSS", retCode)
     return outinteger 
 
@@ -1811,8 +1958,11 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIGHWAVE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHIGHWAVE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHIGHWAVE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHIGHWAVE", retCode)
     return outinteger 
 
@@ -1844,8 +1994,11 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIKKAKE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHIKKAKE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHIKKAKE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHIKKAKE", retCode)
     return outinteger 
 
@@ -1877,8 +2030,11 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIKKAKEMOD_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHIKKAKEMOD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHIKKAKEMOD", retCode)
     return outinteger 
 
@@ -1910,8 +2066,11 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHOMINGPIGEON_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLHOMINGPIGEON( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLHOMINGPIGEON", retCode)
     return outinteger 
 
@@ -1943,8 +2102,11 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLIDENTICAL3CROWS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLIDENTICAL3CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLIDENTICAL3CROWS", retCode)
     return outinteger 
 
@@ -1976,8 +2138,11 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLINNECK_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLINNECK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLINNECK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLINNECK", retCode)
     return outinteger 
 
@@ -2009,8 +2174,11 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLINVERTEDHAMMER_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLINVERTEDHAMMER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLINVERTEDHAMMER", retCode)
     return outinteger 
 
@@ -2042,8 +2210,11 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLKICKING_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLKICKING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLKICKING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLKICKING", retCode)
     return outinteger 
 
@@ -2075,8 +2246,11 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLKICKINGBYLENGTH_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLKICKINGBYLENGTH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLKICKINGBYLENGTH", retCode)
     return outinteger 
 
@@ -2108,8 +2282,11 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLADDERBOTTOM_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLLADDERBOTTOM( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLLADDERBOTTOM", retCode)
     return outinteger 
 
@@ -2141,8 +2318,11 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLONGLEGGEDDOJI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLLONGLEGGEDDOJI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLLONGLEGGEDDOJI", retCode)
     return outinteger 
 
@@ -2174,8 +2354,11 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLONGLINE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLLONGLINE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLLONGLINE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLLONGLINE", retCode)
     return outinteger 
 
@@ -2207,8 +2390,11 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMARUBOZU_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLMARUBOZU( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLMARUBOZU( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLMARUBOZU", retCode)
     return outinteger 
 
@@ -2240,8 +2426,11 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMATCHINGLOW_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLMATCHINGLOW( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLMATCHINGLOW", retCode)
     return outinteger 
 
@@ -2275,8 +2464,11 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMATHOLD_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLMATHOLD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLMATHOLD( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLMATHOLD", retCode)
     return outinteger 
 
@@ -2310,8 +2502,11 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMORNINGDOJISTAR_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLMORNINGDOJISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLMORNINGDOJISTAR", retCode)
     return outinteger 
 
@@ -2345,8 +2540,11 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMORNINGSTAR_Lookback( penetration )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLMORNINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , penetration , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLMORNINGSTAR", retCode)
     return outinteger 
 
@@ -2378,8 +2576,11 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLONNECK_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLONNECK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLONNECK( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLONNECK", retCode)
     return outinteger 
 
@@ -2411,8 +2612,11 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLPIERCING_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLPIERCING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLPIERCING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLPIERCING", retCode)
     return outinteger 
 
@@ -2444,8 +2648,11 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLRICKSHAWMAN_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLRICKSHAWMAN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLRICKSHAWMAN", retCode)
     return outinteger 
 
@@ -2477,8 +2684,11 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLRISEFALL3METHODS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLRISEFALL3METHODS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLRISEFALL3METHODS", retCode)
     return outinteger 
 
@@ -2510,8 +2720,11 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSEPARATINGLINES_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSEPARATINGLINES( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSEPARATINGLINES", retCode)
     return outinteger 
 
@@ -2543,8 +2756,11 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSHOOTINGSTAR_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSHOOTINGSTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSHOOTINGSTAR", retCode)
     return outinteger 
 
@@ -2576,8 +2792,11 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSHORTLINE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSHORTLINE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSHORTLINE( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSHORTLINE", retCode)
     return outinteger 
 
@@ -2609,8 +2828,11 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSPINNINGTOP_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSPINNINGTOP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSPINNINGTOP", retCode)
     return outinteger 
 
@@ -2642,8 +2864,11 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSTALLEDPATTERN_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSTALLEDPATTERN( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSTALLEDPATTERN", retCode)
     return outinteger 
 
@@ -2675,8 +2900,11 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSTICKSANDWICH_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLSTICKSANDWICH( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLSTICKSANDWICH", retCode)
     return outinteger 
 
@@ -2708,8 +2936,11 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTAKURI_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLTAKURI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLTAKURI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLTAKURI", retCode)
     return outinteger 
 
@@ -2741,8 +2972,11 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTASUKIGAP_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLTASUKIGAP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLTASUKIGAP( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLTASUKIGAP", retCode)
     return outinteger 
 
@@ -2774,8 +3008,11 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTHRUSTING_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLTHRUSTING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLTHRUSTING( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLTHRUSTING", retCode)
     return outinteger 
 
@@ -2807,8 +3044,11 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTRISTAR_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLTRISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLTRISTAR( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLTRISTAR", retCode)
     return outinteger 
 
@@ -2840,8 +3080,11 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLUNIQUE3RIVER_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLUNIQUE3RIVER( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLUNIQUE3RIVER", retCode)
     return outinteger 
 
@@ -2873,8 +3116,11 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLUPSIDEGAP2CROWS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLUPSIDEGAP2CROWS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLUPSIDEGAP2CROWS", retCode)
     return outinteger 
 
@@ -2906,8 +3152,11 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLXSIDEGAP3METHODS_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CDLXSIDEGAP3METHODS( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CDLXSIDEGAP3METHODS", retCode)
     return outinteger 
 
@@ -2936,8 +3185,11 @@ def CEIL( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CEIL_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CEIL( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CEIL( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CEIL", retCode)
     return outreal 
 
@@ -2971,8 +3223,11 @@ def CMF( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMF_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CMF( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CMF( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CMF", retCode)
     return outreal 
 
@@ -3003,8 +3258,11 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMO_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CMO( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CMO( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CMO", retCode)
     return outreal 
 
@@ -3035,8 +3293,11 @@ def CMOU( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMOU_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CMOU( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CMOU( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CMOU", retCode)
     return outreal 
 
@@ -3069,8 +3330,11 @@ def COPPOCK( np.ndarray real not None , int wmaperiod=-2**31 , int roc1period=-2
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COPPOCK_Lookback( wmaperiod , roc1period , roc2period )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_COPPOCK( 0 , endidx , <double *>(real.data)+begidx , wmaperiod , roc1period , roc2period , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_COPPOCK( 0 , endidx , <double *>(real.data)+begidx , wmaperiod , roc1period , roc2period , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_COPPOCK", retCode)
     return outreal 
 
@@ -3103,8 +3367,11 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CORREL_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CORREL( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CORREL( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CORREL", retCode)
     return outreal 
 
@@ -3133,8 +3400,11 @@ def COS( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COS_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_COS( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_COS( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_COS", retCode)
     return outreal 
 
@@ -3163,8 +3433,11 @@ def COSH( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COSH_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_COSH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_COSH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_COSH", retCode)
     return outreal 
 
@@ -3193,8 +3466,11 @@ def CUMSUM( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CUMSUM_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CUMSUM( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CUMSUM( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CUMSUM", retCode)
     return outreal 
 
@@ -3227,8 +3503,11 @@ def CVI( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2*
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CVI_Lookback( timeperiod , rocperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_CVI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , rocperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_CVI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , rocperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_CVI", retCode)
     return outreal 
 
@@ -3259,8 +3538,11 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DEMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_DEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_DEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_DEMA", retCode)
     return outreal 
 
@@ -3291,8 +3573,11 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DIV_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_DIV( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_DIV( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_DIV", retCode)
     return outreal 
 
@@ -3330,8 +3615,11 @@ def DONCHIAN( np.ndarray high not None , np.ndarray low not None , int timeperio
     outrealupperband = make_double_array(length, lookback)
     outrealmiddleband = make_double_array(length, lookback)
     outreallowerband = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_DONCHIAN( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_DONCHIAN( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_DONCHIAN", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
 
@@ -3362,8 +3650,11 @@ def DPO( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DPO_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_DPO( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_DPO( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_DPO", retCode)
     return outreal 
 
@@ -3396,8 +3687,11 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DX_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_DX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_DX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_DX", retCode)
     return outreal 
 
@@ -3429,8 +3723,11 @@ def EFI( np.ndarray close not None , np.ndarray volume not None , int timeperiod
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EFI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_EFI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_EFI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_EFI", retCode)
     return outreal 
 
@@ -3461,8 +3758,11 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_EMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_EMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_EMA", retCode)
     return outreal 
 
@@ -3493,8 +3793,11 @@ def ER( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ER_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ER( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ER( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ER", retCode)
     return outreal 
 
@@ -3530,8 +3833,11 @@ def ERI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     lookback = begidx + lib.TA_ERI_Lookback( timeperiod )
     outbullpower = make_double_array(length, lookback)
     outbearpower = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ERI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outbullpower.data)+lookback , <double *>(outbearpower.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ERI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outbullpower.data)+lookback , <double *>(outbearpower.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ERI", retCode)
     return outbullpower , outbearpower 
 
@@ -3560,8 +3866,11 @@ def EXP( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EXP_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_EXP( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_EXP( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_EXP", retCode)
     return outreal 
 
@@ -3590,8 +3899,11 @@ def FLOOR( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_FLOOR_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_FLOOR( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_FLOOR( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_FLOOR", retCode)
     return outreal 
 
@@ -3622,8 +3934,11 @@ def FOSC( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_FOSC_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_FOSC( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_FOSC( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_FOSC", retCode)
     return outreal 
 
@@ -3659,8 +3974,11 @@ def FRACTAL( np.ndarray high not None , np.ndarray low not None , int leftbars=-
     lookback = begidx + lib.TA_FRACTAL_Lookback( leftbars , rightbars )
     outswinghigh = make_int_array(length, lookback)
     outswinglow = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_FRACTAL( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , leftbars , rightbars , &outbegidx , &outnbelement , <int *>(outswinghigh.data)+lookback , <int *>(outswinglow.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_FRACTAL( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , leftbars , rightbars , &outbegidx , &outnbelement , <int *>(outswinghigh.data)+lookback , <int *>(outswinglow.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_FRACTAL", retCode)
     return outswinghigh , outswinglow 
 
@@ -3701,8 +4019,11 @@ def HA( np.ndarray open not None , np.ndarray high not None , np.ndarray low not
     outhahigh = make_double_array(length, lookback)
     outhalow = make_double_array(length, lookback)
     outhaclose = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HA( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outhaopen.data)+lookback , <double *>(outhahigh.data)+lookback , <double *>(outhalow.data)+lookback , <double *>(outhaclose.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HA( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outhaopen.data)+lookback , <double *>(outhahigh.data)+lookback , <double *>(outhalow.data)+lookback , <double *>(outhaclose.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HA", retCode)
     return outhaopen , outhahigh , outhalow , outhaclose 
 
@@ -3733,8 +4054,11 @@ def HMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HMA", retCode)
     return outreal 
 
@@ -3763,8 +4087,11 @@ def HT_DCPERIOD( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_DCPERIOD_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_DCPERIOD( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_DCPERIOD( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_DCPERIOD", retCode)
     return outreal 
 
@@ -3793,8 +4120,11 @@ def HT_DCPHASE( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_DCPHASE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_DCPHASE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_DCPHASE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_DCPHASE", retCode)
     return outreal 
 
@@ -3826,8 +4156,11 @@ def HT_PHASOR( np.ndarray real not None ):
     lookback = begidx + lib.TA_HT_PHASOR_Lookback( )
     outinphase = make_double_array(length, lookback)
     outquadrature = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_PHASOR( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outinphase.data)+lookback , <double *>(outquadrature.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_PHASOR( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outinphase.data)+lookback , <double *>(outquadrature.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_PHASOR", retCode)
     return outinphase , outquadrature 
 
@@ -3859,8 +4192,11 @@ def HT_SINE( np.ndarray real not None ):
     lookback = begidx + lib.TA_HT_SINE_Lookback( )
     outsine = make_double_array(length, lookback)
     outleadsine = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_SINE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outsine.data)+lookback , <double *>(outleadsine.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_SINE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outsine.data)+lookback , <double *>(outleadsine.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_SINE", retCode)
     return outsine , outleadsine 
 
@@ -3889,8 +4225,11 @@ def HT_TRENDLINE( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_TRENDLINE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_TRENDLINE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_TRENDLINE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_TRENDLINE", retCode)
     return outreal 
 
@@ -3919,8 +4258,11 @@ def HT_TRENDMODE( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_TRENDMODE_Lookback( )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_HT_TRENDMODE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_HT_TRENDMODE( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_HT_TRENDMODE", retCode)
     return outinteger 
 
@@ -3952,8 +4294,11 @@ def IMI( np.ndarray open not None , np.ndarray close not None , int timeperiod=-
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_IMI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_IMI( 0 , endidx , <double *>(open.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_IMI( 0 , endidx , <double *>(open.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_IMI", retCode)
     return outreal 
 
@@ -3984,8 +4329,11 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_KAMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_KAMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_KAMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_KAMA", retCode)
     return outreal 
 
@@ -4026,8 +4374,11 @@ def KC( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     outrealupperband = make_double_array(length, lookback)
     outrealmiddleband = make_double_array(length, lookback)
     outreallowerband = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_KC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , atrperiod , nbdev , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_KC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , atrperiod , nbdev , &outbegidx , &outnbelement , <double *>(outrealupperband.data)+lookback , <double *>(outrealmiddleband.data)+lookback , <double *>(outreallowerband.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_KC", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
 
@@ -4070,8 +4421,11 @@ def KDJ( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     outk = make_double_array(length, lookback)
     outd = make_double_array(length, lookback)
     outj = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_KDJ( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outk.data)+lookback , <double *>(outd.data)+lookback , <double *>(outj.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_KDJ( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outk.data)+lookback , <double *>(outd.data)+lookback , <double *>(outj.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_KDJ", retCode)
     return outk , outd , outj 
 
@@ -4102,8 +4456,11 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LINEARREG( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LINEARREG( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LINEARREG", retCode)
     return outreal 
 
@@ -4134,8 +4491,11 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_ANGLE_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LINEARREG_ANGLE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LINEARREG_ANGLE", retCode)
     return outreal 
 
@@ -4166,8 +4526,11 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LINEARREG_INTERCEPT( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LINEARREG_INTERCEPT", retCode)
     return outreal 
 
@@ -4198,8 +4561,11 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_SLOPE_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LINEARREG_SLOPE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LINEARREG_SLOPE", retCode)
     return outreal 
 
@@ -4228,8 +4594,11 @@ def LN( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LN_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LN", retCode)
     return outreal 
 
@@ -4258,8 +4627,11 @@ def LOG10( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LOG10_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_LOG10( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_LOG10( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_LOG10", retCode)
     return outreal 
 
@@ -4291,8 +4663,11 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MA_Lookback( timeperiod , matype )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MA", retCode)
     return outreal 
 
@@ -4331,8 +4706,11 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
     outmacd = make_double_array(length, lookback)
     outmacdsignal = make_double_array(length, lookback)
     outmacdhist = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MACD( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MACD( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MACD", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
@@ -4374,8 +4752,11 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
     outmacd = make_double_array(length, lookback)
     outmacdsignal = make_double_array(length, lookback)
     outmacdhist = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MACDEXT( 0 , endidx , <double *>(real.data)+begidx , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MACDEXT( 0 , endidx , <double *>(real.data)+begidx , fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MACDEXT", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
@@ -4412,8 +4793,11 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
     outmacd = make_double_array(length, lookback)
     outmacdsignal = make_double_array(length, lookback)
     outmacdhist = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MACDFIX( 0 , endidx , <double *>(real.data)+begidx , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MACDFIX( 0 , endidx , <double *>(real.data)+begidx , signalperiod , &outbegidx , &outnbelement , <double *>(outmacd.data)+lookback , <double *>(outmacdsignal.data)+lookback , <double *>(outmacdhist.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MACDFIX", retCode)
     return outmacd , outmacdsignal , outmacdhist 
 
@@ -4448,8 +4832,11 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
     lookback = begidx + lib.TA_MAMA_Lookback( fastlimit , slowlimit )
     outmama = make_double_array(length, lookback)
     outfama = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MAMA( 0 , endidx , <double *>(real.data)+begidx , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama.data)+lookback , <double *>(outfama.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MAMA( 0 , endidx , <double *>(real.data)+begidx , fastlimit , slowlimit , &outbegidx , &outnbelement , <double *>(outmama.data)+lookback , <double *>(outfama.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MAMA", retCode)
     return outmama , outfama 
 
@@ -4480,8 +4867,11 @@ def MARKETFI( np.ndarray high not None , np.ndarray low not None , np.ndarray vo
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MARKETFI_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MARKETFI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MARKETFI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MARKETFI", retCode)
     return outreal 
 
@@ -4514,8 +4904,11 @@ def MASSI( np.ndarray high not None , np.ndarray low not None , int fastperiod=-
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MASSI_Lookback( fastperiod , slowperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MASSI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MASSI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , fastperiod , slowperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MASSI", retCode)
     return outreal 
 
@@ -4550,8 +4943,11 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAVP_Lookback( minperiod , maxperiod , matype )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MAVP( 0 , endidx , <double *>(real.data)+begidx , <double *>(periods.data)+begidx , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MAVP( 0 , endidx , <double *>(real.data)+begidx , <double *>(periods.data)+begidx , minperiod , maxperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MAVP", retCode)
     return outreal 
 
@@ -4582,8 +4978,11 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAX_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MAX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MAX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MAX", retCode)
     return outreal 
 
@@ -4614,8 +5013,11 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAXINDEX_Lookback( timeperiod )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MAXINDEX", retCode)
     outinteger_data = <int*>outinteger.data
     for i from lookback <= i < length:
@@ -4648,8 +5050,11 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MEDPRICE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MEDPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MEDPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MEDPRICE", retCode)
     return outreal 
 
@@ -4683,8 +5088,11 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MFI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MFI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MFI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MFI", retCode)
     return outreal 
 
@@ -4715,8 +5123,11 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIDPOINT_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MIDPOINT( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MIDPOINT( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MIDPOINT", retCode)
     return outreal 
 
@@ -4748,8 +5159,11 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIDPRICE_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MIDPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MIDPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MIDPRICE", retCode)
     return outreal 
 
@@ -4780,8 +5194,11 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIN_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MIN( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MIN( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MIN", retCode)
     return outreal 
 
@@ -4812,8 +5229,11 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MININDEX_Lookback( timeperiod )
     outinteger = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MININDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MININDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outinteger.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MININDEX", retCode)
     outinteger_data = <int*>outinteger.data
     for i from lookback <= i < length:
@@ -4850,8 +5270,11 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
     lookback = begidx + lib.TA_MINMAX_Lookback( timeperiod )
     outmin = make_double_array(length, lookback)
     outmax = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MINMAX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outmin.data)+lookback , <double *>(outmax.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MINMAX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outmin.data)+lookback , <double *>(outmax.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MINMAX", retCode)
     return outmin , outmax 
 
@@ -4885,8 +5308,11 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
     lookback = begidx + lib.TA_MINMAXINDEX_Lookback( timeperiod )
     outminidx = make_int_array(length, lookback)
     outmaxidx = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MINMAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx.data)+lookback , <int *>(outmaxidx.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MINMAXINDEX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <int *>(outminidx.data)+lookback , <int *>(outmaxidx.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MINMAXINDEX", retCode)
     outminidx_data = <int*>outminidx.data
     for i from lookback <= i < length:
@@ -4925,8 +5351,11 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINUS_DI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MINUS_DI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MINUS_DI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MINUS_DI", retCode)
     return outreal 
 
@@ -4958,8 +5387,11 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINUS_DM_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MINUS_DM( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MINUS_DM( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MINUS_DM", retCode)
     return outreal 
 
@@ -4990,8 +5422,11 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MOM_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MOM( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MOM( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MOM", retCode)
     return outreal 
 
@@ -5022,8 +5457,11 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MULT_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_MULT( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_MULT( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_MULT", retCode)
     return outreal 
 
@@ -5056,8 +5494,11 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_NATR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_NATR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_NATR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_NATR", retCode)
     return outreal 
 
@@ -5087,8 +5528,11 @@ def NVI( np.ndarray close not None , np.ndarray volume not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_NVI_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_NVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_NVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_NVI", retCode)
     return outreal 
 
@@ -5119,8 +5563,11 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_OBV_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_OBV( 0 , endidx , <double *>(real.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_OBV( 0 , endidx , <double *>(real.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_OBV", retCode)
     return outreal 
 
@@ -5152,8 +5599,11 @@ def PERCENTILE( np.ndarray real not None , int timeperiod=-2**31 , double percen
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PERCENTILE_Lookback( timeperiod , percentile )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PERCENTILE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , percentile , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PERCENTILE( 0 , endidx , <double *>(real.data)+begidx , timeperiod , percentile , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PERCENTILE", retCode)
     return outreal 
 
@@ -5184,8 +5634,11 @@ def PERCENTRANK( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PERCENTRANK_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PERCENTRANK( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PERCENTRANK( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PERCENTRANK", retCode)
     return outreal 
 
@@ -5218,8 +5671,11 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PLUS_DI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PLUS_DI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PLUS_DI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PLUS_DI", retCode)
     return outreal 
 
@@ -5251,8 +5707,11 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PLUS_DM_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PLUS_DM( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PLUS_DM( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PLUS_DM", retCode)
     return outreal 
 
@@ -5285,8 +5744,11 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PPO_Lookback( fastperiod , slowperiod , matype )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PPO( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PPO( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PPO", retCode)
     return outreal 
 
@@ -5316,8 +5778,11 @@ def PVI( np.ndarray close not None , np.ndarray volume not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVI_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PVI( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PVI", retCode)
     return outreal 
 
@@ -5350,8 +5815,11 @@ def PVO( np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2*
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVO_Lookback( fastperiod , slowperiod , matype )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PVO( 0 , endidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PVO( 0 , endidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PVO", retCode)
     return outreal 
 
@@ -5381,8 +5849,11 @@ def PVT( np.ndarray close not None , np.ndarray volume not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVT_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_PVT( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_PVT( 0 , endidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_PVT", retCode)
     return outreal 
 
@@ -5414,8 +5885,11 @@ def QSTICK( np.ndarray open not None , np.ndarray close not None , int timeperio
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_QSTICK_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_QSTICK( 0 , endidx , <double *>(open.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_QSTICK( 0 , endidx , <double *>(open.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_QSTICK", retCode)
     return outreal 
 
@@ -5446,8 +5920,11 @@ def RMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_RMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_RMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_RMA", retCode)
     return outreal 
 
@@ -5478,8 +5955,11 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROC_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ROC( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ROC( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ROC", retCode)
     return outreal 
 
@@ -5510,8 +5990,11 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCP_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ROCP( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ROCP( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ROCP", retCode)
     return outreal 
 
@@ -5542,8 +6025,11 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ROCR( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ROCR( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ROCR", retCode)
     return outreal 
 
@@ -5574,8 +6060,11 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCR100_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ROCR100( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ROCR100( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ROCR100", retCode)
     return outreal 
 
@@ -5606,8 +6095,11 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RSI_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_RSI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_RSI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_RSI", retCode)
     return outreal 
 
@@ -5639,8 +6131,11 @@ def RVI( np.ndarray real not None , int timeperiod=-2**31 , int stddevperiod=-2*
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RVI_Lookback( timeperiod , stddevperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_RVI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , stddevperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_RVI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , stddevperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_RVI", retCode)
     return outreal 
 
@@ -5671,8 +6166,11 @@ def RVOL( np.ndarray volume not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RVOL_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_RVOL( 0 , endidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_RVOL( 0 , endidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_RVOL", retCode)
     return outreal 
 
@@ -5705,8 +6203,11 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SAR_Lookback( acceleration , maximum )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SAR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SAR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , acceleration , maximum , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SAR", retCode)
     return outreal 
 
@@ -5745,8 +6246,11 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SAREXT( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SAREXT( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SAREXT", retCode)
     return outreal 
 
@@ -5775,8 +6279,11 @@ def SIN( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SIN_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SIN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SIN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SIN", retCode)
     return outreal 
 
@@ -5805,8 +6312,11 @@ def SINH( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SINH_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SINH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SINH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SINH", retCode)
     return outreal 
 
@@ -5837,8 +6347,11 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SMA", retCode)
     return outreal 
 
@@ -5877,8 +6390,11 @@ def SMI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     lookback = begidx + lib.TA_SMI_Lookback( timeperiod , fastperiod , slowperiod , signalperiod )
     outsmi = make_double_array(length, lookback)
     outsmisignal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SMI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outsmi.data)+lookback , <double *>(outsmisignal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SMI( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outsmi.data)+lookback , <double *>(outsmisignal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SMI", retCode)
     return outsmi , outsmisignal 
 
@@ -5907,8 +6423,11 @@ def SQRT( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SQRT_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SQRT( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SQRT( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SQRT", retCode)
     return outreal 
 
@@ -5940,8 +6459,11 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_STDDEV_Lookback( timeperiod , nbdev )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_STDDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_STDDEV( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_STDDEV", retCode)
     return outreal 
 
@@ -5981,8 +6503,11 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     lookback = begidx + lib.TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
     outslowk = make_double_array(length, lookback)
     outslowd = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_STOCH( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk.data)+lookback , <double *>(outslowd.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_STOCH( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype , &outbegidx , &outnbelement , <double *>(outslowk.data)+lookback , <double *>(outslowd.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_STOCH", retCode)
     return outslowk , outslowd 
 
@@ -6020,8 +6545,11 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     lookback = begidx + lib.TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
     outfastk = make_double_array(length, lookback)
     outfastd = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_STOCHF( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk.data)+lookback , <double *>(outfastd.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_STOCHF( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk.data)+lookback , <double *>(outfastd.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_STOCHF", retCode)
     return outfastk , outfastd 
 
@@ -6058,8 +6586,11 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
     lookback = begidx + lib.TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
     outfastk = make_double_array(length, lookback)
     outfastd = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_STOCHRSI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk.data)+lookback , <double *>(outfastd.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_STOCHRSI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , fastk_period , fastd_period , fastd_matype , &outbegidx , &outnbelement , <double *>(outfastk.data)+lookback , <double *>(outfastd.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_STOCHRSI", retCode)
     return outfastk , outfastd 
 
@@ -6090,8 +6621,11 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUB_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SUB( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SUB( 0 , endidx , <double *>(real0.data)+begidx , <double *>(real1.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SUB", retCode)
     return outreal 
 
@@ -6122,8 +6656,11 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUM_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SUM( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SUM( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SUM", retCode)
     return outreal 
 
@@ -6160,8 +6697,11 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
     lookback = begidx + lib.TA_SUPERTREND_Lookback( timeperiod , multiplier )
     outsupertrend = make_double_array(length, lookback)
     outtrend = make_int_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_SUPERTREND( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , multiplier , &outbegidx , &outnbelement , <double *>(outsupertrend.data)+lookback , <int *>(outtrend.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_SUPERTREND( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , multiplier , &outbegidx , &outnbelement , <double *>(outsupertrend.data)+lookback , <int *>(outtrend.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_SUPERTREND", retCode)
     return outsupertrend , outtrend 
 
@@ -6193,8 +6733,11 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_T3_Lookback( timeperiod , vfactor )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_T3( 0 , endidx , <double *>(real.data)+begidx , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_T3( 0 , endidx , <double *>(real.data)+begidx , timeperiod , vfactor , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_T3", retCode)
     return outreal 
 
@@ -6223,8 +6766,11 @@ def TAN( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TAN_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TAN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TAN( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TAN", retCode)
     return outreal 
 
@@ -6253,8 +6799,11 @@ def TANH( np.ndarray real not None ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TANH_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TANH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TANH( 0 , endidx , <double *>(real.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TANH", retCode)
     return outreal 
 
@@ -6285,8 +6834,11 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TEMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TEMA", retCode)
     return outreal 
 
@@ -6317,8 +6869,11 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRANGE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TRANGE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TRANGE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TRANGE", retCode)
     return outreal 
 
@@ -6349,8 +6904,11 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRIMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TRIMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TRIMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TRIMA", retCode)
     return outreal 
 
@@ -6381,8 +6939,11 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRIX_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TRIX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TRIX( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TRIX", retCode)
     return outreal 
 
@@ -6413,8 +6974,11 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TSF_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TSF( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TSF( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TSF", retCode)
     return outreal 
 
@@ -6446,8 +7010,11 @@ def TSI( np.ndarray real not None , int firstperiod=-2**31 , int secondperiod=-2
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TSI_Lookback( firstperiod , secondperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TSI( 0 , endidx , <double *>(real.data)+begidx , firstperiod , secondperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TSI( 0 , endidx , <double *>(real.data)+begidx , firstperiod , secondperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TSI", retCode)
     return outreal 
 
@@ -6478,8 +7045,11 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TYPPRICE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_TYPPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_TYPPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_TYPPRICE", retCode)
     return outreal 
 
@@ -6514,8 +7084,11 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ULTOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ULTOSC( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod1 , timeperiod2 , timeperiod3 , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ULTOSC", retCode)
     return outreal 
 
@@ -6547,8 +7120,11 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VAR_Lookback( timeperiod , nbdev )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_VAR( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_VAR( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdev , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_VAR", retCode)
     return outreal 
 
@@ -6579,8 +7155,11 @@ def VHF( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VHF_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_VHF( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_VHF( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_VHF", retCode)
     return outreal 
 
@@ -6616,8 +7195,11 @@ def VORTEX( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     lookback = begidx + lib.TA_VORTEX_Lookback( timeperiod )
     outplusvi = make_double_array(length, lookback)
     outminusvi = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_VORTEX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outplusvi.data)+lookback , <double *>(outminusvi.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_VORTEX( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outplusvi.data)+lookback , <double *>(outminusvi.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_VORTEX", retCode)
     return outplusvi , outminusvi 
 
@@ -6649,8 +7231,11 @@ def VWAP( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VWAP_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_VWAP( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_VWAP( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_VWAP", retCode)
     return outreal 
 
@@ -6683,8 +7268,11 @@ def VWMA( np.ndarray real not None , np.ndarray volume not None , int timeperiod
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VWMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_VWMA( 0 , endidx , <double *>(real.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_VWMA( 0 , endidx , <double *>(real.data)+begidx , <double *>(volume.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_VWMA", retCode)
     return outreal 
 
@@ -6715,8 +7303,11 @@ def WAD( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WAD_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_WAD( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_WAD( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_WAD", retCode)
     return outreal 
 
@@ -6747,8 +7338,11 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WCLPRICE_Lookback( )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_WCLPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_WCLPRICE( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_WCLPRICE", retCode)
     return outreal 
 
@@ -6781,8 +7375,11 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WILLR_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_WILLR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_WILLR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_WILLR", retCode)
     return outreal 
 
@@ -6813,8 +7410,11 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_WMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_WMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_WMA", retCode)
     return outreal 
 
@@ -6845,8 +7445,11 @@ def ZLEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ZLEMA_Lookback( timeperiod )
     outreal = make_double_array(length, lookback)
-    with nogil:
-        retCode = lib.TA_ZLEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    if length > 0:
+        with nogil:
+            retCode = lib.TA_ZLEMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    else:
+        retCode = lib.TA_SUCCESS
     _ta_check_success("TA_ZLEMA", retCode)
     return outreal 
 

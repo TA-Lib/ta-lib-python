@@ -1,3 +1,6 @@
+import subprocess
+import sys
+
 import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 import pytest
@@ -45,6 +48,23 @@ def test_input_allnans():
     a[:] = np.nan
     r = func.RSI(a)
     assert np.all(np.isnan(r))
+
+
+def test_input_empty():
+    # Out of process: a write outside the buffers corrupts the heap, and the abort
+    # lands later, on some unrelated free.
+    script = '\n'.join([
+        'import numpy as np, talib',
+        'from talib import abstract',
+        'empty = np.array([], dtype=float)',
+        'prices = dict.fromkeys(("open", "high", "low", "close", "volume", "periods"), empty)',
+        'for name in talib.get_functions():',
+        '    out = abstract.Function(name)(prices)',
+        '    assert all(len(o) == 0 for o in (out if isinstance(out, list) else [out])), name',
+        'print("ok")',
+    ])
+    done = subprocess.run([sys.executable, '-c', script], capture_output=True, text=True)
+    assert (done.returncode, done.stdout.strip()) == (0, 'ok'), done.stderr[-2000:]
 
 
 def test_input_nans():
