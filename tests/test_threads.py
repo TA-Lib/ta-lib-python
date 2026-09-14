@@ -1,3 +1,4 @@
+import os
 import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -11,6 +12,12 @@ from talib import abstract, func, stream
 
 THREADS = 8
 ROUNDS = 10
+
+# A probe passes only if the OS schedules a waiting thread while TA-Lib runs,
+# which a starved runner may not do, so only the dev CI, which sets this, runs
+# them.
+gil_probe = pytest.mark.skipif(not os.environ.get('TALIB_TEST_GIL_PROBES'),
+                               reason='scheduling-dependent; set TALIB_TEST_GIL_PROBES=1')
 
 
 def _while_running(call, meanwhile):
@@ -51,6 +58,7 @@ def _releases_the_gil(make_call):
     lambda close: lambda: func.HT_DCPHASE(close),
     lambda close: lambda: abstract.Function('HT_DCPHASE')(close),
 ], ids=['func', 'abstract'])
+@gil_probe
 def test_indicator_call_releases_the_gil(make_call):
     assert _releases_the_gil(make_call)
 
@@ -59,6 +67,7 @@ def test_indicator_call_releases_the_gil(make_call):
     lambda close: lambda: stream.HT_DCPHASE(close),
     lambda close: lambda: stream.HT_DCPHASE.open_and_fill(close),
 ], ids=['open', 'open_and_fill'])
+@gil_probe
 def test_stream_open_releases_the_gil(make_call):
     assert _releases_the_gil(make_call)
 

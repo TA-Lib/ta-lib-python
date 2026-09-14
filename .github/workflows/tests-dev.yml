@@ -77,5 +77,7 @@ jobs:
         flake8 talib --count --select=E9,F63,F7,F82 --show-source --statistics
 
     - name: Test with pytest
+      env:
+        TALIB_TEST_GIL_PROBES: "1"
       run: |
         PYTHONPATH=. pytest
