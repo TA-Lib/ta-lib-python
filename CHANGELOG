@@ -24,6 +24,13 @@
   ``real`` and ``integer``; they are ``supertrend`` and ``trend``, the names
   ``abstract.Function('SUPERTREND').output_names`` already reported.
 
+- [FIX]: An empty array given to a function whose lookback is zero, such as
+  ``talib.ACOS`` or ``talib.MA(x, timeperiod=1)``, made TA-Lib read and write
+  one element outside the buffers, which could crash the interpreter later or
+  corrupt memory silently.  An empty input now returns empty outputs without
+  calling TA-Lib, whatever the function and its parameters.  The bug dates from
+  0.4.27.
+
 0.8.0
 =====
 

@@ -1,3 +1,7 @@
+import subprocess
+import sys
+import textwrap
+
 import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 import pytest
@@ -45,6 +49,42 @@ def test_input_allnans():
     a[:] = np.nan
     r = func.RSI(a)
     assert np.all(np.isnan(r))
+
+
+@pytest.mark.skipif(sys.platform == 'win32', reason='the guard page uses mprotect')
+def test_input_empty():
+    # The empty inputs sit right after an inaccessible page, so a read before the
+    # buffer faults at once; unguarded, it corrupts the heap silently, and an abort,
+    # if any, lands much later. Hence the child process.
+    script = textwrap.dedent("""
+        import ctypes, mmap
+        import numpy as np, talib
+        from talib import abstract, func
+        page = mmap.PAGESIZE
+        buf = mmap.mmap(-1, 2 * page)
+        start = ctypes.addressof(ctypes.c_char.from_buffer(buf))
+        libc = ctypes.CDLL(None, use_errno=True)
+        libc.mprotect.argtypes = (ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int)
+        assert libc.mprotect(start, page, 0) == 0, ctypes.get_errno()
+        empty = np.frombuffer(buf, dtype=np.float64, count=0, offset=page)
+        bars = np.linspace(10.0, 20.0, 100)
+        names = ('open', 'high', 'low', 'close', 'volume', 'periods')
+
+        def outputs(result):
+            return result if isinstance(result, list) else [result]
+
+        for name in talib.get_functions():
+            got = outputs(abstract.Function(name)(dict.fromkeys(names, empty)))
+            ref = outputs(abstract.Function(name)(dict.fromkeys(names, bars)))
+            assert [(len(o), o.dtype) for o in got] == [(0, o.dtype) for o in ref], name
+        assert len(func.MA(empty, timeperiod=1)) == 0
+        for got in (func.SMA(empty, timeperiod=0), func.BBANDS(empty, nbdevup=-1e40),
+                    func.MINMAXINDEX(empty, timeperiod=1)):
+            assert all(len(o) == 0 for o in (got if isinstance(got, tuple) else (got,)))
+        print('ok')
+    """)
+    done = subprocess.run([sys.executable, '-c', script], capture_output=True, text=True)
+    assert (done.returncode, done.stdout.strip()) == (0, 'ok'), done.stderr[-2000:]
 
 
 def test_input_nans():
