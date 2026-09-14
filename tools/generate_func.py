@@ -351,6 +351,13 @@ for f in functions:
     else:
         print('    length = check_length%s(%s)' % (len(inputs), ', '.join(inputs)))
 
+    # No input, no output. It also must not reach check_begidx, which answers -1
+    # for it and points TA-Lib one element before the buffers.
+    empty = ['make_%s_array(0, 0)' % ('double' if arg.startswith('double') else 'int')
+             for arg in args if arg.split()[-1].startswith('out') and arg.endswith('[]')]
+    print('    if length == 0:')
+    print('        return %s' % ', '.join(empty))
+
     # check for all input values are non-NaN
     print('    begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('<double*>(%s.data)' % s for s in inputs)))
 

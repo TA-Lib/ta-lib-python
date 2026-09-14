@@ -165,6 +165,8 @@ def AC( np.ndarray high not None , np.ndarray low not None , int fastperiod=-2**
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AC_Lookback( fastperiod , slowperiod , signalperiod )
@@ -202,6 +204,8 @@ def ACCBANDS( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ACCBANDS_Lookback( timeperiod )
@@ -233,6 +237,8 @@ def ACOS( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ACOS_Lookback( )
@@ -265,6 +271,8 @@ def AD( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     close = check_array(close)
     volume = check_array(volume)
     length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AD_Lookback( )
@@ -296,6 +304,8 @@ def ADD( np.ndarray real0 not None , np.ndarray real1 not None ):
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADD_Lookback( )
@@ -331,6 +341,8 @@ def ADOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     close = check_array(close)
     volume = check_array(volume)
     length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADOSC_Lookback( fastperiod , slowperiod )
@@ -363,6 +375,8 @@ def ADR( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2*
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADR_Lookback( timeperiod )
@@ -396,6 +410,8 @@ def ADX( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADX_Lookback( timeperiod )
@@ -429,6 +445,8 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ADXR_Lookback( timeperiod )
@@ -462,6 +480,8 @@ def AO( np.ndarray high not None , np.ndarray low not None , int fastperiod=-2**
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AO_Lookback( fastperiod , slowperiod )
@@ -495,6 +515,8 @@ def APO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_APO_Lookback( fastperiod , slowperiod , matype )
@@ -529,6 +551,8 @@ def AROON( np.ndarray high not None , np.ndarray low not None , int timeperiod=-
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AROON_Lookback( timeperiod )
@@ -562,6 +586,8 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AROONOSC_Lookback( timeperiod )
@@ -591,6 +617,8 @@ def ASIN( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ASIN_Lookback( )
@@ -620,6 +648,8 @@ def ATAN( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ATAN_Lookback( )
@@ -653,6 +683,8 @@ def ATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ATR_Lookback( timeperiod )
@@ -684,6 +716,8 @@ def AVGDEV( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AVGDEV_Lookback( timeperiod )
@@ -716,6 +750,8 @@ def AVGPRICE( np.ndarray open not None , np.ndarray high not None , np.ndarray l
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_AVGPRICE_Lookback( )
@@ -754,6 +790,8 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
         np.ndarray outreallowerband
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_BBANDS_Lookback( timeperiod , nbdevup , nbdevdn , matype )
@@ -789,6 +827,8 @@ def BETA( np.ndarray real0 not None , np.ndarray real1 not None , int timeperiod
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_BETA_Lookback( timeperiod )
@@ -821,6 +861,8 @@ def BOP( np.ndarray open not None , np.ndarray high not None , np.ndarray low no
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_BOP_Lookback( )
@@ -854,6 +896,8 @@ def CCI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CCI_Lookback( timeperiod )
@@ -886,6 +930,8 @@ def CDL2CROWS( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL2CROWS_Lookback( )
@@ -918,6 +964,8 @@ def CDL3BLACKCROWS( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3BLACKCROWS_Lookback( )
@@ -950,6 +998,8 @@ def CDL3INSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3INSIDE_Lookback( )
@@ -982,6 +1032,8 @@ def CDL3LINESTRIKE( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3LINESTRIKE_Lookback( )
@@ -1014,6 +1066,8 @@ def CDL3OUTSIDE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3OUTSIDE_Lookback( )
@@ -1046,6 +1100,8 @@ def CDL3STARSINSOUTH( np.ndarray open not None , np.ndarray high not None , np.n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3STARSINSOUTH_Lookback( )
@@ -1078,6 +1134,8 @@ def CDL3WHITESOLDIERS( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDL3WHITESOLDIERS_Lookback( )
@@ -1112,6 +1170,8 @@ def CDLABANDONEDBABY( np.ndarray open not None , np.ndarray high not None , np.n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLABANDONEDBABY_Lookback( penetration )
@@ -1144,6 +1204,8 @@ def CDLADVANCEBLOCK( np.ndarray open not None , np.ndarray high not None , np.nd
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLADVANCEBLOCK_Lookback( )
@@ -1176,6 +1238,8 @@ def CDLBELTHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLBELTHOLD_Lookback( )
@@ -1208,6 +1272,8 @@ def CDLBREAKAWAY( np.ndarray open not None , np.ndarray high not None , np.ndarr
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLBREAKAWAY_Lookback( )
@@ -1240,6 +1306,8 @@ def CDLCLOSINGMARUBOZU( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCLOSINGMARUBOZU_Lookback( )
@@ -1272,6 +1340,8 @@ def CDLCONCEALBABYSWALL( np.ndarray open not None , np.ndarray high not None , n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCONCEALBABYSWALL_Lookback( )
@@ -1304,6 +1374,8 @@ def CDLCOUNTERATTACK( np.ndarray open not None , np.ndarray high not None , np.n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLCOUNTERATTACK_Lookback( )
@@ -1338,6 +1410,8 @@ def CDLDARKCLOUDCOVER( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDARKCLOUDCOVER_Lookback( penetration )
@@ -1370,6 +1444,8 @@ def CDLDOJI( np.ndarray open not None , np.ndarray high not None , np.ndarray lo
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDOJI_Lookback( )
@@ -1402,6 +1478,8 @@ def CDLDOJISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDOJISTAR_Lookback( )
@@ -1434,6 +1512,8 @@ def CDLDRAGONFLYDOJI( np.ndarray open not None , np.ndarray high not None , np.n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLDRAGONFLYDOJI_Lookback( )
@@ -1466,6 +1546,8 @@ def CDLENGULFING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLENGULFING_Lookback( )
@@ -1500,6 +1582,8 @@ def CDLEVENINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLEVENINGDOJISTAR_Lookback( penetration )
@@ -1534,6 +1618,8 @@ def CDLEVENINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLEVENINGSTAR_Lookback( penetration )
@@ -1566,6 +1652,8 @@ def CDLGAPSIDESIDEWHITE( np.ndarray open not None , np.ndarray high not None , n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLGAPSIDESIDEWHITE_Lookback( )
@@ -1598,6 +1686,8 @@ def CDLGRAVESTONEDOJI( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLGRAVESTONEDOJI_Lookback( )
@@ -1630,6 +1720,8 @@ def CDLHAMMER( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHAMMER_Lookback( )
@@ -1662,6 +1754,8 @@ def CDLHANGINGMAN( np.ndarray open not None , np.ndarray high not None , np.ndar
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHANGINGMAN_Lookback( )
@@ -1694,6 +1788,8 @@ def CDLHARAMI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHARAMI_Lookback( )
@@ -1726,6 +1822,8 @@ def CDLHARAMICROSS( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHARAMICROSS_Lookback( )
@@ -1758,6 +1856,8 @@ def CDLHIGHWAVE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIGHWAVE_Lookback( )
@@ -1790,6 +1890,8 @@ def CDLHIKKAKE( np.ndarray open not None , np.ndarray high not None , np.ndarray
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIKKAKE_Lookback( )
@@ -1822,6 +1924,8 @@ def CDLHIKKAKEMOD( np.ndarray open not None , np.ndarray high not None , np.ndar
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHIKKAKEMOD_Lookback( )
@@ -1854,6 +1958,8 @@ def CDLHOMINGPIGEON( np.ndarray open not None , np.ndarray high not None , np.nd
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLHOMINGPIGEON_Lookback( )
@@ -1886,6 +1992,8 @@ def CDLIDENTICAL3CROWS( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLIDENTICAL3CROWS_Lookback( )
@@ -1918,6 +2026,8 @@ def CDLINNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLINNECK_Lookback( )
@@ -1950,6 +2060,8 @@ def CDLINVERTEDHAMMER( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLINVERTEDHAMMER_Lookback( )
@@ -1982,6 +2094,8 @@ def CDLKICKING( np.ndarray open not None , np.ndarray high not None , np.ndarray
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLKICKING_Lookback( )
@@ -2014,6 +2128,8 @@ def CDLKICKINGBYLENGTH( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLKICKINGBYLENGTH_Lookback( )
@@ -2046,6 +2162,8 @@ def CDLLADDERBOTTOM( np.ndarray open not None , np.ndarray high not None , np.nd
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLADDERBOTTOM_Lookback( )
@@ -2078,6 +2196,8 @@ def CDLLONGLEGGEDDOJI( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLONGLEGGEDDOJI_Lookback( )
@@ -2110,6 +2230,8 @@ def CDLLONGLINE( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLLONGLINE_Lookback( )
@@ -2142,6 +2264,8 @@ def CDLMARUBOZU( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMARUBOZU_Lookback( )
@@ -2174,6 +2298,8 @@ def CDLMATCHINGLOW( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMATCHINGLOW_Lookback( )
@@ -2208,6 +2334,8 @@ def CDLMATHOLD( np.ndarray open not None , np.ndarray high not None , np.ndarray
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMATHOLD_Lookback( penetration )
@@ -2242,6 +2370,8 @@ def CDLMORNINGDOJISTAR( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMORNINGDOJISTAR_Lookback( penetration )
@@ -2276,6 +2406,8 @@ def CDLMORNINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLMORNINGSTAR_Lookback( penetration )
@@ -2308,6 +2440,8 @@ def CDLONNECK( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLONNECK_Lookback( )
@@ -2340,6 +2474,8 @@ def CDLPIERCING( np.ndarray open not None , np.ndarray high not None , np.ndarra
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLPIERCING_Lookback( )
@@ -2372,6 +2508,8 @@ def CDLRICKSHAWMAN( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLRICKSHAWMAN_Lookback( )
@@ -2404,6 +2542,8 @@ def CDLRISEFALL3METHODS( np.ndarray open not None , np.ndarray high not None , n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLRISEFALL3METHODS_Lookback( )
@@ -2436,6 +2576,8 @@ def CDLSEPARATINGLINES( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSEPARATINGLINES_Lookback( )
@@ -2468,6 +2610,8 @@ def CDLSHOOTINGSTAR( np.ndarray open not None , np.ndarray high not None , np.nd
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSHOOTINGSTAR_Lookback( )
@@ -2500,6 +2644,8 @@ def CDLSHORTLINE( np.ndarray open not None , np.ndarray high not None , np.ndarr
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSHORTLINE_Lookback( )
@@ -2532,6 +2678,8 @@ def CDLSPINNINGTOP( np.ndarray open not None , np.ndarray high not None , np.nda
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSPINNINGTOP_Lookback( )
@@ -2564,6 +2712,8 @@ def CDLSTALLEDPATTERN( np.ndarray open not None , np.ndarray high not None , np.
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSTALLEDPATTERN_Lookback( )
@@ -2596,6 +2746,8 @@ def CDLSTICKSANDWICH( np.ndarray open not None , np.ndarray high not None , np.n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLSTICKSANDWICH_Lookback( )
@@ -2628,6 +2780,8 @@ def CDLTAKURI( np.ndarray open not None , np.ndarray high not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTAKURI_Lookback( )
@@ -2660,6 +2814,8 @@ def CDLTASUKIGAP( np.ndarray open not None , np.ndarray high not None , np.ndarr
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTASUKIGAP_Lookback( )
@@ -2692,6 +2848,8 @@ def CDLTHRUSTING( np.ndarray open not None , np.ndarray high not None , np.ndarr
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTHRUSTING_Lookback( )
@@ -2724,6 +2882,8 @@ def CDLTRISTAR( np.ndarray open not None , np.ndarray high not None , np.ndarray
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLTRISTAR_Lookback( )
@@ -2756,6 +2916,8 @@ def CDLUNIQUE3RIVER( np.ndarray open not None , np.ndarray high not None , np.nd
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLUNIQUE3RIVER_Lookback( )
@@ -2788,6 +2950,8 @@ def CDLUPSIDEGAP2CROWS( np.ndarray open not None , np.ndarray high not None , np
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLUPSIDEGAP2CROWS_Lookback( )
@@ -2820,6 +2984,8 @@ def CDLXSIDEGAP3METHODS( np.ndarray open not None , np.ndarray high not None , n
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CDLXSIDEGAP3METHODS_Lookback( )
@@ -2849,6 +3015,8 @@ def CEIL( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CEIL_Lookback( )
@@ -2883,6 +3051,8 @@ def CMF( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     close = check_array(close)
     volume = check_array(volume)
     length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMF_Lookback( timeperiod )
@@ -2914,6 +3084,8 @@ def CMO( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMO_Lookback( timeperiod )
@@ -2945,6 +3117,8 @@ def CMOU( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CMOU_Lookback( timeperiod )
@@ -2978,6 +3152,8 @@ def COPPOCK( np.ndarray real not None , int wmaperiod=-2**31 , int roc1period=-2
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COPPOCK_Lookback( wmaperiod , roc1period , roc2period )
@@ -3011,6 +3187,8 @@ def CORREL( np.ndarray real0 not None , np.ndarray real1 not None , int timeperi
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CORREL_Lookback( timeperiod )
@@ -3040,6 +3218,8 @@ def COS( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COS_Lookback( )
@@ -3069,6 +3249,8 @@ def COSH( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_COSH_Lookback( )
@@ -3098,6 +3280,8 @@ def CUMSUM( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CUMSUM_Lookback( )
@@ -3131,6 +3315,8 @@ def CVI( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2*
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_CVI_Lookback( timeperiod , rocperiod )
@@ -3162,6 +3348,8 @@ def DEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DEMA_Lookback( timeperiod )
@@ -3193,6 +3381,8 @@ def DIV( np.ndarray real0 not None , np.ndarray real1 not None ):
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DIV_Lookback( )
@@ -3229,6 +3419,8 @@ def DONCHIAN( np.ndarray high not None , np.ndarray low not None , int timeperio
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DONCHIAN_Lookback( timeperiod )
@@ -3262,6 +3454,8 @@ def DPO( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DPO_Lookback( timeperiod )
@@ -3295,6 +3489,8 @@ def DX( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_DX_Lookback( timeperiod )
@@ -3327,6 +3523,8 @@ def EFI( np.ndarray close not None , np.ndarray volume not None , int timeperiod
     close = check_array(close)
     volume = check_array(volume)
     length = check_length2(close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EFI_Lookback( timeperiod )
@@ -3358,6 +3556,8 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EMA_Lookback( timeperiod )
@@ -3389,6 +3589,8 @@ def ER( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ER_Lookback( timeperiod )
@@ -3424,6 +3626,8 @@ def ERI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ERI_Lookback( timeperiod )
@@ -3454,6 +3658,8 @@ def EXP( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_EXP_Lookback( )
@@ -3483,6 +3689,8 @@ def FLOOR( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_FLOOR_Lookback( )
@@ -3514,6 +3722,8 @@ def FOSC( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_FOSC_Lookback( timeperiod )
@@ -3549,6 +3759,8 @@ def FRACTAL( np.ndarray high not None , np.ndarray low not None , int leftbars=-
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_int_array(0, 0), make_int_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_FRACTAL_Lookback( leftbars , rightbars )
@@ -3588,6 +3800,8 @@ def HA( np.ndarray open not None , np.ndarray high not None , np.ndarray low not
     low = check_array(low)
     close = check_array(close)
     length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HA_Lookback( )
@@ -3622,6 +3836,8 @@ def HMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HMA_Lookback( timeperiod )
@@ -3651,6 +3867,8 @@ def HT_DCPERIOD( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_DCPERIOD_Lookback( )
@@ -3680,6 +3898,8 @@ def HT_DCPHASE( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_DCPHASE_Lookback( )
@@ -3711,6 +3931,8 @@ def HT_PHASOR( np.ndarray real not None ):
         np.ndarray outquadrature
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_PHASOR_Lookback( )
@@ -3743,6 +3965,8 @@ def HT_SINE( np.ndarray real not None ):
         np.ndarray outleadsine
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_SINE_Lookback( )
@@ -3773,6 +3997,8 @@ def HT_TRENDLINE( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_TRENDLINE_Lookback( )
@@ -3802,6 +4028,8 @@ def HT_TRENDMODE( np.ndarray real not None ):
         np.ndarray outinteger
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_HT_TRENDMODE_Lookback( )
@@ -3834,6 +4062,8 @@ def IMI( np.ndarray open not None , np.ndarray close not None , int timeperiod=-
     open = check_array(open)
     close = check_array(close)
     length = check_length2(open, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(open.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_IMI_Lookback( timeperiod )
@@ -3865,6 +4095,8 @@ def KAMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_KAMA_Lookback( timeperiod )
@@ -3904,6 +4136,8 @@ def KC( np.ndarray high not None , np.ndarray low not None , np.ndarray close no
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_KC_Lookback( timeperiod , atrperiod , nbdev )
@@ -3947,6 +4181,8 @@ def KDJ( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_KDJ_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
@@ -3980,6 +4216,8 @@ def LINEARREG( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_Lookback( timeperiod )
@@ -4011,6 +4249,8 @@ def LINEARREG_ANGLE( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_ANGLE_Lookback( timeperiod )
@@ -4042,6 +4282,8 @@ def LINEARREG_INTERCEPT( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_INTERCEPT_Lookback( timeperiod )
@@ -4073,6 +4315,8 @@ def LINEARREG_SLOPE( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LINEARREG_SLOPE_Lookback( timeperiod )
@@ -4102,6 +4346,8 @@ def LN( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LN_Lookback( )
@@ -4131,6 +4377,8 @@ def LOG10( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_LOG10_Lookback( )
@@ -4163,6 +4411,8 @@ def MA( np.ndarray real not None , int timeperiod=-2**31 , int matype=0 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MA_Lookback( timeperiod , matype )
@@ -4200,6 +4450,8 @@ def MACD( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**
         np.ndarray outmacdhist
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MACD_Lookback( fastperiod , slowperiod , signalperiod )
@@ -4242,6 +4494,8 @@ def MACDEXT( np.ndarray real not None , int fastperiod=-2**31 , int fastmatype=0
         np.ndarray outmacdhist
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MACDEXT_Lookback( fastperiod , fastmatype , slowperiod , slowmatype , signalperiod , signalmatype )
@@ -4279,6 +4533,8 @@ def MACDFIX( np.ndarray real not None , int signalperiod=-2**31 ):
         np.ndarray outmacdhist
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MACDFIX_Lookback( signalperiod )
@@ -4315,6 +4571,8 @@ def MAMA( np.ndarray real not None , double fastlimit=-4e37 , double slowlimit=-
         np.ndarray outfama
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAMA_Lookback( fastlimit , slowlimit )
@@ -4347,6 +4605,8 @@ def MARKETFI( np.ndarray high not None , np.ndarray low not None , np.ndarray vo
     low = check_array(low)
     volume = check_array(volume)
     length = check_length3(high, low, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MARKETFI_Lookback( )
@@ -4380,6 +4640,8 @@ def MASSI( np.ndarray high not None , np.ndarray low not None , int fastperiod=-
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MASSI_Lookback( fastperiod , slowperiod )
@@ -4415,6 +4677,8 @@ def MAVP( np.ndarray real not None , np.ndarray periods not None , int minperiod
     real = check_array(real)
     periods = check_array(periods)
     length = check_length2(real, periods)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real.data), <double*>(periods.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAVP_Lookback( minperiod , maxperiod , matype )
@@ -4446,6 +4710,8 @@ def MAX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAX_Lookback( timeperiod )
@@ -4477,6 +4743,8 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outinteger
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MAXINDEX_Lookback( timeperiod )
@@ -4510,6 +4778,8 @@ def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MEDPRICE_Lookback( )
@@ -4544,6 +4814,8 @@ def MFI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     close = check_array(close)
     volume = check_array(volume)
     length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MFI_Lookback( timeperiod )
@@ -4575,6 +4847,8 @@ def MIDPOINT( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIDPOINT_Lookback( timeperiod )
@@ -4607,6 +4881,8 @@ def MIDPRICE( np.ndarray high not None , np.ndarray low not None , int timeperio
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIDPRICE_Lookback( timeperiod )
@@ -4638,6 +4914,8 @@ def MIN( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MIN_Lookback( timeperiod )
@@ -4669,6 +4947,8 @@ def MININDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outinteger
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_int_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MININDEX_Lookback( timeperiod )
@@ -4705,6 +4985,8 @@ def MINMAX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outmax
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINMAX_Lookback( timeperiod )
@@ -4739,6 +5021,8 @@ def MINMAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outmaxidx
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_int_array(0, 0), make_int_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINMAXINDEX_Lookback( timeperiod )
@@ -4779,6 +5063,8 @@ def MINUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINUS_DI_Lookback( timeperiod )
@@ -4811,6 +5097,8 @@ def MINUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperio
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MINUS_DM_Lookback( timeperiod )
@@ -4842,6 +5130,8 @@ def MOM( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MOM_Lookback( timeperiod )
@@ -4873,6 +5163,8 @@ def MULT( np.ndarray real0 not None , np.ndarray real1 not None ):
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_MULT_Lookback( )
@@ -4906,6 +5198,8 @@ def NATR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_NATR_Lookback( timeperiod )
@@ -4936,6 +5230,8 @@ def NVI( np.ndarray close not None , np.ndarray volume not None ):
     close = check_array(close)
     volume = check_array(volume)
     length = check_length2(close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_NVI_Lookback( )
@@ -4967,6 +5263,8 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
     real = check_array(real)
     volume = check_array(volume)
     length = check_length2(real, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_OBV_Lookback( )
@@ -4999,6 +5297,8 @@ def PERCENTILE( np.ndarray real not None , int timeperiod=-2**31 , double percen
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PERCENTILE_Lookback( timeperiod , percentile )
@@ -5030,6 +5330,8 @@ def PERCENTRANK( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PERCENTRANK_Lookback( timeperiod )
@@ -5063,6 +5365,8 @@ def PLUS_DI( np.ndarray high not None , np.ndarray low not None , np.ndarray clo
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PLUS_DI_Lookback( timeperiod )
@@ -5095,6 +5399,8 @@ def PLUS_DM( np.ndarray high not None , np.ndarray low not None , int timeperiod
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PLUS_DM_Lookback( timeperiod )
@@ -5128,6 +5434,8 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PPO_Lookback( fastperiod , slowperiod , matype )
@@ -5158,6 +5466,8 @@ def PVI( np.ndarray close not None , np.ndarray volume not None ):
     close = check_array(close)
     volume = check_array(volume)
     length = check_length2(close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVI_Lookback( )
@@ -5191,6 +5501,8 @@ def PVO( np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2*
         np.ndarray outreal
     volume = check_array(volume)
     length = volume.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVO_Lookback( fastperiod , slowperiod , matype )
@@ -5221,6 +5533,8 @@ def PVT( np.ndarray close not None , np.ndarray volume not None ):
     close = check_array(close)
     volume = check_array(volume)
     length = check_length2(close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_PVT_Lookback( )
@@ -5253,6 +5567,8 @@ def QSTICK( np.ndarray open not None , np.ndarray close not None , int timeperio
     open = check_array(open)
     close = check_array(close)
     length = check_length2(open, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(open.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_QSTICK_Lookback( timeperiod )
@@ -5284,6 +5600,8 @@ def RMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RMA_Lookback( timeperiod )
@@ -5315,6 +5633,8 @@ def ROC( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROC_Lookback( timeperiod )
@@ -5346,6 +5666,8 @@ def ROCP( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCP_Lookback( timeperiod )
@@ -5377,6 +5699,8 @@ def ROCR( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCR_Lookback( timeperiod )
@@ -5408,6 +5732,8 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ROCR100_Lookback( timeperiod )
@@ -5439,6 +5765,8 @@ def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RSI_Lookback( timeperiod )
@@ -5471,6 +5799,8 @@ def RVI( np.ndarray real not None , int timeperiod=-2**31 , int stddevperiod=-2*
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RVI_Lookback( timeperiod , stddevperiod )
@@ -5502,6 +5832,8 @@ def RVOL( np.ndarray volume not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     volume = check_array(volume)
     length = volume.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_RVOL_Lookback( timeperiod )
@@ -5535,6 +5867,8 @@ def SAR( np.ndarray high not None , np.ndarray low not None , double acceleratio
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SAR_Lookback( acceleration , maximum )
@@ -5574,6 +5908,8 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
     high = check_array(high)
     low = check_array(low)
     length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SAREXT_Lookback( startvalue , offsetonreverse , accelerationinitlong , accelerationlong , accelerationmaxlong , accelerationinitshort , accelerationshort , accelerationmaxshort )
@@ -5603,6 +5939,8 @@ def SIN( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SIN_Lookback( )
@@ -5632,6 +5970,8 @@ def SINH( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SINH_Lookback( )
@@ -5663,6 +6003,8 @@ def SMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SMA_Lookback( timeperiod )
@@ -5701,6 +6043,8 @@ def SMI( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SMI_Lookback( timeperiod , fastperiod , slowperiod , signalperiod )
@@ -5731,6 +6075,8 @@ def SQRT( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SQRT_Lookback( )
@@ -5763,6 +6109,8 @@ def STDDEV( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e3
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_STDDEV_Lookback( timeperiod , nbdev )
@@ -5802,6 +6150,8 @@ def STOCH( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_STOCH_Lookback( fastk_period , slowk_period , slowk_matype , slowd_period , slowd_matype )
@@ -5840,6 +6190,8 @@ def STOCHF( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_STOCHF_Lookback( fastk_period , fastd_period , fastd_matype )
@@ -5877,6 +6229,8 @@ def STOCHRSI( np.ndarray real not None , int timeperiod=-2**31 , int fastk_perio
         np.ndarray outfastd
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_STOCHRSI_Lookback( timeperiod , fastk_period , fastd_period , fastd_matype )
@@ -5909,6 +6263,8 @@ def SUB( np.ndarray real0 not None , np.ndarray real1 not None ):
     real0 = check_array(real0)
     real1 = check_array(real1)
     length = check_length2(real0, real1)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real0.data), <double*>(real1.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUB_Lookback( )
@@ -5940,6 +6296,8 @@ def SUM( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUM_Lookback( timeperiod )
@@ -5976,6 +6334,8 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_int_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_SUPERTREND_Lookback( timeperiod , multiplier )
@@ -6009,6 +6369,8 @@ def T3( np.ndarray real not None , int timeperiod=-2**31 , double vfactor=-4e37 
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_T3_Lookback( timeperiod , vfactor )
@@ -6038,6 +6400,8 @@ def TAN( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TAN_Lookback( )
@@ -6067,6 +6431,8 @@ def TANH( np.ndarray real not None ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TANH_Lookback( )
@@ -6098,6 +6464,8 @@ def TEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TEMA_Lookback( timeperiod )
@@ -6129,6 +6497,8 @@ def TRANGE( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRANGE_Lookback( )
@@ -6160,6 +6530,8 @@ def TRIMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRIMA_Lookback( timeperiod )
@@ -6191,6 +6563,8 @@ def TRIX( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TRIX_Lookback( timeperiod )
@@ -6222,6 +6596,8 @@ def TSF( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TSF_Lookback( timeperiod )
@@ -6254,6 +6630,8 @@ def TSI( np.ndarray real not None , int firstperiod=-2**31 , int secondperiod=-2
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TSI_Lookback( firstperiod , secondperiod )
@@ -6285,6 +6663,8 @@ def TYPPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_TYPPRICE_Lookback( )
@@ -6320,6 +6700,8 @@ def ULTOSC( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ULTOSC_Lookback( timeperiod1 , timeperiod2 , timeperiod3 )
@@ -6352,6 +6734,8 @@ def VAR( np.ndarray real not None , int timeperiod=-2**31 , double nbdev=-4e37 )
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VAR_Lookback( timeperiod , nbdev )
@@ -6383,6 +6767,8 @@ def VHF( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VHF_Lookback( timeperiod )
@@ -6418,6 +6804,8 @@ def VORTEX( np.ndarray high not None , np.ndarray low not None , np.ndarray clos
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VORTEX_Lookback( timeperiod )
@@ -6451,6 +6839,8 @@ def VWAP( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
     close = check_array(close)
     volume = check_array(volume)
     length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VWAP_Lookback( )
@@ -6484,6 +6874,8 @@ def VWMA( np.ndarray real not None , np.ndarray volume not None , int timeperiod
     real = check_array(real)
     volume = check_array(volume)
     length = check_length2(real, volume)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx2(length, <double*>(real.data), <double*>(volume.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_VWMA_Lookback( timeperiod )
@@ -6515,6 +6907,8 @@ def WAD( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WAD_Lookback( )
@@ -6546,6 +6940,8 @@ def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray cl
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WCLPRICE_Lookback( )
@@ -6579,6 +6975,8 @@ def WILLR( np.ndarray high not None , np.ndarray low not None , np.ndarray close
     low = check_array(low)
     close = check_array(close)
     length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WILLR_Lookback( timeperiod )
@@ -6610,6 +7008,8 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_WMA_Lookback( timeperiod )
@@ -6641,6 +7041,8 @@ def ZLEMA( np.ndarray real not None , int timeperiod=-2**31 ):
         np.ndarray outreal
     real = check_array(real)
     length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
     begidx = check_begidx1(length, <double*>(real.data))
     endidx = <int>length - begidx - 1
     lookback = begidx + lib.TA_ZLEMA_Lookback( timeperiod )
