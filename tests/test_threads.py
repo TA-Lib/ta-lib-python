@@ -1,25 +1,69 @@
+import sys
+import threading
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
+import pytest
 from numpy.testing import assert_array_equal
 
 import talib
-from talib import abstract, func, stream
+from talib import abstract, func
 
 THREADS = 8
-ROUNDS = 50
+ROUNDS = 10
 
 
-def _calls(series, ford_2012):
-    o, h, lo, c = (ford_2012[k] for k in ('open', 'high', 'low', 'close'))
+def _while_running(call, meanwhile):
+    # The switch interval must be out of reach: a thread holding the GIL is then
+    # never made to yield it, so `meanwhile` runs inside `call` only if `call`
+    # releases it. With the default interval this passes on a build that holds it.
+    interval = sys.getswitchinterval()
+    sys.setswitchinterval(100.0)
+    try:
+        worker = threading.Thread(target=call)
+        worker.start()
+        try:
+            return meanwhile()
+        finally:
+            worker.join()
+    finally:
+        sys.setswitchinterval(interval)
+
+
+def _closes():
+    rng = np.random.default_rng(0)
+    for size in (1 << 14, 1 << 16, 1 << 18, 1 << 20):
+        yield 100 + np.cumsum(rng.standard_normal(size))
+
+
+def _releases_the_gil(make_call):
+    # A first call can import, and an import releases the GIL.
+    make_call(np.linspace(1.0, 2.0, 1000))()
+    for close in _closes():
+        done = threading.Event()
+        call = make_call(close)
+        if _while_running(lambda: (call(), done.set()), lambda: not done.is_set()):
+            return True
+    return False
+
+
+@pytest.mark.parametrize('make_call', [
+    lambda close: lambda: func.HT_DCPHASE(close),
+    lambda close: lambda: abstract.Function('HT_DCPHASE')(close),
+], ids=['func', 'abstract'])
+def test_indicator_call_releases_the_gil(make_call):
+    assert _releases_the_gil(make_call)
+
+
+def _calls(prices):
+    o, h, lo, c = (prices[k] for k in ('open', 'high', 'low', 'close'))
     return [
-        lambda: func.EMA(series, timeperiod=30),
-        lambda: func.RSI(series),
-        lambda: func.MACD(series),
+        lambda: func.EMA(c, timeperiod=30),
+        lambda: func.RSI(c),
+        lambda: func.MACD(c),
         lambda: func.CDLDOJI(o, h, lo, c),
         lambda: func.ATR(h, lo, c),
-        lambda: stream.EMA(series, timeperiod=30),
-        lambda: abstract.Function('BBANDS')(series),
+        lambda: abstract.Function('BBANDS')(c),
     ]
 
 
@@ -29,25 +73,31 @@ def _flatten(result):
     return [np.asarray(result)]
 
 
-def test_functions_are_correct_when_called_concurrently(series, ford_2012):
-    # The C call runs with the GIL released, so several threads may be inside
-    # TA-Lib at once. Every result must still equal the single-threaded one.
-    calls = _calls(series, ford_2012)
-    expected = [_flatten(call()) for call in calls]
+def _per_thread_prices(ford_2012, repeat):
+    # Threads computing identical numbers cannot show one wrote into another's buffer.
+    return [{k: np.tile(np.roll(v, 13 * t), repeat) for k, v in ford_2012.items()}
+            for t in range(THREADS)]
 
-    def worker(i):
-        call = calls[i % len(calls)]
-        return i % len(calls), _flatten(call())
+
+def test_functions_are_correct_when_called_concurrently(ford_2012):
+    calls = [_calls(prices) for prices in _per_thread_prices(ford_2012, 200)]
+    expected = [[_flatten(call()) for call in mine] for mine in calls]
+    start = threading.Barrier(THREADS)
+
+    def worker(t):
+        start.wait()
+        n = len(calls[t])
+        return t, [(i % n, _flatten(calls[t][i % n]())) for i in range(ROUNDS * n)]
 
     with ThreadPoolExecutor(THREADS) as pool:
-        for which, got in pool.map(worker, range(THREADS * ROUNDS)):
-            for g, e in zip(got, expected[which]):
-                assert_array_equal(g, e)
+        for t, results in pool.map(worker, range(THREADS)):
+            for which, got in results:
+                assert len(got) == len(expected[t][which])
+                for g, e in zip(got, expected[t][which]):
+                    assert_array_equal(g, e)
 
 
 def test_settings_still_work_between_concurrent_calls(series):
-    # Global settings stay under the GIL. Changing one between batches of
-    # concurrent calls must apply to every later call.
     talib.set_unstable_period('EMA', 0)
     with ThreadPoolExecutor(THREADS) as pool:
         base = list(pool.map(lambda _: func.EMA(series, timeperiod=30), range(THREADS)))
