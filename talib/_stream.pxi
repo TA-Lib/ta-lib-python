@@ -2571,7 +2571,10 @@ cdef class AC_Stream(Stream):
         cdef TA_AC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outreal)
+        else:
             retCode = TA_AC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AC_Open", retCode, historylen, lib.TA_AC_Lookback(fastperiod, slowperiod, signalperiod) + 1)
@@ -2594,7 +2597,10 @@ cdef class AC_Stream(Stream):
         cdef int outnbelement
         cdef TA_AC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -2678,7 +2684,10 @@ cdef class ACCBANDS_Stream(Stream):
         cdef double outmiddleband
         cdef double outlowerband
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ACCBANDS_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outupperband, &outmiddleband, &outlowerband)
+        else:
             retCode = TA_ACCBANDS_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _stream_open_failed("TA_ACCBANDS_Open", retCode, historylen, lib.TA_ACCBANDS_Lookback(timeperiod) + 1)
@@ -2704,7 +2713,10 @@ cdef class ACCBANDS_Stream(Stream):
         cdef int outnbelement
         cdef TA_ACCBANDS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ACCBANDS_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
+        else:
             retCode = TA_ACCBANDS_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ACCBANDS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -2786,7 +2798,10 @@ cdef class ACOS_Stream(Stream):
         cdef TA_ACOS_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ACOS_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_ACOS_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ACOS_Open", retCode, historylen, lib.TA_ACOS_Lookback() + 1)
@@ -2808,7 +2823,10 @@ cdef class ACOS_Stream(Stream):
         cdef int outnbelement
         cdef TA_ACOS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ACOS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ACOS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ACOS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -2887,7 +2905,10 @@ cdef class AD_Stream(Stream):
         cdef TA_AD_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AD_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_AD_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AD_Open", retCode, historylen, lib.TA_AD_Lookback() + 1)
@@ -2912,7 +2933,10 @@ cdef class AD_Stream(Stream):
         cdef int outnbelement
         cdef TA_AD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AD_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AD_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -2990,7 +3014,10 @@ cdef class ADD_Stream(Stream):
         cdef TA_ADD_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADD_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_ADD_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ADD_Open", retCode, historylen, lib.TA_ADD_Lookback() + 1)
@@ -3013,7 +3040,10 @@ cdef class ADD_Stream(Stream):
         cdef int outnbelement
         cdef TA_ADD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADD_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ADD_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ADD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3095,7 +3125,10 @@ cdef class ADOSC_Stream(Stream):
         cdef TA_ADOSC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, &outreal)
+        else:
             retCode = TA_ADOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ADOSC_Open", retCode, historylen, lib.TA_ADOSC_Lookback(fastperiod, slowperiod) + 1)
@@ -3120,7 +3153,10 @@ cdef class ADOSC_Stream(Stream):
         cdef int outnbelement
         cdef TA_ADOSC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ADOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ADOSC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3199,7 +3235,10 @@ cdef class ADR_Stream(Stream):
         cdef TA_ADR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ADR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ADR_Open", retCode, historylen, lib.TA_ADR_Lookback(timeperiod) + 1)
@@ -3222,7 +3261,10 @@ cdef class ADR_Stream(Stream):
         cdef int outnbelement
         cdef TA_ADR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ADR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ADR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3302,7 +3344,10 @@ cdef class ADX_Stream(Stream):
         cdef TA_ADX_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ADX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ADX_Open", retCode, historylen, lib.TA_ADX_Lookback(timeperiod) + 1)
@@ -3326,7 +3371,10 @@ cdef class ADX_Stream(Stream):
         cdef int outnbelement
         cdef TA_ADX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ADX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ADX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3406,7 +3454,10 @@ cdef class ADXR_Stream(Stream):
         cdef TA_ADXR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADXR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ADXR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ADXR_Open", retCode, historylen, lib.TA_ADXR_Lookback(timeperiod) + 1)
@@ -3430,7 +3481,10 @@ cdef class ADXR_Stream(Stream):
         cdef int outnbelement
         cdef TA_ADXR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ADXR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ADXR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ADXR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3510,7 +3564,10 @@ cdef class AO_Stream(Stream):
         cdef TA_AO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AO_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outreal)
+        else:
             retCode = TA_AO_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AO_Open", retCode, historylen, lib.TA_AO_Lookback(fastperiod, slowperiod) + 1)
@@ -3533,7 +3590,10 @@ cdef class AO_Stream(Stream):
         cdef int outnbelement
         cdef TA_AO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AO_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AO_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3613,7 +3673,10 @@ cdef class APO_Stream(Stream):
         cdef TA_APO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_APO_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
+        else:
             retCode = TA_APO_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_APO_Open", retCode, historylen, lib.TA_APO_Lookback(fastperiod, slowperiod, matype) + 1)
@@ -3635,7 +3698,10 @@ cdef class APO_Stream(Stream):
         cdef int outnbelement
         cdef TA_APO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_APO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_APO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_APO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3716,7 +3782,10 @@ cdef class AROON_Stream(Stream):
         cdef double outaroondown
         cdef double outaroonup
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AROON_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outaroondown, &outaroonup)
+        else:
             retCode = TA_AROON_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outaroondown, &outaroonup)
         if retCode != 0:
             _stream_open_failed("TA_AROON_Open", retCode, historylen, lib.TA_AROON_Lookback(timeperiod) + 1)
@@ -3740,7 +3809,10 @@ cdef class AROON_Stream(Stream):
         cdef int outnbelement
         cdef TA_AROON_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AROON_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outaroondown.data + lookback, <double*>outaroonup.data + lookback)
+        else:
             retCode = TA_AROON_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outaroondown.data + lookback, <double*>outaroonup.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AROON_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3822,7 +3894,10 @@ cdef class AROONOSC_Stream(Stream):
         cdef TA_AROONOSC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AROONOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_AROONOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AROONOSC_Open", retCode, historylen, lib.TA_AROONOSC_Lookback(timeperiod) + 1)
@@ -3845,7 +3920,10 @@ cdef class AROONOSC_Stream(Stream):
         cdef int outnbelement
         cdef TA_AROONOSC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AROONOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AROONOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AROONOSC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -3921,7 +3999,10 @@ cdef class ASIN_Stream(Stream):
         cdef TA_ASIN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ASIN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_ASIN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ASIN_Open", retCode, historylen, lib.TA_ASIN_Lookback() + 1)
@@ -3943,7 +4024,10 @@ cdef class ASIN_Stream(Stream):
         cdef int outnbelement
         cdef TA_ASIN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ASIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ASIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ASIN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4019,7 +4103,10 @@ cdef class ATAN_Stream(Stream):
         cdef TA_ATAN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ATAN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_ATAN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ATAN_Open", retCode, historylen, lib.TA_ATAN_Lookback() + 1)
@@ -4041,7 +4128,10 @@ cdef class ATAN_Stream(Stream):
         cdef int outnbelement
         cdef TA_ATAN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ATAN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ATAN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ATAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4121,7 +4211,10 @@ cdef class ATR_Stream(Stream):
         cdef TA_ATR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ATR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ATR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ATR_Open", retCode, historylen, lib.TA_ATR_Lookback(timeperiod) + 1)
@@ -4145,7 +4238,10 @@ cdef class ATR_Stream(Stream):
         cdef int outnbelement
         cdef TA_ATR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ATR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ATR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ATR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4223,7 +4319,10 @@ cdef class AVGDEV_Stream(Stream):
         cdef TA_AVGDEV_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AVGDEV_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_AVGDEV_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AVGDEV_Open", retCode, historylen, lib.TA_AVGDEV_Lookback(timeperiod) + 1)
@@ -4245,7 +4344,10 @@ cdef class AVGDEV_Stream(Stream):
         cdef int outnbelement
         cdef TA_AVGDEV_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AVGDEV_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AVGDEV_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AVGDEV_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4324,7 +4426,10 @@ cdef class AVGPRICE_Stream(Stream):
         cdef TA_AVGPRICE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AVGPRICE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_AVGPRICE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_AVGPRICE_Open", retCode, historylen, lib.TA_AVGPRICE_Lookback() + 1)
@@ -4349,7 +4454,10 @@ cdef class AVGPRICE_Stream(Stream):
         cdef int outnbelement
         cdef TA_AVGPRICE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_AVGPRICE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_AVGPRICE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_AVGPRICE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4434,7 +4542,10 @@ cdef class BBANDS_Stream(Stream):
         cdef double outmiddleband
         cdef double outlowerband
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BBANDS_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outupperband, &outmiddleband, &outlowerband)
+        else:
             retCode = TA_BBANDS_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _stream_open_failed("TA_BBANDS_Open", retCode, historylen, lib.TA_BBANDS_Lookback(timeperiod, nbdevup, nbdevdn, matype) + 1)
@@ -4458,7 +4569,10 @@ cdef class BBANDS_Stream(Stream):
         cdef int outnbelement
         cdef TA_BBANDS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BBANDS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
+        else:
             retCode = TA_BBANDS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_BBANDS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4544,7 +4658,10 @@ cdef class BETA_Stream(Stream):
         cdef TA_BETA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BETA_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_BETA_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_BETA_Open", retCode, historylen, lib.TA_BETA_Lookback(timeperiod) + 1)
@@ -4567,7 +4684,10 @@ cdef class BETA_Stream(Stream):
         cdef int outnbelement
         cdef TA_BETA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BETA_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_BETA_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_BETA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4646,7 +4766,10 @@ cdef class BOP_Stream(Stream):
         cdef TA_BOP_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BOP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_BOP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_BOP_Open", retCode, historylen, lib.TA_BOP_Lookback() + 1)
@@ -4671,7 +4794,10 @@ cdef class BOP_Stream(Stream):
         cdef int outnbelement
         cdef TA_BOP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_BOP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_BOP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_BOP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4751,7 +4877,10 @@ cdef class CCI_Stream(Stream):
         cdef TA_CCI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CCI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_CCI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CCI_Open", retCode, historylen, lib.TA_CCI_Lookback(timeperiod) + 1)
@@ -4775,7 +4904,10 @@ cdef class CCI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CCI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CCI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CCI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CCI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4854,7 +4986,10 @@ cdef class CDL2CROWS_Stream(Stream):
         cdef TA_CDL2CROWS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL2CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL2CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL2CROWS_Open", retCode, historylen, lib.TA_CDL2CROWS_Lookback() + 1)
@@ -4879,7 +5014,10 @@ cdef class CDL2CROWS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL2CROWS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL2CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL2CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL2CROWS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -4958,7 +5096,10 @@ cdef class CDL3BLACKCROWS_Stream(Stream):
         cdef TA_CDL3BLACKCROWS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3BLACKCROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3BLACKCROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3BLACKCROWS_Open", retCode, historylen, lib.TA_CDL3BLACKCROWS_Lookback() + 1)
@@ -4983,7 +5124,10 @@ cdef class CDL3BLACKCROWS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3BLACKCROWS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3BLACKCROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3BLACKCROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3BLACKCROWS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5062,7 +5206,10 @@ cdef class CDL3INSIDE_Stream(Stream):
         cdef TA_CDL3INSIDE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3INSIDE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3INSIDE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3INSIDE_Open", retCode, historylen, lib.TA_CDL3INSIDE_Lookback() + 1)
@@ -5087,7 +5234,10 @@ cdef class CDL3INSIDE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3INSIDE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3INSIDE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3INSIDE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3INSIDE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5166,7 +5316,10 @@ cdef class CDL3LINESTRIKE_Stream(Stream):
         cdef TA_CDL3LINESTRIKE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3LINESTRIKE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3LINESTRIKE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3LINESTRIKE_Open", retCode, historylen, lib.TA_CDL3LINESTRIKE_Lookback() + 1)
@@ -5191,7 +5344,10 @@ cdef class CDL3LINESTRIKE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3LINESTRIKE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3LINESTRIKE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3LINESTRIKE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3LINESTRIKE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5270,7 +5426,10 @@ cdef class CDL3OUTSIDE_Stream(Stream):
         cdef TA_CDL3OUTSIDE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3OUTSIDE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3OUTSIDE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3OUTSIDE_Open", retCode, historylen, lib.TA_CDL3OUTSIDE_Lookback() + 1)
@@ -5295,7 +5454,10 @@ cdef class CDL3OUTSIDE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3OUTSIDE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3OUTSIDE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3OUTSIDE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3OUTSIDE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5374,7 +5536,10 @@ cdef class CDL3STARSINSOUTH_Stream(Stream):
         cdef TA_CDL3STARSINSOUTH_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3STARSINSOUTH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3STARSINSOUTH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3STARSINSOUTH_Open", retCode, historylen, lib.TA_CDL3STARSINSOUTH_Lookback() + 1)
@@ -5399,7 +5564,10 @@ cdef class CDL3STARSINSOUTH_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3STARSINSOUTH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3STARSINSOUTH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3STARSINSOUTH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3STARSINSOUTH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5478,7 +5646,10 @@ cdef class CDL3WHITESOLDIERS_Stream(Stream):
         cdef TA_CDL3WHITESOLDIERS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3WHITESOLDIERS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDL3WHITESOLDIERS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDL3WHITESOLDIERS_Open", retCode, historylen, lib.TA_CDL3WHITESOLDIERS_Lookback() + 1)
@@ -5503,7 +5674,10 @@ cdef class CDL3WHITESOLDIERS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDL3WHITESOLDIERS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDL3WHITESOLDIERS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDL3WHITESOLDIERS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDL3WHITESOLDIERS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5584,7 +5758,10 @@ cdef class CDLABANDONEDBABY_Stream(Stream):
         cdef TA_CDLABANDONEDBABY_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLABANDONEDBABY_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLABANDONEDBABY_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLABANDONEDBABY_Open", retCode, historylen, lib.TA_CDLABANDONEDBABY_Lookback(penetration) + 1)
@@ -5609,7 +5786,10 @@ cdef class CDLABANDONEDBABY_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLABANDONEDBABY_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLABANDONEDBABY_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLABANDONEDBABY_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLABANDONEDBABY_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5688,7 +5868,10 @@ cdef class CDLADVANCEBLOCK_Stream(Stream):
         cdef TA_CDLADVANCEBLOCK_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLADVANCEBLOCK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLADVANCEBLOCK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLADVANCEBLOCK_Open", retCode, historylen, lib.TA_CDLADVANCEBLOCK_Lookback() + 1)
@@ -5713,7 +5896,10 @@ cdef class CDLADVANCEBLOCK_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLADVANCEBLOCK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLADVANCEBLOCK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLADVANCEBLOCK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLADVANCEBLOCK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5792,7 +5978,10 @@ cdef class CDLBELTHOLD_Stream(Stream):
         cdef TA_CDLBELTHOLD_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLBELTHOLD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLBELTHOLD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLBELTHOLD_Open", retCode, historylen, lib.TA_CDLBELTHOLD_Lookback() + 1)
@@ -5817,7 +6006,10 @@ cdef class CDLBELTHOLD_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLBELTHOLD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLBELTHOLD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLBELTHOLD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLBELTHOLD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -5896,7 +6088,10 @@ cdef class CDLBREAKAWAY_Stream(Stream):
         cdef TA_CDLBREAKAWAY_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLBREAKAWAY_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLBREAKAWAY_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLBREAKAWAY_Open", retCode, historylen, lib.TA_CDLBREAKAWAY_Lookback() + 1)
@@ -5921,7 +6116,10 @@ cdef class CDLBREAKAWAY_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLBREAKAWAY_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLBREAKAWAY_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLBREAKAWAY_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLBREAKAWAY_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6000,7 +6198,10 @@ cdef class CDLCLOSINGMARUBOZU_Stream(Stream):
         cdef TA_CDLCLOSINGMARUBOZU_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCLOSINGMARUBOZU_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLCLOSINGMARUBOZU_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLCLOSINGMARUBOZU_Open", retCode, historylen, lib.TA_CDLCLOSINGMARUBOZU_Lookback() + 1)
@@ -6025,7 +6226,10 @@ cdef class CDLCLOSINGMARUBOZU_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLCLOSINGMARUBOZU_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCLOSINGMARUBOZU_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLCLOSINGMARUBOZU_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLCLOSINGMARUBOZU_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6104,7 +6308,10 @@ cdef class CDLCONCEALBABYSWALL_Stream(Stream):
         cdef TA_CDLCONCEALBABYSWALL_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCONCEALBABYSWALL_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLCONCEALBABYSWALL_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLCONCEALBABYSWALL_Open", retCode, historylen, lib.TA_CDLCONCEALBABYSWALL_Lookback() + 1)
@@ -6129,7 +6336,10 @@ cdef class CDLCONCEALBABYSWALL_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLCONCEALBABYSWALL_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCONCEALBABYSWALL_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLCONCEALBABYSWALL_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLCONCEALBABYSWALL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6208,7 +6418,10 @@ cdef class CDLCOUNTERATTACK_Stream(Stream):
         cdef TA_CDLCOUNTERATTACK_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCOUNTERATTACK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLCOUNTERATTACK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLCOUNTERATTACK_Open", retCode, historylen, lib.TA_CDLCOUNTERATTACK_Lookback() + 1)
@@ -6233,7 +6446,10 @@ cdef class CDLCOUNTERATTACK_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLCOUNTERATTACK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLCOUNTERATTACK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLCOUNTERATTACK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLCOUNTERATTACK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6314,7 +6530,10 @@ cdef class CDLDARKCLOUDCOVER_Stream(Stream):
         cdef TA_CDLDARKCLOUDCOVER_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDARKCLOUDCOVER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLDARKCLOUDCOVER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLDARKCLOUDCOVER_Open", retCode, historylen, lib.TA_CDLDARKCLOUDCOVER_Lookback(penetration) + 1)
@@ -6339,7 +6558,10 @@ cdef class CDLDARKCLOUDCOVER_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLDARKCLOUDCOVER_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDARKCLOUDCOVER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLDARKCLOUDCOVER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLDARKCLOUDCOVER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6418,7 +6640,10 @@ cdef class CDLDOJI_Stream(Stream):
         cdef TA_CDLDOJI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLDOJI_Open", retCode, historylen, lib.TA_CDLDOJI_Lookback() + 1)
@@ -6443,7 +6668,10 @@ cdef class CDLDOJI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLDOJI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLDOJI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6522,7 +6750,10 @@ cdef class CDLDOJISTAR_Stream(Stream):
         cdef TA_CDLDOJISTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLDOJISTAR_Open", retCode, historylen, lib.TA_CDLDOJISTAR_Lookback() + 1)
@@ -6547,7 +6778,10 @@ cdef class CDLDOJISTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLDOJISTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLDOJISTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6626,7 +6860,10 @@ cdef class CDLDRAGONFLYDOJI_Stream(Stream):
         cdef TA_CDLDRAGONFLYDOJI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDRAGONFLYDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLDRAGONFLYDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLDRAGONFLYDOJI_Open", retCode, historylen, lib.TA_CDLDRAGONFLYDOJI_Lookback() + 1)
@@ -6651,7 +6888,10 @@ cdef class CDLDRAGONFLYDOJI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLDRAGONFLYDOJI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLDRAGONFLYDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLDRAGONFLYDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLDRAGONFLYDOJI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6730,7 +6970,10 @@ cdef class CDLENGULFING_Stream(Stream):
         cdef TA_CDLENGULFING_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLENGULFING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLENGULFING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLENGULFING_Open", retCode, historylen, lib.TA_CDLENGULFING_Lookback() + 1)
@@ -6755,7 +6998,10 @@ cdef class CDLENGULFING_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLENGULFING_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLENGULFING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLENGULFING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLENGULFING_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6836,7 +7082,10 @@ cdef class CDLEVENINGDOJISTAR_Stream(Stream):
         cdef TA_CDLEVENINGDOJISTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLEVENINGDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLEVENINGDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLEVENINGDOJISTAR_Open", retCode, historylen, lib.TA_CDLEVENINGDOJISTAR_Lookback(penetration) + 1)
@@ -6861,7 +7110,10 @@ cdef class CDLEVENINGDOJISTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLEVENINGDOJISTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLEVENINGDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLEVENINGDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLEVENINGDOJISTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -6942,7 +7194,10 @@ cdef class CDLEVENINGSTAR_Stream(Stream):
         cdef TA_CDLEVENINGSTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLEVENINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLEVENINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLEVENINGSTAR_Open", retCode, historylen, lib.TA_CDLEVENINGSTAR_Lookback(penetration) + 1)
@@ -6967,7 +7222,10 @@ cdef class CDLEVENINGSTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLEVENINGSTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLEVENINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLEVENINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLEVENINGSTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7046,7 +7304,10 @@ cdef class CDLGAPSIDESIDEWHITE_Stream(Stream):
         cdef TA_CDLGAPSIDESIDEWHITE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLGAPSIDESIDEWHITE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLGAPSIDESIDEWHITE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLGAPSIDESIDEWHITE_Open", retCode, historylen, lib.TA_CDLGAPSIDESIDEWHITE_Lookback() + 1)
@@ -7071,7 +7332,10 @@ cdef class CDLGAPSIDESIDEWHITE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLGAPSIDESIDEWHITE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLGAPSIDESIDEWHITE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLGAPSIDESIDEWHITE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLGAPSIDESIDEWHITE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7150,7 +7414,10 @@ cdef class CDLGRAVESTONEDOJI_Stream(Stream):
         cdef TA_CDLGRAVESTONEDOJI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLGRAVESTONEDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLGRAVESTONEDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLGRAVESTONEDOJI_Open", retCode, historylen, lib.TA_CDLGRAVESTONEDOJI_Lookback() + 1)
@@ -7175,7 +7442,10 @@ cdef class CDLGRAVESTONEDOJI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLGRAVESTONEDOJI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLGRAVESTONEDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLGRAVESTONEDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLGRAVESTONEDOJI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7254,7 +7524,10 @@ cdef class CDLHAMMER_Stream(Stream):
         cdef TA_CDLHAMMER_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHAMMER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHAMMER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHAMMER_Open", retCode, historylen, lib.TA_CDLHAMMER_Lookback() + 1)
@@ -7279,7 +7552,10 @@ cdef class CDLHAMMER_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHAMMER_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHAMMER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHAMMER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHAMMER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7358,7 +7634,10 @@ cdef class CDLHANGINGMAN_Stream(Stream):
         cdef TA_CDLHANGINGMAN_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHANGINGMAN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHANGINGMAN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHANGINGMAN_Open", retCode, historylen, lib.TA_CDLHANGINGMAN_Lookback() + 1)
@@ -7383,7 +7662,10 @@ cdef class CDLHANGINGMAN_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHANGINGMAN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHANGINGMAN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHANGINGMAN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHANGINGMAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7462,7 +7744,10 @@ cdef class CDLHARAMI_Stream(Stream):
         cdef TA_CDLHARAMI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHARAMI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHARAMI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHARAMI_Open", retCode, historylen, lib.TA_CDLHARAMI_Lookback() + 1)
@@ -7487,7 +7772,10 @@ cdef class CDLHARAMI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHARAMI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHARAMI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHARAMI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHARAMI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7566,7 +7854,10 @@ cdef class CDLHARAMICROSS_Stream(Stream):
         cdef TA_CDLHARAMICROSS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHARAMICROSS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHARAMICROSS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHARAMICROSS_Open", retCode, historylen, lib.TA_CDLHARAMICROSS_Lookback() + 1)
@@ -7591,7 +7882,10 @@ cdef class CDLHARAMICROSS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHARAMICROSS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHARAMICROSS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHARAMICROSS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHARAMICROSS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7670,7 +7964,10 @@ cdef class CDLHIGHWAVE_Stream(Stream):
         cdef TA_CDLHIGHWAVE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIGHWAVE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHIGHWAVE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIGHWAVE_Open", retCode, historylen, lib.TA_CDLHIGHWAVE_Lookback() + 1)
@@ -7695,7 +7992,10 @@ cdef class CDLHIGHWAVE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHIGHWAVE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIGHWAVE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHIGHWAVE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIGHWAVE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7774,7 +8074,10 @@ cdef class CDLHIKKAKE_Stream(Stream):
         cdef TA_CDLHIKKAKE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIKKAKE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHIKKAKE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIKKAKE_Open", retCode, historylen, lib.TA_CDLHIKKAKE_Lookback() + 1)
@@ -7799,7 +8102,10 @@ cdef class CDLHIKKAKE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHIKKAKE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIKKAKE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHIKKAKE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIKKAKE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7878,7 +8184,10 @@ cdef class CDLHIKKAKEMOD_Stream(Stream):
         cdef TA_CDLHIKKAKEMOD_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIKKAKEMOD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHIKKAKEMOD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIKKAKEMOD_Open", retCode, historylen, lib.TA_CDLHIKKAKEMOD_Lookback() + 1)
@@ -7903,7 +8212,10 @@ cdef class CDLHIKKAKEMOD_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHIKKAKEMOD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHIKKAKEMOD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHIKKAKEMOD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHIKKAKEMOD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -7982,7 +8294,10 @@ cdef class CDLHOMINGPIGEON_Stream(Stream):
         cdef TA_CDLHOMINGPIGEON_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHOMINGPIGEON_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLHOMINGPIGEON_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLHOMINGPIGEON_Open", retCode, historylen, lib.TA_CDLHOMINGPIGEON_Lookback() + 1)
@@ -8007,7 +8322,10 @@ cdef class CDLHOMINGPIGEON_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLHOMINGPIGEON_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLHOMINGPIGEON_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLHOMINGPIGEON_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLHOMINGPIGEON_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8086,7 +8404,10 @@ cdef class CDLIDENTICAL3CROWS_Stream(Stream):
         cdef TA_CDLIDENTICAL3CROWS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLIDENTICAL3CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLIDENTICAL3CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLIDENTICAL3CROWS_Open", retCode, historylen, lib.TA_CDLIDENTICAL3CROWS_Lookback() + 1)
@@ -8111,7 +8432,10 @@ cdef class CDLIDENTICAL3CROWS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLIDENTICAL3CROWS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLIDENTICAL3CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLIDENTICAL3CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLIDENTICAL3CROWS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8190,7 +8514,10 @@ cdef class CDLINNECK_Stream(Stream):
         cdef TA_CDLINNECK_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLINNECK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLINNECK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLINNECK_Open", retCode, historylen, lib.TA_CDLINNECK_Lookback() + 1)
@@ -8215,7 +8542,10 @@ cdef class CDLINNECK_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLINNECK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLINNECK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLINNECK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLINNECK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8294,7 +8624,10 @@ cdef class CDLINVERTEDHAMMER_Stream(Stream):
         cdef TA_CDLINVERTEDHAMMER_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLINVERTEDHAMMER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLINVERTEDHAMMER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLINVERTEDHAMMER_Open", retCode, historylen, lib.TA_CDLINVERTEDHAMMER_Lookback() + 1)
@@ -8319,7 +8652,10 @@ cdef class CDLINVERTEDHAMMER_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLINVERTEDHAMMER_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLINVERTEDHAMMER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLINVERTEDHAMMER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLINVERTEDHAMMER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8398,7 +8734,10 @@ cdef class CDLKICKING_Stream(Stream):
         cdef TA_CDLKICKING_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLKICKING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLKICKING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLKICKING_Open", retCode, historylen, lib.TA_CDLKICKING_Lookback() + 1)
@@ -8423,7 +8762,10 @@ cdef class CDLKICKING_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLKICKING_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLKICKING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLKICKING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLKICKING_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8502,7 +8844,10 @@ cdef class CDLKICKINGBYLENGTH_Stream(Stream):
         cdef TA_CDLKICKINGBYLENGTH_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLKICKINGBYLENGTH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLKICKINGBYLENGTH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLKICKINGBYLENGTH_Open", retCode, historylen, lib.TA_CDLKICKINGBYLENGTH_Lookback() + 1)
@@ -8527,7 +8872,10 @@ cdef class CDLKICKINGBYLENGTH_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLKICKINGBYLENGTH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLKICKINGBYLENGTH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLKICKINGBYLENGTH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLKICKINGBYLENGTH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8606,7 +8954,10 @@ cdef class CDLLADDERBOTTOM_Stream(Stream):
         cdef TA_CDLLADDERBOTTOM_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLADDERBOTTOM_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLLADDERBOTTOM_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLLADDERBOTTOM_Open", retCode, historylen, lib.TA_CDLLADDERBOTTOM_Lookback() + 1)
@@ -8631,7 +8982,10 @@ cdef class CDLLADDERBOTTOM_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLLADDERBOTTOM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLADDERBOTTOM_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLLADDERBOTTOM_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLLADDERBOTTOM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8710,7 +9064,10 @@ cdef class CDLLONGLEGGEDDOJI_Stream(Stream):
         cdef TA_CDLLONGLEGGEDDOJI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLONGLEGGEDDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLLONGLEGGEDDOJI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLLONGLEGGEDDOJI_Open", retCode, historylen, lib.TA_CDLLONGLEGGEDDOJI_Lookback() + 1)
@@ -8735,7 +9092,10 @@ cdef class CDLLONGLEGGEDDOJI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLLONGLEGGEDDOJI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLONGLEGGEDDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLLONGLEGGEDDOJI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLLONGLEGGEDDOJI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8814,7 +9174,10 @@ cdef class CDLLONGLINE_Stream(Stream):
         cdef TA_CDLLONGLINE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLONGLINE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLLONGLINE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLLONGLINE_Open", retCode, historylen, lib.TA_CDLLONGLINE_Lookback() + 1)
@@ -8839,7 +9202,10 @@ cdef class CDLLONGLINE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLLONGLINE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLLONGLINE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLLONGLINE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLLONGLINE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -8918,7 +9284,10 @@ cdef class CDLMARUBOZU_Stream(Stream):
         cdef TA_CDLMARUBOZU_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMARUBOZU_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLMARUBOZU_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLMARUBOZU_Open", retCode, historylen, lib.TA_CDLMARUBOZU_Lookback() + 1)
@@ -8943,7 +9312,10 @@ cdef class CDLMARUBOZU_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLMARUBOZU_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMARUBOZU_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLMARUBOZU_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLMARUBOZU_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9022,7 +9394,10 @@ cdef class CDLMATCHINGLOW_Stream(Stream):
         cdef TA_CDLMATCHINGLOW_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMATCHINGLOW_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLMATCHINGLOW_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLMATCHINGLOW_Open", retCode, historylen, lib.TA_CDLMATCHINGLOW_Lookback() + 1)
@@ -9047,7 +9422,10 @@ cdef class CDLMATCHINGLOW_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLMATCHINGLOW_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMATCHINGLOW_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLMATCHINGLOW_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLMATCHINGLOW_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9128,7 +9506,10 @@ cdef class CDLMATHOLD_Stream(Stream):
         cdef TA_CDLMATHOLD_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMATHOLD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLMATHOLD_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLMATHOLD_Open", retCode, historylen, lib.TA_CDLMATHOLD_Lookback(penetration) + 1)
@@ -9153,7 +9534,10 @@ cdef class CDLMATHOLD_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLMATHOLD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMATHOLD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLMATHOLD_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLMATHOLD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9234,7 +9618,10 @@ cdef class CDLMORNINGDOJISTAR_Stream(Stream):
         cdef TA_CDLMORNINGDOJISTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMORNINGDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLMORNINGDOJISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLMORNINGDOJISTAR_Open", retCode, historylen, lib.TA_CDLMORNINGDOJISTAR_Lookback(penetration) + 1)
@@ -9259,7 +9646,10 @@ cdef class CDLMORNINGDOJISTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLMORNINGDOJISTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMORNINGDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLMORNINGDOJISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLMORNINGDOJISTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9340,7 +9730,10 @@ cdef class CDLMORNINGSTAR_Stream(Stream):
         cdef TA_CDLMORNINGSTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMORNINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
+        else:
             retCode = TA_CDLMORNINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLMORNINGSTAR_Open", retCode, historylen, lib.TA_CDLMORNINGSTAR_Lookback(penetration) + 1)
@@ -9365,7 +9758,10 @@ cdef class CDLMORNINGSTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLMORNINGSTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLMORNINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLMORNINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, penetration, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLMORNINGSTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9444,7 +9840,10 @@ cdef class CDLONNECK_Stream(Stream):
         cdef TA_CDLONNECK_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLONNECK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLONNECK_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLONNECK_Open", retCode, historylen, lib.TA_CDLONNECK_Lookback() + 1)
@@ -9469,7 +9868,10 @@ cdef class CDLONNECK_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLONNECK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLONNECK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLONNECK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLONNECK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9548,7 +9950,10 @@ cdef class CDLPIERCING_Stream(Stream):
         cdef TA_CDLPIERCING_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLPIERCING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLPIERCING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLPIERCING_Open", retCode, historylen, lib.TA_CDLPIERCING_Lookback() + 1)
@@ -9573,7 +9978,10 @@ cdef class CDLPIERCING_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLPIERCING_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLPIERCING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLPIERCING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLPIERCING_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9652,7 +10060,10 @@ cdef class CDLRICKSHAWMAN_Stream(Stream):
         cdef TA_CDLRICKSHAWMAN_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLRICKSHAWMAN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLRICKSHAWMAN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLRICKSHAWMAN_Open", retCode, historylen, lib.TA_CDLRICKSHAWMAN_Lookback() + 1)
@@ -9677,7 +10088,10 @@ cdef class CDLRICKSHAWMAN_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLRICKSHAWMAN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLRICKSHAWMAN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLRICKSHAWMAN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLRICKSHAWMAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9756,7 +10170,10 @@ cdef class CDLRISEFALL3METHODS_Stream(Stream):
         cdef TA_CDLRISEFALL3METHODS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLRISEFALL3METHODS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLRISEFALL3METHODS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLRISEFALL3METHODS_Open", retCode, historylen, lib.TA_CDLRISEFALL3METHODS_Lookback() + 1)
@@ -9781,7 +10198,10 @@ cdef class CDLRISEFALL3METHODS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLRISEFALL3METHODS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLRISEFALL3METHODS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLRISEFALL3METHODS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLRISEFALL3METHODS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9860,7 +10280,10 @@ cdef class CDLSEPARATINGLINES_Stream(Stream):
         cdef TA_CDLSEPARATINGLINES_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSEPARATINGLINES_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSEPARATINGLINES_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSEPARATINGLINES_Open", retCode, historylen, lib.TA_CDLSEPARATINGLINES_Lookback() + 1)
@@ -9885,7 +10308,10 @@ cdef class CDLSEPARATINGLINES_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSEPARATINGLINES_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSEPARATINGLINES_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSEPARATINGLINES_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSEPARATINGLINES_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -9964,7 +10390,10 @@ cdef class CDLSHOOTINGSTAR_Stream(Stream):
         cdef TA_CDLSHOOTINGSTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSHOOTINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSHOOTINGSTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSHOOTINGSTAR_Open", retCode, historylen, lib.TA_CDLSHOOTINGSTAR_Lookback() + 1)
@@ -9989,7 +10418,10 @@ cdef class CDLSHOOTINGSTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSHOOTINGSTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSHOOTINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSHOOTINGSTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSHOOTINGSTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10068,7 +10500,10 @@ cdef class CDLSHORTLINE_Stream(Stream):
         cdef TA_CDLSHORTLINE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSHORTLINE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSHORTLINE_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSHORTLINE_Open", retCode, historylen, lib.TA_CDLSHORTLINE_Lookback() + 1)
@@ -10093,7 +10528,10 @@ cdef class CDLSHORTLINE_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSHORTLINE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSHORTLINE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSHORTLINE_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSHORTLINE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10172,7 +10610,10 @@ cdef class CDLSPINNINGTOP_Stream(Stream):
         cdef TA_CDLSPINNINGTOP_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSPINNINGTOP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSPINNINGTOP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSPINNINGTOP_Open", retCode, historylen, lib.TA_CDLSPINNINGTOP_Lookback() + 1)
@@ -10197,7 +10638,10 @@ cdef class CDLSPINNINGTOP_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSPINNINGTOP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSPINNINGTOP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSPINNINGTOP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSPINNINGTOP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10276,7 +10720,10 @@ cdef class CDLSTALLEDPATTERN_Stream(Stream):
         cdef TA_CDLSTALLEDPATTERN_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSTALLEDPATTERN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSTALLEDPATTERN_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSTALLEDPATTERN_Open", retCode, historylen, lib.TA_CDLSTALLEDPATTERN_Lookback() + 1)
@@ -10301,7 +10748,10 @@ cdef class CDLSTALLEDPATTERN_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSTALLEDPATTERN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSTALLEDPATTERN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSTALLEDPATTERN_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSTALLEDPATTERN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10380,7 +10830,10 @@ cdef class CDLSTICKSANDWICH_Stream(Stream):
         cdef TA_CDLSTICKSANDWICH_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSTICKSANDWICH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLSTICKSANDWICH_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLSTICKSANDWICH_Open", retCode, historylen, lib.TA_CDLSTICKSANDWICH_Lookback() + 1)
@@ -10405,7 +10858,10 @@ cdef class CDLSTICKSANDWICH_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLSTICKSANDWICH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLSTICKSANDWICH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLSTICKSANDWICH_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLSTICKSANDWICH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10484,7 +10940,10 @@ cdef class CDLTAKURI_Stream(Stream):
         cdef TA_CDLTAKURI_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTAKURI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLTAKURI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLTAKURI_Open", retCode, historylen, lib.TA_CDLTAKURI_Lookback() + 1)
@@ -10509,7 +10968,10 @@ cdef class CDLTAKURI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLTAKURI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTAKURI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLTAKURI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLTAKURI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10588,7 +11050,10 @@ cdef class CDLTASUKIGAP_Stream(Stream):
         cdef TA_CDLTASUKIGAP_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTASUKIGAP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLTASUKIGAP_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLTASUKIGAP_Open", retCode, historylen, lib.TA_CDLTASUKIGAP_Lookback() + 1)
@@ -10613,7 +11078,10 @@ cdef class CDLTASUKIGAP_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLTASUKIGAP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTASUKIGAP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLTASUKIGAP_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLTASUKIGAP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10692,7 +11160,10 @@ cdef class CDLTHRUSTING_Stream(Stream):
         cdef TA_CDLTHRUSTING_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTHRUSTING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLTHRUSTING_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLTHRUSTING_Open", retCode, historylen, lib.TA_CDLTHRUSTING_Lookback() + 1)
@@ -10717,7 +11188,10 @@ cdef class CDLTHRUSTING_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLTHRUSTING_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTHRUSTING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLTHRUSTING_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLTHRUSTING_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10796,7 +11270,10 @@ cdef class CDLTRISTAR_Stream(Stream):
         cdef TA_CDLTRISTAR_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTRISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLTRISTAR_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLTRISTAR_Open", retCode, historylen, lib.TA_CDLTRISTAR_Lookback() + 1)
@@ -10821,7 +11298,10 @@ cdef class CDLTRISTAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLTRISTAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLTRISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLTRISTAR_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLTRISTAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -10900,7 +11380,10 @@ cdef class CDLUNIQUE3RIVER_Stream(Stream):
         cdef TA_CDLUNIQUE3RIVER_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLUNIQUE3RIVER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLUNIQUE3RIVER_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLUNIQUE3RIVER_Open", retCode, historylen, lib.TA_CDLUNIQUE3RIVER_Lookback() + 1)
@@ -10925,7 +11408,10 @@ cdef class CDLUNIQUE3RIVER_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLUNIQUE3RIVER_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLUNIQUE3RIVER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLUNIQUE3RIVER_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLUNIQUE3RIVER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11004,7 +11490,10 @@ cdef class CDLUPSIDEGAP2CROWS_Stream(Stream):
         cdef TA_CDLUPSIDEGAP2CROWS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLUPSIDEGAP2CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLUPSIDEGAP2CROWS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLUPSIDEGAP2CROWS_Open", retCode, historylen, lib.TA_CDLUPSIDEGAP2CROWS_Lookback() + 1)
@@ -11029,7 +11518,10 @@ cdef class CDLUPSIDEGAP2CROWS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLUPSIDEGAP2CROWS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLUPSIDEGAP2CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLUPSIDEGAP2CROWS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLUPSIDEGAP2CROWS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11108,7 +11600,10 @@ cdef class CDLXSIDEGAP3METHODS_Stream(Stream):
         cdef TA_CDLXSIDEGAP3METHODS_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLXSIDEGAP3METHODS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_CDLXSIDEGAP3METHODS_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_CDLXSIDEGAP3METHODS_Open", retCode, historylen, lib.TA_CDLXSIDEGAP3METHODS_Lookback() + 1)
@@ -11133,7 +11628,10 @@ cdef class CDLXSIDEGAP3METHODS_Stream(Stream):
         cdef int outnbelement
         cdef TA_CDLXSIDEGAP3METHODS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CDLXSIDEGAP3METHODS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_CDLXSIDEGAP3METHODS_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CDLXSIDEGAP3METHODS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11209,7 +11707,10 @@ cdef class CEIL_Stream(Stream):
         cdef TA_CEIL_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CEIL_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_CEIL_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CEIL_Open", retCode, historylen, lib.TA_CEIL_Lookback() + 1)
@@ -11231,7 +11732,10 @@ cdef class CEIL_Stream(Stream):
         cdef int outnbelement
         cdef TA_CEIL_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CEIL_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CEIL_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CEIL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11312,7 +11816,10 @@ cdef class CMF_Stream(Stream):
         cdef TA_CMF_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMF_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_CMF_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CMF_Open", retCode, historylen, lib.TA_CMF_Lookback(timeperiod) + 1)
@@ -11337,7 +11844,10 @@ cdef class CMF_Stream(Stream):
         cdef int outnbelement
         cdef TA_CMF_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMF_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CMF_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CMF_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11415,7 +11925,10 @@ cdef class CMO_Stream(Stream):
         cdef TA_CMO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMO_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_CMO_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CMO_Open", retCode, historylen, lib.TA_CMO_Lookback(timeperiod) + 1)
@@ -11437,7 +11950,10 @@ cdef class CMO_Stream(Stream):
         cdef int outnbelement
         cdef TA_CMO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CMO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CMO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11515,7 +12031,10 @@ cdef class CMOU_Stream(Stream):
         cdef TA_CMOU_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMOU_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_CMOU_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CMOU_Open", retCode, historylen, lib.TA_CMOU_Lookback(timeperiod) + 1)
@@ -11537,7 +12056,10 @@ cdef class CMOU_Stream(Stream):
         cdef int outnbelement
         cdef TA_CMOU_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CMOU_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CMOU_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CMOU_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11617,7 +12139,10 @@ cdef class COPPOCK_Stream(Stream):
         cdef TA_COPPOCK_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COPPOCK_Open(&handle, <double*>a_real.data + begidx, historylen, wmaperiod, roc1period, roc2period, &outreal)
+        else:
             retCode = TA_COPPOCK_Open(&handle, <double*>a_real.data + begidx, historylen, wmaperiod, roc1period, roc2period, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_COPPOCK_Open", retCode, historylen, lib.TA_COPPOCK_Lookback(wmaperiod, roc1period, roc2period) + 1)
@@ -11639,7 +12164,10 @@ cdef class COPPOCK_Stream(Stream):
         cdef int outnbelement
         cdef TA_COPPOCK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COPPOCK_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, wmaperiod, roc1period, roc2period, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_COPPOCK_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, wmaperiod, roc1period, roc2period, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_COPPOCK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11719,7 +12247,10 @@ cdef class CORREL_Stream(Stream):
         cdef TA_CORREL_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CORREL_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_CORREL_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CORREL_Open", retCode, historylen, lib.TA_CORREL_Lookback(timeperiod) + 1)
@@ -11742,7 +12273,10 @@ cdef class CORREL_Stream(Stream):
         cdef int outnbelement
         cdef TA_CORREL_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CORREL_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CORREL_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CORREL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11818,7 +12352,10 @@ cdef class COS_Stream(Stream):
         cdef TA_COS_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COS_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_COS_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_COS_Open", retCode, historylen, lib.TA_COS_Lookback() + 1)
@@ -11840,7 +12377,10 @@ cdef class COS_Stream(Stream):
         cdef int outnbelement
         cdef TA_COS_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_COS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_COS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -11916,7 +12456,10 @@ cdef class COSH_Stream(Stream):
         cdef TA_COSH_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COSH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_COSH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_COSH_Open", retCode, historylen, lib.TA_COSH_Lookback() + 1)
@@ -11938,7 +12481,10 @@ cdef class COSH_Stream(Stream):
         cdef int outnbelement
         cdef TA_COSH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_COSH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_COSH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_COSH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12014,7 +12560,10 @@ cdef class CUMSUM_Stream(Stream):
         cdef TA_CUMSUM_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CUMSUM_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_CUMSUM_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CUMSUM_Open", retCode, historylen, lib.TA_CUMSUM_Lookback() + 1)
@@ -12036,7 +12585,10 @@ cdef class CUMSUM_Stream(Stream):
         cdef int outnbelement
         cdef TA_CUMSUM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CUMSUM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CUMSUM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CUMSUM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12116,7 +12668,10 @@ cdef class CVI_Stream(Stream):
         cdef TA_CVI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CVI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, rocperiod, &outreal)
+        else:
             retCode = TA_CVI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, rocperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_CVI_Open", retCode, historylen, lib.TA_CVI_Lookback(timeperiod, rocperiod) + 1)
@@ -12139,7 +12694,10 @@ cdef class CVI_Stream(Stream):
         cdef int outnbelement
         cdef TA_CVI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_CVI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, rocperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_CVI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, rocperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_CVI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12217,7 +12775,10 @@ cdef class DEMA_Stream(Stream):
         cdef TA_DEMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_DEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_DEMA_Open", retCode, historylen, lib.TA_DEMA_Lookback(timeperiod) + 1)
@@ -12239,7 +12800,10 @@ cdef class DEMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_DEMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_DEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_DEMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12317,7 +12881,10 @@ cdef class DIV_Stream(Stream):
         cdef TA_DIV_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DIV_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_DIV_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_DIV_Open", retCode, historylen, lib.TA_DIV_Lookback() + 1)
@@ -12340,7 +12907,10 @@ cdef class DIV_Stream(Stream):
         cdef int outnbelement
         cdef TA_DIV_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DIV_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_DIV_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_DIV_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12423,7 +12993,10 @@ cdef class DONCHIAN_Stream(Stream):
         cdef double outmiddleband
         cdef double outlowerband
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DONCHIAN_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outupperband, &outmiddleband, &outlowerband)
+        else:
             retCode = TA_DONCHIAN_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _stream_open_failed("TA_DONCHIAN_Open", retCode, historylen, lib.TA_DONCHIAN_Lookback(timeperiod) + 1)
@@ -12448,7 +13021,10 @@ cdef class DONCHIAN_Stream(Stream):
         cdef int outnbelement
         cdef TA_DONCHIAN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DONCHIAN_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
+        else:
             retCode = TA_DONCHIAN_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_DONCHIAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12532,7 +13108,10 @@ cdef class DPO_Stream(Stream):
         cdef TA_DPO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DPO_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_DPO_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_DPO_Open", retCode, historylen, lib.TA_DPO_Lookback(timeperiod) + 1)
@@ -12554,7 +13133,10 @@ cdef class DPO_Stream(Stream):
         cdef int outnbelement
         cdef TA_DPO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DPO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_DPO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_DPO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12634,7 +13216,10 @@ cdef class DX_Stream(Stream):
         cdef TA_DX_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_DX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_DX_Open", retCode, historylen, lib.TA_DX_Lookback(timeperiod) + 1)
@@ -12658,7 +13243,10 @@ cdef class DX_Stream(Stream):
         cdef int outnbelement
         cdef TA_DX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_DX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_DX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_DX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12737,7 +13325,10 @@ cdef class EFI_Stream(Stream):
         cdef TA_EFI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EFI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_EFI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_EFI_Open", retCode, historylen, lib.TA_EFI_Lookback(timeperiod) + 1)
@@ -12760,7 +13351,10 @@ cdef class EFI_Stream(Stream):
         cdef int outnbelement
         cdef TA_EFI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EFI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_EFI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_EFI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12838,7 +13432,10 @@ cdef class EMA_Stream(Stream):
         cdef TA_EMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_EMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_EMA_Open", retCode, historylen, lib.TA_EMA_Lookback(timeperiod) + 1)
@@ -12860,7 +13457,10 @@ cdef class EMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_EMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_EMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_EMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -12938,7 +13538,10 @@ cdef class ER_Stream(Stream):
         cdef TA_ER_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ER_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ER_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ER_Open", retCode, historylen, lib.TA_ER_Lookback(timeperiod) + 1)
@@ -12960,7 +13563,10 @@ cdef class ER_Stream(Stream):
         cdef int outnbelement
         cdef TA_ER_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ER_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ER_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13042,7 +13648,10 @@ cdef class ERI_Stream(Stream):
         cdef double outbullpower
         cdef double outbearpower
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ERI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbullpower, &outbearpower)
+        else:
             retCode = TA_ERI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbullpower, &outbearpower)
         if retCode != 0:
             _stream_open_failed("TA_ERI_Open", retCode, historylen, lib.TA_ERI_Lookback(timeperiod) + 1)
@@ -13067,7 +13676,10 @@ cdef class ERI_Stream(Stream):
         cdef int outnbelement
         cdef TA_ERI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ERI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outbullpower.data + lookback, <double*>outbearpower.data + lookback)
+        else:
             retCode = TA_ERI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outbullpower.data + lookback, <double*>outbearpower.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ERI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13146,7 +13758,10 @@ cdef class EXP_Stream(Stream):
         cdef TA_EXP_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EXP_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_EXP_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_EXP_Open", retCode, historylen, lib.TA_EXP_Lookback() + 1)
@@ -13168,7 +13783,10 @@ cdef class EXP_Stream(Stream):
         cdef int outnbelement
         cdef TA_EXP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_EXP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_EXP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_EXP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13244,7 +13862,10 @@ cdef class FLOOR_Stream(Stream):
         cdef TA_FLOOR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FLOOR_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_FLOOR_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_FLOOR_Open", retCode, historylen, lib.TA_FLOOR_Lookback() + 1)
@@ -13266,7 +13887,10 @@ cdef class FLOOR_Stream(Stream):
         cdef int outnbelement
         cdef TA_FLOOR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FLOOR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_FLOOR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_FLOOR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13344,7 +13968,10 @@ cdef class FOSC_Stream(Stream):
         cdef TA_FOSC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FOSC_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_FOSC_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_FOSC_Open", retCode, historylen, lib.TA_FOSC_Lookback(timeperiod) + 1)
@@ -13366,7 +13993,10 @@ cdef class FOSC_Stream(Stream):
         cdef int outnbelement
         cdef TA_FOSC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FOSC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_FOSC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_FOSC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13448,7 +14078,10 @@ cdef class FRACTAL_Stream(Stream):
         cdef int outswinghigh
         cdef int outswinglow
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FRACTAL_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, leftbars, rightbars, &outswinghigh, &outswinglow)
+        else:
             retCode = TA_FRACTAL_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, leftbars, rightbars, &outswinghigh, &outswinglow)
         if retCode != 0:
             _stream_open_failed("TA_FRACTAL_Open", retCode, historylen, lib.TA_FRACTAL_Lookback(leftbars, rightbars) + 1)
@@ -13472,7 +14105,10 @@ cdef class FRACTAL_Stream(Stream):
         cdef int outnbelement
         cdef TA_FRACTAL_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_FRACTAL_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, leftbars, rightbars, &outbegidx, &outnbelement, <int*>outswinghigh.data + lookback, <int*>outswinglow.data + lookback)
+        else:
             retCode = TA_FRACTAL_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, leftbars, rightbars, &outbegidx, &outnbelement, <int*>outswinghigh.data + lookback, <int*>outswinglow.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_FRACTAL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13560,7 +14196,10 @@ cdef class HA_Stream(Stream):
         cdef double outhalow
         cdef double outhaclose
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HA_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outhaopen, &outhahigh, &outhalow, &outhaclose)
+        else:
             retCode = TA_HA_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outhaopen, &outhahigh, &outhalow, &outhaclose)
         if retCode != 0:
             _stream_open_failed("TA_HA_Open", retCode, historylen, lib.TA_HA_Lookback() + 1)
@@ -13588,7 +14227,10 @@ cdef class HA_Stream(Stream):
         cdef int outnbelement
         cdef TA_HA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HA_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outhaopen.data + lookback, <double*>outhahigh.data + lookback, <double*>outhalow.data + lookback, <double*>outhaclose.data + lookback)
+        else:
             retCode = TA_HA_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outhaopen.data + lookback, <double*>outhahigh.data + lookback, <double*>outhalow.data + lookback, <double*>outhaclose.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13675,7 +14317,10 @@ cdef class HMA_Stream(Stream):
         cdef TA_HMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_HMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_HMA_Open", retCode, historylen, lib.TA_HMA_Lookback(timeperiod) + 1)
@@ -13697,7 +14342,10 @@ cdef class HMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_HMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_HMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13773,7 +14421,10 @@ cdef class HT_DCPERIOD_Stream(Stream):
         cdef TA_HT_DCPERIOD_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_DCPERIOD_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_HT_DCPERIOD_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_HT_DCPERIOD_Open", retCode, historylen, lib.TA_HT_DCPERIOD_Lookback() + 1)
@@ -13795,7 +14446,10 @@ cdef class HT_DCPERIOD_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_DCPERIOD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_DCPERIOD_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_HT_DCPERIOD_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_DCPERIOD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13871,7 +14525,10 @@ cdef class HT_DCPHASE_Stream(Stream):
         cdef TA_HT_DCPHASE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_DCPHASE_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_HT_DCPHASE_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_HT_DCPHASE_Open", retCode, historylen, lib.TA_HT_DCPHASE_Lookback() + 1)
@@ -13893,7 +14550,10 @@ cdef class HT_DCPHASE_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_DCPHASE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_DCPHASE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_HT_DCPHASE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_DCPHASE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -13971,7 +14631,10 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef double outinphase
         cdef double outquadrature
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_PHASOR_Open(&handle, <double*>a_real.data + begidx, historylen, &outinphase, &outquadrature)
+        else:
             retCode = TA_HT_PHASOR_Open(&handle, <double*>a_real.data + begidx, historylen, &outinphase, &outquadrature)
         if retCode != 0:
             _stream_open_failed("TA_HT_PHASOR_Open", retCode, historylen, lib.TA_HT_PHASOR_Lookback() + 1)
@@ -13994,7 +14657,10 @@ cdef class HT_PHASOR_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_PHASOR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_PHASOR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outinphase.data + lookback, <double*>outquadrature.data + lookback)
+        else:
             retCode = TA_HT_PHASOR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outinphase.data + lookback, <double*>outquadrature.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_PHASOR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14075,7 +14741,10 @@ cdef class HT_SINE_Stream(Stream):
         cdef double outsine
         cdef double outleadsine
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_SINE_Open(&handle, <double*>a_real.data + begidx, historylen, &outsine, &outleadsine)
+        else:
             retCode = TA_HT_SINE_Open(&handle, <double*>a_real.data + begidx, historylen, &outsine, &outleadsine)
         if retCode != 0:
             _stream_open_failed("TA_HT_SINE_Open", retCode, historylen, lib.TA_HT_SINE_Lookback() + 1)
@@ -14098,7 +14767,10 @@ cdef class HT_SINE_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_SINE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_SINE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outsine.data + lookback, <double*>outleadsine.data + lookback)
+        else:
             retCode = TA_HT_SINE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outsine.data + lookback, <double*>outleadsine.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_SINE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14177,7 +14849,10 @@ cdef class HT_TRENDLINE_Stream(Stream):
         cdef TA_HT_TRENDLINE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_TRENDLINE_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_HT_TRENDLINE_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_HT_TRENDLINE_Open", retCode, historylen, lib.TA_HT_TRENDLINE_Lookback() + 1)
@@ -14199,7 +14874,10 @@ cdef class HT_TRENDLINE_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_TRENDLINE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_TRENDLINE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_HT_TRENDLINE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_TRENDLINE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14275,7 +14953,10 @@ cdef class HT_TRENDMODE_Stream(Stream):
         cdef TA_HT_TRENDMODE_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_TRENDMODE_Open(&handle, <double*>a_real.data + begidx, historylen, &outinteger)
+        else:
             retCode = TA_HT_TRENDMODE_Open(&handle, <double*>a_real.data + begidx, historylen, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_HT_TRENDMODE_Open", retCode, historylen, lib.TA_HT_TRENDMODE_Lookback() + 1)
@@ -14297,7 +14978,10 @@ cdef class HT_TRENDMODE_Stream(Stream):
         cdef int outnbelement
         cdef TA_HT_TRENDMODE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_HT_TRENDMODE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_HT_TRENDMODE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_HT_TRENDMODE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14376,7 +15060,10 @@ cdef class IMI_Stream(Stream):
         cdef TA_IMI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_IMI_Open(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_IMI_Open(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_IMI_Open", retCode, historylen, lib.TA_IMI_Lookback(timeperiod) + 1)
@@ -14399,7 +15086,10 @@ cdef class IMI_Stream(Stream):
         cdef int outnbelement
         cdef TA_IMI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_IMI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_IMI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_IMI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14477,7 +15167,10 @@ cdef class KAMA_Stream(Stream):
         cdef TA_KAMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KAMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_KAMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_KAMA_Open", retCode, historylen, lib.TA_KAMA_Lookback(timeperiod) + 1)
@@ -14499,7 +15192,10 @@ cdef class KAMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_KAMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KAMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_KAMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_KAMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14585,7 +15281,10 @@ cdef class KC_Stream(Stream):
         cdef double outmiddleband
         cdef double outlowerband
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, atrperiod, nbdev, &outupperband, &outmiddleband, &outlowerband)
+        else:
             retCode = TA_KC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, atrperiod, nbdev, &outupperband, &outmiddleband, &outlowerband)
         if retCode != 0:
             _stream_open_failed("TA_KC_Open", retCode, historylen, lib.TA_KC_Lookback(timeperiod, atrperiod, nbdev) + 1)
@@ -14611,7 +15310,10 @@ cdef class KC_Stream(Stream):
         cdef int outnbelement
         cdef TA_KC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, atrperiod, nbdev, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
+        else:
             retCode = TA_KC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, atrperiod, nbdev, &outbegidx, &outnbelement, <double*>outupperband.data + lookback, <double*>outmiddleband.data + lookback, <double*>outlowerband.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_KC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14705,7 +15407,10 @@ cdef class KDJ_Stream(Stream):
         cdef double outd
         cdef double outj
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KDJ_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outk, &outd, &outj)
+        else:
             retCode = TA_KDJ_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outk, &outd, &outj)
         if retCode != 0:
             _stream_open_failed("TA_KDJ_Open", retCode, historylen, lib.TA_KDJ_Lookback(fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype) + 1)
@@ -14731,7 +15436,10 @@ cdef class KDJ_Stream(Stream):
         cdef int outnbelement
         cdef TA_KDJ_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_KDJ_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outbegidx, &outnbelement, <double*>outk.data + lookback, <double*>outd.data + lookback, <double*>outj.data + lookback)
+        else:
             retCode = TA_KDJ_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outbegidx, &outnbelement, <double*>outk.data + lookback, <double*>outd.data + lookback, <double*>outj.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_KDJ_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14815,7 +15523,10 @@ cdef class LINEARREG_Stream(Stream):
         cdef TA_LINEARREG_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_LINEARREG_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_Open", retCode, historylen, lib.TA_LINEARREG_Lookback(timeperiod) + 1)
@@ -14837,7 +15548,10 @@ cdef class LINEARREG_Stream(Stream):
         cdef int outnbelement
         cdef TA_LINEARREG_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LINEARREG_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -14915,7 +15629,10 @@ cdef class LINEARREG_ANGLE_Stream(Stream):
         cdef TA_LINEARREG_ANGLE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_ANGLE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_LINEARREG_ANGLE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_ANGLE_Open", retCode, historylen, lib.TA_LINEARREG_ANGLE_Lookback(timeperiod) + 1)
@@ -14937,7 +15654,10 @@ cdef class LINEARREG_ANGLE_Stream(Stream):
         cdef int outnbelement
         cdef TA_LINEARREG_ANGLE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_ANGLE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LINEARREG_ANGLE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_ANGLE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15015,7 +15735,10 @@ cdef class LINEARREG_INTERCEPT_Stream(Stream):
         cdef TA_LINEARREG_INTERCEPT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_INTERCEPT_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_LINEARREG_INTERCEPT_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_INTERCEPT_Open", retCode, historylen, lib.TA_LINEARREG_INTERCEPT_Lookback(timeperiod) + 1)
@@ -15037,7 +15760,10 @@ cdef class LINEARREG_INTERCEPT_Stream(Stream):
         cdef int outnbelement
         cdef TA_LINEARREG_INTERCEPT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_INTERCEPT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LINEARREG_INTERCEPT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_INTERCEPT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15115,7 +15841,10 @@ cdef class LINEARREG_SLOPE_Stream(Stream):
         cdef TA_LINEARREG_SLOPE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_SLOPE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_LINEARREG_SLOPE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_SLOPE_Open", retCode, historylen, lib.TA_LINEARREG_SLOPE_Lookback(timeperiod) + 1)
@@ -15137,7 +15866,10 @@ cdef class LINEARREG_SLOPE_Stream(Stream):
         cdef int outnbelement
         cdef TA_LINEARREG_SLOPE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LINEARREG_SLOPE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LINEARREG_SLOPE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LINEARREG_SLOPE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15213,7 +15945,10 @@ cdef class LN_Stream(Stream):
         cdef TA_LN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_LN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LN_Open", retCode, historylen, lib.TA_LN_Lookback() + 1)
@@ -15235,7 +15970,10 @@ cdef class LN_Stream(Stream):
         cdef int outnbelement
         cdef TA_LN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15311,7 +16049,10 @@ cdef class LOG10_Stream(Stream):
         cdef TA_LOG10_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LOG10_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_LOG10_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_LOG10_Open", retCode, historylen, lib.TA_LOG10_Lookback() + 1)
@@ -15333,7 +16074,10 @@ cdef class LOG10_Stream(Stream):
         cdef int outnbelement
         cdef TA_LOG10_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_LOG10_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_LOG10_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_LOG10_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15412,7 +16156,10 @@ cdef class MA_Stream(Stream):
         cdef TA_MA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, matype, &outreal)
+        else:
             retCode = TA_MA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, matype, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MA_Open", retCode, historylen, lib.TA_MA_Lookback(timeperiod, matype) + 1)
@@ -15434,7 +16181,10 @@ cdef class MA_Stream(Stream):
         cdef int outnbelement
         cdef TA_MA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15518,7 +16268,10 @@ cdef class MACD_Stream(Stream):
         cdef double outmacdsignal
         cdef double outmacdhist
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACD_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outmacd, &outmacdsignal, &outmacdhist)
+        else:
             retCode = TA_MACD_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _stream_open_failed("TA_MACD_Open", retCode, historylen, lib.TA_MACD_Lookback(fastperiod, slowperiod, signalperiod) + 1)
@@ -15542,7 +16295,10 @@ cdef class MACD_Stream(Stream):
         cdef int outnbelement
         cdef TA_MACD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACD_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
+        else:
             retCode = TA_MACD_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MACD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15635,7 +16391,10 @@ cdef class MACDEXT_Stream(Stream):
         cdef double outmacdsignal
         cdef double outmacdhist
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACDEXT_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, fastmatype, slowperiod, slowmatype, signalperiod, signalmatype, &outmacd, &outmacdsignal, &outmacdhist)
+        else:
             retCode = TA_MACDEXT_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, fastmatype, slowperiod, slowmatype, signalperiod, signalmatype, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _stream_open_failed("TA_MACDEXT_Open", retCode, historylen, lib.TA_MACDEXT_Lookback(fastperiod, fastmatype, slowperiod, slowmatype, signalperiod, signalmatype) + 1)
@@ -15659,7 +16418,10 @@ cdef class MACDEXT_Stream(Stream):
         cdef int outnbelement
         cdef TA_MACDEXT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACDEXT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, fastmatype, slowperiod, slowmatype, signalperiod, signalmatype, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
+        else:
             retCode = TA_MACDEXT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, fastmatype, slowperiod, slowmatype, signalperiod, signalmatype, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MACDEXT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15747,7 +16509,10 @@ cdef class MACDFIX_Stream(Stream):
         cdef double outmacdsignal
         cdef double outmacdhist
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACDFIX_Open(&handle, <double*>a_real.data + begidx, historylen, signalperiod, &outmacd, &outmacdsignal, &outmacdhist)
+        else:
             retCode = TA_MACDFIX_Open(&handle, <double*>a_real.data + begidx, historylen, signalperiod, &outmacd, &outmacdsignal, &outmacdhist)
         if retCode != 0:
             _stream_open_failed("TA_MACDFIX_Open", retCode, historylen, lib.TA_MACDFIX_Lookback(signalperiod) + 1)
@@ -15771,7 +16536,10 @@ cdef class MACDFIX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MACDFIX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MACDFIX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, signalperiod, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
+        else:
             retCode = TA_MACDFIX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, signalperiod, &outbegidx, &outnbelement, <double*>outmacd.data + lookback, <double*>outmacdsignal.data + lookback, <double*>outmacdhist.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MACDFIX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15858,7 +16626,10 @@ cdef class MAMA_Stream(Stream):
         cdef double outmama
         cdef double outfama
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAMA_Open(&handle, <double*>a_real.data + begidx, historylen, fastlimit, slowlimit, &outmama, &outfama)
+        else:
             retCode = TA_MAMA_Open(&handle, <double*>a_real.data + begidx, historylen, fastlimit, slowlimit, &outmama, &outfama)
         if retCode != 0:
             _stream_open_failed("TA_MAMA_Open", retCode, historylen, lib.TA_MAMA_Lookback(fastlimit, slowlimit) + 1)
@@ -15881,7 +16652,10 @@ cdef class MAMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_MAMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastlimit, slowlimit, &outbegidx, &outnbelement, <double*>outmama.data + lookback, <double*>outfama.data + lookback)
+        else:
             retCode = TA_MAMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastlimit, slowlimit, &outbegidx, &outnbelement, <double*>outmama.data + lookback, <double*>outfama.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MAMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -15962,7 +16736,10 @@ cdef class MARKETFI_Stream(Stream):
         cdef TA_MARKETFI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MARKETFI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_MARKETFI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MARKETFI_Open", retCode, historylen, lib.TA_MARKETFI_Lookback() + 1)
@@ -15986,7 +16763,10 @@ cdef class MARKETFI_Stream(Stream):
         cdef int outnbelement
         cdef TA_MARKETFI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MARKETFI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MARKETFI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MARKETFI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16066,7 +16846,10 @@ cdef class MASSI_Stream(Stream):
         cdef TA_MASSI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MASSI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outreal)
+        else:
             retCode = TA_MASSI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MASSI_Open", retCode, historylen, lib.TA_MASSI_Lookback(fastperiod, slowperiod) + 1)
@@ -16089,7 +16872,10 @@ cdef class MASSI_Stream(Stream):
         cdef int outnbelement
         cdef TA_MASSI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MASSI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MASSI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, fastperiod, slowperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MASSI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16171,7 +16957,10 @@ cdef class MAVP_Stream(Stream):
         cdef TA_MAVP_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAVP_Open(&handle, <double*>a_real.data + begidx, <double*>a_periods.data + begidx, historylen, minperiod, maxperiod, matype, &outreal)
+        else:
             retCode = TA_MAVP_Open(&handle, <double*>a_real.data + begidx, <double*>a_periods.data + begidx, historylen, minperiod, maxperiod, matype, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MAVP_Open", retCode, historylen, lib.TA_MAVP_Lookback(minperiod, maxperiod, matype) + 1)
@@ -16194,7 +16983,10 @@ cdef class MAVP_Stream(Stream):
         cdef int outnbelement
         cdef TA_MAVP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAVP_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_periods.data + begidx, historylen, minperiod, maxperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MAVP_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_periods.data + begidx, historylen, minperiod, maxperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MAVP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16272,7 +17064,10 @@ cdef class MAX_Stream(Stream):
         cdef TA_MAX_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MAX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MAX_Open", retCode, historylen, lib.TA_MAX_Lookback(timeperiod) + 1)
@@ -16294,7 +17089,10 @@ cdef class MAX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MAX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MAX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MAX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16372,7 +17170,10 @@ cdef class MAXINDEX_Stream(Stream):
         cdef TA_MAXINDEX_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAXINDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outinteger)
+        else:
             retCode = TA_MAXINDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_MAXINDEX_Open", retCode, historylen, lib.TA_MAXINDEX_Lookback(timeperiod) + 1)
@@ -16394,7 +17195,10 @@ cdef class MAXINDEX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MAXINDEX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MAXINDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_MAXINDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MAXINDEX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16475,7 +17279,10 @@ cdef class MEDPRICE_Stream(Stream):
         cdef TA_MEDPRICE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MEDPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_MEDPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MEDPRICE_Open", retCode, historylen, lib.TA_MEDPRICE_Lookback() + 1)
@@ -16498,7 +17305,10 @@ cdef class MEDPRICE_Stream(Stream):
         cdef int outnbelement
         cdef TA_MEDPRICE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MEDPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MEDPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MEDPRICE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16579,7 +17389,10 @@ cdef class MFI_Stream(Stream):
         cdef TA_MFI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MFI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MFI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MFI_Open", retCode, historylen, lib.TA_MFI_Lookback(timeperiod) + 1)
@@ -16604,7 +17417,10 @@ cdef class MFI_Stream(Stream):
         cdef int outnbelement
         cdef TA_MFI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MFI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MFI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MFI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16682,7 +17498,10 @@ cdef class MIDPOINT_Stream(Stream):
         cdef TA_MIDPOINT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIDPOINT_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MIDPOINT_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MIDPOINT_Open", retCode, historylen, lib.TA_MIDPOINT_Lookback(timeperiod) + 1)
@@ -16704,7 +17523,10 @@ cdef class MIDPOINT_Stream(Stream):
         cdef int outnbelement
         cdef TA_MIDPOINT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIDPOINT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MIDPOINT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MIDPOINT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16783,7 +17605,10 @@ cdef class MIDPRICE_Stream(Stream):
         cdef TA_MIDPRICE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIDPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MIDPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MIDPRICE_Open", retCode, historylen, lib.TA_MIDPRICE_Lookback(timeperiod) + 1)
@@ -16806,7 +17631,10 @@ cdef class MIDPRICE_Stream(Stream):
         cdef int outnbelement
         cdef TA_MIDPRICE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIDPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MIDPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MIDPRICE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16884,7 +17712,10 @@ cdef class MIN_Stream(Stream):
         cdef TA_MIN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIN_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MIN_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MIN_Open", retCode, historylen, lib.TA_MIN_Lookback(timeperiod) + 1)
@@ -16906,7 +17737,10 @@ cdef class MIN_Stream(Stream):
         cdef int outnbelement
         cdef TA_MIN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MIN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -16984,7 +17818,10 @@ cdef class MININDEX_Stream(Stream):
         cdef TA_MININDEX_Stream* handle = NULL
         cdef int outinteger
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MININDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outinteger)
+        else:
             retCode = TA_MININDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outinteger)
         if retCode != 0:
             _stream_open_failed("TA_MININDEX_Open", retCode, historylen, lib.TA_MININDEX_Lookback(timeperiod) + 1)
@@ -17006,7 +17843,10 @@ cdef class MININDEX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MININDEX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MININDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
+        else:
             retCode = TA_MININDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outinteger.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MININDEX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17090,7 +17930,10 @@ cdef class MINMAX_Stream(Stream):
         cdef double outmin
         cdef double outmax
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINMAX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outmin, &outmax)
+        else:
             retCode = TA_MINMAX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outmin, &outmax)
         if retCode != 0:
             _stream_open_failed("TA_MINMAX_Open", retCode, historylen, lib.TA_MINMAX_Lookback(timeperiod) + 1)
@@ -17113,7 +17956,10 @@ cdef class MINMAX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MINMAX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINMAX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outmin.data + lookback, <double*>outmax.data + lookback)
+        else:
             retCode = TA_MINMAX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outmin.data + lookback, <double*>outmax.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MINMAX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17196,7 +18042,10 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef int outminidx
         cdef int outmaxidx
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINMAXINDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outminidx, &outmaxidx)
+        else:
             retCode = TA_MINMAXINDEX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outminidx, &outmaxidx)
         if retCode != 0:
             _stream_open_failed("TA_MINMAXINDEX_Open", retCode, historylen, lib.TA_MINMAXINDEX_Lookback(timeperiod) + 1)
@@ -17219,7 +18068,10 @@ cdef class MINMAXINDEX_Stream(Stream):
         cdef int outnbelement
         cdef TA_MINMAXINDEX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINMAXINDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outminidx.data + lookback, <int*>outmaxidx.data + lookback)
+        else:
             retCode = TA_MINMAXINDEX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <int*>outminidx.data + lookback, <int*>outmaxidx.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MINMAXINDEX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17309,7 +18161,10 @@ cdef class MINUS_DI_Stream(Stream):
         cdef TA_MINUS_DI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINUS_DI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MINUS_DI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MINUS_DI_Open", retCode, historylen, lib.TA_MINUS_DI_Lookback(timeperiod) + 1)
@@ -17333,7 +18188,10 @@ cdef class MINUS_DI_Stream(Stream):
         cdef int outnbelement
         cdef TA_MINUS_DI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINUS_DI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MINUS_DI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MINUS_DI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17412,7 +18270,10 @@ cdef class MINUS_DM_Stream(Stream):
         cdef TA_MINUS_DM_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINUS_DM_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MINUS_DM_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MINUS_DM_Open", retCode, historylen, lib.TA_MINUS_DM_Lookback(timeperiod) + 1)
@@ -17435,7 +18296,10 @@ cdef class MINUS_DM_Stream(Stream):
         cdef int outnbelement
         cdef TA_MINUS_DM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MINUS_DM_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MINUS_DM_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MINUS_DM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17513,7 +18377,10 @@ cdef class MOM_Stream(Stream):
         cdef TA_MOM_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MOM_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_MOM_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MOM_Open", retCode, historylen, lib.TA_MOM_Lookback(timeperiod) + 1)
@@ -17535,7 +18402,10 @@ cdef class MOM_Stream(Stream):
         cdef int outnbelement
         cdef TA_MOM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MOM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MOM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MOM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17613,7 +18483,10 @@ cdef class MULT_Stream(Stream):
         cdef TA_MULT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MULT_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_MULT_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_MULT_Open", retCode, historylen, lib.TA_MULT_Lookback() + 1)
@@ -17636,7 +18509,10 @@ cdef class MULT_Stream(Stream):
         cdef int outnbelement
         cdef TA_MULT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_MULT_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_MULT_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_MULT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17716,7 +18592,10 @@ cdef class NATR_Stream(Stream):
         cdef TA_NATR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_NATR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_NATR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_NATR_Open", retCode, historylen, lib.TA_NATR_Lookback(timeperiod) + 1)
@@ -17740,7 +18619,10 @@ cdef class NATR_Stream(Stream):
         cdef int outnbelement
         cdef TA_NATR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_NATR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_NATR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_NATR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17817,7 +18699,10 @@ cdef class NVI_Stream(Stream):
         cdef TA_NVI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_NVI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_NVI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_NVI_Open", retCode, historylen, lib.TA_NVI_Lookback() + 1)
@@ -17840,7 +18725,10 @@ cdef class NVI_Stream(Stream):
         cdef int outnbelement
         cdef TA_NVI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_NVI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_NVI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_NVI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -17918,7 +18806,10 @@ cdef class OBV_Stream(Stream):
         cdef TA_OBV_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_OBV_Open(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_OBV_Open(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_OBV_Open", retCode, historylen, lib.TA_OBV_Lookback() + 1)
@@ -17941,7 +18832,10 @@ cdef class OBV_Stream(Stream):
         cdef int outnbelement
         cdef TA_OBV_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_OBV_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_OBV_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_OBV_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18020,7 +18914,10 @@ cdef class PERCENTILE_Stream(Stream):
         cdef TA_PERCENTILE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PERCENTILE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, percentile, &outreal)
+        else:
             retCode = TA_PERCENTILE_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, percentile, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PERCENTILE_Open", retCode, historylen, lib.TA_PERCENTILE_Lookback(timeperiod, percentile) + 1)
@@ -18042,7 +18939,10 @@ cdef class PERCENTILE_Stream(Stream):
         cdef int outnbelement
         cdef TA_PERCENTILE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PERCENTILE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, percentile, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PERCENTILE_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, percentile, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PERCENTILE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18120,7 +19020,10 @@ cdef class PERCENTRANK_Stream(Stream):
         cdef TA_PERCENTRANK_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PERCENTRANK_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_PERCENTRANK_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PERCENTRANK_Open", retCode, historylen, lib.TA_PERCENTRANK_Lookback(timeperiod) + 1)
@@ -18142,7 +19045,10 @@ cdef class PERCENTRANK_Stream(Stream):
         cdef int outnbelement
         cdef TA_PERCENTRANK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PERCENTRANK_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PERCENTRANK_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PERCENTRANK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18222,7 +19128,10 @@ cdef class PLUS_DI_Stream(Stream):
         cdef TA_PLUS_DI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PLUS_DI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_PLUS_DI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PLUS_DI_Open", retCode, historylen, lib.TA_PLUS_DI_Lookback(timeperiod) + 1)
@@ -18246,7 +19155,10 @@ cdef class PLUS_DI_Stream(Stream):
         cdef int outnbelement
         cdef TA_PLUS_DI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PLUS_DI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PLUS_DI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PLUS_DI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18325,7 +19237,10 @@ cdef class PLUS_DM_Stream(Stream):
         cdef TA_PLUS_DM_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PLUS_DM_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_PLUS_DM_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PLUS_DM_Open", retCode, historylen, lib.TA_PLUS_DM_Lookback(timeperiod) + 1)
@@ -18348,7 +19263,10 @@ cdef class PLUS_DM_Stream(Stream):
         cdef int outnbelement
         cdef TA_PLUS_DM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PLUS_DM_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PLUS_DM_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PLUS_DM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18428,7 +19346,10 @@ cdef class PPO_Stream(Stream):
         cdef TA_PPO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PPO_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
+        else:
             retCode = TA_PPO_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PPO_Open", retCode, historylen, lib.TA_PPO_Lookback(fastperiod, slowperiod, matype) + 1)
@@ -18450,7 +19371,10 @@ cdef class PPO_Stream(Stream):
         cdef int outnbelement
         cdef TA_PPO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PPO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PPO_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PPO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18527,7 +19451,10 @@ cdef class PVI_Stream(Stream):
         cdef TA_PVI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_PVI_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PVI_Open", retCode, historylen, lib.TA_PVI_Lookback() + 1)
@@ -18550,7 +19477,10 @@ cdef class PVI_Stream(Stream):
         cdef int outnbelement
         cdef TA_PVI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PVI_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PVI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18630,7 +19560,10 @@ cdef class PVO_Stream(Stream):
         cdef TA_PVO_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVO_Open(&handle, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
+        else:
             retCode = TA_PVO_Open(&handle, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, matype, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PVO_Open", retCode, historylen, lib.TA_PVO_Lookback(fastperiod, slowperiod, matype) + 1)
@@ -18652,7 +19585,10 @@ cdef class PVO_Stream(Stream):
         cdef int outnbelement
         cdef TA_PVO_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVO_OpenAndFill(&handle, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PVO_OpenAndFill(&handle, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PVO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18729,7 +19665,10 @@ cdef class PVT_Stream(Stream):
         cdef TA_PVT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVT_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_PVT_Open(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_PVT_Open", retCode, historylen, lib.TA_PVT_Lookback() + 1)
@@ -18752,7 +19691,10 @@ cdef class PVT_Stream(Stream):
         cdef int outnbelement
         cdef TA_PVT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_PVT_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_PVT_OpenAndFill(&handle, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_PVT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18831,7 +19773,10 @@ cdef class QSTICK_Stream(Stream):
         cdef TA_QSTICK_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_QSTICK_Open(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_QSTICK_Open(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_QSTICK_Open", retCode, historylen, lib.TA_QSTICK_Lookback(timeperiod) + 1)
@@ -18854,7 +19799,10 @@ cdef class QSTICK_Stream(Stream):
         cdef int outnbelement
         cdef TA_QSTICK_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_QSTICK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_QSTICK_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_QSTICK_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -18932,7 +19880,10 @@ cdef class RMA_Stream(Stream):
         cdef TA_RMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_RMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_RMA_Open", retCode, historylen, lib.TA_RMA_Lookback(timeperiod) + 1)
@@ -18954,7 +19905,10 @@ cdef class RMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_RMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_RMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_RMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19032,7 +19986,10 @@ cdef class ROC_Stream(Stream):
         cdef TA_ROC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROC_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ROC_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ROC_Open", retCode, historylen, lib.TA_ROC_Lookback(timeperiod) + 1)
@@ -19054,7 +20011,10 @@ cdef class ROC_Stream(Stream):
         cdef int outnbelement
         cdef TA_ROC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ROC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ROC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19132,7 +20092,10 @@ cdef class ROCP_Stream(Stream):
         cdef TA_ROCP_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCP_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ROCP_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ROCP_Open", retCode, historylen, lib.TA_ROCP_Lookback(timeperiod) + 1)
@@ -19154,7 +20117,10 @@ cdef class ROCP_Stream(Stream):
         cdef int outnbelement
         cdef TA_ROCP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ROCP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ROCP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19232,7 +20198,10 @@ cdef class ROCR_Stream(Stream):
         cdef TA_ROCR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCR_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ROCR_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ROCR_Open", retCode, historylen, lib.TA_ROCR_Lookback(timeperiod) + 1)
@@ -19254,7 +20223,10 @@ cdef class ROCR_Stream(Stream):
         cdef int outnbelement
         cdef TA_ROCR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ROCR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ROCR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19332,7 +20304,10 @@ cdef class ROCR100_Stream(Stream):
         cdef TA_ROCR100_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCR100_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ROCR100_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ROCR100_Open", retCode, historylen, lib.TA_ROCR100_Lookback(timeperiod) + 1)
@@ -19354,7 +20329,10 @@ cdef class ROCR100_Stream(Stream):
         cdef int outnbelement
         cdef TA_ROCR100_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ROCR100_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ROCR100_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ROCR100_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19432,7 +20410,10 @@ cdef class RSI_Stream(Stream):
         cdef TA_RSI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RSI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_RSI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_RSI_Open", retCode, historylen, lib.TA_RSI_Lookback(timeperiod) + 1)
@@ -19454,7 +20435,10 @@ cdef class RSI_Stream(Stream):
         cdef int outnbelement
         cdef TA_RSI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_RSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_RSI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19533,7 +20517,10 @@ cdef class RVI_Stream(Stream):
         cdef TA_RVI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RVI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, stddevperiod, &outreal)
+        else:
             retCode = TA_RVI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, stddevperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_RVI_Open", retCode, historylen, lib.TA_RVI_Lookback(timeperiod, stddevperiod) + 1)
@@ -19555,7 +20542,10 @@ cdef class RVI_Stream(Stream):
         cdef int outnbelement
         cdef TA_RVI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RVI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, stddevperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_RVI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, stddevperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_RVI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19633,7 +20623,10 @@ cdef class RVOL_Stream(Stream):
         cdef TA_RVOL_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RVOL_Open(&handle, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_RVOL_Open(&handle, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_RVOL_Open", retCode, historylen, lib.TA_RVOL_Lookback(timeperiod) + 1)
@@ -19655,7 +20648,10 @@ cdef class RVOL_Stream(Stream):
         cdef int outnbelement
         cdef TA_RVOL_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_RVOL_OpenAndFill(&handle, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_RVOL_OpenAndFill(&handle, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_RVOL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19735,7 +20731,10 @@ cdef class SAR_Stream(Stream):
         cdef TA_SAR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SAR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, acceleration, maximum, &outreal)
+        else:
             retCode = TA_SAR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, acceleration, maximum, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SAR_Open", retCode, historylen, lib.TA_SAR_Lookback(acceleration, maximum) + 1)
@@ -19758,7 +20757,10 @@ cdef class SAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_SAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SAR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, acceleration, maximum, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SAR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, acceleration, maximum, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19844,7 +20846,10 @@ cdef class SAREXT_Stream(Stream):
         cdef TA_SAREXT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SAREXT_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, startvalue, offsetonreverse, accelerationinitlong, accelerationlong, accelerationmaxlong, accelerationinitshort, accelerationshort, accelerationmaxshort, &outreal)
+        else:
             retCode = TA_SAREXT_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, startvalue, offsetonreverse, accelerationinitlong, accelerationlong, accelerationmaxlong, accelerationinitshort, accelerationshort, accelerationmaxshort, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SAREXT_Open", retCode, historylen, lib.TA_SAREXT_Lookback(startvalue, offsetonreverse, accelerationinitlong, accelerationlong, accelerationmaxlong, accelerationinitshort, accelerationshort, accelerationmaxshort) + 1)
@@ -19867,7 +20872,10 @@ cdef class SAREXT_Stream(Stream):
         cdef int outnbelement
         cdef TA_SAREXT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SAREXT_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, startvalue, offsetonreverse, accelerationinitlong, accelerationlong, accelerationmaxlong, accelerationinitshort, accelerationshort, accelerationmaxshort, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SAREXT_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, startvalue, offsetonreverse, accelerationinitlong, accelerationlong, accelerationmaxlong, accelerationinitshort, accelerationshort, accelerationmaxshort, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SAREXT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -19943,7 +20951,10 @@ cdef class SIN_Stream(Stream):
         cdef TA_SIN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SIN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_SIN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SIN_Open", retCode, historylen, lib.TA_SIN_Lookback() + 1)
@@ -19965,7 +20976,10 @@ cdef class SIN_Stream(Stream):
         cdef int outnbelement
         cdef TA_SIN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SIN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SIN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20041,7 +21055,10 @@ cdef class SINH_Stream(Stream):
         cdef TA_SINH_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SINH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_SINH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SINH_Open", retCode, historylen, lib.TA_SINH_Lookback() + 1)
@@ -20063,7 +21080,10 @@ cdef class SINH_Stream(Stream):
         cdef int outnbelement
         cdef TA_SINH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SINH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SINH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SINH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20141,7 +21161,10 @@ cdef class SMA_Stream(Stream):
         cdef TA_SMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_SMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SMA_Open", retCode, historylen, lib.TA_SMA_Lookback(timeperiod) + 1)
@@ -20163,7 +21186,10 @@ cdef class SMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_SMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20248,7 +21274,10 @@ cdef class SMI_Stream(Stream):
         cdef double outsmi
         cdef double outsmisignal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SMI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, fastperiod, slowperiod, signalperiod, &outsmi, &outsmisignal)
+        else:
             retCode = TA_SMI_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, fastperiod, slowperiod, signalperiod, &outsmi, &outsmisignal)
         if retCode != 0:
             _stream_open_failed("TA_SMI_Open", retCode, historylen, lib.TA_SMI_Lookback(timeperiod, fastperiod, slowperiod, signalperiod) + 1)
@@ -20273,7 +21302,10 @@ cdef class SMI_Stream(Stream):
         cdef int outnbelement
         cdef TA_SMI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SMI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outsmi.data + lookback, <double*>outsmisignal.data + lookback)
+        else:
             retCode = TA_SMI_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outsmi.data + lookback, <double*>outsmisignal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SMI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20352,7 +21384,10 @@ cdef class SQRT_Stream(Stream):
         cdef TA_SQRT_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SQRT_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_SQRT_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SQRT_Open", retCode, historylen, lib.TA_SQRT_Lookback() + 1)
@@ -20374,7 +21409,10 @@ cdef class SQRT_Stream(Stream):
         cdef int outnbelement
         cdef TA_SQRT_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SQRT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SQRT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SQRT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20453,7 +21491,10 @@ cdef class STDDEV_Stream(Stream):
         cdef TA_STDDEV_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STDDEV_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outreal)
+        else:
             retCode = TA_STDDEV_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_STDDEV_Open", retCode, historylen, lib.TA_STDDEV_Lookback(timeperiod, nbdev) + 1)
@@ -20475,7 +21516,10 @@ cdef class STDDEV_Stream(Stream):
         cdef int outnbelement
         cdef TA_STDDEV_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STDDEV_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_STDDEV_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_STDDEV_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20561,7 +21605,10 @@ cdef class STOCH_Stream(Stream):
         cdef double outslowk
         cdef double outslowd
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCH_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outslowk, &outslowd)
+        else:
             retCode = TA_STOCH_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outslowk, &outslowd)
         if retCode != 0:
             _stream_open_failed("TA_STOCH_Open", retCode, historylen, lib.TA_STOCH_Lookback(fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype) + 1)
@@ -20586,7 +21633,10 @@ cdef class STOCH_Stream(Stream):
         cdef int outnbelement
         cdef TA_STOCH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCH_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outbegidx, &outnbelement, <double*>outslowk.data + lookback, <double*>outslowd.data + lookback)
+        else:
             retCode = TA_STOCH_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype, &outbegidx, &outnbelement, <double*>outslowk.data + lookback, <double*>outslowd.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_STOCH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20673,7 +21723,10 @@ cdef class STOCHF_Stream(Stream):
         cdef double outfastk
         cdef double outfastd
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCHF_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, fastd_period, fastd_matype, &outfastk, &outfastd)
+        else:
             retCode = TA_STOCHF_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, fastd_period, fastd_matype, &outfastk, &outfastd)
         if retCode != 0:
             _stream_open_failed("TA_STOCHF_Open", retCode, historylen, lib.TA_STOCHF_Lookback(fastk_period, fastd_period, fastd_matype) + 1)
@@ -20698,7 +21751,10 @@ cdef class STOCHF_Stream(Stream):
         cdef int outnbelement
         cdef TA_STOCHF_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCHF_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, fastd_period, fastd_matype, &outbegidx, &outnbelement, <double*>outfastk.data + lookback, <double*>outfastd.data + lookback)
+        else:
             retCode = TA_STOCHF_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, fastd_period, fastd_matype, &outbegidx, &outnbelement, <double*>outfastk.data + lookback, <double*>outfastd.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_STOCHF_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20784,7 +21840,10 @@ cdef class STOCHRSI_Stream(Stream):
         cdef double outfastk
         cdef double outfastd
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCHRSI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, fastk_period, fastd_period, fastd_matype, &outfastk, &outfastd)
+        else:
             retCode = TA_STOCHRSI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, fastk_period, fastd_period, fastd_matype, &outfastk, &outfastd)
         if retCode != 0:
             _stream_open_failed("TA_STOCHRSI_Open", retCode, historylen, lib.TA_STOCHRSI_Lookback(timeperiod, fastk_period, fastd_period, fastd_matype) + 1)
@@ -20807,7 +21866,10 @@ cdef class STOCHRSI_Stream(Stream):
         cdef int outnbelement
         cdef TA_STOCHRSI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_STOCHRSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, fastk_period, fastd_period, fastd_matype, &outbegidx, &outnbelement, <double*>outfastk.data + lookback, <double*>outfastd.data + lookback)
+        else:
             retCode = TA_STOCHRSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, fastk_period, fastd_period, fastd_matype, &outbegidx, &outnbelement, <double*>outfastk.data + lookback, <double*>outfastd.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_STOCHRSI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20888,7 +21950,10 @@ cdef class SUB_Stream(Stream):
         cdef TA_SUB_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUB_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_SUB_Open(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SUB_Open", retCode, historylen, lib.TA_SUB_Lookback() + 1)
@@ -20911,7 +21976,10 @@ cdef class SUB_Stream(Stream):
         cdef int outnbelement
         cdef TA_SUB_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUB_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SUB_OpenAndFill(&handle, <double*>a_real0.data + begidx, <double*>a_real1.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SUB_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -20989,7 +22057,10 @@ cdef class SUM_Stream(Stream):
         cdef TA_SUM_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUM_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_SUM_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_SUM_Open", retCode, historylen, lib.TA_SUM_Lookback(timeperiod) + 1)
@@ -21011,7 +22082,10 @@ cdef class SUM_Stream(Stream):
         cdef int outnbelement
         cdef TA_SUM_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_SUM_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SUM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21094,7 +22168,10 @@ cdef class SUPERTREND_Stream(Stream):
         cdef double outsupertrend
         cdef int outtrend
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUPERTREND_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outsupertrend, &outtrend)
+        else:
             retCode = TA_SUPERTREND_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outsupertrend, &outtrend)
         if retCode != 0:
             _stream_open_failed("TA_SUPERTREND_Open", retCode, historylen, lib.TA_SUPERTREND_Lookback(timeperiod, multiplier) + 1)
@@ -21119,7 +22196,10 @@ cdef class SUPERTREND_Stream(Stream):
         cdef int outnbelement
         cdef TA_SUPERTREND_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_SUPERTREND_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outbegidx, &outnbelement, <double*>outsupertrend.data + lookback, <int*>outtrend.data + lookback)
+        else:
             retCode = TA_SUPERTREND_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, &outbegidx, &outnbelement, <double*>outsupertrend.data + lookback, <int*>outtrend.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_SUPERTREND_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21201,7 +22281,10 @@ cdef class T3_Stream(Stream):
         cdef TA_T3_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_T3_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, vfactor, &outreal)
+        else:
             retCode = TA_T3_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, vfactor, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_T3_Open", retCode, historylen, lib.TA_T3_Lookback(timeperiod, vfactor) + 1)
@@ -21223,7 +22306,10 @@ cdef class T3_Stream(Stream):
         cdef int outnbelement
         cdef TA_T3_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_T3_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, vfactor, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_T3_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, vfactor, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_T3_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21299,7 +22385,10 @@ cdef class TAN_Stream(Stream):
         cdef TA_TAN_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TAN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_TAN_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TAN_Open", retCode, historylen, lib.TA_TAN_Lookback() + 1)
@@ -21321,7 +22410,10 @@ cdef class TAN_Stream(Stream):
         cdef int outnbelement
         cdef TA_TAN_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TAN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TAN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21397,7 +22489,10 @@ cdef class TANH_Stream(Stream):
         cdef TA_TANH_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TANH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_TANH_Open(&handle, <double*>a_real.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TANH_Open", retCode, historylen, lib.TA_TANH_Lookback() + 1)
@@ -21419,7 +22514,10 @@ cdef class TANH_Stream(Stream):
         cdef int outnbelement
         cdef TA_TANH_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TANH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TANH_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TANH_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21497,7 +22595,10 @@ cdef class TEMA_Stream(Stream):
         cdef TA_TEMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_TEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TEMA_Open", retCode, historylen, lib.TA_TEMA_Lookback(timeperiod) + 1)
@@ -21519,7 +22620,10 @@ cdef class TEMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_TEMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TEMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21597,7 +22701,10 @@ cdef class TRANGE_Stream(Stream):
         cdef TA_TRANGE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRANGE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_TRANGE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TRANGE_Open", retCode, historylen, lib.TA_TRANGE_Lookback() + 1)
@@ -21621,7 +22728,10 @@ cdef class TRANGE_Stream(Stream):
         cdef int outnbelement
         cdef TA_TRANGE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRANGE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TRANGE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TRANGE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21699,7 +22809,10 @@ cdef class TRIMA_Stream(Stream):
         cdef TA_TRIMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRIMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_TRIMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TRIMA_Open", retCode, historylen, lib.TA_TRIMA_Lookback(timeperiod) + 1)
@@ -21721,7 +22834,10 @@ cdef class TRIMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_TRIMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRIMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TRIMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TRIMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21799,7 +22915,10 @@ cdef class TRIX_Stream(Stream):
         cdef TA_TRIX_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRIX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_TRIX_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TRIX_Open", retCode, historylen, lib.TA_TRIX_Lookback(timeperiod) + 1)
@@ -21821,7 +22940,10 @@ cdef class TRIX_Stream(Stream):
         cdef int outnbelement
         cdef TA_TRIX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TRIX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TRIX_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TRIX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -21899,7 +23021,10 @@ cdef class TSF_Stream(Stream):
         cdef TA_TSF_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TSF_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_TSF_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TSF_Open", retCode, historylen, lib.TA_TSF_Lookback(timeperiod) + 1)
@@ -21921,7 +23046,10 @@ cdef class TSF_Stream(Stream):
         cdef int outnbelement
         cdef TA_TSF_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TSF_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TSF_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TSF_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22000,7 +23128,10 @@ cdef class TSI_Stream(Stream):
         cdef TA_TSI_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TSI_Open(&handle, <double*>a_real.data + begidx, historylen, firstperiod, secondperiod, &outreal)
+        else:
             retCode = TA_TSI_Open(&handle, <double*>a_real.data + begidx, historylen, firstperiod, secondperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TSI_Open", retCode, historylen, lib.TA_TSI_Lookback(firstperiod, secondperiod) + 1)
@@ -22022,7 +23153,10 @@ cdef class TSI_Stream(Stream):
         cdef int outnbelement
         cdef TA_TSI_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, firstperiod, secondperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, firstperiod, secondperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TSI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22100,7 +23234,10 @@ cdef class TYPPRICE_Stream(Stream):
         cdef TA_TYPPRICE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TYPPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_TYPPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_TYPPRICE_Open", retCode, historylen, lib.TA_TYPPRICE_Lookback() + 1)
@@ -22124,7 +23261,10 @@ cdef class TYPPRICE_Stream(Stream):
         cdef int outnbelement
         cdef TA_TYPPRICE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_TYPPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_TYPPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_TYPPRICE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22206,7 +23346,10 @@ cdef class ULTOSC_Stream(Stream):
         cdef TA_ULTOSC_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ULTOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod1, timeperiod2, timeperiod3, &outreal)
+        else:
             retCode = TA_ULTOSC_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod1, timeperiod2, timeperiod3, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ULTOSC_Open", retCode, historylen, lib.TA_ULTOSC_Lookback(timeperiod1, timeperiod2, timeperiod3) + 1)
@@ -22230,7 +23373,10 @@ cdef class ULTOSC_Stream(Stream):
         cdef int outnbelement
         cdef TA_ULTOSC_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ULTOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod1, timeperiod2, timeperiod3, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ULTOSC_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod1, timeperiod2, timeperiod3, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ULTOSC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22309,7 +23455,10 @@ cdef class VAR_Stream(Stream):
         cdef TA_VAR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VAR_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outreal)
+        else:
             retCode = TA_VAR_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_VAR_Open", retCode, historylen, lib.TA_VAR_Lookback(timeperiod, nbdev) + 1)
@@ -22331,7 +23480,10 @@ cdef class VAR_Stream(Stream):
         cdef int outnbelement
         cdef TA_VAR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VAR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_VAR_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdev, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_VAR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22409,7 +23561,10 @@ cdef class VHF_Stream(Stream):
         cdef TA_VHF_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VHF_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_VHF_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_VHF_Open", retCode, historylen, lib.TA_VHF_Lookback(timeperiod) + 1)
@@ -22431,7 +23586,10 @@ cdef class VHF_Stream(Stream):
         cdef int outnbelement
         cdef TA_VHF_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VHF_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_VHF_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_VHF_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22513,7 +23671,10 @@ cdef class VORTEX_Stream(Stream):
         cdef double outplusvi
         cdef double outminusvi
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VORTEX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outplusvi, &outminusvi)
+        else:
             retCode = TA_VORTEX_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outplusvi, &outminusvi)
         if retCode != 0:
             _stream_open_failed("TA_VORTEX_Open", retCode, historylen, lib.TA_VORTEX_Lookback(timeperiod) + 1)
@@ -22538,7 +23699,10 @@ cdef class VORTEX_Stream(Stream):
         cdef int outnbelement
         cdef TA_VORTEX_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VORTEX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outplusvi.data + lookback, <double*>outminusvi.data + lookback)
+        else:
             retCode = TA_VORTEX_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outplusvi.data + lookback, <double*>outminusvi.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_VORTEX_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22620,7 +23784,10 @@ cdef class VWAP_Stream(Stream):
         cdef TA_VWAP_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VWAP_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_VWAP_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_VWAP_Open", retCode, historylen, lib.TA_VWAP_Lookback() + 1)
@@ -22645,7 +23812,10 @@ cdef class VWAP_Stream(Stream):
         cdef int outnbelement
         cdef TA_VWAP_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VWAP_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_VWAP_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_VWAP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22725,7 +23895,10 @@ cdef class VWMA_Stream(Stream):
         cdef TA_VWMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VWMA_Open(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_VWMA_Open(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_VWMA_Open", retCode, historylen, lib.TA_VWMA_Lookback(timeperiod) + 1)
@@ -22748,7 +23921,10 @@ cdef class VWMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_VWMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_VWMA_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_VWMA_OpenAndFill(&handle, <double*>a_real.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_VWMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22826,7 +24002,10 @@ cdef class WAD_Stream(Stream):
         cdef TA_WAD_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WAD_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_WAD_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_WAD_Open", retCode, historylen, lib.TA_WAD_Lookback() + 1)
@@ -22850,7 +24029,10 @@ cdef class WAD_Stream(Stream):
         cdef int outnbelement
         cdef TA_WAD_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WAD_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_WAD_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_WAD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -22928,7 +24110,10 @@ cdef class WCLPRICE_Stream(Stream):
         cdef TA_WCLPRICE_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WCLPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+        else:
             retCode = TA_WCLPRICE_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_WCLPRICE_Open", retCode, historylen, lib.TA_WCLPRICE_Lookback() + 1)
@@ -22952,7 +24137,10 @@ cdef class WCLPRICE_Stream(Stream):
         cdef int outnbelement
         cdef TA_WCLPRICE_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WCLPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_WCLPRICE_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_WCLPRICE_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -23032,7 +24220,10 @@ cdef class WILLR_Stream(Stream):
         cdef TA_WILLR_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WILLR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_WILLR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_WILLR_Open", retCode, historylen, lib.TA_WILLR_Lookback(timeperiod) + 1)
@@ -23056,7 +24247,10 @@ cdef class WILLR_Stream(Stream):
         cdef int outnbelement
         cdef TA_WILLR_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WILLR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_WILLR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_WILLR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -23134,7 +24328,10 @@ cdef class WMA_Stream(Stream):
         cdef TA_WMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_WMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_WMA_Open", retCode, historylen, lib.TA_WMA_Lookback(timeperiod) + 1)
@@ -23156,7 +24353,10 @@ cdef class WMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_WMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_WMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_WMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_WMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
@@ -23234,7 +24434,10 @@ cdef class ZLEMA_Stream(Stream):
         cdef TA_ZLEMA_Stream* handle = NULL
         cdef double outreal
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ZLEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+        else:
             retCode = TA_ZLEMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
         if retCode != 0:
             _stream_open_failed("TA_ZLEMA_Open", retCode, historylen, lib.TA_ZLEMA_Lookback(timeperiod) + 1)
@@ -23256,7 +24459,10 @@ cdef class ZLEMA_Stream(Stream):
         cdef int outnbelement
         cdef TA_ZLEMA_Stream* handle = NULL
         cdef TA_RetCode retCode
-        with nogil:
+        if historylen >= _TA_NOGIL_MIN_LENGTH:
+            with nogil:
+                retCode = TA_ZLEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+        else:
             retCode = TA_ZLEMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
         if retCode != 0:
             _stream_open_failed("TA_ZLEMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)

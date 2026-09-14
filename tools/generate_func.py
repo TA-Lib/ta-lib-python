@@ -403,9 +403,12 @@ for f in functions:
 
     # An empty input has begidx -1, so the call would read and write one element
     # before the buffers.
-    print('    if length > 0:')
+    call = 'retCode = lib.%s( %s )' % (name, ' , '.join(call_args))
+    print('    if length - begidx >= _TA_NOGIL_MIN_LENGTH:')
     print('        with nogil:')
-    print('            retCode = lib.%s( %s )' % (name, ' , '.join(call_args)))
+    print('            %s' % call)
+    print('    elif length > 0:')
+    print('        %s' % call)
     print('    else:')
     print('        retCode = lib.TA_SUCCESS')
     print('    _ta_check_success("%s", retCode)' % name)

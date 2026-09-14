@@ -59,6 +59,11 @@ cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
     raise error('%s function failed with error code %s: %s' % (
         function_name, ret_code, description))
 
+# Counted after the leading NaN bars. Below it, releasing the GIL costs
+# throughput whenever threads contend for it; a lone thread sees no difference.
+cdef enum:
+    _TA_NOGIL_MIN_LENGTH = 30000
+
 def _ta_initialize():
     cdef TA_RetCode ret_code
     ret_code = lib.TA_Initialize()

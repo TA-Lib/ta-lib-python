@@ -310,7 +310,10 @@ def emit(func, docstring):
     # reachable from another thread. A verb on self._handle must hold it, or two
     # threads on one handle corrupt its ring.
     out.append('        cdef TA_RetCode retCode')
-    out.append('        with nogil:')
+    out.append('        if historylen >= _TA_NOGIL_MIN_LENGTH:')
+    out.append('            with nogil:')
+    out.append('                retCode = %s' % call('Open', *opened(*out_ptrs)))
+    out.append('        else:')
     out.append('            retCode = %s' % call('Open', *opened(*out_ptrs)))
     out.append('        if retCode != 0:')
     out.append('            _stream_open_failed("TA_%s_Open", retCode, historylen, '
@@ -331,10 +334,13 @@ def emit(func, docstring):
     out.append('        cdef int outnbelement')
     out.append('        cdef %s* handle = NULL' % handle)
     out.append('        cdef TA_RetCode retCode')
-    out.append('        with nogil:')
-    out.append('            retCode = %s' % call('OpenAndFill', *opened(
-        '&outbegidx', '&outnbelement',
-        *['<%s*>%s.data + lookback' % o for o in outputs])))
+    open_and_fill = call('OpenAndFill', *opened(
+        '&outbegidx', '&outnbelement', *['<%s*>%s.data + lookback' % o for o in outputs]))
+    out.append('        if historylen >= _TA_NOGIL_MIN_LENGTH:')
+    out.append('            with nogil:')
+    out.append('                retCode = %s' % open_and_fill)
+    out.append('        else:')
+    out.append('            retCode = %s' % open_and_fill)
     out.append('        if retCode != 0:')
     out.append('            _stream_open_failed("TA_%s_OpenAndFill", retCode, historylen, '
                'lookback - begidx + 1)' % name)

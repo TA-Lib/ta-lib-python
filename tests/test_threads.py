@@ -32,7 +32,7 @@ def _while_running(call, meanwhile):
 
 def _closes():
     rng = np.random.default_rng(0)
-    for size in (1 << 14, 1 << 16, 1 << 18, 1 << 20):
+    for size in (1 << 15, 1 << 17, 1 << 19, 1 << 21):
         yield 100 + np.cumsum(rng.standard_normal(size))
 
 
