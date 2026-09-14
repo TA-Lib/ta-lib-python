@@ -306,7 +306,12 @@ def emit(func, docstring):
     emit_history()
     out.append('        cdef %s* handle = NULL' % handle)
     out.extend('        cdef %s %s' % o for o in outputs)
-    out.append('        cdef TA_RetCode retCode = %s' % call('Open', *opened(*out_ptrs)))
+    # Only Open and OpenAndFill release the GIL: the handle they build is not yet
+    # reachable from another thread. A verb on self._handle must hold it, or two
+    # threads on one handle corrupt its ring.
+    out.append('        cdef TA_RetCode retCode')
+    out.append('        with nogil:')
+    out.append('            retCode = %s' % call('Open', *opened(*out_ptrs)))
     out.append('        if retCode != 0:')
     out.append('            _stream_open_failed("TA_%s_Open", retCode, historylen, '
                'lib.TA_%s_Lookback(%s) + 1)' % (name, name, lookback_args))
@@ -325,7 +330,9 @@ def emit(func, docstring):
     out.append('        cdef int outbegidx')
     out.append('        cdef int outnbelement')
     out.append('        cdef %s* handle = NULL' % handle)
-    out.append('        cdef TA_RetCode retCode = %s' % call('OpenAndFill', *opened(
+    out.append('        cdef TA_RetCode retCode')
+    out.append('        with nogil:')
+    out.append('            retCode = %s' % call('OpenAndFill', *opened(
         '&outbegidx', '&outnbelement',
         *['<%s*>%s.data + lookback' % o for o in outputs])))
     out.append('        if retCode != 0:')
@@ -454,7 +461,7 @@ stub = '--stub' in sys.argv
 
 if not stub:
     print(PREAMBLE)
-    print('cdef extern from "ta-lib/ta_func.h":')
+    print('cdef extern from "ta-lib/ta_func.h" nogil:')
     for name in sorted(declarations):
         print()
         for line in declare(name, declarations[name]):

@@ -7,7 +7,7 @@ import pytest
 from numpy.testing import assert_array_equal
 
 import talib
-from talib import abstract, func
+from talib import abstract, func, stream
 
 THREADS = 8
 ROUNDS = 10
@@ -52,6 +52,14 @@ def _releases_the_gil(make_call):
     lambda close: lambda: abstract.Function('HT_DCPHASE')(close),
 ], ids=['func', 'abstract'])
 def test_indicator_call_releases_the_gil(make_call):
+    assert _releases_the_gil(make_call)
+
+
+@pytest.mark.parametrize('make_call', [
+    lambda close: lambda: stream.HT_DCPHASE(close),
+    lambda close: lambda: stream.HT_DCPHASE.open_and_fill(close),
+], ids=['open', 'open_and_fill'])
+def test_stream_open_releases_the_gil(make_call):
     assert _releases_the_gil(make_call)
 
 
@@ -111,3 +119,18 @@ def test_settings_still_work_between_concurrent_calls(series):
         assert_array_equal(b, base[0])
         assert_array_equal(s, shifted[0])
     assert np.isnan(shifted[0]).sum() == np.isnan(base[0]).sum() + 10
+
+
+def test_one_stream_handle_per_thread_is_correct_concurrently(ford_2012):
+    warmup = 60
+    closes = [prices['close'] for prices in _per_thread_prices(ford_2012, 20)]
+    handles = [stream.MACD(close[:warmup]) for close in closes]
+    start = threading.Barrier(THREADS)
+
+    def worker(t):
+        start.wait()
+        return t, [handles[t].update(bar) for bar in closes[t][warmup:]]
+
+    with ThreadPoolExecutor(THREADS) as pool:
+        for t, got in pool.map(worker, range(THREADS)):
+            assert_array_equal(np.array(got), np.column_stack(func.MACD(closes[t]))[warmup:])
