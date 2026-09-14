@@ -560,7 +560,7 @@ cdef extern from "ta-lib/ta_func.h":
     int TA_SUB_Lookback()
     TA_RetCode TA_SUM(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_SUM_Lookback(int optInTimePeriod)
-    TA_RetCode TA_SUPERTREND(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, double optInMultiplier, int *outBegIdx, int *outNBElement, double outReal[], int outInteger[])
+    TA_RetCode TA_SUPERTREND(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, double optInMultiplier, int *outBegIdx, int *outNBElement, double outSupertrend[], int outTrend[])
     int TA_SUPERTREND_Lookback(int optInTimePeriod, double optInMultiplier)
     TA_RetCode TA_T3(int startIdx, int endIdx, const double inReal[], int optInTimePeriod, double optInVFactor, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_T3_Lookback(int optInTimePeriod, double optInVFactor)
