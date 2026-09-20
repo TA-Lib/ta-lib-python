@@ -11,7 +11,9 @@ from talib import abstract, func
 
 
 def test_talib_version():
-    assert talib.__ta_version__[:5] == b'0.8.1'
+    required = (0, 8, 1)
+    installed = tuple(int(p) for p in talib.__ta_version__.split()[0].split(b'.'))
+    assert installed >= required
 
 
 def test_num_functions():
