@@ -1,10 +1,12 @@
 name: Tests
 
+# master and the dev-* release branches test against the TA-Lib C release the
+# wheels are built from. dev tracks TA-Lib C's dev branch, in tests-dev.yml.
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 'dev-*' ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'dev-*' ]
 
 jobs:
   build:
@@ -15,8 +17,18 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: TA-Lib C version
+      id: talib_c
+      run: |
+        set -euo pipefail
+        V=$(sed -n 's/^  TALIB_C_VER: *//p' .github/workflows/wheels.yml)
+        [ -n "$V" ] || { echo "::error::no TALIB_C_VER in wheels.yml"; exit 1; }
+        echo "version=$V" >> "$GITHUB_OUTPUT"
+
     - name: Set up TA-Lib
       uses: TA-Lib/setup-ta-lib@v1
+      with:
+        version: ${{ steps.talib_c.outputs.version }}
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
