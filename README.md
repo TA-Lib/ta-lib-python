@@ -611,6 +611,31 @@ s.advance()                       # count a skipped bar: the range moves, the va
 A handle points into the TA-Lib C library, so it cannot be pickled or shared
 with another process. Keep the history and re-open instead.
 
+## Threads
+
+TA-Lib supports both regular and free-threaded CPython. Native calculations,
+including stream opening, updates, reads and cloning, release the GIL on
+regular CPython. Python argument conversion, array allocation and result
+construction still require Python thread state. Independent calculations run
+concurrently; operations on the same stream handle use a per-handle mutex.
+
+Inputs must remain unchanged during a call: do not write to or resize an input
+array from another thread. Calls allocate their own output arrays.
+
+Settings are process-wide. Set unstable periods, compatibility and candle
+settings before starting calculations or opening streams. Changing settings
+while a calculation is active or any stream is alive raises `RuntimeError`.
+After calls finish and all streams (including copies) are released, settings
+can be changed again. The settings gate protects lookback calculation, output
+allocation and computation together, while allowing simultaneous readers.
+
+The synchronization covers calls through this Python extension; other code
+calling the same C library directly must observe TA-Lib's settings and lifecycle
+contract too. Separate subinterpreters are not supported.
+
+Free-threaded Python requires a matching free-threaded extension build and
+compatible dependencies. Importing TA-Lib does not enable the GIL in that build.
+
 ## Supported Indicators and Functions 📋
 
 We can show all the TA functions supported by TA-Lib, either as a `list` or

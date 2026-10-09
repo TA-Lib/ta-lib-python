@@ -93,7 +93,7 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_CandleSettingType TA_Equal = 10
     const TA_CandleSettingType TA_AllCandleSettings = 11
 
-cdef extern from "ta-lib/ta_common.h":
+cdef extern from "ta-lib/ta_common.h" nogil:
     const char *TA_GetVersionString()
     const char *TA_GetVersionMajor()
     const char *TA_GetVersionMinor()
@@ -118,7 +118,7 @@ cdef extern from "ta-lib/ta_common.h":
     TA_RetCode TA_Initialize()
     TA_RetCode TA_Shutdown()
 
-cdef extern from "ta-lib/ta_abstract.h":
+cdef extern from "ta-lib/ta_abstract.h" nogil:
 
     TA_RetCode TA_GroupTableAlloc(TA_StringTable **table)
     TA_RetCode TA_GroupTableFree(TA_StringTable *table)
@@ -201,7 +201,7 @@ cdef extern from "ta-lib/ta_abstract.h":
 
     char* TA_FunctionDescriptionXML()
 
-cdef extern from "ta-lib/ta_func.h":
+cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_AC(int startIdx, int endIdx, const double inHigh[], const double inLow[], int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int *outBegIdx, int *outNBElement, double outReal[])
     int TA_AC_Lookback(int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod)
     TA_RetCode TA_ACCBANDS(int startIdx, int endIdx, const double inHigh[], const double inLow[], const double inClose[], int optInTimePeriod, int *outBegIdx, int *outNBElement, double outRealUpperBand[], double outRealMiddleBand[], double outRealLowerBand[])

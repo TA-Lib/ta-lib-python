@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.14t", "3.15t"]
     env:
       TA_INCLUDE_PATH: ${{ github.workspace }}/ta-lib-c/include
       TA_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
@@ -56,7 +56,7 @@ jobs:
         cmake --install ta-lib-c-build
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
@@ -64,7 +64,12 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip wheel setuptools
-        pip install -r requirements_test.txt
+        if [[ "${{ matrix.python-version }}" == *t ]]; then
+          # Polars has no free-threaded wheels; exercise NumPy and pandas here.
+          pip install -r requirements.txt pytest pandas
+        else
+          pip install -r requirements_test.txt
+        fi
         pip install flake8
 
     - name: Build cython modules in-place
