@@ -148,7 +148,7 @@ __version__ = '0.8.1'
 # the underlying TA-Lib.
 
 _ta_initialize()
-atexit.register(_ta_shutdown)
+atexit.register(_ta_shutdown, True)
 
 __function_groups__ = {
     'Cycle Indicators': [

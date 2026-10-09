@@ -125,7 +125,7 @@ cdef np.npy_intp check_length4(np.ndarray a1, np.ndarray a2, np.ndarray a3, np.n
         raise Exception("input array lengths are different")
     return length
 
-cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
+cdef np.npy_int check_begidx1(np.npy_intp length, double* a1) noexcept nogil:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -136,7 +136,7 @@ cdef np.npy_int check_begidx1(np.npy_intp length, double* a1):
     else:
         return length - 1
 
-cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
+cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2) noexcept nogil:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -150,7 +150,7 @@ cdef np.npy_int check_begidx2(np.npy_intp length, double* a1, double* a2):
     else:
         return length - 1
 
-cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3):
+cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double* a3) noexcept nogil:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -167,7 +167,7 @@ cdef np.npy_int check_begidx3(np.npy_intp length, double* a1, double* a2, double
     else:
         return length - 1
 
-cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4):
+cdef np.npy_int check_begidx4(np.npy_intp length, double* a1, double* a2, double* a3, double* a4) noexcept nogil:
     cdef:
         double val
     for i from 0 <= i < length:
@@ -193,8 +193,9 @@ cdef np.ndarray make_double_array(np.npy_intp length, int lookback):
         double* outreal_data
     outreal = PyArray_EMPTY(1, &length, np.NPY_DOUBLE, np.NPY_ARRAY_DEFAULT)
     outreal_data = <double*>outreal.data
-    for i from 0 <= i < min(lookback, length):
-        outreal_data[i] = NaN
+    with nogil:
+        for i from 0 <= i < min(lookback, length):
+            outreal_data[i] = NaN
     return outreal
 
 cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
@@ -203,8 +204,9 @@ cdef np.ndarray make_int_array(np.npy_intp length, int lookback):
         int* outinteger_data
     outinteger = PyArray_EMPTY(1, &length, np.NPY_INT32, np.NPY_ARRAY_DEFAULT)
     outinteger_data = <int*>outinteger.data
-    for i from 0 <= i < min(lookback, length):
-        outinteger_data[i] = 0
+    with nogil:
+        for i from 0 <= i < min(lookback, length):
+            outinteger_data[i] = 0
     return outinteger
 
 """)
@@ -359,10 +361,14 @@ for f in functions:
     print('        return %s' % ', '.join(empty))
 
     # check for all input values are non-NaN
-    print('    begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('<double*>(%s.data)' % s for s in inputs)))
+    print('    with nogil:')
+    print('        begidx = check_begidx%s(length, %s)' % (len(inputs), ', '.join('<double*>(%s.data)' % s for s in inputs)))
 
     print('    endidx = <int>length - begidx - 1')
-    print('    lookback = begidx + lib.%s_Lookback(' % name, end=' ')
+    print('    _ta_acquire_read()')
+    print('    try:')
+    print('        with nogil:')
+    print('            lookback = begidx + lib.%s_Lookback(' % name, end=' ')
     opts = [arg for arg in args if 'opt' in arg]
     for i, opt in enumerate(opts):
         if i > 0:
@@ -379,13 +385,14 @@ for f in functions:
         if var.endswith('[]'):
             var = cleanup(var[:-2])
             if 'double' in arg:
-                print('    %s = make_double_array(length, lookback)' % var)
+                print('        %s = make_double_array(length, lookback)' % var)
             elif 'int' in arg:
-                print('    %s = make_int_array(length, lookback)' % var)
+                print('        %s = make_int_array(length, lookback)' % var)
             else:
                 assert False, args
 
-    print('    retCode = lib.%s(' % name, end=' ')
+    print('        with nogil:')
+    print('            retCode = lib.%s(' % name, end=' ')
 
     for i, arg in enumerate(args):
         if i > 0:
@@ -414,6 +421,9 @@ for f in functions:
             print(cleaned, end=' ')
 
     print(')')
+    print('    finally:')
+    print('        with nogil:')
+    print('            _ta_end_read()')
     print('    _ta_check_success("%s", retCode)' % name)
     if 'INDEX' in f:
         for arg in args:
@@ -425,8 +435,9 @@ for f in functions:
             if var.endswith('[]'):
                 var = cleanup(var[:-2])
                 print('    %s_data = <int*>%s.data' % (var, var))
-                print('    for i from lookback <= i < length:')
-                print('        %s_data[i] += begidx' % var)
+                print('    with nogil:')
+                print('        for i from lookback <= i < length:')
+                print('            %s_data[i] += begidx' % var)
     print('    return ', end='')
     i = 0
     for arg in args:

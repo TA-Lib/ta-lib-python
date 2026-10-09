@@ -154,12 +154,13 @@ cdef int check_begidx(np.npy_intp length, tuple arrays) except -2:
         raise Exception("too many input arrays")
     for k in range(count):
         data[k] = <double*>(<np.ndarray>arrays[k]).data
-    for i in range(length):
-        for k in range(count):
-            if data[k][i] != data[k][i]:
-                break
-        else:
-            return <int>i
+    with nogil:
+        for i in range(length):
+            for k in range(count):
+                if data[k][i] != data[k][i]:
+                    break
+            else:
+                return <int>i
     return <int>length - 1
 
 
@@ -217,29 +218,38 @@ cdef class Stream:
     offset of the first history bar the batch tier would have used."""
     cdef void* _handle
     cdef int _begidx
+    cdef cython.pymutex _mutex
     cdef object __weakref__
 
     def __cinit__(self):
         self._handle = NULL
 
-    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
         return TA_BAD_PARAM
 
-    cdef TA_RetCode _advance(self):
+    cdef TA_RetCode _advance(self) noexcept nogil:
         return TA_BAD_PARAM
 
     @property
     def out_range(self):
         cdef int outbegidx
         cdef int outnbelement
-        cdef TA_RetCode retCode = self._out_range(&outbegidx, &outnbelement)
+        cdef int begidx
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = self._out_range(&outbegidx, &outnbelement)
+                begidx = self._begidx
         if retCode != 0:
             _ta_check_success("%s.out_range" % type(self).__name__, retCode)
-        return OutRange(outbegidx + self._begidx, outnbelement)
+        return OutRange(outbegidx + begidx, outnbelement)
 
     @cython.binding(False)
     def advance(self):
-        cdef TA_RetCode retCode = self._advance()
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = self._advance()
         if retCode != 0:
             _ta_check_success("%s.advance" % type(self).__name__, retCode)
 
@@ -264,7 +274,7 @@ def emit(func, docstring):
     out_ptrs = ['&%s' % py for _, py in outputs]
     # An index output counts from the first bar the stream opened on; the batch
     # tier reports it in the caller's coordinates, so shift it back the same way.
-    shift = ' + self._begidx' if 'INDEX' in name else ''
+    shift = ' + begidx' if 'INDEX' in name else ''
     value = (outputs[0][1] + shift if len(outputs) == 1
              else '(%s)' % ', '.join(py + shift for _, py in outputs))
     live = '<%s*>self._handle' % handle
@@ -275,7 +285,14 @@ def emit(func, docstring):
         return 'TA_%s_%s(%s)' % (name, verb, ', '.join(args))
 
     def emit_call(verb, *args):
-        out.append('        cdef TA_RetCode retCode = %s' % call(verb, *args))
+        out.append('        cdef TA_RetCode retCode')
+        if shift:
+            out.append('        cdef int begidx')
+        out.append('        with nogil:')
+        out.append('            with self._mutex:')
+        out.append('                retCode = %s' % call(verb, *args))
+        if shift:
+            out.append('                begidx = self._begidx')
         out.append('        if retCode != 0:')
         out.append('            _ta_check_success("TA_%s_%s", retCode)' % (name, verb))
 
@@ -298,36 +315,65 @@ def emit(func, docstring):
     out.append('    """%s"""' % docstring)
     out.append('')
     out.append('    def __dealloc__(self):')
-    out.append('        if self._handle is not NULL:')
-    out.append('            %s' % call('Close', live))
-    out.append('            self._handle = NULL')
+    out.append('        with nogil:')
+    out.append('            if self._handle is not NULL:')
+    out.append('                %s' % call('Close', live))
+    out.append('                self._handle = NULL')
+    out.append('                _ta_stream_closed()')
     out.append('')
     out.append('    def __init__(self, %s):' % ', '.join(arguments))
     emit_history()
     out.append('        cdef %s* handle = NULL' % handle)
     out.extend('        cdef %s %s' % o for o in outputs)
-    out.append('        cdef TA_RetCode retCode = %s' % call('Open', *opened(*out_ptrs)))
+    out.append('        cdef TA_RetCode retCode')
+    out.append('        cdef int need')
+    out.append('        _ta_acquire_read()')
+    out.append('        try:')
+    out.append('            with nogil:')
+    out.append('                need = lib.TA_%s_Lookback(%s) + 1' % (name, lookback_args))
+    out.append('                retCode = %s' % call('Open', *opened(*out_ptrs)))
+    out.append('                if retCode == 0:')
+    out.append('                    with self._mutex:')
+    out.append('                        if self._handle is not NULL:')
+    out.append('                            %s' % call('Close', live))
+    out.append('                        else:')
+    out.append('                            _ta_stream_registered()')
+    out.append('                        self._handle = <void*>handle')
+    out.append('                        self._begidx = begidx')
+    out.append('        finally:')
+    out.append('            with nogil:')
+    out.append('                _ta_end_read()')
     out.append('        if retCode != 0:')
-    out.append('            _stream_open_failed("TA_%s_Open", retCode, historylen, '
-               'lib.TA_%s_Lookback(%s) + 1)' % (name, name, lookback_args))
-    out.append('        if self._handle is not NULL:')
-    out.append('            %s' % call('Close', live))
-    out.append('        self._handle = <void*>handle')
-    out.append('        self._begidx = begidx')
+    out.append('            _stream_open_failed("TA_%s_Open", retCode, historylen, need)' % name)
     out.append('')
     out.append('    @staticmethod')
     out.append('    def open_and_fill(%s):' % ', '.join(arguments))
     emit_history()
-    out.append('        cdef int lookback = begidx + lib.TA_%s_Lookback(%s)'
-               % (name, lookback_args))
-    out.extend('        cdef np.ndarray %s = make_%s_array(length, lookback)' % (py, ctype)
+    out.append('        cdef int lookback')
+    out.extend('        cdef np.ndarray %s' % py
                for ctype, py in outputs)
     out.append('        cdef int outbegidx')
     out.append('        cdef int outnbelement')
     out.append('        cdef %s* handle = NULL' % handle)
-    out.append('        cdef TA_RetCode retCode = %s' % call('OpenAndFill', *opened(
+    out.append('        cdef %s stream = %s.__new__(%s)' % (cls, cls, cls))
+    out.append('        cdef TA_RetCode retCode')
+    out.append('        _ta_acquire_read()')
+    out.append('        try:')
+    out.append('            with nogil:')
+    out.append('                lookback = begidx + lib.TA_%s_Lookback(%s)' % (name, lookback_args))
+    out.extend('            %s = make_%s_array(length, lookback)' % (py, ctype)
+               for ctype, py in outputs)
+    out.append('            with nogil:')
+    out.append('                retCode = %s' % call('OpenAndFill', *opened(
         '&outbegidx', '&outnbelement',
         *['<%s*>%s.data + lookback' % o for o in outputs])))
+    out.append('                if retCode == 0:')
+    out.append('                    stream._handle = <void*>handle')
+    out.append('                    stream._begidx = begidx')
+    out.append('                    _ta_stream_registered()')
+    out.append('        finally:')
+    out.append('            with nogil:')
+    out.append('                _ta_end_read()')
     out.append('        if retCode != 0:')
     out.append('            _stream_open_failed("TA_%s_OpenAndFill", retCode, historylen, '
                'lookback - begidx + 1)' % name)
@@ -337,9 +383,6 @@ def emit(func, docstring):
             out.append('        cdef %s* %s_data = <%s*>%s.data' % (ctype, py, ctype, py))
             out.append('        for i in range(lookback, length):')
             out.append('            %s_data[i] += begidx' % py)
-    out.append('        cdef %s stream = %s.__new__(%s)' % (cls, cls, cls))
-    out.append('        stream._handle = <void*>handle')
-    out.append('        stream._begidx = begidx')
     filled = ['_stream_like((%s,), %s)' % (', '.join(inputs), py) for _, py in outputs]
     out.append('        return stream, %s' % (
         filled[0] if len(outputs) == 1 else '(%s)' % ', '.join(filled)))
@@ -358,21 +401,26 @@ def emit(func, docstring):
     emit_call('Value', *([live] + out_ptrs))
     out.append('        return %s' % value)
     out.append('')
-    out.append('    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement):')
+    out.append('    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:')
     out.append('        return %s' % call('OutRange', live, 'outbegidx', 'outnbelement'))
     out.append('')
-    out.append('    cdef TA_RetCode _advance(self):')
+    out.append('    cdef TA_RetCode _advance(self) noexcept nogil:')
     out.append('        return %s' % call('Advance', live))
     out.append('')
     out.append('    @cython.binding(False)')
     out.append('    def copy(self):')
     out.append('        cdef %s* clone = NULL' % handle)
-    out.append('        cdef TA_RetCode retCode = %s' % call('Clone', live, '&clone'))
+    out.append('        cdef %s stream = %s.__new__(type(self))' % (cls, cls))
+    out.append('        cdef TA_RetCode retCode')
+    out.append('        with nogil:')
+    out.append('            with self._mutex:')
+    out.append('                retCode = %s' % call('Clone', live, '&clone'))
+    out.append('                if retCode == 0:')
+    out.append('                    stream._handle = <void*>clone')
+    out.append('                    stream._begidx = self._begidx')
+    out.append('                    _ta_stream_registered()')
     out.append('        if retCode != 0:')
     out.append('            _ta_check_success("TA_%s_Clone", retCode)' % name)
-    out.append('        cdef %s stream = %s.__new__(type(self))' % (cls, cls))
-    out.append('        stream._handle = <void*>clone')
-    out.append('        stream._begidx = self._begidx')
     out.append('        return stream')
     return '\n'.join(out)
 
@@ -454,7 +502,7 @@ stub = '--stub' in sys.argv
 
 if not stub:
     print(PREAMBLE)
-    print('cdef extern from "ta-lib/ta_func.h":')
+    print('cdef extern from "ta-lib/ta_func.h" nogil:')
     for name in sorted(declarations):
         print()
         for line in declare(name, declarations[name]):

@@ -321,11 +321,14 @@ def test_a_handle_takes_what_the_function_takes(datasets):
 
 
 def test_a_result_pickles(datasets):
-    import pandas as pd
-    import polars as pl
     handle = stream.MACD(datasets[0]['close'])
     assert pickle.loads(pickle.dumps(handle.value)) == handle.value
     assert pickle.loads(pickle.dumps(handle.out_range)) == handle.out_range
+
+
+def test_stream_rejects_mixed_series(datasets):
+    import pandas as pd
+    pl = pytest.importorskip('polars')
     with pytest.raises(Exception, match='Cannot mix polars and pandas'):
         stream.MAVP.open_and_fill(pd.Series(datasets[0]['close']),
                                   pl.Series(datasets[0]['periods']))

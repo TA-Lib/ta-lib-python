@@ -349,8 +349,10 @@ class Function(object):
             elif type_ == lib.TA_OptInput_IntegerRange or type_ == lib.TA_OptInput_IntegerList:
                 __ta_setOptInputParamInteger(holder, i, value)
 
-        lookback = __ta_getLookback(holder)
-        __ta_paramHolderFree(holder)
+        try:
+            lookback = __ta_getLookback(holder)
+        finally:
+            __ta_paramHolderFree(holder)
         return lookback
 
     @property
@@ -566,11 +568,19 @@ def _ta_getGroupTable():
     Returns the list of available TALIB function group names. *slow*
     """
     cdef lib.TA_StringTable *table
-    _ta_check_success('TA_GroupTableAlloc', lib.TA_GroupTableAlloc(&table))
-    groups = []
-    for i in xrange(table.size):
-        groups.append(deref(&table.string[i]))
-    _ta_check_success('TA_GroupTableFree', lib.TA_GroupTableFree(table))
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GroupTableAlloc(&table)
+        _ta_check_success('TA_GroupTableAlloc', retCode)
+        try:
+            groups = []
+            for i in xrange(table.size):
+                groups.append(deref(&table.string[i]))
+        finally:
+            with nogil:
+                retCode = lib.TA_GroupTableFree(table)
+            _ta_check_success('TA_GroupTableFree', retCode)
     return groups
 
 def _ta_getFuncTable(char *group):
@@ -578,11 +588,19 @@ def _ta_getFuncTable(char *group):
     Returns a list of the functions for the specified group name. *slow*
     """
     cdef lib.TA_StringTable *table
-    _ta_check_success('TA_FuncTableAlloc', lib.TA_FuncTableAlloc(group, &table))
-    functions = []
-    for i in xrange(table.size):
-        functions.append(deref(&table.string[i]))
-    _ta_check_success('TA_FuncTableFree', lib.TA_FuncTableFree(table))
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_FuncTableAlloc(group, &table)
+        _ta_check_success('TA_FuncTableAlloc', retCode)
+        try:
+            functions = []
+            for i in xrange(table.size):
+                functions.append(deref(&table.string[i]))
+        finally:
+            with nogil:
+                retCode = lib.TA_FuncTableFree(table)
+            _ta_check_success('TA_FuncTableFree', retCode)
     return functions
 
 def __get_flags(int flag, dict flags_lookup_dict):
@@ -644,7 +662,11 @@ def _ta_getFuncInfo(char *function_name):
     group, help, flags, num_inputs, num_opt_inputs and num_outputs.
     """
     cdef const lib.TA_FuncInfo *info
-    retCode = lib.TA_GetFuncInfo(__ta_getFuncHandle(function_name), &info)
+    cdef const lib.TA_FuncHandle *handle = __ta_getFuncHandle(function_name)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetFuncInfo(handle, &info)
     _ta_check_success('TA_GetFuncInfo', retCode)
 
     return {
@@ -663,7 +685,11 @@ def _ta_getInputParameterInfo(char *function_name, int idx):
     keys: name and flags.
     """
     cdef const lib.TA_InputParameterInfo *info
-    retCode = lib.TA_GetInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef const lib.TA_FuncHandle *handle = __ta_getFuncHandle(function_name)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetInputParameterInfo(handle, idx, &info)
     _ta_check_success('TA_GetInputParameterInfo', retCode)
 
     name = bytes2str(info.paramName)
@@ -684,7 +710,11 @@ def _ta_getOptInputParameterInfo(char *function_name, int idx):
     following keys: name, display_name, type, help, default_value and value.
     """
     cdef const lib.TA_OptInputParameterInfo *info
-    retCode = lib.TA_GetOptInputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef const lib.TA_FuncHandle *handle = __ta_getFuncHandle(function_name)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetOptInputParameterInfo(handle, idx, &info)
     _ta_check_success('TA_GetOptInputParameterInfo', retCode)
 
     name = bytes2str(info.paramName)
@@ -706,7 +736,11 @@ def _ta_getOutputParameterInfo(char *function_name, int idx):
     keys: name and flags.
     """
     cdef const lib.TA_OutputParameterInfo *info
-    retCode = lib.TA_GetOutputParameterInfo(__ta_getFuncHandle(function_name), idx, &info)
+    cdef const lib.TA_FuncHandle *handle = __ta_getFuncHandle(function_name)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetOutputParameterInfo(handle, idx, &info)
     _ta_check_success('TA_GetOutputParameterInfo', retCode)
 
     name = bytes2str(info.paramName)
@@ -778,7 +812,11 @@ cdef const lib.TA_FuncHandle*  __ta_getFuncHandle(char *function_name):
     Returns a pointer to a function handle for the given function name
     """
     cdef const lib.TA_FuncHandle *handle
-    _ta_check_success('TA_GetFuncHandle', lib.TA_GetFuncHandle(function_name, &handle))
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetFuncHandle(function_name, &handle)
+    _ta_check_success('TA_GetFuncHandle', retCode)
     return handle
 
 cdef lib.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
@@ -786,7 +824,11 @@ cdef lib.TA_ParamHolder* __ta_paramHolderAlloc(char *function_name):
     Returns a pointer to a parameter holder for the given function name
     """
     cdef lib.TA_ParamHolder *holder
-    retCode = lib.TA_ParamHolderAlloc(__ta_getFuncHandle(function_name), &holder)
+    cdef const lib.TA_FuncHandle *handle = __ta_getFuncHandle(function_name)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_ParamHolderAlloc(handle, &holder)
     _ta_check_success('TA_ParamHolderAlloc', retCode)
     return holder
 
@@ -795,18 +837,28 @@ cdef int __ta_paramHolderFree(lib.TA_ParamHolder *params):
     Frees the memory allocated by __ta_paramHolderAlloc (call when done with the parameter holder)
     WARNING: Not properly calling this function will cause memory leaks!
     """
-    _ta_check_success('TA_ParamHolderFree', lib.TA_ParamHolderFree(params))
+    cdef TA_RetCode retCode
+    with nogil:
+        retCode = lib.TA_ParamHolderFree(params)
+    _ta_check_success('TA_ParamHolderFree', retCode)
 
 cdef int __ta_setOptInputParamInteger(lib.TA_ParamHolder *holder, int idx, int value):
-    retCode = lib.TA_SetOptInputParamInteger(holder, idx, value)
+    cdef TA_RetCode retCode
+    with nogil:
+        retCode = lib.TA_SetOptInputParamInteger(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamInteger', retCode)
 
 cdef int __ta_setOptInputParamReal(lib.TA_ParamHolder *holder, int idx, double value):
-    retCode = lib.TA_SetOptInputParamReal(holder, idx, value)
+    cdef TA_RetCode retCode
+    with nogil:
+        retCode = lib.TA_SetOptInputParamReal(holder, idx, value)
     _ta_check_success('TA_SetOptInputParamReal', retCode)
 
 cdef int __ta_getLookback(lib.TA_ParamHolder *holder):
     cdef int lookback
-    retCode = lib.TA_GetLookback(holder, &lookback)
+    cdef TA_RetCode retCode
+    with _TA_ReadLease():
+        with nogil:
+            retCode = lib.TA_GetLookback(holder, &lookback)
     _ta_check_success('TA_GetLookback', retCode)
     return lookback

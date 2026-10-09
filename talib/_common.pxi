@@ -1,9 +1,82 @@
 import warnings
+cimport cython
 
 cimport _ta_lib as lib
 from _ta_lib cimport TA_RetCode, TA_FuncUnstId
 
 __ta_version__ = lib.TA_GetVersionString()
+
+# The gate protects bookkeeping only: independent readers compute concurrently.
+# A settings change fails rather than waiting for a live stream or a reader
+# (which could itself be invoking the setter from an allocation callback).
+cdef cython.pymutex _ta_gate
+cdef unsigned long _ta_readers = 0
+cdef unsigned long _ta_live_streams = 0
+cdef bint _ta_writing = False
+cdef bint _ta_initialized = False
+
+cdef bint _ta_begin_read() noexcept nogil:
+    global _ta_readers
+    with _ta_gate:
+        if _ta_writing or not _ta_initialized:
+            return False
+        _ta_readers += 1
+        return True
+
+cdef void _ta_end_read() noexcept nogil:
+    global _ta_readers
+    with _ta_gate:
+        _ta_readers -= 1
+
+cdef bint _ta_begin_write() noexcept nogil:
+    global _ta_writing
+    with _ta_gate:
+        if _ta_writing or _ta_readers or _ta_live_streams:
+            return False
+        _ta_writing = True
+        return True
+
+cdef void _ta_end_write() noexcept nogil:
+    global _ta_writing
+    with _ta_gate:
+        _ta_writing = False
+
+cdef void _ta_stream_registered() noexcept nogil:
+    global _ta_live_streams
+    with _ta_gate:
+        _ta_live_streams += 1
+
+cdef void _ta_stream_closed() noexcept nogil:
+    global _ta_live_streams
+    with _ta_gate:
+        _ta_live_streams -= 1
+
+cdef void _ta_acquire_read() except *:
+    cdef bint acquired
+    with nogil:
+        acquired = _ta_begin_read()
+    if not acquired:
+        raise RuntimeError("TA-Lib is not initialized or a settings change is in progress")
+
+cdef class _TA_ReadLease:
+    def __enter__(self):
+        _ta_acquire_read()
+
+    def __exit__(self, *args):
+        with nogil:
+            _ta_end_read()
+
+cdef class _TA_WriteLease:
+    def __enter__(self):
+        cdef bint acquired
+        with nogil:
+            acquired = _ta_begin_write()
+        if not acquired:
+            raise RuntimeError("cannot change TA-Lib settings or lifecycle while calls or streams are active")
+
+    def __exit__(self, *args):
+        with nogil:
+            _ta_end_write()
 
 
 class InsufficientHistory(Exception):
@@ -60,14 +133,36 @@ cpdef _ta_check_success(str function_name, TA_RetCode ret_code):
         function_name, ret_code, description))
 
 def _ta_initialize():
+    global _ta_initialized
     cdef TA_RetCode ret_code
-    ret_code = lib.TA_Initialize()
-    _ta_check_success('TA_Initialize', ret_code)
+    with _TA_WriteLease():
+        if not _ta_initialized:
+            with nogil:
+                ret_code = lib.TA_Initialize()
+            _ta_check_success('TA_Initialize', ret_code)
+            _ta_initialized = True
 
-def _ta_shutdown():
+def _ta_shutdown(bint at_exit=False):
+    global _ta_initialized
     cdef TA_RetCode ret_code
-    ret_code = lib.TA_Shutdown()
-    _ta_check_success('TA_Shutdown', ret_code)
+    cdef bint acquired
+    with nogil:
+        acquired = _ta_begin_write()
+    if not acquired:
+        if at_exit:
+            # Workers and module globals may still own handles at interpreter
+            # exit. Leave the C library intact for their finalizers.
+            return
+        raise RuntimeError("cannot shut down TA-Lib while calls or streams are active")
+    try:
+        if _ta_initialized:
+            with nogil:
+                ret_code = lib.TA_Shutdown()
+            _ta_check_success('TA_Shutdown', ret_code)
+            _ta_initialized = False
+    finally:
+        with nogil:
+            _ta_end_write()
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, HMA, DISABLED, DEFAULT, \
@@ -152,11 +247,15 @@ def _ta_func_unst_id(name):
 def _ta_set_unstable_period(name, period):
     cdef TA_RetCode ret_code
     cdef TA_FuncUnstId id
+    cdef unsigned int c_period
     unst_id = _ta_func_unst_id(name)
     if unst_id is None:
         return
     id = unst_id
-    ret_code = lib.TA_SetUnstablePeriod(id, period)
+    c_period = period
+    with _TA_WriteLease():
+        with nogil:
+            ret_code = lib.TA_SetUnstablePeriod(id, c_period)
     _ta_check_success('TA_SetUnstablePeriod', ret_code)
 
 def _ta_get_unstable_period(name):
@@ -166,17 +265,24 @@ def _ta_get_unstable_period(name):
     if unst_id is None:
         return 0
     id = unst_id
-    period = lib.TA_GetUnstablePeriod(id)
+    with _TA_ReadLease():
+        with nogil:
+            period = lib.TA_GetUnstablePeriod(id)
     return period
 
 def _ta_set_compatibility(value):
     cdef TA_RetCode ret_code
-    ret_code = lib.TA_SetCompatibility(value)
+    cdef int c_value = value
+    with _TA_WriteLease():
+        with nogil:
+            ret_code = lib.TA_SetCompatibility(c_value)
     _ta_check_success('TA_SetCompatibility', ret_code)
 
 def _ta_get_compatibility():
     cdef int value
-    value = lib.TA_GetCompatibility()
+    with _TA_ReadLease():
+        with nogil:
+            value = lib.TA_GetCompatibility()
     return value
 
 class CandleSettingType(object):
@@ -191,12 +297,16 @@ class RangeType(object):
 
 RangeType = RangeType()
 
-def _ta_set_candle_settings(settingtype, rangetype, avgperiod, factor):
+def _ta_set_candle_settings(int settingtype, int rangetype, int avgperiod, double factor):
     cdef TA_RetCode ret_code
-    ret_code = lib.TA_SetCandleSettings(settingtype, rangetype, avgperiod, factor)
+    with _TA_WriteLease():
+        with nogil:
+            ret_code = lib.TA_SetCandleSettings(settingtype, rangetype, avgperiod, factor)
     _ta_check_success('TA_SetCandleSettings', ret_code)
 
-def _ta_restore_candle_default_settings(settingtype):
+def _ta_restore_candle_default_settings(int settingtype):
     cdef TA_RetCode ret_code
-    ret_code = lib.TA_RestoreCandleDefaultSettings(settingtype)
+    with _TA_WriteLease():
+        with nogil:
+            ret_code = lib.TA_RestoreCandleDefaultSettings(settingtype)
     _ta_check_success('TA_RestoreCandleDefaultSettings', ret_code)

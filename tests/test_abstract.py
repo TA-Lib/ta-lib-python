@@ -1,7 +1,6 @@
-import copy
+from concurrent.futures import ThreadPoolExecutor
 import re
 import threading
-import time
 
 import numpy as np
 import pytest
@@ -331,45 +330,17 @@ def test_call_without_arguments():
 
 
 def test_threading():
-    import pandas as pd
-    TEST_LEN_SHORT = 999
-    TEST_LEN_LONG = 4005
-    LOOPS = 1000
-    THREADS = 4
+    start = threading.Barrier(4)
 
-    data_short = np.random.rand(TEST_LEN_SHORT, 5)
-    data_long = np.random.rand(TEST_LEN_LONG, 5)
+    def worker(i):
+        close = np.random.default_rng(i).random(999 + i * 1000)
+        expected = talib.RSI(close, timeperiod=10 + i)
+        start.wait()
+        for _ in range(20):
+            # Share one Function instance, with different inputs and parameters
+            # in each thread, to exercise its thread-local state.
+            result = abstract.RSI({'close': close}, timeperiod=10 + i)
+            assert_array_equal(result, expected)
 
-    df_short = pd.DataFrame(data_short, columns=['open', 'high', 'low', 'close', 'volume'])
-    df_long = pd.DataFrame(data_long, columns=['open', 'high', 'low', 'close', 'volume'])
-
-    total = 0
-
-    def loop(i):
-        nonlocal total
-        if i % 2 == 0:
-            df = copy.deepcopy(df_short)
-        else:
-            df = copy.deepcopy(df_long)
-
-        for _ in range(LOOPS):
-            total += 1
-            df['RSI'] = abstract.RSI(df)
-
-    t0 = time.time()
-
-    threads = []
-    for i in range(THREADS):
-        t = threading.Thread(target=lambda: loop(i))
-        threads.append(t)
-        t.start()
-
-    for t in threads:
-        t.join()
-
-    t1 = time.time()
-    print('test_len: %d, loops: %d' % (TEST_LEN_LONG, LOOPS))
-    print('%.6f' % (t1 - t0))
-    print('%.6f' % ((t1 - t0) / LOOPS))
-
-    assert total == THREADS * LOOPS
+    with ThreadPoolExecutor(4) as pool:
+        list(pool.map(worker, range(4)))

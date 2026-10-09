@@ -1,6 +1,8 @@
 import numpy as np
 from numpy.testing import assert_array_equal
-import polars as pl
+import pytest
+
+pl = pytest.importorskip('polars')
 
 import talib
 from talib import abstract, stream

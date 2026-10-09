@@ -4,6 +4,7 @@ import sys
 import os
 import os.path
 import warnings
+import sysconfig
 
 from setuptools import setup, Extension
 
@@ -96,6 +97,8 @@ ext_modules = [
     Extension(
         'talib._ta_lib',
         ['talib/_ta_lib.pyx' if has_cython else 'talib/_ta_lib.c'],
+        define_macros=[('Py_GIL_DISABLED', '1')]
+            if sys.platform == 'win32' and sysconfig.get_config_var('Py_GIL_DISABLED') else [],
         include_dirs=include_dirs,
         library_dirs=library_dirs,
         libraries=[lib_talib_name],
