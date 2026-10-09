@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TA-Lib"
-version = "0.8.1"
+version = "0.8.2"
 description = "Python wrapper for TA-Lib"
 readme = "README.md"
 license-files = ["LICENSE"]

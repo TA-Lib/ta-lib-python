@@ -1,5 +1,26 @@
+0.8.2
+=====
+
+- [NEW]: Support free-threaded CPython without enabling the GIL on import.
+
 0.8.1
 =====
+
+- [CHANGE]: Native indicator calculations and stream operations release the
+  GIL on regular CPython too. Independent calls can run concurrently;
+  operations on a shared stream handle are protected by a per-handle mutex.
+  Python argument conversion, array allocation and result construction still
+  require Python thread state. Input arrays must not be modified or resized
+  during a call. Short calls can incur additional GIL handoff overhead.
+
+- [CHANGE]: Changing process-wide unstable periods, compatibility or candle
+  settings while a call is active or any stream is alive now raises
+  ``RuntimeError``. Settings cannot change between lookback calculation and
+  computation. Explicit shutdown also rejects active calls or streams.
+
+- [FIX]: ``tools/threads_talib.py`` now benchmarks a fixed number of calls,
+  propagates worker failures and reports median throughput across thread
+  counts, replacing its racy shared counter.
 
 - [CHANGE]: ``talib.stream`` is now the real streaming API of TA-Lib C 0.8.1:
   ``stream.SMA(close)`` returns a handle, not a value.  ``handle.value`` is the
