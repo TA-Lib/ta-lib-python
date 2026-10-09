@@ -41,3 +41,10 @@ requires-python = '>=3.9'
 [tool.setuptools]
 packages = ["talib"]
 package-data = {"talib" = ["_ta_lib.pyi", "py.typed", "abstract.pyi", "stream.pyi"]}
+
+[tool.cibuildwheel]
+test-requires = ["pytest", "pandas", "maturin", "polars"]
+
+[[tool.cibuildwheel.overrides]]
+select = "cp3{14,15}t-*"
+test-requires = ["pytest", "pandas"]
