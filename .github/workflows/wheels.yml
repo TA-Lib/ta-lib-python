@@ -22,9 +22,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
@@ -46,7 +46,7 @@ jobs:
             export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
             auditwheel repair -w {dest_dir} {wheel}
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-linux_x86_64"
@@ -58,9 +58,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
@@ -82,7 +82,7 @@ jobs:
             export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
             auditwheel repair -w {dest_dir} {wheel}
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-linux_arm64"
@@ -90,11 +90,11 @@ jobs:
     name: Build Windows amd64 wheels
     strategy:
       matrix:
-        os: ["windows-2022"]
+        os: ["windows-2025-vs2026"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up MSVC for x64
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -103,7 +103,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -116,7 +116,7 @@ jobs:
             TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-win_amd64"
@@ -124,11 +124,11 @@ jobs:
     name: Build Windows x86 wheels
     strategy:
       matrix:
-        os: ["windows-2022"]
+        os: ["windows-2025-vs2026"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up MSVC for x86
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -137,7 +137,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -150,7 +150,7 @@ jobs:
             TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-win32"
@@ -158,11 +158,11 @@ jobs:
     name: Build Windows arm64 wheels
     strategy:
       matrix:
-        os: ["windows-11-arm"]
+        os: ["windows-11-vs2026-arm"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up MSVC for arm
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -171,7 +171,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -184,7 +184,7 @@ jobs:
             TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-win_arm64"
@@ -192,13 +192,13 @@ jobs:
     name: Build MacOS x86_64 wheels
     strategy:
       matrix:
-        os: [macos-15-intel]
+        os: [macos-26-intel]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_macos.sh
@@ -215,7 +215,7 @@ jobs:
             export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-macos_x86_64"
@@ -223,13 +223,13 @@ jobs:
     name: Build MacOS arm64 wheels
     strategy:
       matrix:
-        os: [macos-15]
+        os: [macos-26]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v4
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_macos.sh
@@ -246,7 +246,7 @@ jobs:
             export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
             delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: ./wheelhouse/*.whl
           name: "ta_lib-${{ github.ref_name }}-macos_arm64"

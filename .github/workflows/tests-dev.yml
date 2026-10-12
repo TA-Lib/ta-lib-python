@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.14t", "3.15t"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.14t", "3.15", "3.15t"]
     env:
       TA_INCLUDE_PATH: ${{ github.workspace }}/ta-lib-c/include
       TA_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
