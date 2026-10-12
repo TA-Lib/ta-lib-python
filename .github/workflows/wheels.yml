@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
@@ -60,7 +60,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_linux.sh
@@ -103,7 +103,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -137,7 +137,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -171,7 +171,7 @@ jobs:
         run: tools/build_talib_windows.cmd
         shell: cmd
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_TEST_SKIP: "cp*"
           CIBW_TEST_COMMAND: >
@@ -198,7 +198,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_macos.sh
@@ -229,7 +229,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4
+        uses: pypa/cibuildwheel@v4.2.1
         env:
           CIBW_BEFORE_ALL: |
               bash ./tools/build_talib_macos.sh
