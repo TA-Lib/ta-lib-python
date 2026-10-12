@@ -65,10 +65,14 @@ conda install -c conda-forge ta-lib
 
 ### Dependencies 🧩
 
-To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
-already installed. You should probably follow their [installation
-directions](https://ta-lib.org/install/) for your platform, but some
-suggestions are included below for reference.
+Installing from source does not require the [TA-Lib](http://ta-lib.org) C
+library to be installed. If a suitable preinstalled copy is not found, `setup.py` downloads the matching release, builds it as a static library and links it into the extension. This needs a C compiler and network access.
+
+To use your own installation instead, follow their [installation
+directions](https://ta-lib.org/install/) for your platform (some suggestions
+are included below for reference) and, if it is not in a standard location,
+point `TA_INCLUDE_PATH` and `TA_LIBRARY_PATH` at it. An installation older than
+the version above is ignored in favor of the bundled build.
 
 > Some Conda Forge users have reported success installing the underlying TA-Lib C
 > library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
@@ -142,7 +146,7 @@ fail with ``No such file or directory`` errors.
 
 For convenience, and starting with version 0.6.5, we now build binary wheels
 for different operating systems, architectures, and Python versions using
-GitHub Actions which include the underlying TA-Lib C library and are easy to
+GitHub Actions which statically link the underlying TA-Lib C library and are easy to
 install.
 
 Supported platforms:
@@ -172,18 +176,6 @@ not available as a binary wheel, it is fairly easy to install from source
 using the instructions above.
 
 ### Troubleshooting 🛠️
-
-If you get a warning that looks like this:
-
-```shell
-setup.py:79: UserWarning: Cannot find ta-lib library, installation may fail.
-warnings.warn('Cannot find ta-lib library, installation may fail.')
-```
-
-This typically means `setup.py` can't find the underlying `TA-Lib`
-library, a dependency which needs to be installed.
-
----
 
 If you installed the underlying `TA-Lib` library with a custom prefix
 (e.g., with `./configure --prefix=$PREFIX`), then when you go to install

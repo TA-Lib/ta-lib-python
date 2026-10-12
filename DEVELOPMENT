@@ -9,14 +9,21 @@ $ make build
 $ [sudo] make install
 ```
 
+TA-Lib C does not need to be installed first. `make build` uses an installed
+TA-Lib only if its version is at least `TALIB_C_VER` (see `setup.py`); otherwise
+it builds a static copy from the release tarball and links it in. Set
+`TA_INCLUDE_PATH` / `TA_LIBRARY_PATH` to point at your own build instead.
+
+
 Here's the full list of make commands (see the Makefile file):
 
-make build     # builds and places libs in the project directory; required for testing
-make clean     # cleans the local build files
-make install   # installs talib system-wide
-make generate: # generates a fresh _func.pxi, _stream.pxi file. Requires talib and TA-Lib to both be installed
-make perf      # run performance profiling
-make test      # run tests
+make build         # builds and places libs in the project directory; required for testing
+make build-bundled # same, but always builds and links the bundled static TA-Lib C
+make clean         # cleans the local build files
+make install       # installs talib system-wide
+make generate:     # generates a fresh _func.pxi, _stream.pxi file. Requires talib and TA-Lib to both be installed
+make perf          # run performance profiling
+make test          # run tests
 
 The source code is comprised of one python package, located in the talib
 directory, which itself has one Cython module (_ta_lib) which consists of
