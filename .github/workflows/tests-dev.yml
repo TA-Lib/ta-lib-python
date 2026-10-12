@@ -1,9 +1,10 @@
 name: Tests (dev)
 
-# The dev branch tracks TA-Lib C's dev branch, which has no release yet, so this
-# builds the C library from source and the two dev lines move together. master
-# is tests.yml, which installs the published release; the steps after the C
-# build are that file's, and are meant to stay in step with it.
+# The dev branch tracks TA-Lib C's dev branch, which has no release yet, so
+# setup.py builds the C library from the dev tarball (TALIB_C_URL) and the two
+# dev lines move together. master is tests.yml, which builds the published
+# release; the steps after this are that file's, and are meant to stay in step
+# with it.
 
 on:
   push:
@@ -18,9 +19,7 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14", "3.14t", "3.15", "3.15t"]
     env:
-      TA_INCLUDE_PATH: ${{ github.workspace }}/ta-lib-c/include
-      TA_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
-      LD_LIBRARY_PATH: ${{ github.workspace }}/ta-lib-c/lib
+      TALIB_C_URL: https://github.com/TA-Lib/ta-lib/archive/refs/heads/dev.tar.gz
     steps:
     - uses: actions/checkout@v3
 
@@ -70,7 +69,7 @@ jobs:
         else
           pip install -r requirements_test.txt
         fi
-        pip install flake8
+        pip install flake8 cmake
 
     - name: Build cython modules in-place
       run: |

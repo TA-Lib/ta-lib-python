@@ -1,7 +1,11 @@
-.PHONY: build
+.PHONY: build build-bundled
 
 build:
 	python3 -m pip install --use-pep517 -e .
+
+build-bundled:
+	TA_FORCE_BUNDLED=1 python3 -m pip install --use-pep517 -e .
+
 
 install:
 	python3 -m pip install --use-pep517 .
