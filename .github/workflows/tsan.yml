@@ -52,4 +52,7 @@ jobs:
         export TSAN_OPTIONS="suppressions=/tmp/tsan_suppressions.txt handle_segv=0 second_deadlock_stack=1"
 
         PYTHONPATH=. python -m pytest -s -ra tests \
-          --ignore=tests/test_pandas.py --ignore=tests/test_polars.py
+          --ignore=tests/test_pandas.py --ignore=tests/test_polars.py \
+          --deselect tests/test_abstract.py::test_pandas \
+          --deselect tests/test_abstract.py::test_pandas_series \
+          --deselect tests/test_stream.py::test_stream_rejects_mixed_series
