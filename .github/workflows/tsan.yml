@@ -41,7 +41,7 @@ jobs:
       run: |
         docker run --rm -i -v "$PWD":/src -w /src -e CPYTHON_REF "$IMAGE" bash -euo pipefail -s <<'EOF'
         python -c "import sys, sysconfig; print(sys.version); print(sysconfig.get_config_var('CONFIG_ARGS'))"
-        python -m pip install -r requirements.txt pytest setuptools
+        python -m pip install -r requirements.txt pytest setuptools cmake
 
         TA_TSAN=1 python setup.py build_ext --inplace
         grep -q __tsan talib/_ta_lib*.so
