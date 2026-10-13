@@ -24,6 +24,9 @@ make install       # installs talib system-wide
 make generate:     # generates a fresh _func.pxi, _stream.pxi file. Requires talib and TA-Lib to both be installed
 make perf          # run performance profiling
 make test          # run tests
+make build-tsan # clean, then rebuild with ThreadSanitizer (needs a TSAN CPython)
+make test-tsan  # build-tsan, then run the threading tests under TSAN
+
 
 The source code is comprised of one python package, located in the talib
 directory, which itself has one Cython module (_ta_lib) which consists of
@@ -57,3 +60,32 @@ tools/generate_func.py,generate_stream.py
 
 If you are interested in developing new indicator functions or whatnot on
 the underlying TA-Lib, you must install TA-Lib from git.
+
+
+Thread-safety testing with ThreadSanitizer (TSAN)
+
+TSAN only works with a free-threaded CPython that was itself built with it
+(Linux or macOS; clang is what CPython uses). Build one once, without
+--with-pydebug so that NumPy wheels still install:
+
+```
+$ env CC=clang CXX=clang++ ./configure --disable-gil --with-thread-sanitizer \
+      --prefix=$HOME/py-tsan
+$ make -j && make install
+```
+
+Then, from a virtual environment created with that interpreter (the extension
+and TA-Lib C are both built with the compiler that interpreter was built with):
+
+```
+$ pip install -r requirements.txt pytest pandas
+$ export TSAN_OPTIONS="suppressions=<cpython>/Tools/tsan/suppressions_free_threading.txt halt_on_error=1 handle_segv=0"
+$ make test-tsan
+```
+
+TA_TSAN=1 (set by make build-tsan) builds the extension with -fsanitize=thread
+and always builds a TSAN-instrumented static TA-Lib C alongside it (cached
+separately). It is not supported on Windows. CI runs the full test suite this
+way for 3.14t and 3.15t (see .github/workflows/tsan.yml).
+
+

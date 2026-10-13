@@ -1,10 +1,18 @@
-.PHONY: build build-bundled
+.PHONY: build build-bundled build-tsan test-tsan
 
 build:
 	python3 -m pip install --use-pep517 -e .
 
 build-bundled:
 	TA_FORCE_BUNDLED=1 python3 -m pip install --use-pep517 -e .
+
+
+build-tsan: clean
+	TA_TSAN=1 python3 -m pip install --use-pep517 -e .
+
+TSAN_OPTIONS ?= halt_on_error=1 second_deadlock_stack=1 handle_segv=0
+test-tsan: build-tsan
+	TSAN_OPTIONS="$(TSAN_OPTIONS)" pytest tests/test_threads.py
 
 
 install:

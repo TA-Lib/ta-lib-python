@@ -1,0 +1,55 @@
+name: TSAN
+
+# Runs the test suite under ThreadSanitizer on free-threaded CPython, using the
+# prebuilt TSAN images (CPython and NumPy both built with -fsanitize=thread).
+
+on:
+  push:
+    branches: [ master, 'dev-*' ]
+  pull_request:
+    branches: [ master, 'dev-*' ]
+  workflow_dispatch:
+
+jobs:
+  tsan:
+    name: TSAN (${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.14t"
+            image: ghcr.io/nascheme/numpy-tsan:3.14t
+            cpython_ref: "3.14"
+            experimental: false
+          - python: "3.15t"
+            image: ghcr.io/nascheme/numpy-tsan:3.15t
+            cpython_ref: main
+            experimental: false
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Lower ASLR entropy for TSAN
+      run: sudo sysctl vm.mmap_rnd_bits=28
+
+    - name: Build with TSAN and run the tests
+      env:
+        IMAGE: ${{ matrix.image }}
+        CPYTHON_REF: ${{ matrix.cpython_ref }}
+      run: |
+        docker run --rm -i -v "$PWD":/src -w /src -e CPYTHON_REF "$IMAGE" bash -euo pipefail -s <<'EOF'
+        python -c "import sys, sysconfig; print(sys.version); print(sysconfig.get_config_var('CONFIG_ARGS'))"
+        python -m pip install -r requirements.txt pytest setuptools
+
+        TA_TSAN=1 python setup.py build_ext --inplace
+        grep -q __tsan talib/_ta_lib*.so
+
+        python -W error -c "import sys, talib; assert not sys._is_gil_enabled()"
+
+        python -c "import os, urllib.request; urllib.request.urlretrieve('https://raw.githubusercontent.com/python/cpython/' + os.environ['CPYTHON_REF'] + '/Tools/tsan/suppressions_free_threading.txt', '/tmp/tsan_suppressions.txt')"
+        export TSAN_OPTIONS="suppressions=/tmp/tsan_suppressions.txt handle_segv=0 second_deadlock_stack=1"
+
+        PYTHONPATH=. python -m pytest -s -ra tests \
+          --ignore=tests/test_pandas.py --ignore=tests/test_polars.py

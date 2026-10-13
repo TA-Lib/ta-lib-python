@@ -8,6 +8,7 @@ import multiprocessing
 import os
 import os.path
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -23,6 +24,23 @@ from setuptools import Extension, setup
 ROOT = Path(__file__).resolve().parent
 TALIB_C_VER = os.environ.get("TALIB_C_VER", "0.8.1")
 FORCE_BUNDLED = os.environ.get("TA_FORCE_BUNDLED") == "1"
+
+TSAN = os.environ.get("TA_TSAN") == "1"
+if TSAN and sys.platform == "win32":
+    raise RuntimeError("TA_TSAN is not supported on Windows")
+if TSAN and not sysconfig.get_config_var("Py_GIL_DISABLED"):
+    print("[talib] warning: TA_TSAN=1 needs a free-threaded CPython", file=sys.stderr)
+if TSAN and "--with-thread-sanitizer" not in (
+    sysconfig.get_config_var("CONFIG_ARGS") or ""
+):
+    print(
+        "[talib] warning: this CPython was not built with --with-thread-sanitizer",
+        file=sys.stderr,
+    )
+_TSAN_SAN = ["-fsanitize=thread", "-fno-omit-frame-pointer"] if TSAN else []
+_TSAN_CFLAGS = (_TSAN_SAN + ["-O1", "-g"]) if TSAN else []
+_TSAN_LDFLAGS = ["-fsanitize=thread"] if TSAN else []
+
 _CACHE_ROOT = Path(os.environ.get("TA_BUNDLE_CACHE") or ROOT / "build")
 _CUSTOM_SRC = "TALIB_C_URL" in os.environ
 TALIB_C_URL = os.environ.get(
@@ -30,7 +48,7 @@ TALIB_C_URL = os.environ.get(
     f"https://github.com/TA-Lib/ta-lib/archive/refs/tags/v{TALIB_C_VER}.tar.gz",
 )
 _URL_TAG = hashlib.sha1(TALIB_C_URL.encode()).hexdigest()[:8]
-BUNDLE_DIR = _CACHE_ROOT / f"ta-lib-c-{TALIB_C_VER}-{_URL_TAG}"
+BUNDLE_DIR = _CACHE_ROOT / f"ta-lib-c-{TALIB_C_VER}-{_URL_TAG}{'-tsan' if TSAN else ''}"
 
 
 def _find_static(prefix):
@@ -63,12 +81,17 @@ def build_bundled_talib():
         str(src),
         "-B",
         str(bdir),
-        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_BUILD_TYPE=" + ("RelWithDebInfo" if TSAN else "Release"),
         f"-DCMAKE_INSTALL_PREFIX={prefix}",
         "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
         "-DBUILD_DEV_TOOLS=OFF",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
     ]
+    if TSAN:
+        args.append("-DCMAKE_C_FLAGS=" + " ".join(_TSAN_SAN))
+        cc = shlex.split(os.environ.get("CC") or sysconfig.get_config_var("CC") or "")
+        if cc:
+            args.append("-DCMAKE_C_COMPILER=" + cc[0])
     if sys.platform == "win32":
         args.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL")
         if sys.maxsize <= 2**32:
@@ -187,7 +210,7 @@ def _fmt(version):
 
 @functools.cache
 def resolve_talib():
-    if FORCE_BUNDLED or _CUSTOM_SRC:
+    if FORCE_BUNDLED or _CUSTOM_SRC or TSAN:
         return build_bundled_talib()
 
     required = _parse_version(TALIB_C_VER)
@@ -273,6 +296,8 @@ ext_modules = [
         library_dirs=library_dirs,
         libraries=[lib_talib_name],
         runtime_library_dirs=[] if sys.platform == "win32" else library_dirs,
+        extra_compile_args=_TSAN_CFLAGS,
+        extra_link_args=_TSAN_LDFLAGS,
     )
 ]
 
