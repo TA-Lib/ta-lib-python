@@ -10,3 +10,5 @@ dist/
 *.egg-info/
 
 talib/_ta_lib.c
+
+!.github/
