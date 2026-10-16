@@ -48,8 +48,12 @@ jobs:
         pip install flake8
 
     - name: Build cython modules in-place
+      env:
+        TA_INCLUDE_PATH: /usr/include
+        TA_LIBRARY_PATH: /usr/lib
       run: |
         python setup.py build_ext --inplace
+        ldd talib/_ta_lib*.so | grep -E 'libta-lib\.so[^ ]* => /'
 
     - name: Lint with flake8
       run: |

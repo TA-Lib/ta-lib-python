@@ -69,13 +69,42 @@ except ImportError:
 
 class NumpyBuildExt(build_ext):
     """
-    Build and statically link TA-Lib C before compiling the extension.
+    Build TA-Lib C unless explicit library or header paths are supplied.
     """
 
     def build_extensions(self):
         """
-        Build the C library in a temporary directory used through linking.
+        Respect explicit paths, otherwise build and statically link TA-Lib C.
         """
+        if 'TA_LIBRARY_PATH' in os.environ or 'TA_INCLUDE_PATH' in os.environ:
+            if sys.platform == 'win32':
+                include_dirs = [r'c:\ta-lib\c\include',
+                                r'c:\Program Files\TA-Lib\include',
+                                r'c:\Program Files (x86)\TA-Lib\include']
+                library_dirs = [r'c:\ta-lib\c\lib',
+                                r'c:\Program Files\TA-Lib\lib',
+                                r'c:\Program Files (x86)\TA-Lib\lib']
+                library = 'ta-lib-static'
+            else:
+                include_dirs = ['/usr/include', '/usr/local/include', '/opt/include',
+                                '/opt/local/include', '/opt/homebrew/include',
+                                '/opt/homebrew/opt/ta-lib/include']
+                library_dirs = ['/usr/lib', '/usr/local/lib', '/usr/lib64',
+                                '/usr/local/lib64', '/opt/lib', '/opt/local/lib',
+                                '/opt/homebrew/lib', '/opt/homebrew/opt/ta-lib/lib']
+                library = 'ta-lib'
+            if 'TA_INCLUDE_PATH' in os.environ:
+                include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
+            if 'TA_LIBRARY_PATH' in os.environ:
+                library_dirs = os.environ['TA_LIBRARY_PATH'].split(os.pathsep)
+            for ext in self.extensions:
+                ext.include_dirs += include_dirs + [numpy.get_include()]
+                ext.library_dirs = library_dirs
+                ext.libraries.append(library)
+                ext.runtime_library_dirs = [] if sys.platform == 'win32' else library_dirs
+            super().build_extensions()
+            return
+
         with tempfile.TemporaryDirectory(prefix='ta-lib-') as temporary:
             prefix = build_talib(Path(temporary), self.plat_name)
             library = 'ta-lib-static.lib' if sys.platform == 'win32' else 'libta-lib.a'
