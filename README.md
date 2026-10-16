@@ -65,10 +65,24 @@ conda install -c conda-forge ta-lib
 
 ### Dependencies 🧩
 
-To use TA-Lib for python, you need to have the [TA-Lib](http://ta-lib.org)
-already installed. You should probably follow their [installation
-directions](https://ta-lib.org/install/) for your platform, but some
-suggestions are included below for reference.
+Binary wheels include the [TA-Lib](http://ta-lib.org) C library and do not
+require a compiler or a separate TA-Lib C installation.
+
+Starting with version 0.8.3, source builds download the pinned TA-Lib C 0.8.1
+release, verify its checksum, and build and statically link it into the Python
+extension. This requires network access, a C compiler and CMake. On Windows,
+source builds require the Microsoft C++ Build Tools. CMake is installed
+automatically when using pip's default build isolation.
+
+To use an existing TA-Lib C installation instead, set ``TA_INCLUDE_PATH`` or
+``TA_LIBRARY_PATH`` before building. Setting either variable disables the
+bundled C build, including its download; if only one is set, the other uses
+the standard search paths. These variables accept multiple directories
+separated by ``os.pathsep`` (``:`` on Unix, ``;`` on Windows). They apply to
+source builds, not prebuilt wheels.
+
+The following instructions are for installing your own TA-Lib C library.
+You can also follow its [installation directions](https://ta-lib.org/install/).
 
 > Some Conda Forge users have reported success installing the underlying TA-Lib C
 > library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
@@ -91,7 +105,7 @@ for your architecture:
 arch -arm64 brew install ta-lib
 ```
 
-And perhaps you can set these before installing with `pip`:
+To link a source build against the Homebrew installation, set:
 
 ```shell
 export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
@@ -143,7 +157,8 @@ fail with ``No such file or directory`` errors.
 For convenience, and starting with version 0.6.5, we now build binary wheels
 for different operating systems, architectures, and Python versions using
 GitHub Actions which include the underlying TA-Lib C library and are easy to
-install.
+install. Starting with version 0.8.3, this library is statically linked into
+the extension.
 
 Supported platforms:
 
@@ -173,28 +188,15 @@ using the instructions above.
 
 ### Troubleshooting 🛠️
 
-If you get a warning that looks like this:
-
-```shell
-setup.py:79: UserWarning: Cannot find ta-lib library, installation may fail.
-warnings.warn('Cannot find ta-lib library, installation may fail.')
-```
-
-This typically means `setup.py` can't find the underlying `TA-Lib`
-library, a dependency which needs to be installed.
-
----
-
 If you installed the underlying `TA-Lib` library with a custom prefix
 (e.g., with `./configure --prefix=$PREFIX`), then when you go to install
-this python wrapper you can specify additional search paths to find the
-library and include files for the underlying `TA-Lib` library using the
-`TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
+this Python wrapper you can select that installation instead of the bundled
+build using the `TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
 
 ```shell
 export TA_LIBRARY_PATH=$PREFIX/lib
 export TA_INCLUDE_PATH=$PREFIX/include
-python setup.py install # or pip install ta-lib
+python -m pip install --no-binary=TA-Lib TA-Lib
 ```
 
 ---
@@ -218,10 +220,10 @@ common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
 common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
 ```
 
-This typically means that it can't find the underlying `TA-Lib` library, a
-dependency which needs to be installed.  On Windows, this could be caused by
-installing the 32-bit binary distribution of the underlying `TA-Lib` library,
-but trying to use it with 64-bit Python.
+When using ``TA_INCLUDE_PATH`` or ``TA_LIBRARY_PATH``, check that they point
+to the headers and libraries of a compatible TA-Lib C installation. On Windows,
+the library architecture must match Python (for example, a 64-bit Python needs
+a 64-bit TA-Lib C library).
 
 ---
 
