@@ -1,3 +1,17 @@
+0.8.3
+=====
+
+- [NEW]: Source builds download and verify TA-Lib C 0.8.1, build it as a
+  static library and link it into the extension. A compiler, CMake and network
+  access are required; a separate TA-Lib C installation is no longer needed.
+  Generated C files remain included in source distributions.
+
+- [CHANGE]: Setting ``TA_INCLUDE_PATH`` or ``TA_LIBRARY_PATH`` uses an existing
+  TA-Lib C installation instead, without downloading or building the C library.
+  If only one is set, the other uses the standard search paths.
+
+- [CHANGE]: Wheels statically link TA-Lib C through the same build process.
+
 0.8.2
 =====
 
