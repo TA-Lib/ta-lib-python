@@ -26,11 +26,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
-          CIBW_BEFORE_ALL: |
-              bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-          CIBW_ENVIRONMENT_PASS_LINUX: TALIB_C_VER CFLAGS
+          CIBW_ENVIRONMENT_PASS_LINUX: CFLAGS
           CFLAGS: -D_GNU_SOURCE
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
@@ -39,12 +37,7 @@ jobs:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
-            TA_LIBRARY_PATH="ta-lib-install/lib"
-            TA_INCLUDE_PATH="ta-lib-install/include"
             PIP_NO_BUILD_ISOLATION=false
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
-            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
-            auditwheel repair -w {dest_dir} {wheel}
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -62,11 +55,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
-          CIBW_BEFORE_ALL: |
-              bash ./tools/build_talib_linux.sh
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-          CIBW_ENVIRONMENT_PASS_LINUX: TALIB_C_VER CFLAGS
+          CIBW_ENVIRONMENT_PASS_LINUX: CFLAGS
           CFLAGS: -D_GNU_SOURCE
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
@@ -75,12 +66,7 @@ jobs:
           CIBW_ARCHS_LINUX: aarch64
           CIBW_BUILD_FRONTEND: build
           CIBW_ENVIRONMENT_LINUX : >
-            TA_LIBRARY_PATH="ta-lib-install/lib"
-            TA_INCLUDE_PATH="ta-lib-install/include"
             PIP_NO_BUILD_ISOLATION=false
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX: |
-            export LD_LIBRARY_PATH="/project/ta-lib-install/lib:$LD_LIBRARY_PATH"
-            auditwheel repair -w {dest_dir} {wheel}
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -99,9 +85,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
-      - name: Build TA-Lib C Library
-        run: tools/build_talib_windows.cmd
-        shell: cmd
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
@@ -112,8 +95,6 @@ jobs:
           MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
-            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
-            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
         uses: actions/upload-artifact@v7
@@ -133,9 +114,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64_x86
-      - name: Build TA-Lib C library
-        run: tools/build_talib_windows.cmd
-        shell: cmd
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
@@ -146,8 +124,6 @@ jobs:
           MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: >
-            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
-            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
         uses: actions/upload-artifact@v7
@@ -167,9 +143,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: arm64
-      - name: Build TA-Lib C Library
-        run: tools/build_talib_windows.cmd
-        shell: cmd
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
@@ -180,8 +153,6 @@ jobs:
           MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
           CIBW_ARCHS_WINDOWS: ARM64
           CIBW_ENVIRONMENT_WINDOWS: >
-            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
-            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheel
         uses: actions/upload-artifact@v7
@@ -200,20 +171,13 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
-          CIBW_BEFORE_ALL: |
-              bash ./tools/build_talib_macos.sh
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_MACOS: x86_64
           CIBW_ENVIRONMENT_MACOS : >
-            TA_LIBRARY_PATH="ta-lib-install/lib"
-            TA_INCLUDE_PATH="ta-lib-install/include"
+            MACOSX_DEPLOYMENT_TARGET=13.7
             PIP_NO_BUILD_ISOLATION=false
-          CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
-            export MACOSX_DEPLOYMENT_TARGET=13.7
-            export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
-            delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -231,20 +195,13 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.2.1
         env:
-          CIBW_BEFORE_ALL: |
-              bash ./tools/build_talib_macos.sh
           CIBW_TEST_COMMAND: >
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_MACOS: arm64
           CIBW_ENVIRONMENT_MACOS : >
-            TA_LIBRARY_PATH="ta-lib-install/lib"
-            TA_INCLUDE_PATH="ta-lib-install/include"
+            MACOSX_DEPLOYMENT_TARGET=14.0
             PIP_NO_BUILD_ISOLATION=false
-          CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
-            export MACOSX_DEPLOYMENT_TARGET=14.0
-            export DYLD_LIBRARY_PATH="/Users/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/ta-lib-install/lib:$DYLD_LIBRARY_PATH"
-            delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
