@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "Cython", "numpy"]
+requires = ["setuptools", "Cython", "numpy", "cmake"]
 build-backend = "setuptools.build_meta"
 
 [project]
