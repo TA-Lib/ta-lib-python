@@ -20,8 +20,20 @@ TALIB_C_VERSION = '0.8.1'
 TALIB_C_SHA256 = 'ec59ccd88c0c77f618587d858787c8f9d06c40460a09d66751926f6fd670f985'
 
 
-def build_talib(directory, plat_name):
-    """Build the pinned C release locally, without installing it system-wide."""
+def talib_source(directory):
+    """Return the TA-Lib C source tree: TA_LIB_SOURCE if set, else the pinned release."""
+    if 'TA_LIB_SOURCE' in os.environ:
+        path = Path(os.environ['TA_LIB_SOURCE']).expanduser().resolve()
+        if path.is_dir():
+            return path
+        with tarfile.open(path) as source:
+            source.extractall(directory / 'source')
+        trees = [p for p in (directory / 'source').iterdir()
+                 if (p / 'CMakeLists.txt').is_file()]
+        if len(trees) != 1:
+            raise RuntimeError(f'TA_LIB_SOURCE: no single TA-Lib C tree in {path}')
+        return trees[0]
+
     archive = directory / 'ta-lib.tar.gz'
     urllib.request.urlretrieve(
         f'https://github.com/TA-Lib/ta-lib/releases/download/v{TALIB_C_VERSION}/'
@@ -30,11 +42,16 @@ def build_talib(directory, plat_name):
         raise RuntimeError('TA-Lib C source checksum mismatch')
     with tarfile.open(archive) as source:
         source.extractall(directory)
+    return directory / f'ta-lib-{TALIB_C_VERSION}'
 
+
+def build_talib(directory, plat_name):
+    """Build TA-Lib C locally, without installing it system-wide."""
+    source = talib_source(directory)
     prefix = directory / 'install'
     build = directory / 'build'
     args = [
-        'cmake', '-S', str(directory / f'ta-lib-{TALIB_C_VERSION}'),
+        'cmake', '-S', str(source),
         '-B', str(build), '-DCMAKE_BUILD_TYPE=Release',
         f'-DCMAKE_INSTALL_PREFIX={prefix}',
         '-DBUILD_SHARED_LIBS=OFF', '-DBUILD_STATIC_LIBS=ON',
@@ -77,6 +94,9 @@ class NumpyBuildExt(build_ext):
         Respect explicit paths, otherwise build and statically link TA-Lib C.
         """
         if 'TA_LIBRARY_PATH' in os.environ or 'TA_INCLUDE_PATH' in os.environ:
+            if 'TA_LIB_SOURCE' in os.environ:
+                raise RuntimeError('TA_LIB_SOURCE cannot be combined with '
+                                   'TA_INCLUDE_PATH or TA_LIBRARY_PATH')
             if sys.platform == 'win32':
                 include_dirs = [r'c:\ta-lib\c\include',
                                 r'c:\Program Files\TA-Lib\include',
@@ -108,9 +128,11 @@ class NumpyBuildExt(build_ext):
         with tempfile.TemporaryDirectory(prefix='ta-lib-') as temporary:
             prefix = build_talib(Path(temporary), self.plat_name)
             library = 'ta-lib-static.lib' if sys.platform == 'win32' else 'libta-lib.a'
+            archive = str(prefix / 'lib' / library)
             for ext in self.extensions:
                 ext.include_dirs += [str(prefix / 'include'), numpy.get_include()]
-                ext.extra_objects = [str(prefix / 'lib' / library)]
+                ext.extra_objects = [archive]
+                ext.depends.append(archive)
             super().build_extensions()
 
 cmdclass = {'build_ext': NumpyBuildExt}

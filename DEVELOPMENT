@@ -50,3 +50,11 @@ tools/generate_func.py,generate_stream.py
 
 If you are interested in developing new indicator functions or whatnot on
 the underlying TA-Lib, you must install TA-Lib from git.
+
+Alternatively, to build against a TA-Lib C checkout with the same static
+build the wheels use, set TA_LIB_SOURCE to its directory (or a source
+tarball) instead of installing it:
+
+```
+$ TA_LIB_SOURCE=~/ta-lib make build
+```
