@@ -21,8 +21,8 @@ jobs:
       id: talib_c
       run: |
         set -euo pipefail
-        V=$(sed -n 's/^  TALIB_C_VER: *//p' .github/workflows/wheels.yml)
-        [ -n "$V" ] || { echo "::error::no TALIB_C_VER in wheels.yml"; exit 1; }
+        V=$(sed -n "s/^TALIB_C_VERSION = '\(.*\)'$/\1/p" setup.py)
+        [ -n "$V" ] || { echo "::error::no TALIB_C_VERSION in setup.py"; exit 1; }
         echo "version=$V" >> "$GITHUB_OUTPUT"
 
     - name: Set up TA-Lib
