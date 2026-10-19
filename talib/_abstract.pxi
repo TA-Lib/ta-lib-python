@@ -619,6 +619,9 @@ def __get_flags(int flag, dict flags_lookup_dict):
 
 TA_FUNC_FLAGS = {
     1: 'A period of 1 performs no smoothing',
+    2: 'An output is display-shifted',
+    4: 'Uses a transcendental math function',
+    8: 'Input must be positive',
     16777216: 'Output scale same as input',
     33554432: 'Function has a streaming API',
     67108864: 'Output is over volume',
@@ -647,13 +650,15 @@ TA_OUTPUT_FLAGS = {
     16: 'Histogram',
     32: 'Pattern (Bool)',
     64: 'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
-    128: 'Strength Pattern ([-200..-100] = Bearish, [-100..0] = Getting Bearish, 0 = Neutral, [0..100] = Getting Bullish, [100-200] = Bullish)',
+    128: 'Confirmation Pattern (+/-200 = this bar confirms an earlier pattern)',
     256: 'Output can be positive',
     512: 'Output can be negative',
     1024: 'Output can be zero',
     2048: 'Values represent an upper limit',
     4096: 'Values represent a lower limit',
     8192: 'Output is optional (nullable)',
+    16384: 'Output is display-shifted',
+    32768: 'Weak Pattern (+/-80 = a weaker form of the pattern)',
 }
 
 def _ta_getFuncInfo(char *function_name):
