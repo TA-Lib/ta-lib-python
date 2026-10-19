@@ -174,6 +174,40 @@ def test_info():
     assert expected == abstract.Function('BBANDS').info
 
 
+_TA_VERSION = tuple(int(p) for p in talib.__ta_version__.split()[0].split(b'.'))
+
+
+@pytest.mark.skipif(_TA_VERSION < (0, 8, 2),
+                    reason='these flags are newer than TA-Lib C 0.8.1')
+def test_flags_newer_than_0_8_1():
+    pattern = ['Line',
+               'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
+               'Output can be positive',
+               'Output can be negative',
+               'Output can be zero']
+    assert abstract.Function('CDLENGULFING').output_flags == OrderedDict([
+        ('integer', pattern + ['Weak Pattern (+/-80 = a weaker form of the pattern)']),
+        ])
+    assert abstract.Function('CDLHIKKAKE').output_flags == OrderedDict([
+        ('integer', ['Line',
+                     'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
+                     'Confirmation Pattern (+/-200 = this bar confirms an earlier pattern)',
+                     'Output can be positive',
+                     'Output can be negative',
+                     'Output can be zero']),
+        ])
+
+    dpo = abstract.Function('DPO')
+    assert 'An output is display-shifted' in dpo.function_flags
+    assert dpo.output_flags == OrderedDict([
+        ('real', ['Line', 'Output is display-shifted']),
+        ])
+
+    ln_flags = abstract.Function('LN').function_flags
+    assert 'Uses a transcendental math function' in ln_flags
+    assert 'Input must be positive' in ln_flags
+
+
 def test_input_names():
     expected = OrderedDict([('price', 'close')])
     assert expected == abstract.Function('MAMA').input_names
