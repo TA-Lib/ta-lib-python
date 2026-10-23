@@ -35,6 +35,11 @@ from talib import MA_Type
 upper, middle, lower = talib.BBANDS(close, matype=MA_Type.T3)
 ```
 
+Every `matype` argument (for example `STOCH`'s `slowk_matype` and
+`slowd_matype`) takes an `MA_Type` value. The integer defaults shown in the
+function docs are those values: `0` is `MA_Type.SMA`, and `MA_Type[n]` names
+value `n`.
+
 Calculating momentum of the close prices, with a time period of 5:
 
 ```python

@@ -193,6 +193,7 @@ smi, smisignal = SMI(high, low, close, timeperiod=13, fastperiod=2, slowperiod=2
 ```
 
 ### STOCH - Stochastic
+NOTE: `slowk_matype` and `slowd_matype` take an `MA_Type` value. See [STOCH](https://ta-lib.org/functions/stoch) for the formula.
 ```python
 slowk, slowd = STOCH(high, low, close, fastk_period=5, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0)
 ```
