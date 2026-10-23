@@ -289,9 +289,10 @@ class Function(object):
         local = self.__local
         parameters = parameters or {}
         parameters.update(kwargs)
-        for param, value in parameters.items():
-            if self.__check_opt_input_value(param, value):
-                local.opt_inputs[param]['value'] = value
+        updates = [(param, value) for param, value in parameters.items()
+                   if self.__check_opt_input_value(param, value)]
+        for param, value in updates:
+            local.opt_inputs[param]['value'] = value
         local.outputs_valid = False
         local.info['parameters'] = self.parameters
 
@@ -459,18 +460,19 @@ class Function(object):
                 ', '.join(input_price_series_names))
             raise TypeError(msg)
 
-        self.set_function_args(*args, **kwargs)
-        self.__call_function()
+        try:
+            self.set_function_args(*args, **kwargs)
+            self.__call_function()
+        finally:
+            # restore opt_input values to as they were before this call
+            for param_name, value in opt_input_values:
+                local.opt_inputs[param_name]['value'] = value
+            local.info['parameters'] = self.parameters
 
-        # restore opt_input values to as they were before this call
-        for param_name, value in opt_input_values:
-            local.opt_inputs[param_name]['value'] = value
-        local.info['parameters'] = self.parameters
-
-        # restore input names values to as they were before this call
-        for input_name, value in price_series_name_values:
-            local.input_names[input_name]['price_series'] = value
-            local.info['input_names'][input_name] = value
+            # restore input names values to as they were before this call
+            for input_name, value in price_series_name_values:
+                local.input_names[input_name]['price_series'] = value
+                local.info['input_names'][input_name] = value
 
         return self.outputs
 

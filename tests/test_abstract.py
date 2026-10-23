@@ -355,6 +355,29 @@ def test_call_doesnt_cache_parameters(ford_2012):
     assert_array_equal(expected, output)
 
 
+def test_failed_call_doesnt_cache_parameters(ford_2012):
+    sma = abstract.Function('SMA', timeperiod=10)
+    expected = func.SMA(ford_2012['close'], 10)
+
+    with pytest.raises(Exception, match='TA_BAD_PARAM'):
+        sma(ford_2012, timeperiod=0)
+    assert_array_equal(expected, sma(ford_2012))
+
+    with pytest.raises(Exception, match='missing required data key'):
+        sma(ford_2012, timeperiod=20, price='missing')
+    assert_array_equal(expected, sma(ford_2012))
+    assert sma.parameters == {'timeperiod': 10}
+    assert sma.input_names == {'price': 'close'}
+
+
+def test_rejected_set_parameters_changes_nothing():
+    macd = abstract.Function('MACD')
+    with pytest.raises(TypeError):
+        macd.set_parameters(fastperiod=5, slowperiod='26')
+    assert macd.parameters == {'fastperiod': 12, 'slowperiod': 26,
+                               'signalperiod': 9}
+
+
 def test_call_without_arguments():
     with pytest.raises(TypeError, match='Not enough price arguments'):
         abstract.Function('SMA')()
