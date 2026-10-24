@@ -7,7 +7,9 @@ try:
 except ImportError: # handle python 2.6 and earlier
     from ordereddict import OrderedDict
 from cython.operator cimport dereference as deref
+import numbers
 import numpy
+import operator
 import sys
 
 cimport numpy as np
@@ -289,10 +291,11 @@ class Function(object):
         local = self.__local
         parameters = parameters or {}
         parameters.update(kwargs)
-        updates = [(param, value) for param, value in parameters.items()
-                   if self.__check_opt_input_value(param, value)]
+        updates = [(param, self.__opt_input_value(param, value))
+                   for param, value in parameters.items()]
         for param, value in updates:
-            local.opt_inputs[param]['value'] = value
+            if value is not None:
+                local.opt_inputs[param]['value'] = value
         local.outputs_valid = False
         local.info['parameters'] = self.parameters
 
@@ -307,9 +310,9 @@ class Function(object):
 
         for key in kwargs:
             if key in local.opt_inputs:
-                value = kwargs[key]
-                if self.__check_opt_input_value(key, value):
-                    local.opt_inputs[key]['value'] = kwargs[key]
+                value = self.__opt_input_value(key, kwargs[key])
+                if value is not None:
+                    local.opt_inputs[key]['value'] = value
                     update_info = True
             elif key in local.input_names:
                 local.input_names[key]['price_series'] = kwargs[key]
@@ -323,8 +326,8 @@ class Function(object):
                 for i, param_name in enumerate(local.opt_inputs):
                     i += skip_first
                     if i < len(args):
-                        value = args[i]
-                        if self.__check_opt_input_value(param_name, value):
+                        value = self.__opt_input_value(param_name, args[i])
+                        if value is not None:
                             local.opt_inputs[param_name]['value'] = value
                             update_info = True
 
@@ -520,20 +523,25 @@ class Function(object):
                 local.outputs[output] = results[i]
         local.outputs_valid = True
 
-    def __check_opt_input_value(self, input_name, value):
+    def __opt_input_value(self, input_name, value):
+        """
+        Returns value (None included) as given if it is of its parameter's
+        type, converted if it is another number of that kind; otherwise raises
+        TypeError.
+        """
         type_ = self.__local.opt_inputs[input_name]['type']
         if type_ in {lib.TA_OptInput_IntegerList, lib.TA_OptInput_IntegerRange}:
-            type_ = int
+            type_, kind, convert = int, numbers.Integral, operator.index
         elif type_ in {lib.TA_OptInput_RealList, lib.TA_OptInput_RealRange}:
-            type_ = float
+            type_, kind, convert = float, numbers.Real, float
 
-        if isinstance(value, type_):
-           return True
-        elif value is not None:
-            raise TypeError(
-                'Invalid parameter value for %s (expected %s, got %s)' % (
-                    input_name, type_.__name__, type(value).__name__))
-        return False
+        if value is None or isinstance(value, type_):
+            return value
+        if isinstance(value, kind):
+            return convert(value)
+        raise TypeError(
+            'Invalid parameter value for %s (expected %s, got %s)' % (
+                input_name, type_.__name__, type(value).__name__))
 
     def __get_opt_input_value(self, input_name):
         """
