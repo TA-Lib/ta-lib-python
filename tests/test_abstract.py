@@ -339,6 +339,49 @@ def test_parameter_type_checking(ford_2012):
         sma.set_parameters(timeperiod=35.5)
 
 
+def test_real_parameter_accepts_any_real_number(ford_2012):
+    expected = func.BBANDS(ford_2012['close'], 20, 3.0, 1.0)
+    bbands = abstract.Function('BBANDS')
+
+    for up, dn in ((3, 1), (np.int64(3), np.int64(1)),
+                   (np.float32(3.0), np.float32(1.0))):
+        assert_array_equal(expected, bbands(ford_2012, 20, up, dn))
+        assert_array_equal(expected, bbands(ford_2012, nbdevup=up,
+                                            nbdevdn=dn, timeperiod=20))
+
+    bbands.set_parameters(timeperiod=20, nbdevup=3, nbdevdn=np.int64(1))
+    assert bbands.parameters['nbdevup'] == 3.0
+    assert type(bbands.parameters['nbdevup']) is float
+    assert type(bbands.parameters['nbdevdn']) is float
+    assert_array_equal(expected, bbands(ford_2012))
+
+    bbands.set_parameters(nbdevup=np.float64(3.0))
+    assert type(bbands.parameters['nbdevup']) is np.float64
+
+    with pytest.raises(TypeError, match=re.escape(
+            'Invalid parameter value for nbdevup (expected float, got str)')):
+        bbands(ford_2012, nbdevup='2')
+
+
+def test_integer_parameter_accepts_any_integer(ford_2012):
+    expected = func.SMA(ford_2012['close'], 10)
+
+    sma = abstract.Function('SMA', timeperiod=np.int64(10))
+    assert type(sma.parameters['timeperiod']) is int
+    assert sma.lookback == 9
+    assert_array_equal(expected, sma(ford_2012))
+    assert_array_equal(expected, abstract.SMA(ford_2012, np.int32(10)))
+
+    class Period(int):
+        pass
+    sma.set_parameters(timeperiod=Period(10))
+    assert type(sma.parameters['timeperiod']) is Period
+
+    with pytest.raises(TypeError, match=re.escape(
+            'Invalid parameter value for timeperiod (expected int, got float64)')):
+        sma(ford_2012, timeperiod=np.float64(10))
+
+
 def test_call_doesnt_cache_parameters(ford_2012):
     sma = abstract.Function('SMA', timeperiod=10)
 
