@@ -11,14 +11,14 @@ from talib import abstract, func
 
 
 def test_talib_version():
-    required = (0, 8, 1)
+    required = tuple(int(p) for p in talib.TA_LIB_C_REQUIRED.split('.'))
     installed = tuple(int(p) for p in talib.__ta_version__.split()[0].split(b'.'))
     assert installed >= required
 
 
 def test_num_functions():
-    assert len(talib.get_functions()) == 201
-    assert len(talib.__TA_FUNCTION_NAMES__) == 201
+    assert len(talib.get_functions()) == 237
+    assert len(talib.__TA_FUNCTION_NAMES__) == 237
 
 
 def test_every_grouped_function_is_bound():
@@ -145,6 +145,16 @@ def _unstable_period_cases():
         'RMA': lambda: func.RMA(close),
         'HA': lambda: func.HA(open_, high, low, close)[0],
         'RVI': lambda: func.RVI(close),
+        'FRAMA': lambda: func.FRAMA(high, low),
+        'MCGD': lambda: func.MCGD(close),
+        'VIDYA': lambda: func.VIDYA(close),
+        'STC': lambda: func.STC(close),
+        'SWAK_GAUSS': lambda: func.SWAK_GAUSS(close),
+        'SWAK_BUTTER': lambda: func.SWAK_BUTTER(close),
+        'SWAK_HP': lambda: func.SWAK_HP(close),
+        'SWAK_2PHP': lambda: func.SWAK_2PHP(close),
+        'SWAK_BP': lambda: func.SWAK_BP(close),
+        'FISHER': lambda: func.FISHER(high, low)[0],
     }
 
 
@@ -171,7 +181,7 @@ def test_unstable_period_moves_its_own_function(name):
     talib.set_unstable_period(name, 0)
     unshifted = call()
     baseline = _leading_unset(unshifted)
-    assert baseline > 0 or name == 'HA'  # HA is the one case with no lookback
+    assert baseline > 0 or abstract.Function(name).lookback == 0
     try:
         talib.set_unstable_period(name, 5)
         shifted = call()
@@ -188,10 +198,14 @@ def test_unstable_period_all():
     talib.set_unstable_period('ALL', 0)
     baseline = {name: _leading_unset(call())
                 for name, call in UNSTABLE_PERIOD_CASES.items()}
+    lookback = {name: abstract.Function(name).lookback for name in UNSTABLE_PERIOD_CASES}
     try:
         talib.set_unstable_period('ALL', 3)
         for name, call in UNSTABLE_PERIOD_CASES.items():
-            assert _leading_unset(call()) == baseline[name] + 3, name
+            # a function built on another unstable one moves by both
+            grown = abstract.Function(name).lookback - lookback[name]
+            assert grown == 3 * {'STC': 2}.get(name, 1), name
+            assert _leading_unset(call()) == baseline[name] + grown, name
     finally:
         talib.set_unstable_period('ALL', 0)
     for name, call in UNSTABLE_PERIOD_CASES.items():
@@ -338,7 +352,7 @@ def test_MAXINDEX():
 
 
 # The func API bakes each parameter's default into its own signature, while the
-# abstract API reads them from the library. They have to agree, for all 201.
+# abstract API reads them from the library. They have to agree, for every function.
 def test_func_and_abstract_agree():
     n = 200
     rs = np.random.RandomState(4)
@@ -369,15 +383,35 @@ def test_func_and_abstract_agree():
             assert_array_equal(a, b, err_msg=name)
 
 
-# The moving averages TA-Lib C 0.8.1 added to TA_MAType.
-@pytest.mark.parametrize('matype,name', [
-    (talib.MA_Type.HMA, 'HMA'),
-    (talib.MA_Type.ZLEMA, 'ZLEMA'),
-    (talib.MA_Type.RMA, 'RMA'),
+# The moving averages TA-Lib C added to TA_MAType after 0.6.  MA runs VIDYA
+# with a CMO period of (3n+2)/4, not VIDYA's own default.
+@pytest.mark.parametrize('matype,name,kwargs', [
+    (talib.MA_Type.HMA, 'HMA', {}),
+    (talib.MA_Type.ZLEMA, 'ZLEMA', {}),
+    (talib.MA_Type.RMA, 'RMA', {}),
+    (talib.MA_Type.VIDYA, 'VIDYA', {'cmoperiod': 15}),
+    (talib.MA_Type.ALMA, 'ALMA', {}),
 ])
-def test_MA_dispatches_to_the_new_types(matype, name):
+def test_MA_dispatches_to_the_new_types(matype, name, kwargs):
     a = np.cumsum(np.random.RandomState(3).randn(200)) + 100.0
-    assert_array_equal(func.MA(a, 20, matype), getattr(func, name)(a, 20))
+    assert_array_equal(func.MA(a, 20, matype), getattr(func, name)(a, 20, **kwargs))
+
+
+def test_ZIGZAG_pivot_index_is_in_the_callers_coordinates():
+    # Like MAXINDEX, outPivotIdx is a bar index, so leading NaN bars move it.
+    rs = np.random.RandomState(5)
+    close = np.cumsum(rs.randn(300)) + 100.0
+    high, low = close + rs.rand(300) + 0.5, close - rs.rand(300) - 0.5
+    pad = 7
+    nan = np.full(pad, np.nan)
+    lookback = abstract.Function('ZIGZAG').lookback
+    zigzag, trend, pivot = func.ZIGZAG(high, low)
+    assert len(set(pivot[lookback:])) > 1 and len(set(trend[lookback:])) > 1
+    for got in (func.ZIGZAG(np.r_[nan, high], np.r_[nan, low]),
+                abstract.ZIGZAG({'high': np.r_[nan, high], 'low': np.r_[nan, low]})):
+        assert_array_equal(got[0][pad:], zigzag)
+        assert_array_equal(got[1][pad:], trend)
+        assert_array_equal(got[2][pad + lookback:], pivot[lookback:] + pad)
 
 
 def test_MA_DISABLED_and_DEFAULT():

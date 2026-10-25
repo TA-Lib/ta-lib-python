@@ -19,6 +19,16 @@ real = CMF(high, low, close, volume, timeperiod=20)
 real = EFI(close, volume, timeperiod=13)
 ```
 
+### EMV - Arms Ease of Movement
+```python
+real = EMV(high, low, volume, timeperiod=14, volumedivisor=10000)
+```
+
+### KVO - Klinger Volume Oscillator
+```python
+kvo, kvosignal = KVO(high, low, close, volume, fastperiod=34, slowperiod=55, signalperiod=13)
+```
+
 ### MARKETFI - Market Facilitation Index
 ```python
 real = MARKETFI(high, low, volume)

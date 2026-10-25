@@ -29,6 +29,24 @@ NOTE: The ``HT_TRENDMODE`` function has an unstable period.
 integer = HT_TRENDMODE(close)
 ```
 
+### SWAK_2PHP - Swiss Army Knife - Two-Pole High-Pass Filter
+NOTE: The ``SWAK_2PHP`` function has an unstable period.  
+```python
+real = SWAK_2PHP(close, timeperiod=20)
+```
+
+### SWAK_BP - Swiss Army Knife - Band-Pass Filter
+NOTE: The ``SWAK_BP`` function has an unstable period.  
+```python
+real = SWAK_BP(close, timeperiod=20, delta=0.1)
+```
+
+### SWAK_HP - Swiss Army Knife - High-Pass Filter
+NOTE: The ``SWAK_HP`` function has an unstable period.  
+```python
+real = SWAK_HP(close, timeperiod=20)
+```
+
 
 [Documentation Index](../doc_index.md)
 [FLOAT_RIGHTAll Function Groups](../funcs.md)

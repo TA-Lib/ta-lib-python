@@ -35,6 +35,11 @@ aroondown, aroonup = AROON(high, low, timeperiod=14)
 real = AROONOSC(high, low, timeperiod=14)
 ```
 
+### ASI - Wilder Accumulative Swing Index
+```python
+real = ASI(open, high, low, close, limitmove=3)
+```
+
 ### BOP - Balance Of Power
 ```python
 real = BOP(open, high, low, close)
@@ -43,6 +48,21 @@ real = BOP(open, high, low, close)
 ### CCI - Commodity Channel Index
 ```python
 real = CCI(high, low, close, timeperiod=14)
+```
+
+### CG - Center of Gravity Oscillator
+```python
+real = CG(close, timeperiod=10)
+```
+
+### CHOP - Choppiness Index
+```python
+real = CHOP(high, low, close, timeperiod=14)
+```
+
+### CHOPTR - Choppiness Index (True Range Box)
+```python
+real = CHOPTR(high, low, close, timeperiod=14)
 ```
 
 ### CMO - Chande Momentum Oscillator
@@ -59,6 +79,21 @@ real = CMOU(close, timeperiod=14)
 ### COPPOCK - Coppock Curve
 ```python
 real = COPPOCK(close, wmaperiod=10, roc1period=11, roc2period=14)
+```
+
+### CRSI - Connors Relative Strength Index
+```python
+real = CRSI(close, timeperiod=3, streakperiod=2, rankperiod=100)
+```
+
+### CTI - Correlation Trend Indicator
+```python
+real = CTI(close, timeperiod=20)
+```
+
+### DOSC - Derivative Oscillator
+```python
+real = DOSC(close, timeperiod=14, firstperiod=5, secondperiod=3, signalperiod=9)
 ```
 
 ### DPO - Detrended Price Oscillator
@@ -82,6 +117,12 @@ real = ER(close, timeperiod=10)
 bullpower, bearpower = ERI(high, low, close, timeperiod=13)
 ```
 
+### FISHER - Fisher Transform
+NOTE: The ``FISHER`` function has an unstable period.  
+```python
+fisher, trigger = FISHER(high, low, timeperiod=10)
+```
+
 ### FOSC - Forecast Oscillator
 ```python
 real = FOSC(close, timeperiod=5)
@@ -92,6 +133,11 @@ real = FOSC(close, timeperiod=5)
 swinghigh, swinglow = FRACTAL(high, low, leftbars=2, rightbars=2)
 ```
 
+### IBS - Internal Bar Strength
+```python
+real = IBS(high, low, close)
+```
+
 ### IMI - Intraday Momentum Index
 ```python
 real = IMI(open, close, timeperiod=14)
@@ -100,6 +146,16 @@ real = IMI(open, close, timeperiod=14)
 ### KDJ - KDJ Stochastic
 ```python
 k, d, j = KDJ(high, low, close, fastk_period=9, slowk_period=3, slowk_matype=13, slowd_period=3, slowd_matype=13)
+```
+
+### KST - Know Sure Thing (Pring)
+```python
+kst, kstsignal = KST(close, roc1period=10, roc2period=15, roc3period=20, roc4period=30, sma1period=10, sma2period=10, sma3period=10, sma4period=15, signalperiod=9)
+```
+
+### KSTEXT - Know Sure Thing with controllable MA type
+```python
+kst, kstsignal = KSTEXT(close, roc1period=10, roc2period=15, roc3period=20, roc4period=30, ma1period=10, ma2period=10, ma3period=10, ma4period=15, signalperiod=9, rocmatype=0, signalmatype=0)
 ```
 
 ### MACD - Moving Average Convergence/Divergence
@@ -156,6 +212,11 @@ real = PLUS_DM(high, low, timeperiod=14)
 real = PPO(close, fastperiod=12, slowperiod=26, matype=1)
 ```
 
+### PSO - Premier Stochastic Oscillator
+```python
+real = PSO(high, low, close, fastk_period=8, emaperiod=5)
+```
+
 ### QSTICK - Qstick
 ```python
 real = QSTICK(open, close, timeperiod=10)
@@ -187,9 +248,25 @@ NOTE: The ``RSI`` function has an unstable period.
 real = RSI(close, timeperiod=14)
 ```
 
+### SI - Wilder Swing Index
+```python
+real = SI(open, high, low, close, limitmove=3)
+```
+
 ### SMI - Stochastic Momentum Index
 ```python
 smi, smisignal = SMI(high, low, close, timeperiod=13, fastperiod=2, slowperiod=25, signalperiod=9)
+```
+
+### SQZMOM - Squeeze Momentum and Level
+```python
+momentum, squeeze = SQZMOM(high, low, close, bbperiod=20, nbdev=2, kcperiod=20, factorwide=2, factornormal=1.5, factornarrow=1)
+```
+
+### STC - Schaff Trend Cycle
+NOTE: The ``STC`` function has an unstable period.  
+```python
+real = STC(close, fastperiod=23, slowperiod=50, cycleperiod=10)
 ```
 
 ### STOCH - Stochastic
@@ -236,6 +313,11 @@ plusvi, minusvi = VORTEX(high, low, close, timeperiod=14)
 ### WAD - Williams' Accumulation/Distribution
 ```python
 real = WAD(high, low, close)
+```
+
+### WAVETREND - WaveTrend Oscillator
+```python
+wt1, wt2 = WAVETREND(high, low, close, channelperiod=10, averageperiod=21, signalperiod=4)
 ```
 
 ### WILLR - Williams' %R
