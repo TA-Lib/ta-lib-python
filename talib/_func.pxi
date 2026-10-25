@@ -531,6 +531,49 @@ def ADXR( np.ndarray high not None , np.ndarray low not None , np.ndarray close 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def ALMA( np.ndarray real not None , int timeperiod=-2**31 , double sigma=6.0 , double offset=0.85 ):
+    """ ALMA(real[, timeperiod=?, sigma=?, offset=?])
+
+    Arnaud Legoux Moving Average (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 9
+        sigma: 6.0
+        offset: 0.85
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_ALMA_Lookback( timeperiod , sigma , offset )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_ALMA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , sigma , offset , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_ALMA", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def AO( np.ndarray high not None , np.ndarray low not None , int fastperiod=-2**31 , int slowperiod=-2**31 ):
     """ AO(high, low[, fastperiod=?, slowperiod=?])
 
@@ -700,6 +743,50 @@ def AROONOSC( np.ndarray high not None , np.ndarray low not None , int timeperio
         with nogil:
             _ta_end_read()
     _ta_check_success("TA_AROONOSC", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def ASI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double limitmove=-4e37 ):
+    """ ASI(open, high, low, close[, limitmove=?])
+
+    Wilder Accumulative Swing Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        limitmove: 3.0
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    open = check_array(open)
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_ASI_Lookback( limitmove )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_ASI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , limitmove , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_ASI", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -955,6 +1042,50 @@ def BBANDS( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4
             _ta_end_read()
     _ta_check_success("TA_BBANDS", retCode)
     return outrealupperband , outrealmiddleband , outreallowerband 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def BBW( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+    """ BBW(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+
+    Bollinger BandWidth (Volatility Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        nbdevup: 2.0
+        nbdevdn: 2.0
+        matype: 0 (Simple Moving Average)
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_BBW_Lookback( timeperiod , nbdevup , nbdevdn , matype )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_BBW( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_BBW", retCode)
+    return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
@@ -3701,6 +3832,181 @@ def CEIL( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def CG( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ CG(real[, timeperiod=?])
+
+    Center of Gravity Oscillator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 10
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CG_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CG( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CG", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def CHOP( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ CHOP(high, low, close[, timeperiod=?])
+
+    Choppiness Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CHOP_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CHOP( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CHOP", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def CHOPTR( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
+    """ CHOPTR(high, low, close[, timeperiod=?])
+
+    Choppiness Index (True Range Box) (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CHOPTR_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CHOPTR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CHOPTR", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def CKSP( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 , double multiplier=1.0 , int stopperiod=-2**31 ):
+    """ CKSP(high, low, close[, timeperiod=?, multiplier=?, stopperiod=?])
+
+    Chande Kroll Stop (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 10
+        multiplier: 1.0
+        stopperiod: 9
+    Outputs:
+        highstop
+        lowstop
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outhighstop
+        np.ndarray outlowstop
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CKSP_Lookback( timeperiod , multiplier , stopperiod )
+        outhighstop = make_double_array(length, lookback)
+        outlowstop = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CKSP( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , multiplier , stopperiod , &outbegidx , &outnbelement , <double *>(outhighstop.data)+lookback , <double *>(outlowstop.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CKSP", retCode)
+    return outhighstop , outlowstop 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def CMF( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int timeperiod=-2**31 ):
     """ CMF(high, low, close, volume[, timeperiod=?])
 
@@ -3991,6 +4297,90 @@ def COSH( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def CRSI( np.ndarray real not None , int timeperiod=-2**31 , int streakperiod=-2**31 , int rankperiod=-2**31 ):
+    """ CRSI(real[, timeperiod=?, streakperiod=?, rankperiod=?])
+
+    Connors Relative Strength Index (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 3
+        streakperiod: 2
+        rankperiod: 100
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CRSI_Lookback( timeperiod , streakperiod , rankperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CRSI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , streakperiod , rankperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CRSI", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def CTI( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ CTI(real[, timeperiod=?])
+
+    Correlation Trend Indicator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_CTI_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_CTI( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_CTI", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def CUMSUM( np.ndarray real not None ):
     """ CUMSUM(real)
 
@@ -4203,6 +4593,50 @@ def DONCHIAN( np.ndarray high not None , np.ndarray low not None , int timeperio
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def DOSC( np.ndarray real not None , int timeperiod=-2**31 , int firstperiod=-2**31 , int secondperiod=-2**31 , int signalperiod=-2**31 ):
+    """ DOSC(real[, timeperiod=?, firstperiod=?, secondperiod=?, signalperiod=?])
+
+    Derivative Oscillator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+        firstperiod: 5
+        secondperiod: 3
+        signalperiod: 9
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_DOSC_Lookback( timeperiod , firstperiod , secondperiod , signalperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_DOSC( 0 , endidx , <double *>(real.data)+begidx , timeperiod , firstperiod , secondperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_DOSC", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def DPO( np.ndarray real not None , int timeperiod=-2**31 ):
     """ DPO(real[, timeperiod=?])
 
@@ -4370,6 +4804,50 @@ def EMA( np.ndarray real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def EMV( np.ndarray high not None , np.ndarray low not None , np.ndarray volume not None , int timeperiod=-2**31 , double volumedivisor=-4e37 ):
+    """ EMV(high, low, volume[, timeperiod=?, volumedivisor=?])
+
+    Arms Ease of Movement (Volume Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'volume']
+    Parameters:
+        timeperiod: 14
+        volumedivisor: 10000.0
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    volume = check_array(volume)
+    length = check_length3(high, low, volume)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_EMV_Lookback( timeperiod , volumedivisor )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_EMV( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(volume.data)+begidx , timeperiod , volumedivisor , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_EMV", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def ER( np.ndarray real not None , int timeperiod=-2**31 ):
     """ ER(real[, timeperiod=?])
 
@@ -4496,6 +4974,51 @@ def EXP( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def FISHER( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ FISHER(high, low[, timeperiod=?])
+
+    Fisher Transform (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 10
+    Outputs:
+        fisher
+        trigger
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outfisher
+        np.ndarray outtrigger
+    high = check_array(high)
+    low = check_array(low)
+    length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_FISHER_Lookback( timeperiod )
+        outfisher = make_double_array(length, lookback)
+        outtrigger = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_FISHER( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outfisher.data)+lookback , <double *>(outtrigger.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_FISHER", retCode)
+    return outfisher , outtrigger 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def FLOOR( np.ndarray real not None ):
     """ FLOOR(real)
 
@@ -4619,6 +5142,48 @@ def FRACTAL( np.ndarray high not None , np.ndarray low not None , int leftbars=-
             _ta_end_read()
     _ta_check_success("TA_FRACTAL", retCode)
     return outswinghigh , outswinglow 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def FRAMA( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 ):
+    """ FRAMA(high, low[, timeperiod=?])
+
+    Fractal Adaptive Moving Average (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 16
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_FRAMA_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_FRAMA( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_FRAMA", retCode)
+    return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
@@ -4954,6 +5519,100 @@ def HT_TRENDMODE( np.ndarray real not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def IBS( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
+    """ IBS(high, low, close)
+
+    Internal Bar Strength (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_IBS_Lookback( )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_IBS( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_IBS", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def ICHIMOKU( np.ndarray high not None , np.ndarray low not None , int tenkanperiod=-2**31 , int kijunperiod=-2**31 , int senkoubperiod=-2**31 ):
+    """ ICHIMOKU(high, low[, tenkanperiod=?, kijunperiod=?, senkoubperiod=?])
+
+    Ichimoku Kinko Hyo (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        tenkanperiod: 9
+        kijunperiod: 26
+        senkoubperiod: 52
+    Outputs:
+        tenkansen
+        kijunsen
+        senkouspana
+        senkouspanb
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outtenkansen
+        np.ndarray outkijunsen
+        np.ndarray outsenkouspana
+        np.ndarray outsenkouspanb
+    high = check_array(high)
+    low = check_array(low)
+    length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_ICHIMOKU_Lookback( tenkanperiod , kijunperiod , senkoubperiod )
+        outtenkansen = make_double_array(length, lookback)
+        outkijunsen = make_double_array(length, lookback)
+        outsenkouspana = make_double_array(length, lookback)
+        outsenkouspanb = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_ICHIMOKU( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , tenkanperiod , kijunperiod , senkoubperiod , &outbegidx , &outnbelement , <double *>(outtenkansen.data)+lookback , <double *>(outkijunsen.data)+lookback , <double *>(outsenkouspana.data)+lookback , <double *>(outsenkouspanb.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_ICHIMOKU", retCode)
+    return outtenkansen , outkijunsen , outsenkouspana , outsenkouspanb 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def IMI( np.ndarray open not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """ IMI(open, close[, timeperiod=?])
 
@@ -5138,6 +5797,202 @@ def KDJ( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
             _ta_end_read()
     _ta_check_success("TA_KDJ", retCode)
     return outk , outd , outj 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def KST( np.ndarray real not None , int roc1period=-2**31 , int roc2period=-2**31 , int roc3period=-2**31 , int roc4period=-2**31 , int sma1period=-2**31 , int sma2period=-2**31 , int sma3period=-2**31 , int sma4period=-2**31 , int signalperiod=-2**31 ):
+    """ KST(real[, roc1period=?, roc2period=?, roc3period=?, roc4period=?, sma1period=?, sma2period=?, sma3period=?, sma4period=?, signalperiod=?])
+
+    Know Sure Thing (Pring) (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        roc1period: 10
+        roc2period: 15
+        roc3period: 20
+        roc4period: 30
+        sma1period: 10
+        sma2period: 10
+        sma3period: 10
+        sma4period: 15
+        signalperiod: 9
+    Outputs:
+        kst
+        kstsignal
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outkst
+        np.ndarray outkstsignal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_KST_Lookback( roc1period , roc2period , roc3period , roc4period , sma1period , sma2period , sma3period , sma4period , signalperiod )
+        outkst = make_double_array(length, lookback)
+        outkstsignal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_KST( 0 , endidx , <double *>(real.data)+begidx , roc1period , roc2period , roc3period , roc4period , sma1period , sma2period , sma3period , sma4period , signalperiod , &outbegidx , &outnbelement , <double *>(outkst.data)+lookback , <double *>(outkstsignal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_KST", retCode)
+    return outkst , outkstsignal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def KSTEXT( np.ndarray real not None , int roc1period=-2**31 , int roc2period=-2**31 , int roc3period=-2**31 , int roc4period=-2**31 , int ma1period=-2**31 , int ma2period=-2**31 , int ma3period=-2**31 , int ma4period=-2**31 , int signalperiod=-2**31 , int rocmatype=0 , int signalmatype=0 ):
+    """ KSTEXT(real[, roc1period=?, roc2period=?, roc3period=?, roc4period=?, ma1period=?, ma2period=?, ma3period=?, ma4period=?, signalperiod=?, rocmatype=?, signalmatype=?])
+
+    Know Sure Thing with controllable MA type (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        roc1period: 10
+        roc2period: 15
+        roc3period: 20
+        roc4period: 30
+        ma1period: 10
+        ma2period: 10
+        ma3period: 10
+        ma4period: 15
+        signalperiod: 9
+        rocmatype: 0 (Simple Moving Average)
+        signalmatype: 0 (Simple Moving Average)
+    Outputs:
+        kst
+        kstsignal
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outkst
+        np.ndarray outkstsignal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_KSTEXT_Lookback( roc1period , roc2period , roc3period , roc4period , ma1period , ma2period , ma3period , ma4period , signalperiod , rocmatype , signalmatype )
+        outkst = make_double_array(length, lookback)
+        outkstsignal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_KSTEXT( 0 , endidx , <double *>(real.data)+begidx , roc1period , roc2period , roc3period , roc4period , ma1period , ma2period , ma3period , ma4period , signalperiod , rocmatype , signalmatype , &outbegidx , &outnbelement , <double *>(outkst.data)+lookback , <double *>(outkstsignal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_KSTEXT", retCode)
+    return outkst , outkstsignal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def KURTOSIS( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ KURTOSIS(real[, timeperiod=?])
+
+    Rolling Excess Kurtosis (Statistic Functions)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 30
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_KURTOSIS_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_KURTOSIS( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_KURTOSIS", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def KVO( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , np.ndarray volume not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int signalperiod=-2**31 ):
+    """ KVO(high, low, close, volume[, fastperiod=?, slowperiod=?, signalperiod=?])
+
+    Klinger Volume Oscillator (Volume Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close', 'volume']
+    Parameters:
+        fastperiod: 34
+        slowperiod: 55
+        signalperiod: 13
+    Outputs:
+        kvo
+        kvosignal
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outkvo
+        np.ndarray outkvosignal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    volume = check_array(volume)
+    length = check_length4(high, low, close, volume)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx4(length, <double*>(high.data), <double*>(low.data), <double*>(close.data), <double*>(volume.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_KVO_Lookback( fastperiod , slowperiod , signalperiod )
+        outkvo = make_double_array(length, lookback)
+        outkvosignal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_KVO( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , <double *>(volume.data)+begidx , fastperiod , slowperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outkvo.data)+lookback , <double *>(outkvosignal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_KVO", retCode)
+    return outkvo , outkvosignal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
@@ -5833,6 +6688,88 @@ def MAXINDEX( np.ndarray real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def MCGD( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MCGD(real[, timeperiod=?])
+
+    McGinley Dynamic (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_MCGD_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_MCGD( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_MCGD", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def MEDIAN( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ MEDIAN(real[, timeperiod=?])
+
+    Rolling Median (Statistic Functions)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 30
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_MEDIAN_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_MEDIAN( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_MEDIAN", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def MEDPRICE( np.ndarray high not None , np.ndarray low not None ):
     """ MEDPRICE(high, low)
 
@@ -6473,6 +7410,50 @@ def OBV( np.ndarray real not None , np.ndarray volume not None ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def PERCENTB( np.ndarray real not None , int timeperiod=-2**31 , double nbdevup=-4e37 , double nbdevdn=-4e37 , int matype=0 ):
+    """ PERCENTB(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+
+    Bollinger Bands %B (Volatility Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        nbdevup: 2.0
+        nbdevdn: 2.0
+        matype: 0 (Simple Moving Average)
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_PERCENTB_Lookback( timeperiod , nbdevup , nbdevdn , matype )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_PERCENTB( 0 , endidx , <double *>(real.data)+begidx , timeperiod , nbdevup , nbdevdn , matype , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_PERCENTB", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def PERCENTILE( np.ndarray real not None , int timeperiod=-2**31 , double percentile=50.0 ):
     """ PERCENTILE(real[, timeperiod=?, percentile=?])
 
@@ -6481,7 +7462,7 @@ def PERCENTILE( np.ndarray real not None , int timeperiod=-2**31 , double percen
     Inputs:
         real: (any ndarray)
     Parameters:
-        timeperiod: 30
+        timeperiod: 100
         percentile: 50.0
     Outputs:
         real
@@ -6680,6 +7661,50 @@ def PPO( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**3
         with nogil:
             _ta_end_read()
     _ta_check_success("TA_PPO", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def PSO( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int fastk_period=-2**31 , int emaperiod=-2**31 ):
+    """ PSO(high, low, close[, fastk_period=?, emaperiod=?])
+
+    Premier Stochastic Oscillator (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        fastk_period: 8
+        emaperiod: 5
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_PSO_Lookback( fastk_period , emaperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_PSO( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , fastk_period , emaperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_PSO", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7054,6 +8079,51 @@ def ROCR100( np.ndarray real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def ROGERSSATCHELL( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 , double annualization=252.0 ):
+    """ ROGERSSATCHELL(open, high, low, close[, timeperiod=?, annualization=?])
+
+    Rogers-Satchell Volatility (Volatility Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        timeperiod: 10
+        annualization: 252.0
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    open = check_array(open)
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_ROGERSSATCHELL_Lookback( timeperiod , annualization )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_ROGERSSATCHELL( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , timeperiod , annualization , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_ROGERSSATCHELL", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def RSI( np.ndarray real not None , int timeperiod=-2**31 ):
     """ RSI(real[, timeperiod=?])
 
@@ -7133,6 +8203,49 @@ def RVI( np.ndarray real not None , int timeperiod=-2**31 , int stddevperiod=-2*
         with nogil:
             _ta_end_read()
     _ta_check_success("TA_RVI", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def RVIR( np.ndarray high not None , np.ndarray low not None , int timeperiod=-2**31 , int stddevperiod=-2**31 ):
+    """ RVIR(high, low[, timeperiod=?, stddevperiod=?])
+
+    Relative Volatility Index, refined high/low form (Volatility Indicators)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 14
+        stddevperiod: 10
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    high = check_array(high)
+    low = check_array(low)
+    length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_RVIR_Lookback( timeperiod , stddevperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_RVIR( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , timeperiod , stddevperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_RVIR", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7266,6 +8379,50 @@ def SAREXT( np.ndarray high not None , np.ndarray low not None , double startval
         with nogil:
             _ta_end_read()
     _ta_check_success("TA_SAREXT", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SI( np.ndarray open not None , np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , double limitmove=-4e37 ):
+    """ SI(open, high, low, close[, limitmove=?])
+
+    Wilder Swing Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        limitmove: 3.0
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    open = check_array(open)
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length4(open, high, low, close)
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx4(length, <double*>(open.data), <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SI_Lookback( limitmove )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SI( 0 , endidx , <double *>(open.data)+begidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , limitmove , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SI", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7473,6 +8630,100 @@ def SQRT( np.ndarray real not None ):
         with nogil:
             _ta_end_read()
     _ta_check_success("TA_SQRT", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SQZMOM( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int bbperiod=-2**31 , double nbdev=-4e37 , int kcperiod=-2**31 , double factorwide=-4e37 , double factornormal=-4e37 , double factornarrow=-4e37 ):
+    """ SQZMOM(high, low, close[, bbperiod=?, nbdev=?, kcperiod=?, factorwide=?, factornormal=?, factornarrow=?])
+
+    Squeeze Momentum and Level (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        bbperiod: 20
+        nbdev: 2.0
+        kcperiod: 20
+        factorwide: 2.0
+        factornormal: 1.5
+        factornarrow: 1.0
+    Outputs:
+        momentum
+        squeeze
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outmomentum
+        np.ndarray outsqueeze
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_int_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SQZMOM_Lookback( bbperiod , nbdev , kcperiod , factorwide , factornormal , factornarrow )
+        outmomentum = make_double_array(length, lookback)
+        outsqueeze = make_int_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SQZMOM( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , bbperiod , nbdev , kcperiod , factorwide , factornormal , factornarrow , &outbegidx , &outnbelement , <double *>(outmomentum.data)+lookback , <int *>(outsqueeze.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SQZMOM", retCode)
+    return outmomentum , outsqueeze 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def STC( np.ndarray real not None , int fastperiod=-2**31 , int slowperiod=-2**31 , int cycleperiod=-2**31 ):
+    """ STC(real[, fastperiod=?, slowperiod=?, cycleperiod=?])
+
+    Schaff Trend Cycle (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        fastperiod: 23
+        slowperiod: 50
+        cycleperiod: 10
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_STC_Lookback( fastperiod , slowperiod , cycleperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_STC( 0 , endidx , <double *>(real.data)+begidx , fastperiod , slowperiod , cycleperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_STC", retCode)
     return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
@@ -7790,6 +9041,212 @@ def SUPERTREND( np.ndarray high not None , np.ndarray low not None , np.ndarray 
             _ta_end_read()
     _ta_check_success("TA_SUPERTREND", retCode)
     return outsupertrend , outtrend 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SWAK_2PHP( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SWAK_2PHP(real[, timeperiod=?])
+
+    Swiss Army Knife - Two-Pole High-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SWAK_2PHP_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SWAK_2PHP( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SWAK_2PHP", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SWAK_BP( np.ndarray real not None , int timeperiod=-2**31 , double delta=0.1 ):
+    """ SWAK_BP(real[, timeperiod=?, delta=?])
+
+    Swiss Army Knife - Band-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        delta: 0.1
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SWAK_BP_Lookback( timeperiod , delta )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SWAK_BP( 0 , endidx , <double *>(real.data)+begidx , timeperiod , delta , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SWAK_BP", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SWAK_BUTTER( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SWAK_BUTTER(real[, timeperiod=?])
+
+    Swiss Army Knife - Butterworth Filter (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SWAK_BUTTER_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SWAK_BUTTER( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SWAK_BUTTER", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SWAK_GAUSS( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SWAK_GAUSS(real[, timeperiod=?])
+
+    Swiss Army Knife - Gaussian Filter (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SWAK_GAUSS_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SWAK_GAUSS( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SWAK_GAUSS", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
+def SWAK_HP( np.ndarray real not None , int timeperiod=-2**31 ):
+    """ SWAK_HP(real[, timeperiod=?])
+
+    Swiss Army Knife - High-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_SWAK_HP_Lookback( timeperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_SWAK_HP( 0 , endidx , <double *>(real.data)+begidx , timeperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_SWAK_HP", retCode)
+    return outreal 
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
@@ -8329,6 +9786,48 @@ def VHF( np.ndarray real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def VIDYA( np.ndarray real not None , int timeperiod=-2**31 , int cmoperiod=-2**31 ):
+    """ VIDYA(real[, timeperiod=?, cmoperiod=?])
+
+    Variable Index Dynamic Average (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 12
+        cmoperiod: 9
+    Outputs:
+        real
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outreal
+    real = check_array(real)
+    length = real.shape[0]
+    if length == 0:
+        return make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx1(length, <double*>(real.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_VIDYA_Lookback( timeperiod , cmoperiod )
+        outreal = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_VIDYA( 0 , endidx , <double *>(real.data)+begidx , timeperiod , cmoperiod , &outbegidx , &outnbelement , <double *>(outreal.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_VIDYA", retCode)
+    return outreal 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def VORTEX( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int timeperiod=-2**31 ):
     """ VORTEX(high, low, close[, timeperiod=?])
 
@@ -8501,6 +10000,54 @@ def WAD( np.ndarray high not None , np.ndarray low not None , np.ndarray close n
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def WAVETREND( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None , int channelperiod=-2**31 , int averageperiod=-2**31 , int signalperiod=-2**31 ):
+    """ WAVETREND(high, low, close[, channelperiod=?, averageperiod=?, signalperiod=?])
+
+    WaveTrend Oscillator (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        channelperiod: 10
+        averageperiod: 21
+        signalperiod: 4
+    Outputs:
+        wt1
+        wt2
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outwt1
+        np.ndarray outwt2
+    high = check_array(high)
+    low = check_array(low)
+    close = check_array(close)
+    length = check_length3(high, low, close)
+    if length == 0:
+        return make_double_array(0, 0), make_double_array(0, 0)
+    with nogil:
+        begidx = check_begidx3(length, <double*>(high.data), <double*>(low.data), <double*>(close.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_WAVETREND_Lookback( channelperiod , averageperiod , signalperiod )
+        outwt1 = make_double_array(length, lookback)
+        outwt2 = make_double_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_WAVETREND( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , <double *>(close.data)+begidx , channelperiod , averageperiod , signalperiod , &outbegidx , &outnbelement , <double *>(outwt1.data)+lookback , <double *>(outwt2.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_WAVETREND", retCode)
+    return outwt1 , outwt2 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def WCLPRICE( np.ndarray high not None , np.ndarray low not None , np.ndarray close not None ):
     """ WCLPRICE(high, low, close)
 
@@ -8626,6 +10173,59 @@ def WMA( np.ndarray real not None , int timeperiod=-2**31 ):
 
 @wraparound(False)  # turn off relative indexing from end of lists
 @boundscheck(False) # turn off bounds-checking for entire function
+def ZIGZAG( np.ndarray high not None , np.ndarray low not None , double sensitivity=5.0 , int mintrendlength=-2**31 ):
+    """ ZIGZAG(high, low[, sensitivity=?, mintrendlength=?])
+
+    Zig Zag (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        sensitivity: 5.0
+        mintrendlength: 1
+    Outputs:
+        zigzag
+        trend
+        pivotidx
+    """
+    cdef:
+        np.npy_intp length
+        int begidx, endidx, lookback
+        TA_RetCode retCode
+        int outbegidx
+        int outnbelement
+        np.ndarray outzigzag
+        np.ndarray outtrend
+        np.ndarray outpivotidx
+    high = check_array(high)
+    low = check_array(low)
+    length = check_length2(high, low)
+    if length == 0:
+        return make_double_array(0, 0), make_int_array(0, 0), make_int_array(0, 0)
+    with nogil:
+        begidx = check_begidx2(length, <double*>(high.data), <double*>(low.data))
+    endidx = <int>length - begidx - 1
+    _ta_acquire_read()
+    try:
+        with nogil:
+            lookback = begidx + lib.TA_ZIGZAG_Lookback( sensitivity , mintrendlength )
+        outzigzag = make_double_array(length, lookback)
+        outtrend = make_int_array(length, lookback)
+        outpivotidx = make_int_array(length, lookback)
+        with nogil:
+            retCode = lib.TA_ZIGZAG( 0 , endidx , <double *>(high.data)+begidx , <double *>(low.data)+begidx , sensitivity , mintrendlength , &outbegidx , &outnbelement , <double *>(outzigzag.data)+lookback , <int *>(outtrend.data)+lookback , <int *>(outpivotidx.data)+lookback )
+    finally:
+        with nogil:
+            _ta_end_read()
+    _ta_check_success("TA_ZIGZAG", retCode)
+    outpivotidx_data = <int*>outpivotidx.data
+    with nogil:
+        for i from lookback <= i < length:
+            outpivotidx_data[i] += begidx
+    return outzigzag , outtrend , outpivotidx 
+
+@wraparound(False)  # turn off relative indexing from end of lists
+@boundscheck(False) # turn off bounds-checking for entire function
 def ZLEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     """ ZLEMA(real[, timeperiod=?])
 
@@ -8665,4 +10265,4 @@ def ZLEMA( np.ndarray real not None , int timeperiod=-2**31 ):
     _ta_check_success("TA_ZLEMA", retCode)
     return outreal 
 
-__TA_FUNCTION_NAMES__ = ["AC","ACCBANDS","ACOS","AD","ADD","ADOSC","ADR","ADX","ADXR","AO","APO","AROON","AROONOSC","ASIN","ATAN","ATR","AVGDEV","AVGPRICE","BBANDS","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CMF","CMO","CMOU","COPPOCK","CORREL","COS","COSH","CUMSUM","CVI","DEMA","DIV","DONCHIAN","DPO","DX","EFI","EMA","ER","ERI","EXP","FLOOR","FOSC","FRACTAL","HA","HMA","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","IMI","KAMA","KC","KDJ","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MARKETFI","MASSI","MAVP","MAX","MAXINDEX","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","NVI","OBV","PERCENTILE","PERCENTRANK","PLUS_DI","PLUS_DM","PPO","PVI","PVO","PVT","QSTICK","RMA","ROC","ROCP","ROCR","ROCR100","RSI","RVI","RVOL","SAR","SAREXT","SIN","SINH","SMA","SMI","SQRT","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","SUPERTREND","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TSI","TYPPRICE","ULTOSC","VAR","VHF","VORTEX","VWAP","VWMA","WAD","WCLPRICE","WILLR","WMA","ZLEMA"]
+__TA_FUNCTION_NAMES__ = ["AC","ACCBANDS","ACOS","AD","ADD","ADOSC","ADR","ADX","ADXR","ALMA","AO","APO","AROON","AROONOSC","ASI","ASIN","ATAN","ATR","AVGDEV","AVGPRICE","BBANDS","BBW","BETA","BOP","CCI","CDL2CROWS","CDL3BLACKCROWS","CDL3INSIDE","CDL3LINESTRIKE","CDL3OUTSIDE","CDL3STARSINSOUTH","CDL3WHITESOLDIERS","CDLABANDONEDBABY","CDLADVANCEBLOCK","CDLBELTHOLD","CDLBREAKAWAY","CDLCLOSINGMARUBOZU","CDLCONCEALBABYSWALL","CDLCOUNTERATTACK","CDLDARKCLOUDCOVER","CDLDOJI","CDLDOJISTAR","CDLDRAGONFLYDOJI","CDLENGULFING","CDLEVENINGDOJISTAR","CDLEVENINGSTAR","CDLGAPSIDESIDEWHITE","CDLGRAVESTONEDOJI","CDLHAMMER","CDLHANGINGMAN","CDLHARAMI","CDLHARAMICROSS","CDLHIGHWAVE","CDLHIKKAKE","CDLHIKKAKEMOD","CDLHOMINGPIGEON","CDLIDENTICAL3CROWS","CDLINNECK","CDLINVERTEDHAMMER","CDLKICKING","CDLKICKINGBYLENGTH","CDLLADDERBOTTOM","CDLLONGLEGGEDDOJI","CDLLONGLINE","CDLMARUBOZU","CDLMATCHINGLOW","CDLMATHOLD","CDLMORNINGDOJISTAR","CDLMORNINGSTAR","CDLONNECK","CDLPIERCING","CDLRICKSHAWMAN","CDLRISEFALL3METHODS","CDLSEPARATINGLINES","CDLSHOOTINGSTAR","CDLSHORTLINE","CDLSPINNINGTOP","CDLSTALLEDPATTERN","CDLSTICKSANDWICH","CDLTAKURI","CDLTASUKIGAP","CDLTHRUSTING","CDLTRISTAR","CDLUNIQUE3RIVER","CDLUPSIDEGAP2CROWS","CDLXSIDEGAP3METHODS","CEIL","CG","CHOP","CHOPTR","CKSP","CMF","CMO","CMOU","COPPOCK","CORREL","COS","COSH","CRSI","CTI","CUMSUM","CVI","DEMA","DIV","DONCHIAN","DOSC","DPO","DX","EFI","EMA","EMV","ER","ERI","EXP","FISHER","FLOOR","FOSC","FRACTAL","FRAMA","HA","HMA","HT_DCPERIOD","HT_DCPHASE","HT_PHASOR","HT_SINE","HT_TRENDLINE","HT_TRENDMODE","IBS","ICHIMOKU","IMI","KAMA","KC","KDJ","KST","KSTEXT","KURTOSIS","KVO","LINEARREG","LINEARREG_ANGLE","LINEARREG_INTERCEPT","LINEARREG_SLOPE","LN","LOG10","MA","MACD","MACDEXT","MACDFIX","MAMA","MARKETFI","MASSI","MAVP","MAX","MAXINDEX","MCGD","MEDIAN","MEDPRICE","MFI","MIDPOINT","MIDPRICE","MIN","MININDEX","MINMAX","MINMAXINDEX","MINUS_DI","MINUS_DM","MOM","MULT","NATR","NVI","OBV","PERCENTB","PERCENTILE","PERCENTRANK","PLUS_DI","PLUS_DM","PPO","PSO","PVI","PVO","PVT","QSTICK","RMA","ROC","ROCP","ROCR","ROCR100","ROGERSSATCHELL","RSI","RVI","RVIR","RVOL","SAR","SAREXT","SI","SIN","SINH","SMA","SMI","SQRT","SQZMOM","STC","STDDEV","STOCH","STOCHF","STOCHRSI","SUB","SUM","SUPERTREND","SWAK_2PHP","SWAK_BP","SWAK_BUTTER","SWAK_GAUSS","SWAK_HP","T3","TAN","TANH","TEMA","TRANGE","TRIMA","TRIX","TSF","TSI","TYPPRICE","ULTOSC","VAR","VHF","VIDYA","VORTEX","VWAP","VWMA","WAD","WAVETREND","WCLPRICE","WILLR","WMA","ZIGZAG","ZLEMA"]

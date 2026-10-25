@@ -121,6 +121,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_ADXR_OutRange(const TA_ADXR_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_ADXR_Advance(TA_ADXR_Stream* stream)
 
+    ctypedef struct TA_ALMA_Stream:
+        pass
+    TA_RetCode TA_ALMA_OpenAndFill(TA_ALMA_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInSigma, double optInOffset, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_ALMA_Open(TA_ALMA_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInSigma, double optInOffset, double* outReal)
+    TA_RetCode TA_ALMA_Update(TA_ALMA_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_ALMA_Peek(const TA_ALMA_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_ALMA_Value(const TA_ALMA_Stream* stream, double* outReal)
+    TA_RetCode TA_ALMA_Clone(const TA_ALMA_Stream* stream, TA_ALMA_Stream** clone)
+    TA_RetCode TA_ALMA_Close(TA_ALMA_Stream* stream)
+    TA_RetCode TA_ALMA_OutRange(const TA_ALMA_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_ALMA_Advance(TA_ALMA_Stream* stream)
+
     ctypedef struct TA_AO_Stream:
         pass
     TA_RetCode TA_AO_OpenAndFill(TA_AO_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInFastPeriod, int optInSlowPeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -168,6 +180,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_AROONOSC_Close(TA_AROONOSC_Stream* stream)
     TA_RetCode TA_AROONOSC_OutRange(const TA_AROONOSC_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_AROONOSC_Advance(TA_AROONOSC_Stream* stream)
+
+    ctypedef struct TA_ASI_Stream:
+        pass
+    TA_RetCode TA_ASI_OpenAndFill(TA_ASI_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, double optInLimitMove, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_ASI_Open(TA_ASI_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, double optInLimitMove, double* outReal)
+    TA_RetCode TA_ASI_Update(TA_ASI_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_ASI_Peek(const TA_ASI_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_ASI_Value(const TA_ASI_Stream* stream, double* outReal)
+    TA_RetCode TA_ASI_Clone(const TA_ASI_Stream* stream, TA_ASI_Stream** clone)
+    TA_RetCode TA_ASI_Close(TA_ASI_Stream* stream)
+    TA_RetCode TA_ASI_OutRange(const TA_ASI_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_ASI_Advance(TA_ASI_Stream* stream)
 
     ctypedef struct TA_ASIN_Stream:
         pass
@@ -240,6 +264,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_BBANDS_Close(TA_BBANDS_Stream* stream)
     TA_RetCode TA_BBANDS_OutRange(const TA_BBANDS_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_BBANDS_Advance(TA_BBANDS_Stream* stream)
+
+    ctypedef struct TA_BBW_Stream:
+        pass
+    TA_RetCode TA_BBW_OpenAndFill(TA_BBW_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_BBW_Open(TA_BBW_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, double* outReal)
+    TA_RetCode TA_BBW_Update(TA_BBW_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_BBW_Peek(const TA_BBW_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_BBW_Value(const TA_BBW_Stream* stream, double* outReal)
+    TA_RetCode TA_BBW_Clone(const TA_BBW_Stream* stream, TA_BBW_Stream** clone)
+    TA_RetCode TA_BBW_Close(TA_BBW_Stream* stream)
+    TA_RetCode TA_BBW_OutRange(const TA_BBW_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_BBW_Advance(TA_BBW_Stream* stream)
 
     ctypedef struct TA_BETA_Stream:
         pass
@@ -1021,6 +1057,54 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_CEIL_OutRange(const TA_CEIL_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_CEIL_Advance(TA_CEIL_Stream* stream)
 
+    ctypedef struct TA_CG_Stream:
+        pass
+    TA_RetCode TA_CG_OpenAndFill(TA_CG_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_CG_Open(TA_CG_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_CG_Update(TA_CG_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CG_Peek(const TA_CG_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CG_Value(const TA_CG_Stream* stream, double* outReal)
+    TA_RetCode TA_CG_Clone(const TA_CG_Stream* stream, TA_CG_Stream** clone)
+    TA_RetCode TA_CG_Close(TA_CG_Stream* stream)
+    TA_RetCode TA_CG_OutRange(const TA_CG_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CG_Advance(TA_CG_Stream* stream)
+
+    ctypedef struct TA_CHOP_Stream:
+        pass
+    TA_RetCode TA_CHOP_OpenAndFill(TA_CHOP_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_CHOP_Open(TA_CHOP_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_CHOP_Update(TA_CHOP_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_CHOP_Peek(const TA_CHOP_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_CHOP_Value(const TA_CHOP_Stream* stream, double* outReal)
+    TA_RetCode TA_CHOP_Clone(const TA_CHOP_Stream* stream, TA_CHOP_Stream** clone)
+    TA_RetCode TA_CHOP_Close(TA_CHOP_Stream* stream)
+    TA_RetCode TA_CHOP_OutRange(const TA_CHOP_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CHOP_Advance(TA_CHOP_Stream* stream)
+
+    ctypedef struct TA_CHOPTR_Stream:
+        pass
+    TA_RetCode TA_CHOPTR_OpenAndFill(TA_CHOPTR_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_CHOPTR_Open(TA_CHOPTR_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_CHOPTR_Update(TA_CHOPTR_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_CHOPTR_Peek(const TA_CHOPTR_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_CHOPTR_Value(const TA_CHOPTR_Stream* stream, double* outReal)
+    TA_RetCode TA_CHOPTR_Clone(const TA_CHOPTR_Stream* stream, TA_CHOPTR_Stream** clone)
+    TA_RetCode TA_CHOPTR_Close(TA_CHOPTR_Stream* stream)
+    TA_RetCode TA_CHOPTR_OutRange(const TA_CHOPTR_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CHOPTR_Advance(TA_CHOPTR_Stream* stream)
+
+    ctypedef struct TA_CKSP_Stream:
+        pass
+    TA_RetCode TA_CKSP_OpenAndFill(TA_CKSP_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, int optInStopPeriod, int* outBegIdx, int* outNBElement, double* outHighStop, double* outLowStop)
+    TA_RetCode TA_CKSP_Open(TA_CKSP_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInMultiplier, int optInStopPeriod, double* outHighStop, double* outLowStop)
+    TA_RetCode TA_CKSP_Update(TA_CKSP_Stream* stream, double inHigh, double inLow, double inClose, double* outHighStop, double* outLowStop)
+    TA_RetCode TA_CKSP_Peek(const TA_CKSP_Stream* stream, double inHigh, double inLow, double inClose, double* outHighStop, double* outLowStop)
+    TA_RetCode TA_CKSP_Value(const TA_CKSP_Stream* stream, double* outHighStop, double* outLowStop)
+    TA_RetCode TA_CKSP_Clone(const TA_CKSP_Stream* stream, TA_CKSP_Stream** clone)
+    TA_RetCode TA_CKSP_Close(TA_CKSP_Stream* stream)
+    TA_RetCode TA_CKSP_OutRange(const TA_CKSP_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CKSP_Advance(TA_CKSP_Stream* stream)
+
     ctypedef struct TA_CMF_Stream:
         pass
     TA_RetCode TA_CMF_OpenAndFill(TA_CMF_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, const double* inVolume, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1105,6 +1189,30 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_COSH_OutRange(const TA_COSH_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_COSH_Advance(TA_COSH_Stream* stream)
 
+    ctypedef struct TA_CRSI_Stream:
+        pass
+    TA_RetCode TA_CRSI_OpenAndFill(TA_CRSI_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInStreakPeriod, int optInRankPeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_CRSI_Open(TA_CRSI_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInStreakPeriod, int optInRankPeriod, double* outReal)
+    TA_RetCode TA_CRSI_Update(TA_CRSI_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CRSI_Peek(const TA_CRSI_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CRSI_Value(const TA_CRSI_Stream* stream, double* outReal)
+    TA_RetCode TA_CRSI_Clone(const TA_CRSI_Stream* stream, TA_CRSI_Stream** clone)
+    TA_RetCode TA_CRSI_Close(TA_CRSI_Stream* stream)
+    TA_RetCode TA_CRSI_OutRange(const TA_CRSI_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CRSI_Advance(TA_CRSI_Stream* stream)
+
+    ctypedef struct TA_CTI_Stream:
+        pass
+    TA_RetCode TA_CTI_OpenAndFill(TA_CTI_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_CTI_Open(TA_CTI_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_CTI_Update(TA_CTI_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CTI_Peek(const TA_CTI_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_CTI_Value(const TA_CTI_Stream* stream, double* outReal)
+    TA_RetCode TA_CTI_Clone(const TA_CTI_Stream* stream, TA_CTI_Stream** clone)
+    TA_RetCode TA_CTI_Close(TA_CTI_Stream* stream)
+    TA_RetCode TA_CTI_OutRange(const TA_CTI_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_CTI_Advance(TA_CTI_Stream* stream)
+
     ctypedef struct TA_CUMSUM_Stream:
         pass
     TA_RetCode TA_CUMSUM_OpenAndFill(TA_CUMSUM_Stream** stream, const double* inReal, int historyLen, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1165,6 +1273,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_DONCHIAN_OutRange(const TA_DONCHIAN_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_DONCHIAN_Advance(TA_DONCHIAN_Stream* stream)
 
+    ctypedef struct TA_DOSC_Stream:
+        pass
+    TA_RetCode TA_DOSC_OpenAndFill(TA_DOSC_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInFirstPeriod, int optInSecondPeriod, int optInSignalPeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_DOSC_Open(TA_DOSC_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInFirstPeriod, int optInSecondPeriod, int optInSignalPeriod, double* outReal)
+    TA_RetCode TA_DOSC_Update(TA_DOSC_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_DOSC_Peek(const TA_DOSC_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_DOSC_Value(const TA_DOSC_Stream* stream, double* outReal)
+    TA_RetCode TA_DOSC_Clone(const TA_DOSC_Stream* stream, TA_DOSC_Stream** clone)
+    TA_RetCode TA_DOSC_Close(TA_DOSC_Stream* stream)
+    TA_RetCode TA_DOSC_OutRange(const TA_DOSC_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_DOSC_Advance(TA_DOSC_Stream* stream)
+
     ctypedef struct TA_DPO_Stream:
         pass
     TA_RetCode TA_DPO_OpenAndFill(TA_DPO_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1213,6 +1333,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_EMA_OutRange(const TA_EMA_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_EMA_Advance(TA_EMA_Stream* stream)
 
+    ctypedef struct TA_EMV_Stream:
+        pass
+    TA_RetCode TA_EMV_OpenAndFill(TA_EMV_Stream** stream, const double* inHigh, const double* inLow, const double* inVolume, int historyLen, int optInTimePeriod, double optInVolumeDivisor, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_EMV_Open(TA_EMV_Stream** stream, const double* inHigh, const double* inLow, const double* inVolume, int historyLen, int optInTimePeriod, double optInVolumeDivisor, double* outReal)
+    TA_RetCode TA_EMV_Update(TA_EMV_Stream* stream, double inHigh, double inLow, double inVolume, double* outReal)
+    TA_RetCode TA_EMV_Peek(const TA_EMV_Stream* stream, double inHigh, double inLow, double inVolume, double* outReal)
+    TA_RetCode TA_EMV_Value(const TA_EMV_Stream* stream, double* outReal)
+    TA_RetCode TA_EMV_Clone(const TA_EMV_Stream* stream, TA_EMV_Stream** clone)
+    TA_RetCode TA_EMV_Close(TA_EMV_Stream* stream)
+    TA_RetCode TA_EMV_OutRange(const TA_EMV_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_EMV_Advance(TA_EMV_Stream* stream)
+
     ctypedef struct TA_ER_Stream:
         pass
     TA_RetCode TA_ER_OpenAndFill(TA_ER_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1249,6 +1381,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_EXP_OutRange(const TA_EXP_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_EXP_Advance(TA_EXP_Stream* stream)
 
+    ctypedef struct TA_FISHER_Stream:
+        pass
+    TA_RetCode TA_FISHER_OpenAndFill(TA_FISHER_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outFisher, double* outTrigger)
+    TA_RetCode TA_FISHER_Open(TA_FISHER_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, double* outFisher, double* outTrigger)
+    TA_RetCode TA_FISHER_Update(TA_FISHER_Stream* stream, double inHigh, double inLow, double* outFisher, double* outTrigger)
+    TA_RetCode TA_FISHER_Peek(const TA_FISHER_Stream* stream, double inHigh, double inLow, double* outFisher, double* outTrigger)
+    TA_RetCode TA_FISHER_Value(const TA_FISHER_Stream* stream, double* outFisher, double* outTrigger)
+    TA_RetCode TA_FISHER_Clone(const TA_FISHER_Stream* stream, TA_FISHER_Stream** clone)
+    TA_RetCode TA_FISHER_Close(TA_FISHER_Stream* stream)
+    TA_RetCode TA_FISHER_OutRange(const TA_FISHER_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_FISHER_Advance(TA_FISHER_Stream* stream)
+
     ctypedef struct TA_FLOOR_Stream:
         pass
     TA_RetCode TA_FLOOR_OpenAndFill(TA_FLOOR_Stream** stream, const double* inReal, int historyLen, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1284,6 +1428,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_FRACTAL_Close(TA_FRACTAL_Stream* stream)
     TA_RetCode TA_FRACTAL_OutRange(const TA_FRACTAL_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_FRACTAL_Advance(TA_FRACTAL_Stream* stream)
+
+    ctypedef struct TA_FRAMA_Stream:
+        pass
+    TA_RetCode TA_FRAMA_OpenAndFill(TA_FRAMA_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_FRAMA_Open(TA_FRAMA_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_FRAMA_Update(TA_FRAMA_Stream* stream, double inHigh, double inLow, double* outReal)
+    TA_RetCode TA_FRAMA_Peek(const TA_FRAMA_Stream* stream, double inHigh, double inLow, double* outReal)
+    TA_RetCode TA_FRAMA_Value(const TA_FRAMA_Stream* stream, double* outReal)
+    TA_RetCode TA_FRAMA_Clone(const TA_FRAMA_Stream* stream, TA_FRAMA_Stream** clone)
+    TA_RetCode TA_FRAMA_Close(TA_FRAMA_Stream* stream)
+    TA_RetCode TA_FRAMA_OutRange(const TA_FRAMA_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_FRAMA_Advance(TA_FRAMA_Stream* stream)
 
     ctypedef struct TA_HA_Stream:
         pass
@@ -1381,6 +1537,30 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_HT_TRENDMODE_OutRange(const TA_HT_TRENDMODE_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_HT_TRENDMODE_Advance(TA_HT_TRENDMODE_Stream* stream)
 
+    ctypedef struct TA_IBS_Stream:
+        pass
+    TA_RetCode TA_IBS_OpenAndFill(TA_IBS_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_IBS_Open(TA_IBS_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, double* outReal)
+    TA_RetCode TA_IBS_Update(TA_IBS_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_IBS_Peek(const TA_IBS_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_IBS_Value(const TA_IBS_Stream* stream, double* outReal)
+    TA_RetCode TA_IBS_Clone(const TA_IBS_Stream* stream, TA_IBS_Stream** clone)
+    TA_RetCode TA_IBS_Close(TA_IBS_Stream* stream)
+    TA_RetCode TA_IBS_OutRange(const TA_IBS_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_IBS_Advance(TA_IBS_Stream* stream)
+
+    ctypedef struct TA_ICHIMOKU_Stream:
+        pass
+    TA_RetCode TA_ICHIMOKU_OpenAndFill(TA_ICHIMOKU_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTenkanPeriod, int optInKijunPeriod, int optInSenkouBPeriod, int* outBegIdx, int* outNBElement, double* outTenkanSen, double* outKijunSen, double* outSenkouSpanA, double* outSenkouSpanB)
+    TA_RetCode TA_ICHIMOKU_Open(TA_ICHIMOKU_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTenkanPeriod, int optInKijunPeriod, int optInSenkouBPeriod, double* outTenkanSen, double* outKijunSen, double* outSenkouSpanA, double* outSenkouSpanB)
+    TA_RetCode TA_ICHIMOKU_Update(TA_ICHIMOKU_Stream* stream, double inHigh, double inLow, double* outTenkanSen, double* outKijunSen, double* outSenkouSpanA, double* outSenkouSpanB)
+    TA_RetCode TA_ICHIMOKU_Peek(const TA_ICHIMOKU_Stream* stream, double inHigh, double inLow, double* outTenkanSen, double* outKijunSen, double* outSenkouSpanA, double* outSenkouSpanB)
+    TA_RetCode TA_ICHIMOKU_Value(const TA_ICHIMOKU_Stream* stream, double* outTenkanSen, double* outKijunSen, double* outSenkouSpanA, double* outSenkouSpanB)
+    TA_RetCode TA_ICHIMOKU_Clone(const TA_ICHIMOKU_Stream* stream, TA_ICHIMOKU_Stream** clone)
+    TA_RetCode TA_ICHIMOKU_Close(TA_ICHIMOKU_Stream* stream)
+    TA_RetCode TA_ICHIMOKU_OutRange(const TA_ICHIMOKU_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_ICHIMOKU_Advance(TA_ICHIMOKU_Stream* stream)
+
     ctypedef struct TA_IMI_Stream:
         pass
     TA_RetCode TA_IMI_OpenAndFill(TA_IMI_Stream** stream, const double* inOpen, const double* inClose, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1428,6 +1608,54 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_KDJ_Close(TA_KDJ_Stream* stream)
     TA_RetCode TA_KDJ_OutRange(const TA_KDJ_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_KDJ_Advance(TA_KDJ_Stream* stream)
+
+    ctypedef struct TA_KST_Stream:
+        pass
+    TA_RetCode TA_KST_OpenAndFill(TA_KST_Stream** stream, const double* inReal, int historyLen, int optInROC1Period, int optInROC2Period, int optInROC3Period, int optInROC4Period, int optInSMA1Period, int optInSMA2Period, int optInSMA3Period, int optInSMA4Period, int optInSignalPeriod, int* outBegIdx, int* outNBElement, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KST_Open(TA_KST_Stream** stream, const double* inReal, int historyLen, int optInROC1Period, int optInROC2Period, int optInROC3Period, int optInROC4Period, int optInSMA1Period, int optInSMA2Period, int optInSMA3Period, int optInSMA4Period, int optInSignalPeriod, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KST_Update(TA_KST_Stream* stream, double inReal, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KST_Peek(const TA_KST_Stream* stream, double inReal, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KST_Value(const TA_KST_Stream* stream, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KST_Clone(const TA_KST_Stream* stream, TA_KST_Stream** clone)
+    TA_RetCode TA_KST_Close(TA_KST_Stream* stream)
+    TA_RetCode TA_KST_OutRange(const TA_KST_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_KST_Advance(TA_KST_Stream* stream)
+
+    ctypedef struct TA_KSTEXT_Stream:
+        pass
+    TA_RetCode TA_KSTEXT_OpenAndFill(TA_KSTEXT_Stream** stream, const double* inReal, int historyLen, int optInROC1Period, int optInROC2Period, int optInROC3Period, int optInROC4Period, int optInMA1Period, int optInMA2Period, int optInMA3Period, int optInMA4Period, int optInSignalPeriod, TA_MAType optInROCMAType, TA_MAType optInSignalMAType, int* outBegIdx, int* outNBElement, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KSTEXT_Open(TA_KSTEXT_Stream** stream, const double* inReal, int historyLen, int optInROC1Period, int optInROC2Period, int optInROC3Period, int optInROC4Period, int optInMA1Period, int optInMA2Period, int optInMA3Period, int optInMA4Period, int optInSignalPeriod, TA_MAType optInROCMAType, TA_MAType optInSignalMAType, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KSTEXT_Update(TA_KSTEXT_Stream* stream, double inReal, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KSTEXT_Peek(const TA_KSTEXT_Stream* stream, double inReal, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KSTEXT_Value(const TA_KSTEXT_Stream* stream, double* outKST, double* outKSTSignal)
+    TA_RetCode TA_KSTEXT_Clone(const TA_KSTEXT_Stream* stream, TA_KSTEXT_Stream** clone)
+    TA_RetCode TA_KSTEXT_Close(TA_KSTEXT_Stream* stream)
+    TA_RetCode TA_KSTEXT_OutRange(const TA_KSTEXT_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_KSTEXT_Advance(TA_KSTEXT_Stream* stream)
+
+    ctypedef struct TA_KURTOSIS_Stream:
+        pass
+    TA_RetCode TA_KURTOSIS_OpenAndFill(TA_KURTOSIS_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_KURTOSIS_Open(TA_KURTOSIS_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_KURTOSIS_Update(TA_KURTOSIS_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_KURTOSIS_Peek(const TA_KURTOSIS_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_KURTOSIS_Value(const TA_KURTOSIS_Stream* stream, double* outReal)
+    TA_RetCode TA_KURTOSIS_Clone(const TA_KURTOSIS_Stream* stream, TA_KURTOSIS_Stream** clone)
+    TA_RetCode TA_KURTOSIS_Close(TA_KURTOSIS_Stream* stream)
+    TA_RetCode TA_KURTOSIS_OutRange(const TA_KURTOSIS_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_KURTOSIS_Advance(TA_KURTOSIS_Stream* stream)
+
+    ctypedef struct TA_KVO_Stream:
+        pass
+    TA_RetCode TA_KVO_OpenAndFill(TA_KVO_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, const double* inVolume, int historyLen, int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, int* outBegIdx, int* outNBElement, double* outKVO, double* outKVOSignal)
+    TA_RetCode TA_KVO_Open(TA_KVO_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, const double* inVolume, int historyLen, int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, double* outKVO, double* outKVOSignal)
+    TA_RetCode TA_KVO_Update(TA_KVO_Stream* stream, double inHigh, double inLow, double inClose, double inVolume, double* outKVO, double* outKVOSignal)
+    TA_RetCode TA_KVO_Peek(const TA_KVO_Stream* stream, double inHigh, double inLow, double inClose, double inVolume, double* outKVO, double* outKVOSignal)
+    TA_RetCode TA_KVO_Value(const TA_KVO_Stream* stream, double* outKVO, double* outKVOSignal)
+    TA_RetCode TA_KVO_Clone(const TA_KVO_Stream* stream, TA_KVO_Stream** clone)
+    TA_RetCode TA_KVO_Close(TA_KVO_Stream* stream)
+    TA_RetCode TA_KVO_OutRange(const TA_KVO_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_KVO_Advance(TA_KVO_Stream* stream)
 
     ctypedef struct TA_LINEARREG_Stream:
         pass
@@ -1621,6 +1849,30 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_MAXINDEX_OutRange(const TA_MAXINDEX_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_MAXINDEX_Advance(TA_MAXINDEX_Stream* stream)
 
+    ctypedef struct TA_MCGD_Stream:
+        pass
+    TA_RetCode TA_MCGD_OpenAndFill(TA_MCGD_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_MCGD_Open(TA_MCGD_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_MCGD_Update(TA_MCGD_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_MCGD_Peek(const TA_MCGD_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_MCGD_Value(const TA_MCGD_Stream* stream, double* outReal)
+    TA_RetCode TA_MCGD_Clone(const TA_MCGD_Stream* stream, TA_MCGD_Stream** clone)
+    TA_RetCode TA_MCGD_Close(TA_MCGD_Stream* stream)
+    TA_RetCode TA_MCGD_OutRange(const TA_MCGD_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_MCGD_Advance(TA_MCGD_Stream* stream)
+
+    ctypedef struct TA_MEDIAN_Stream:
+        pass
+    TA_RetCode TA_MEDIAN_OpenAndFill(TA_MEDIAN_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_MEDIAN_Open(TA_MEDIAN_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_MEDIAN_Update(TA_MEDIAN_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_MEDIAN_Peek(const TA_MEDIAN_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_MEDIAN_Value(const TA_MEDIAN_Stream* stream, double* outReal)
+    TA_RetCode TA_MEDIAN_Clone(const TA_MEDIAN_Stream* stream, TA_MEDIAN_Stream** clone)
+    TA_RetCode TA_MEDIAN_Close(TA_MEDIAN_Stream* stream)
+    TA_RetCode TA_MEDIAN_OutRange(const TA_MEDIAN_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_MEDIAN_Advance(TA_MEDIAN_Stream* stream)
+
     ctypedef struct TA_MEDPRICE_Stream:
         pass
     TA_RetCode TA_MEDPRICE_OpenAndFill(TA_MEDPRICE_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1801,6 +2053,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_OBV_OutRange(const TA_OBV_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_OBV_Advance(TA_OBV_Stream* stream)
 
+    ctypedef struct TA_PERCENTB_Stream:
+        pass
+    TA_RetCode TA_PERCENTB_OpenAndFill(TA_PERCENTB_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_PERCENTB_Open(TA_PERCENTB_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInNbDevUp, double optInNbDevDn, TA_MAType optInMAType, double* outReal)
+    TA_RetCode TA_PERCENTB_Update(TA_PERCENTB_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_PERCENTB_Peek(const TA_PERCENTB_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_PERCENTB_Value(const TA_PERCENTB_Stream* stream, double* outReal)
+    TA_RetCode TA_PERCENTB_Clone(const TA_PERCENTB_Stream* stream, TA_PERCENTB_Stream** clone)
+    TA_RetCode TA_PERCENTB_Close(TA_PERCENTB_Stream* stream)
+    TA_RetCode TA_PERCENTB_OutRange(const TA_PERCENTB_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_PERCENTB_Advance(TA_PERCENTB_Stream* stream)
+
     ctypedef struct TA_PERCENTILE_Stream:
         pass
     TA_RetCode TA_PERCENTILE_OpenAndFill(TA_PERCENTILE_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInPercentile, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1860,6 +2124,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_PPO_Close(TA_PPO_Stream* stream)
     TA_RetCode TA_PPO_OutRange(const TA_PPO_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_PPO_Advance(TA_PPO_Stream* stream)
+
+    ctypedef struct TA_PSO_Stream:
+        pass
+    TA_RetCode TA_PSO_OpenAndFill(TA_PSO_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInFastK_Period, int optInEMAPeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_PSO_Open(TA_PSO_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInFastK_Period, int optInEMAPeriod, double* outReal)
+    TA_RetCode TA_PSO_Update(TA_PSO_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_PSO_Peek(const TA_PSO_Stream* stream, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_PSO_Value(const TA_PSO_Stream* stream, double* outReal)
+    TA_RetCode TA_PSO_Clone(const TA_PSO_Stream* stream, TA_PSO_Stream** clone)
+    TA_RetCode TA_PSO_Close(TA_PSO_Stream* stream)
+    TA_RetCode TA_PSO_OutRange(const TA_PSO_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_PSO_Advance(TA_PSO_Stream* stream)
 
     ctypedef struct TA_PVI_Stream:
         pass
@@ -1969,6 +2245,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_ROCR100_OutRange(const TA_ROCR100_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_ROCR100_Advance(TA_ROCR100_Stream* stream)
 
+    ctypedef struct TA_ROGERSSATCHELL_Stream:
+        pass
+    TA_RetCode TA_ROGERSSATCHELL_OpenAndFill(TA_ROGERSSATCHELL_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInAnnualization, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_ROGERSSATCHELL_Open(TA_ROGERSSATCHELL_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, double optInAnnualization, double* outReal)
+    TA_RetCode TA_ROGERSSATCHELL_Update(TA_ROGERSSATCHELL_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_ROGERSSATCHELL_Peek(const TA_ROGERSSATCHELL_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_ROGERSSATCHELL_Value(const TA_ROGERSSATCHELL_Stream* stream, double* outReal)
+    TA_RetCode TA_ROGERSSATCHELL_Clone(const TA_ROGERSSATCHELL_Stream* stream, TA_ROGERSSATCHELL_Stream** clone)
+    TA_RetCode TA_ROGERSSATCHELL_Close(TA_ROGERSSATCHELL_Stream* stream)
+    TA_RetCode TA_ROGERSSATCHELL_OutRange(const TA_ROGERSSATCHELL_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_ROGERSSATCHELL_Advance(TA_ROGERSSATCHELL_Stream* stream)
+
     ctypedef struct TA_RSI_Stream:
         pass
     TA_RetCode TA_RSI_OpenAndFill(TA_RSI_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
@@ -1992,6 +2280,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_RVI_Close(TA_RVI_Stream* stream)
     TA_RetCode TA_RVI_OutRange(const TA_RVI_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_RVI_Advance(TA_RVI_Stream* stream)
+
+    ctypedef struct TA_RVIR_Stream:
+        pass
+    TA_RetCode TA_RVIR_OpenAndFill(TA_RVIR_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, int optInStdDevPeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_RVIR_Open(TA_RVIR_Stream** stream, const double* inHigh, const double* inLow, int historyLen, int optInTimePeriod, int optInStdDevPeriod, double* outReal)
+    TA_RetCode TA_RVIR_Update(TA_RVIR_Stream* stream, double inHigh, double inLow, double* outReal)
+    TA_RetCode TA_RVIR_Peek(const TA_RVIR_Stream* stream, double inHigh, double inLow, double* outReal)
+    TA_RetCode TA_RVIR_Value(const TA_RVIR_Stream* stream, double* outReal)
+    TA_RetCode TA_RVIR_Clone(const TA_RVIR_Stream* stream, TA_RVIR_Stream** clone)
+    TA_RetCode TA_RVIR_Close(TA_RVIR_Stream* stream)
+    TA_RetCode TA_RVIR_OutRange(const TA_RVIR_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_RVIR_Advance(TA_RVIR_Stream* stream)
 
     ctypedef struct TA_RVOL_Stream:
         pass
@@ -2028,6 +2328,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_SAREXT_Close(TA_SAREXT_Stream* stream)
     TA_RetCode TA_SAREXT_OutRange(const TA_SAREXT_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_SAREXT_Advance(TA_SAREXT_Stream* stream)
+
+    ctypedef struct TA_SI_Stream:
+        pass
+    TA_RetCode TA_SI_OpenAndFill(TA_SI_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, double optInLimitMove, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SI_Open(TA_SI_Stream** stream, const double* inOpen, const double* inHigh, const double* inLow, const double* inClose, int historyLen, double optInLimitMove, double* outReal)
+    TA_RetCode TA_SI_Update(TA_SI_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_SI_Peek(const TA_SI_Stream* stream, double inOpen, double inHigh, double inLow, double inClose, double* outReal)
+    TA_RetCode TA_SI_Value(const TA_SI_Stream* stream, double* outReal)
+    TA_RetCode TA_SI_Clone(const TA_SI_Stream* stream, TA_SI_Stream** clone)
+    TA_RetCode TA_SI_Close(TA_SI_Stream* stream)
+    TA_RetCode TA_SI_OutRange(const TA_SI_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SI_Advance(TA_SI_Stream* stream)
 
     ctypedef struct TA_SIN_Stream:
         pass
@@ -2088,6 +2400,30 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_SQRT_Close(TA_SQRT_Stream* stream)
     TA_RetCode TA_SQRT_OutRange(const TA_SQRT_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_SQRT_Advance(TA_SQRT_Stream* stream)
+
+    ctypedef struct TA_SQZMOM_Stream:
+        pass
+    TA_RetCode TA_SQZMOM_OpenAndFill(TA_SQZMOM_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInBBPeriod, double optInNbDev, int optInKCPeriod, double optInFactorWide, double optInFactorNormal, double optInFactorNarrow, int* outBegIdx, int* outNBElement, double* outMomentum, int* outSqueeze)
+    TA_RetCode TA_SQZMOM_Open(TA_SQZMOM_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInBBPeriod, double optInNbDev, int optInKCPeriod, double optInFactorWide, double optInFactorNormal, double optInFactorNarrow, double* outMomentum, int* outSqueeze)
+    TA_RetCode TA_SQZMOM_Update(TA_SQZMOM_Stream* stream, double inHigh, double inLow, double inClose, double* outMomentum, int* outSqueeze)
+    TA_RetCode TA_SQZMOM_Peek(const TA_SQZMOM_Stream* stream, double inHigh, double inLow, double inClose, double* outMomentum, int* outSqueeze)
+    TA_RetCode TA_SQZMOM_Value(const TA_SQZMOM_Stream* stream, double* outMomentum, int* outSqueeze)
+    TA_RetCode TA_SQZMOM_Clone(const TA_SQZMOM_Stream* stream, TA_SQZMOM_Stream** clone)
+    TA_RetCode TA_SQZMOM_Close(TA_SQZMOM_Stream* stream)
+    TA_RetCode TA_SQZMOM_OutRange(const TA_SQZMOM_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SQZMOM_Advance(TA_SQZMOM_Stream* stream)
+
+    ctypedef struct TA_STC_Stream:
+        pass
+    TA_RetCode TA_STC_OpenAndFill(TA_STC_Stream** stream, const double* inReal, int historyLen, int optInFastPeriod, int optInSlowPeriod, int optInCyclePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_STC_Open(TA_STC_Stream** stream, const double* inReal, int historyLen, int optInFastPeriod, int optInSlowPeriod, int optInCyclePeriod, double* outReal)
+    TA_RetCode TA_STC_Update(TA_STC_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_STC_Peek(const TA_STC_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_STC_Value(const TA_STC_Stream* stream, double* outReal)
+    TA_RetCode TA_STC_Clone(const TA_STC_Stream* stream, TA_STC_Stream** clone)
+    TA_RetCode TA_STC_Close(TA_STC_Stream* stream)
+    TA_RetCode TA_STC_OutRange(const TA_STC_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_STC_Advance(TA_STC_Stream* stream)
 
     ctypedef struct TA_STDDEV_Stream:
         pass
@@ -2172,6 +2508,66 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_SUPERTREND_Close(TA_SUPERTREND_Stream* stream)
     TA_RetCode TA_SUPERTREND_OutRange(const TA_SUPERTREND_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_SUPERTREND_Advance(TA_SUPERTREND_Stream* stream)
+
+    ctypedef struct TA_SWAK_2PHP_Stream:
+        pass
+    TA_RetCode TA_SWAK_2PHP_OpenAndFill(TA_SWAK_2PHP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SWAK_2PHP_Open(TA_SWAK_2PHP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_SWAK_2PHP_Update(TA_SWAK_2PHP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_2PHP_Peek(const TA_SWAK_2PHP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_2PHP_Value(const TA_SWAK_2PHP_Stream* stream, double* outReal)
+    TA_RetCode TA_SWAK_2PHP_Clone(const TA_SWAK_2PHP_Stream* stream, TA_SWAK_2PHP_Stream** clone)
+    TA_RetCode TA_SWAK_2PHP_Close(TA_SWAK_2PHP_Stream* stream)
+    TA_RetCode TA_SWAK_2PHP_OutRange(const TA_SWAK_2PHP_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SWAK_2PHP_Advance(TA_SWAK_2PHP_Stream* stream)
+
+    ctypedef struct TA_SWAK_BP_Stream:
+        pass
+    TA_RetCode TA_SWAK_BP_OpenAndFill(TA_SWAK_BP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInDelta, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SWAK_BP_Open(TA_SWAK_BP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double optInDelta, double* outReal)
+    TA_RetCode TA_SWAK_BP_Update(TA_SWAK_BP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_BP_Peek(const TA_SWAK_BP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_BP_Value(const TA_SWAK_BP_Stream* stream, double* outReal)
+    TA_RetCode TA_SWAK_BP_Clone(const TA_SWAK_BP_Stream* stream, TA_SWAK_BP_Stream** clone)
+    TA_RetCode TA_SWAK_BP_Close(TA_SWAK_BP_Stream* stream)
+    TA_RetCode TA_SWAK_BP_OutRange(const TA_SWAK_BP_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SWAK_BP_Advance(TA_SWAK_BP_Stream* stream)
+
+    ctypedef struct TA_SWAK_BUTTER_Stream:
+        pass
+    TA_RetCode TA_SWAK_BUTTER_OpenAndFill(TA_SWAK_BUTTER_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SWAK_BUTTER_Open(TA_SWAK_BUTTER_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_SWAK_BUTTER_Update(TA_SWAK_BUTTER_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_BUTTER_Peek(const TA_SWAK_BUTTER_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_BUTTER_Value(const TA_SWAK_BUTTER_Stream* stream, double* outReal)
+    TA_RetCode TA_SWAK_BUTTER_Clone(const TA_SWAK_BUTTER_Stream* stream, TA_SWAK_BUTTER_Stream** clone)
+    TA_RetCode TA_SWAK_BUTTER_Close(TA_SWAK_BUTTER_Stream* stream)
+    TA_RetCode TA_SWAK_BUTTER_OutRange(const TA_SWAK_BUTTER_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SWAK_BUTTER_Advance(TA_SWAK_BUTTER_Stream* stream)
+
+    ctypedef struct TA_SWAK_GAUSS_Stream:
+        pass
+    TA_RetCode TA_SWAK_GAUSS_OpenAndFill(TA_SWAK_GAUSS_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SWAK_GAUSS_Open(TA_SWAK_GAUSS_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_SWAK_GAUSS_Update(TA_SWAK_GAUSS_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_GAUSS_Peek(const TA_SWAK_GAUSS_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_GAUSS_Value(const TA_SWAK_GAUSS_Stream* stream, double* outReal)
+    TA_RetCode TA_SWAK_GAUSS_Clone(const TA_SWAK_GAUSS_Stream* stream, TA_SWAK_GAUSS_Stream** clone)
+    TA_RetCode TA_SWAK_GAUSS_Close(TA_SWAK_GAUSS_Stream* stream)
+    TA_RetCode TA_SWAK_GAUSS_OutRange(const TA_SWAK_GAUSS_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SWAK_GAUSS_Advance(TA_SWAK_GAUSS_Stream* stream)
+
+    ctypedef struct TA_SWAK_HP_Stream:
+        pass
+    TA_RetCode TA_SWAK_HP_OpenAndFill(TA_SWAK_HP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_SWAK_HP_Open(TA_SWAK_HP_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, double* outReal)
+    TA_RetCode TA_SWAK_HP_Update(TA_SWAK_HP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_HP_Peek(const TA_SWAK_HP_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_SWAK_HP_Value(const TA_SWAK_HP_Stream* stream, double* outReal)
+    TA_RetCode TA_SWAK_HP_Clone(const TA_SWAK_HP_Stream* stream, TA_SWAK_HP_Stream** clone)
+    TA_RetCode TA_SWAK_HP_Close(TA_SWAK_HP_Stream* stream)
+    TA_RetCode TA_SWAK_HP_OutRange(const TA_SWAK_HP_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_SWAK_HP_Advance(TA_SWAK_HP_Stream* stream)
 
     ctypedef struct TA_T3_Stream:
         pass
@@ -2329,6 +2725,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_VHF_OutRange(const TA_VHF_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_VHF_Advance(TA_VHF_Stream* stream)
 
+    ctypedef struct TA_VIDYA_Stream:
+        pass
+    TA_RetCode TA_VIDYA_OpenAndFill(TA_VIDYA_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInCMOPeriod, int* outBegIdx, int* outNBElement, double* outReal)
+    TA_RetCode TA_VIDYA_Open(TA_VIDYA_Stream** stream, const double* inReal, int historyLen, int optInTimePeriod, int optInCMOPeriod, double* outReal)
+    TA_RetCode TA_VIDYA_Update(TA_VIDYA_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_VIDYA_Peek(const TA_VIDYA_Stream* stream, double inReal, double* outReal)
+    TA_RetCode TA_VIDYA_Value(const TA_VIDYA_Stream* stream, double* outReal)
+    TA_RetCode TA_VIDYA_Clone(const TA_VIDYA_Stream* stream, TA_VIDYA_Stream** clone)
+    TA_RetCode TA_VIDYA_Close(TA_VIDYA_Stream* stream)
+    TA_RetCode TA_VIDYA_OutRange(const TA_VIDYA_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_VIDYA_Advance(TA_VIDYA_Stream* stream)
+
     ctypedef struct TA_VORTEX_Stream:
         pass
     TA_RetCode TA_VORTEX_OpenAndFill(TA_VORTEX_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInTimePeriod, int* outBegIdx, int* outNBElement, double* outPlusVI, double* outMinusVI)
@@ -2377,6 +2785,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_WAD_OutRange(const TA_WAD_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_WAD_Advance(TA_WAD_Stream* stream)
 
+    ctypedef struct TA_WAVETREND_Stream:
+        pass
+    TA_RetCode TA_WAVETREND_OpenAndFill(TA_WAVETREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInChannelPeriod, int optInAveragePeriod, int optInSignalPeriod, int* outBegIdx, int* outNBElement, double* outWT1, double* outWT2)
+    TA_RetCode TA_WAVETREND_Open(TA_WAVETREND_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int optInChannelPeriod, int optInAveragePeriod, int optInSignalPeriod, double* outWT1, double* outWT2)
+    TA_RetCode TA_WAVETREND_Update(TA_WAVETREND_Stream* stream, double inHigh, double inLow, double inClose, double* outWT1, double* outWT2)
+    TA_RetCode TA_WAVETREND_Peek(const TA_WAVETREND_Stream* stream, double inHigh, double inLow, double inClose, double* outWT1, double* outWT2)
+    TA_RetCode TA_WAVETREND_Value(const TA_WAVETREND_Stream* stream, double* outWT1, double* outWT2)
+    TA_RetCode TA_WAVETREND_Clone(const TA_WAVETREND_Stream* stream, TA_WAVETREND_Stream** clone)
+    TA_RetCode TA_WAVETREND_Close(TA_WAVETREND_Stream* stream)
+    TA_RetCode TA_WAVETREND_OutRange(const TA_WAVETREND_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_WAVETREND_Advance(TA_WAVETREND_Stream* stream)
+
     ctypedef struct TA_WCLPRICE_Stream:
         pass
     TA_RetCode TA_WCLPRICE_OpenAndFill(TA_WCLPRICE_Stream** stream, const double* inHigh, const double* inLow, const double* inClose, int historyLen, int* outBegIdx, int* outNBElement, double* outReal)
@@ -2412,6 +2832,18 @@ cdef extern from "ta-lib/ta_func.h" nogil:
     TA_RetCode TA_WMA_Close(TA_WMA_Stream* stream)
     TA_RetCode TA_WMA_OutRange(const TA_WMA_Stream* stream, int* outBegIdx, int* outNBElement)
     TA_RetCode TA_WMA_Advance(TA_WMA_Stream* stream)
+
+    ctypedef struct TA_ZIGZAG_Stream:
+        pass
+    TA_RetCode TA_ZIGZAG_OpenAndFill(TA_ZIGZAG_Stream** stream, const double* inHigh, const double* inLow, int historyLen, double optInSensitivity, int optInMinTrendLength, int* outBegIdx, int* outNBElement, double* outZigZag, int* outTrend, int* outPivotIdx)
+    TA_RetCode TA_ZIGZAG_Open(TA_ZIGZAG_Stream** stream, const double* inHigh, const double* inLow, int historyLen, double optInSensitivity, int optInMinTrendLength, double* outZigZag, int* outTrend, int* outPivotIdx)
+    TA_RetCode TA_ZIGZAG_Update(TA_ZIGZAG_Stream* stream, double inHigh, double inLow, double* outZigZag, int* outTrend, int* outPivotIdx)
+    TA_RetCode TA_ZIGZAG_Peek(const TA_ZIGZAG_Stream* stream, double inHigh, double inLow, double* outZigZag, int* outTrend, int* outPivotIdx)
+    TA_RetCode TA_ZIGZAG_Value(const TA_ZIGZAG_Stream* stream, double* outZigZag, int* outTrend, int* outPivotIdx)
+    TA_RetCode TA_ZIGZAG_Clone(const TA_ZIGZAG_Stream* stream, TA_ZIGZAG_Stream** clone)
+    TA_RetCode TA_ZIGZAG_Close(TA_ZIGZAG_Stream* stream)
+    TA_RetCode TA_ZIGZAG_OutRange(const TA_ZIGZAG_Stream* stream, int* outBegIdx, int* outNBElement)
+    TA_RetCode TA_ZIGZAG_Advance(TA_ZIGZAG_Stream* stream)
 
     ctypedef struct TA_ZLEMA_Stream:
         pass
@@ -3826,6 +4258,145 @@ cdef class ADXR_Stream(Stream):
         return stream
 
 
+cdef class ALMA_Stream(Stream):
+    """ ALMA(real[, timeperiod=?, sigma=?, offset=?])
+
+    Arnaud Legoux Moving Average (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 9
+        sigma: 6.0
+        offset: 0.85
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_ALMA_Close(<TA_ALMA_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, double sigma=6.0, double offset=0.85):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_ALMA_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_ALMA_Lookback(timeperiod, sigma, offset) + 1
+                retCode = TA_ALMA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, sigma, offset, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_ALMA_Close(<TA_ALMA_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ALMA_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, double sigma=6.0, double offset=0.85):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_ALMA_Stream* handle = NULL
+        cdef ALMA_Stream stream = ALMA_Stream.__new__(ALMA_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_ALMA_Lookback(timeperiod, sigma, offset)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_ALMA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, sigma, offset, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ALMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ALMA_Update(<TA_ALMA_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ALMA_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ALMA_Peek(<TA_ALMA_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ALMA_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ALMA_Value(<TA_ALMA_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ALMA_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_ALMA_OutRange(<TA_ALMA_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_ALMA_Advance(<TA_ALMA_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_ALMA_Stream* clone = NULL
+        cdef ALMA_Stream stream = ALMA_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ALMA_Clone(<TA_ALMA_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_ALMA_Clone", retCode)
+        return stream
+
+
 cdef class AO_Stream(Stream):
     """ AO(high, low[, fastperiod=?, slowperiod=?])
 
@@ -4387,6 +4958,149 @@ cdef class AROONOSC_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_AROONOSC_Clone", retCode)
+        return stream
+
+
+cdef class ASI_Stream(Stream):
+    """ ASI(open, high, low, close[, limitmove=?])
+
+    Wilder Accumulative Swing Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        limitmove: 3.0
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_ASI_Close(<TA_ASI_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, open, high, low, close, double limitmove=-4e37):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_ASI_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_ASI_Lookback(limitmove) + 1
+                retCode = TA_ASI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, limitmove, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_ASI_Close(<TA_ASI_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ASI_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(open, high, low, close, double limitmove=-4e37):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_ASI_Stream* handle = NULL
+        cdef ASI_Stream stream = ASI_Stream.__new__(ASI_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_ASI_Lookback(limitmove)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_ASI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, limitmove, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ASI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((open, high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ASI_Update(<TA_ASI_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ASI_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ASI_Peek(<TA_ASI_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ASI_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ASI_Value(<TA_ASI_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ASI_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_ASI_OutRange(<TA_ASI_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_ASI_Advance(<TA_ASI_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_ASI_Stream* clone = NULL
+        cdef ASI_Stream stream = ASI_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ASI_Clone(<TA_ASI_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_ASI_Clone", retCode)
         return stream
 
 
@@ -5230,6 +5944,146 @@ cdef class BBANDS_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_BBANDS_Clone", retCode)
+        return stream
+
+
+cdef class BBW_Stream(Stream):
+    """ BBW(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+
+    Bollinger BandWidth (Volatility Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        nbdevup: 2.0
+        nbdevdn: 2.0
+        matype: 0 (Simple Moving Average)
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_BBW_Close(<TA_BBW_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, double nbdevup=-4e37, double nbdevdn=-4e37, int matype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_BBW_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_BBW_Lookback(timeperiod, nbdevup, nbdevdn, matype) + 1
+                retCode = TA_BBW_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_BBW_Close(<TA_BBW_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_BBW_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, double nbdevup=-4e37, double nbdevdn=-4e37, int matype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_BBW_Stream* handle = NULL
+        cdef BBW_Stream stream = BBW_Stream.__new__(BBW_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_BBW_Lookback(timeperiod, nbdevup, nbdevdn, matype)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_BBW_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_BBW_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_BBW_Update(<TA_BBW_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_BBW_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_BBW_Peek(<TA_BBW_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_BBW_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_BBW_Value(<TA_BBW_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_BBW_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_BBW_OutRange(<TA_BBW_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_BBW_Advance(<TA_BBW_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_BBW_Stream* clone = NULL
+        cdef BBW_Stream stream = BBW_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_BBW_Clone(<TA_BBW_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_BBW_Clone", retCode)
         return stream
 
 
@@ -14405,6 +15259,575 @@ cdef class CEIL_Stream(Stream):
         return stream
 
 
+cdef class CG_Stream(Stream):
+    """ CG(real[, timeperiod=?])
+
+    Center of Gravity Oscillator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 10
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CG_Close(<TA_CG_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CG_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CG_Lookback(timeperiod) + 1
+                retCode = TA_CG_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CG_Close(<TA_CG_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CG_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CG_Stream* handle = NULL
+        cdef CG_Stream stream = CG_Stream.__new__(CG_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CG_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CG_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CG_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CG_Update(<TA_CG_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CG_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CG_Peek(<TA_CG_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CG_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CG_Value(<TA_CG_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CG_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CG_OutRange(<TA_CG_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CG_Advance(<TA_CG_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CG_Stream* clone = NULL
+        cdef CG_Stream stream = CG_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CG_Clone(<TA_CG_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CG_Clone", retCode)
+        return stream
+
+
+cdef class CHOP_Stream(Stream):
+    """ CHOP(high, low, close[, timeperiod=?])
+
+    Choppiness Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CHOP_Close(<TA_CHOP_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CHOP_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CHOP_Lookback(timeperiod) + 1
+                retCode = TA_CHOP_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CHOP_Close(<TA_CHOP_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CHOP_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CHOP_Stream* handle = NULL
+        cdef CHOP_Stream stream = CHOP_Stream.__new__(CHOP_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CHOP_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CHOP_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CHOP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOP_Update(<TA_CHOP_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOP_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOP_Peek(<TA_CHOP_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOP_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOP_Value(<TA_CHOP_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOP_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CHOP_OutRange(<TA_CHOP_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CHOP_Advance(<TA_CHOP_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CHOP_Stream* clone = NULL
+        cdef CHOP_Stream stream = CHOP_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOP_Clone(<TA_CHOP_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CHOP_Clone", retCode)
+        return stream
+
+
+cdef class CHOPTR_Stream(Stream):
+    """ CHOPTR(high, low, close[, timeperiod=?])
+
+    Choppiness Index (True Range Box) (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CHOPTR_Close(<TA_CHOPTR_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CHOPTR_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CHOPTR_Lookback(timeperiod) + 1
+                retCode = TA_CHOPTR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CHOPTR_Close(<TA_CHOPTR_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CHOPTR_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CHOPTR_Stream* handle = NULL
+        cdef CHOPTR_Stream stream = CHOPTR_Stream.__new__(CHOPTR_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CHOPTR_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CHOPTR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CHOPTR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOPTR_Update(<TA_CHOPTR_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOPTR_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOPTR_Peek(<TA_CHOPTR_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOPTR_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOPTR_Value(<TA_CHOPTR_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CHOPTR_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CHOPTR_OutRange(<TA_CHOPTR_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CHOPTR_Advance(<TA_CHOPTR_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CHOPTR_Stream* clone = NULL
+        cdef CHOPTR_Stream stream = CHOPTR_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CHOPTR_Clone(<TA_CHOPTR_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CHOPTR_Clone", retCode)
+        return stream
+
+
+cdef class CKSP_Stream(Stream):
+    """ CKSP(high, low, close[, timeperiod=?, multiplier=?, stopperiod=?])
+
+    Chande Kroll Stop (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        timeperiod: 10
+        multiplier: 1.0
+        stopperiod: 9
+    Outputs:
+        highstop
+        lowstop
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CKSP_Close(<TA_CKSP_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int timeperiod=-2**31, double multiplier=1.0, int stopperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CKSP_Stream* handle = NULL
+        cdef double outhighstop
+        cdef double outlowstop
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CKSP_Lookback(timeperiod, multiplier, stopperiod) + 1
+                retCode = TA_CKSP_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, stopperiod, &outhighstop, &outlowstop)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CKSP_Close(<TA_CKSP_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CKSP_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int timeperiod=-2**31, double multiplier=1.0, int stopperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outhighstop
+        cdef np.ndarray outlowstop
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CKSP_Stream* handle = NULL
+        cdef CKSP_Stream stream = CKSP_Stream.__new__(CKSP_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CKSP_Lookback(timeperiod, multiplier, stopperiod)
+            outhighstop = make_double_array(length, lookback)
+            outlowstop = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CKSP_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, multiplier, stopperiod, &outbegidx, &outnbelement, <double*>outhighstop.data + lookback, <double*>outlowstop.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CKSP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low, close,), outhighstop), _stream_like((high, low, close,), outlowstop))
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outhighstop
+        cdef double outlowstop
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CKSP_Update(<TA_CKSP_Stream*>self._handle, high, low, close, &outhighstop, &outlowstop)
+        if retCode != 0:
+            _ta_check_success("TA_CKSP_Update", retCode)
+        return (outhighstop, outlowstop)
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outhighstop
+        cdef double outlowstop
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CKSP_Peek(<TA_CKSP_Stream*>self._handle, high, low, close, &outhighstop, &outlowstop)
+        if retCode != 0:
+            _ta_check_success("TA_CKSP_Peek", retCode)
+        return (outhighstop, outlowstop)
+
+    @property
+    def value(self):
+        cdef double outhighstop
+        cdef double outlowstop
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CKSP_Value(<TA_CKSP_Stream*>self._handle, &outhighstop, &outlowstop)
+        if retCode != 0:
+            _ta_check_success("TA_CKSP_Value", retCode)
+        return (outhighstop, outlowstop)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CKSP_OutRange(<TA_CKSP_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CKSP_Advance(<TA_CKSP_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CKSP_Stream* clone = NULL
+        cdef CKSP_Stream stream = CKSP_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CKSP_Clone(<TA_CKSP_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CKSP_Clone", retCode)
+        return stream
+
+
 cdef class CMF_Stream(Stream):
     """ CMF(high, low, close, volume[, timeperiod=?])
 
@@ -15371,6 +16794,282 @@ cdef class COSH_Stream(Stream):
         return stream
 
 
+cdef class CRSI_Stream(Stream):
+    """ CRSI(real[, timeperiod=?, streakperiod=?, rankperiod=?])
+
+    Connors Relative Strength Index (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 3
+        streakperiod: 2
+        rankperiod: 100
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CRSI_Close(<TA_CRSI_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, int streakperiod=-2**31, int rankperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CRSI_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CRSI_Lookback(timeperiod, streakperiod, rankperiod) + 1
+                retCode = TA_CRSI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, streakperiod, rankperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CRSI_Close(<TA_CRSI_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CRSI_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, int streakperiod=-2**31, int rankperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CRSI_Stream* handle = NULL
+        cdef CRSI_Stream stream = CRSI_Stream.__new__(CRSI_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CRSI_Lookback(timeperiod, streakperiod, rankperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CRSI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, streakperiod, rankperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CRSI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CRSI_Update(<TA_CRSI_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CRSI_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CRSI_Peek(<TA_CRSI_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CRSI_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CRSI_Value(<TA_CRSI_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CRSI_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CRSI_OutRange(<TA_CRSI_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CRSI_Advance(<TA_CRSI_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CRSI_Stream* clone = NULL
+        cdef CRSI_Stream stream = CRSI_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CRSI_Clone(<TA_CRSI_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CRSI_Clone", retCode)
+        return stream
+
+
+cdef class CTI_Stream(Stream):
+    """ CTI(real[, timeperiod=?])
+
+    Correlation Trend Indicator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_CTI_Close(<TA_CTI_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_CTI_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_CTI_Lookback(timeperiod) + 1
+                retCode = TA_CTI_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_CTI_Close(<TA_CTI_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CTI_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_CTI_Stream* handle = NULL
+        cdef CTI_Stream stream = CTI_Stream.__new__(CTI_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_CTI_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_CTI_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_CTI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CTI_Update(<TA_CTI_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CTI_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CTI_Peek(<TA_CTI_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CTI_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CTI_Value(<TA_CTI_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_CTI_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_CTI_OutRange(<TA_CTI_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_CTI_Advance(<TA_CTI_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_CTI_Stream* clone = NULL
+        cdef CTI_Stream stream = CTI_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_CTI_Clone(<TA_CTI_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_CTI_Clone", retCode)
+        return stream
+
+
 cdef class CUMSUM_Stream(Stream):
     """ CUMSUM(real)
 
@@ -16074,6 +17773,146 @@ cdef class DONCHIAN_Stream(Stream):
         return stream
 
 
+cdef class DOSC_Stream(Stream):
+    """ DOSC(real[, timeperiod=?, firstperiod=?, secondperiod=?, signalperiod=?])
+
+    Derivative Oscillator (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+        firstperiod: 5
+        secondperiod: 3
+        signalperiod: 9
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_DOSC_Close(<TA_DOSC_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, int firstperiod=-2**31, int secondperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_DOSC_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_DOSC_Lookback(timeperiod, firstperiod, secondperiod, signalperiod) + 1
+                retCode = TA_DOSC_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, firstperiod, secondperiod, signalperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_DOSC_Close(<TA_DOSC_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_DOSC_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, int firstperiod=-2**31, int secondperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_DOSC_Stream* handle = NULL
+        cdef DOSC_Stream stream = DOSC_Stream.__new__(DOSC_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_DOSC_Lookback(timeperiod, firstperiod, secondperiod, signalperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_DOSC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, firstperiod, secondperiod, signalperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_DOSC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_DOSC_Update(<TA_DOSC_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_DOSC_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_DOSC_Peek(<TA_DOSC_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_DOSC_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_DOSC_Value(<TA_DOSC_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_DOSC_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_DOSC_OutRange(<TA_DOSC_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_DOSC_Advance(<TA_DOSC_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_DOSC_Stream* clone = NULL
+        cdef DOSC_Stream stream = DOSC_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_DOSC_Clone(<TA_DOSC_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_DOSC_Clone", retCode)
+        return stream
+
+
 cdef class DPO_Stream(Stream):
     """ DPO(real[, timeperiod=?])
 
@@ -16628,6 +18467,148 @@ cdef class EMA_Stream(Stream):
         return stream
 
 
+cdef class EMV_Stream(Stream):
+    """ EMV(high, low, volume[, timeperiod=?, volumedivisor=?])
+
+    Arms Ease of Movement (Volume Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'volume']
+    Parameters:
+        timeperiod: 14
+        volumedivisor: 10000.0
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_EMV_Close(<TA_EMV_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, volume, int timeperiod=-2**31, double volumedivisor=-4e37):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_volume = _stream_input(volume)
+        cdef tuple arrays = (a_high, a_low, a_volume,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_EMV_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_EMV_Lookback(timeperiod, volumedivisor) + 1
+                retCode = TA_EMV_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, volumedivisor, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_EMV_Close(<TA_EMV_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_EMV_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, volume, int timeperiod=-2**31, double volumedivisor=-4e37):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_volume = _stream_input(volume)
+        cdef tuple arrays = (a_high, a_low, a_volume,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_EMV_Stream* handle = NULL
+        cdef EMV_Stream stream = EMV_Stream.__new__(EMV_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_EMV_Lookback(timeperiod, volumedivisor)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_EMV_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_volume.data + begidx, historylen, timeperiod, volumedivisor, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_EMV_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low, volume,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low, double volume):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_EMV_Update(<TA_EMV_Stream*>self._handle, high, low, volume, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_EMV_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double volume):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_EMV_Peek(<TA_EMV_Stream*>self._handle, high, low, volume, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_EMV_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_EMV_Value(<TA_EMV_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_EMV_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_EMV_OutRange(<TA_EMV_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_EMV_Advance(<TA_EMV_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_EMV_Stream* clone = NULL
+        cdef EMV_Stream stream = EMV_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_EMV_Clone(<TA_EMV_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_EMV_Clone", retCode)
+        return stream
+
+
 cdef class ER_Stream(Stream):
     """ ER(real[, timeperiod=?])
 
@@ -17048,6 +19029,152 @@ cdef class EXP_Stream(Stream):
         return stream
 
 
+cdef class FISHER_Stream(Stream):
+    """ FISHER(high, low[, timeperiod=?])
+
+    Fisher Transform (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 10
+    Outputs:
+        fisher
+        trigger
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_FISHER_Close(<TA_FISHER_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_FISHER_Stream* handle = NULL
+        cdef double outfisher
+        cdef double outtrigger
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_FISHER_Lookback(timeperiod) + 1
+                retCode = TA_FISHER_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outfisher, &outtrigger)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_FISHER_Close(<TA_FISHER_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_FISHER_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outfisher
+        cdef np.ndarray outtrigger
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_FISHER_Stream* handle = NULL
+        cdef FISHER_Stream stream = FISHER_Stream.__new__(FISHER_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_FISHER_Lookback(timeperiod)
+            outfisher = make_double_array(length, lookback)
+            outtrigger = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_FISHER_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outfisher.data + lookback, <double*>outtrigger.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_FISHER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low,), outfisher), _stream_like((high, low,), outtrigger))
+
+    @cython.binding(False)
+    def update(self, double high, double low):
+        cdef double outfisher
+        cdef double outtrigger
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FISHER_Update(<TA_FISHER_Stream*>self._handle, high, low, &outfisher, &outtrigger)
+        if retCode != 0:
+            _ta_check_success("TA_FISHER_Update", retCode)
+        return (outfisher, outtrigger)
+
+    @cython.binding(False)
+    def peek(self, double high, double low):
+        cdef double outfisher
+        cdef double outtrigger
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FISHER_Peek(<TA_FISHER_Stream*>self._handle, high, low, &outfisher, &outtrigger)
+        if retCode != 0:
+            _ta_check_success("TA_FISHER_Peek", retCode)
+        return (outfisher, outtrigger)
+
+    @property
+    def value(self):
+        cdef double outfisher
+        cdef double outtrigger
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FISHER_Value(<TA_FISHER_Stream*>self._handle, &outfisher, &outtrigger)
+        if retCode != 0:
+            _ta_check_success("TA_FISHER_Value", retCode)
+        return (outfisher, outtrigger)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_FISHER_OutRange(<TA_FISHER_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_FISHER_Advance(<TA_FISHER_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_FISHER_Stream* clone = NULL
+        cdef FISHER_Stream stream = FISHER_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FISHER_Clone(<TA_FISHER_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_FISHER_Clone", retCode)
+        return stream
+
+
 cdef class FLOOR_Stream(Stream):
     """ FLOOR(real)
 
@@ -17464,6 +19591,145 @@ cdef class FRACTAL_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_FRACTAL_Clone", retCode)
+        return stream
+
+
+cdef class FRAMA_Stream(Stream):
+    """ FRAMA(high, low[, timeperiod=?])
+
+    Fractal Adaptive Moving Average (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 16
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_FRAMA_Close(<TA_FRAMA_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_FRAMA_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_FRAMA_Lookback(timeperiod) + 1
+                retCode = TA_FRAMA_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_FRAMA_Close(<TA_FRAMA_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_FRAMA_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, int timeperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_FRAMA_Stream* handle = NULL
+        cdef FRAMA_Stream stream = FRAMA_Stream.__new__(FRAMA_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_FRAMA_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_FRAMA_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_FRAMA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FRAMA_Update(<TA_FRAMA_Stream*>self._handle, high, low, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_FRAMA_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FRAMA_Peek(<TA_FRAMA_Stream*>self._handle, high, low, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_FRAMA_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FRAMA_Value(<TA_FRAMA_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_FRAMA_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_FRAMA_OutRange(<TA_FRAMA_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_FRAMA_Advance(<TA_FRAMA_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_FRAMA_Stream* clone = NULL
+        cdef FRAMA_Stream stream = FRAMA_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_FRAMA_Clone(<TA_FRAMA_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_FRAMA_Clone", retCode)
         return stream
 
 
@@ -18590,6 +20856,307 @@ cdef class HT_TRENDMODE_Stream(Stream):
         return stream
 
 
+cdef class IBS_Stream(Stream):
+    """ IBS(high, low, close)
+
+    Internal Bar Strength (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_IBS_Close(<TA_IBS_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_IBS_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_IBS_Lookback() + 1
+                retCode = TA_IBS_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_IBS_Close(<TA_IBS_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_IBS_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_IBS_Stream* handle = NULL
+        cdef IBS_Stream stream = IBS_Stream.__new__(IBS_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_IBS_Lookback()
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_IBS_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_IBS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_IBS_Update(<TA_IBS_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_IBS_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_IBS_Peek(<TA_IBS_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_IBS_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_IBS_Value(<TA_IBS_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_IBS_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_IBS_OutRange(<TA_IBS_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_IBS_Advance(<TA_IBS_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_IBS_Stream* clone = NULL
+        cdef IBS_Stream stream = IBS_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_IBS_Clone(<TA_IBS_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_IBS_Clone", retCode)
+        return stream
+
+
+cdef class ICHIMOKU_Stream(Stream):
+    """ ICHIMOKU(high, low[, tenkanperiod=?, kijunperiod=?, senkoubperiod=?])
+
+    Ichimoku Kinko Hyo (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        tenkanperiod: 9
+        kijunperiod: 26
+        senkoubperiod: 52
+    Outputs:
+        tenkansen
+        kijunsen
+        senkouspana
+        senkouspanb
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_ICHIMOKU_Close(<TA_ICHIMOKU_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, int tenkanperiod=-2**31, int kijunperiod=-2**31, int senkoubperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_ICHIMOKU_Stream* handle = NULL
+        cdef double outtenkansen
+        cdef double outkijunsen
+        cdef double outsenkouspana
+        cdef double outsenkouspanb
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_ICHIMOKU_Lookback(tenkanperiod, kijunperiod, senkoubperiod) + 1
+                retCode = TA_ICHIMOKU_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, tenkanperiod, kijunperiod, senkoubperiod, &outtenkansen, &outkijunsen, &outsenkouspana, &outsenkouspanb)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_ICHIMOKU_Close(<TA_ICHIMOKU_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ICHIMOKU_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, int tenkanperiod=-2**31, int kijunperiod=-2**31, int senkoubperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outtenkansen
+        cdef np.ndarray outkijunsen
+        cdef np.ndarray outsenkouspana
+        cdef np.ndarray outsenkouspanb
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_ICHIMOKU_Stream* handle = NULL
+        cdef ICHIMOKU_Stream stream = ICHIMOKU_Stream.__new__(ICHIMOKU_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_ICHIMOKU_Lookback(tenkanperiod, kijunperiod, senkoubperiod)
+            outtenkansen = make_double_array(length, lookback)
+            outkijunsen = make_double_array(length, lookback)
+            outsenkouspana = make_double_array(length, lookback)
+            outsenkouspanb = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_ICHIMOKU_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, tenkanperiod, kijunperiod, senkoubperiod, &outbegidx, &outnbelement, <double*>outtenkansen.data + lookback, <double*>outkijunsen.data + lookback, <double*>outsenkouspana.data + lookback, <double*>outsenkouspanb.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ICHIMOKU_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low,), outtenkansen), _stream_like((high, low,), outkijunsen), _stream_like((high, low,), outsenkouspana), _stream_like((high, low,), outsenkouspanb))
+
+    @cython.binding(False)
+    def update(self, double high, double low):
+        cdef double outtenkansen
+        cdef double outkijunsen
+        cdef double outsenkouspana
+        cdef double outsenkouspanb
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ICHIMOKU_Update(<TA_ICHIMOKU_Stream*>self._handle, high, low, &outtenkansen, &outkijunsen, &outsenkouspana, &outsenkouspanb)
+        if retCode != 0:
+            _ta_check_success("TA_ICHIMOKU_Update", retCode)
+        return (outtenkansen, outkijunsen, outsenkouspana, outsenkouspanb)
+
+    @cython.binding(False)
+    def peek(self, double high, double low):
+        cdef double outtenkansen
+        cdef double outkijunsen
+        cdef double outsenkouspana
+        cdef double outsenkouspanb
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ICHIMOKU_Peek(<TA_ICHIMOKU_Stream*>self._handle, high, low, &outtenkansen, &outkijunsen, &outsenkouspana, &outsenkouspanb)
+        if retCode != 0:
+            _ta_check_success("TA_ICHIMOKU_Peek", retCode)
+        return (outtenkansen, outkijunsen, outsenkouspana, outsenkouspanb)
+
+    @property
+    def value(self):
+        cdef double outtenkansen
+        cdef double outkijunsen
+        cdef double outsenkouspana
+        cdef double outsenkouspanb
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ICHIMOKU_Value(<TA_ICHIMOKU_Stream*>self._handle, &outtenkansen, &outkijunsen, &outsenkouspana, &outsenkouspanb)
+        if retCode != 0:
+            _ta_check_success("TA_ICHIMOKU_Value", retCode)
+        return (outtenkansen, outkijunsen, outsenkouspana, outsenkouspanb)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_ICHIMOKU_OutRange(<TA_ICHIMOKU_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_ICHIMOKU_Advance(<TA_ICHIMOKU_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_ICHIMOKU_Stream* clone = NULL
+        cdef ICHIMOKU_Stream stream = ICHIMOKU_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ICHIMOKU_Clone(<TA_ICHIMOKU_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_ICHIMOKU_Clone", retCode)
+        return stream
+
+
 cdef class IMI_Stream(Stream):
     """ IMI(open, close[, timeperiod=?])
 
@@ -19179,6 +21746,601 @@ cdef class KDJ_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_KDJ_Clone", retCode)
+        return stream
+
+
+cdef class KST_Stream(Stream):
+    """ KST(real[, roc1period=?, roc2period=?, roc3period=?, roc4period=?, sma1period=?, sma2period=?, sma3period=?, sma4period=?, signalperiod=?])
+
+    Know Sure Thing (Pring) (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        roc1period: 10
+        roc2period: 15
+        roc3period: 20
+        roc4period: 30
+        sma1period: 10
+        sma2period: 10
+        sma3period: 10
+        sma4period: 15
+        signalperiod: 9
+    Outputs:
+        kst
+        kstsignal
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_KST_Close(<TA_KST_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int roc1period=-2**31, int roc2period=-2**31, int roc3period=-2**31, int roc4period=-2**31, int sma1period=-2**31, int sma2period=-2**31, int sma3period=-2**31, int sma4period=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_KST_Stream* handle = NULL
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_KST_Lookback(roc1period, roc2period, roc3period, roc4period, sma1period, sma2period, sma3period, sma4period, signalperiod) + 1
+                retCode = TA_KST_Open(&handle, <double*>a_real.data + begidx, historylen, roc1period, roc2period, roc3period, roc4period, sma1period, sma2period, sma3period, sma4period, signalperiod, &outkst, &outkstsignal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_KST_Close(<TA_KST_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KST_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int roc1period=-2**31, int roc2period=-2**31, int roc3period=-2**31, int roc4period=-2**31, int sma1period=-2**31, int sma2period=-2**31, int sma3period=-2**31, int sma4period=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outkst
+        cdef np.ndarray outkstsignal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_KST_Stream* handle = NULL
+        cdef KST_Stream stream = KST_Stream.__new__(KST_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_KST_Lookback(roc1period, roc2period, roc3period, roc4period, sma1period, sma2period, sma3period, sma4period, signalperiod)
+            outkst = make_double_array(length, lookback)
+            outkstsignal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_KST_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, roc1period, roc2period, roc3period, roc4period, sma1period, sma2period, sma3period, sma4period, signalperiod, &outbegidx, &outnbelement, <double*>outkst.data + lookback, <double*>outkstsignal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KST_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((real,), outkst), _stream_like((real,), outkstsignal))
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KST_Update(<TA_KST_Stream*>self._handle, real, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KST_Update", retCode)
+        return (outkst, outkstsignal)
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KST_Peek(<TA_KST_Stream*>self._handle, real, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KST_Peek", retCode)
+        return (outkst, outkstsignal)
+
+    @property
+    def value(self):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KST_Value(<TA_KST_Stream*>self._handle, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KST_Value", retCode)
+        return (outkst, outkstsignal)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_KST_OutRange(<TA_KST_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_KST_Advance(<TA_KST_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_KST_Stream* clone = NULL
+        cdef KST_Stream stream = KST_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KST_Clone(<TA_KST_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_KST_Clone", retCode)
+        return stream
+
+
+cdef class KSTEXT_Stream(Stream):
+    """ KSTEXT(real[, roc1period=?, roc2period=?, roc3period=?, roc4period=?, ma1period=?, ma2period=?, ma3period=?, ma4period=?, signalperiod=?, rocmatype=?, signalmatype=?])
+
+    Know Sure Thing with controllable MA type (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        roc1period: 10
+        roc2period: 15
+        roc3period: 20
+        roc4period: 30
+        ma1period: 10
+        ma2period: 10
+        ma3period: 10
+        ma4period: 15
+        signalperiod: 9
+        rocmatype: 0 (Simple Moving Average)
+        signalmatype: 0 (Simple Moving Average)
+    Outputs:
+        kst
+        kstsignal
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_KSTEXT_Close(<TA_KSTEXT_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int roc1period=-2**31, int roc2period=-2**31, int roc3period=-2**31, int roc4period=-2**31, int ma1period=-2**31, int ma2period=-2**31, int ma3period=-2**31, int ma4period=-2**31, int signalperiod=-2**31, int rocmatype=0, int signalmatype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_KSTEXT_Stream* handle = NULL
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_KSTEXT_Lookback(roc1period, roc2period, roc3period, roc4period, ma1period, ma2period, ma3period, ma4period, signalperiod, rocmatype, signalmatype) + 1
+                retCode = TA_KSTEXT_Open(&handle, <double*>a_real.data + begidx, historylen, roc1period, roc2period, roc3period, roc4period, ma1period, ma2period, ma3period, ma4period, signalperiod, rocmatype, signalmatype, &outkst, &outkstsignal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_KSTEXT_Close(<TA_KSTEXT_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KSTEXT_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int roc1period=-2**31, int roc2period=-2**31, int roc3period=-2**31, int roc4period=-2**31, int ma1period=-2**31, int ma2period=-2**31, int ma3period=-2**31, int ma4period=-2**31, int signalperiod=-2**31, int rocmatype=0, int signalmatype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outkst
+        cdef np.ndarray outkstsignal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_KSTEXT_Stream* handle = NULL
+        cdef KSTEXT_Stream stream = KSTEXT_Stream.__new__(KSTEXT_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_KSTEXT_Lookback(roc1period, roc2period, roc3period, roc4period, ma1period, ma2period, ma3period, ma4period, signalperiod, rocmatype, signalmatype)
+            outkst = make_double_array(length, lookback)
+            outkstsignal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_KSTEXT_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, roc1period, roc2period, roc3period, roc4period, ma1period, ma2period, ma3period, ma4period, signalperiod, rocmatype, signalmatype, &outbegidx, &outnbelement, <double*>outkst.data + lookback, <double*>outkstsignal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KSTEXT_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((real,), outkst), _stream_like((real,), outkstsignal))
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KSTEXT_Update(<TA_KSTEXT_Stream*>self._handle, real, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KSTEXT_Update", retCode)
+        return (outkst, outkstsignal)
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KSTEXT_Peek(<TA_KSTEXT_Stream*>self._handle, real, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KSTEXT_Peek", retCode)
+        return (outkst, outkstsignal)
+
+    @property
+    def value(self):
+        cdef double outkst
+        cdef double outkstsignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KSTEXT_Value(<TA_KSTEXT_Stream*>self._handle, &outkst, &outkstsignal)
+        if retCode != 0:
+            _ta_check_success("TA_KSTEXT_Value", retCode)
+        return (outkst, outkstsignal)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_KSTEXT_OutRange(<TA_KSTEXT_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_KSTEXT_Advance(<TA_KSTEXT_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_KSTEXT_Stream* clone = NULL
+        cdef KSTEXT_Stream stream = KSTEXT_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KSTEXT_Clone(<TA_KSTEXT_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_KSTEXT_Clone", retCode)
+        return stream
+
+
+cdef class KURTOSIS_Stream(Stream):
+    """ KURTOSIS(real[, timeperiod=?])
+
+    Rolling Excess Kurtosis (Statistic Functions)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 30
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_KURTOSIS_Close(<TA_KURTOSIS_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_KURTOSIS_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_KURTOSIS_Lookback(timeperiod) + 1
+                retCode = TA_KURTOSIS_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_KURTOSIS_Close(<TA_KURTOSIS_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KURTOSIS_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_KURTOSIS_Stream* handle = NULL
+        cdef KURTOSIS_Stream stream = KURTOSIS_Stream.__new__(KURTOSIS_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_KURTOSIS_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_KURTOSIS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KURTOSIS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KURTOSIS_Update(<TA_KURTOSIS_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_KURTOSIS_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KURTOSIS_Peek(<TA_KURTOSIS_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_KURTOSIS_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KURTOSIS_Value(<TA_KURTOSIS_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_KURTOSIS_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_KURTOSIS_OutRange(<TA_KURTOSIS_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_KURTOSIS_Advance(<TA_KURTOSIS_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_KURTOSIS_Stream* clone = NULL
+        cdef KURTOSIS_Stream stream = KURTOSIS_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KURTOSIS_Clone(<TA_KURTOSIS_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_KURTOSIS_Clone", retCode)
+        return stream
+
+
+cdef class KVO_Stream(Stream):
+    """ KVO(high, low, close, volume[, fastperiod=?, slowperiod=?, signalperiod=?])
+
+    Klinger Volume Oscillator (Volume Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close', 'volume']
+    Parameters:
+        fastperiod: 34
+        slowperiod: 55
+        signalperiod: 13
+    Outputs:
+        kvo
+        kvosignal
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_KVO_Close(<TA_KVO_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, volume, int fastperiod=-2**31, int slowperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef np.ndarray a_volume = _stream_input(volume)
+        cdef tuple arrays = (a_high, a_low, a_close, a_volume,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_KVO_Stream* handle = NULL
+        cdef double outkvo
+        cdef double outkvosignal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_KVO_Lookback(fastperiod, slowperiod, signalperiod) + 1
+                retCode = TA_KVO_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outkvo, &outkvosignal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_KVO_Close(<TA_KVO_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KVO_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, volume, int fastperiod=-2**31, int slowperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef np.ndarray a_volume = _stream_input(volume)
+        cdef tuple arrays = (a_high, a_low, a_close, a_volume,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outkvo
+        cdef np.ndarray outkvosignal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_KVO_Stream* handle = NULL
+        cdef KVO_Stream stream = KVO_Stream.__new__(KVO_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_KVO_Lookback(fastperiod, slowperiod, signalperiod)
+            outkvo = make_double_array(length, lookback)
+            outkvosignal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_KVO_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, <double*>a_volume.data + begidx, historylen, fastperiod, slowperiod, signalperiod, &outbegidx, &outnbelement, <double*>outkvo.data + lookback, <double*>outkvosignal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_KVO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low, close, volume,), outkvo), _stream_like((high, low, close, volume,), outkvosignal))
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close, double volume):
+        cdef double outkvo
+        cdef double outkvosignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KVO_Update(<TA_KVO_Stream*>self._handle, high, low, close, volume, &outkvo, &outkvosignal)
+        if retCode != 0:
+            _ta_check_success("TA_KVO_Update", retCode)
+        return (outkvo, outkvosignal)
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close, double volume):
+        cdef double outkvo
+        cdef double outkvosignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KVO_Peek(<TA_KVO_Stream*>self._handle, high, low, close, volume, &outkvo, &outkvosignal)
+        if retCode != 0:
+            _ta_check_success("TA_KVO_Peek", retCode)
+        return (outkvo, outkvosignal)
+
+    @property
+    def value(self):
+        cdef double outkvo
+        cdef double outkvosignal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KVO_Value(<TA_KVO_Stream*>self._handle, &outkvo, &outkvosignal)
+        if retCode != 0:
+            _ta_check_success("TA_KVO_Value", retCode)
+        return (outkvo, outkvosignal)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_KVO_OutRange(<TA_KVO_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_KVO_Advance(<TA_KVO_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_KVO_Stream* clone = NULL
+        cdef KVO_Stream stream = KVO_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_KVO_Clone(<TA_KVO_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_KVO_Clone", retCode)
         return stream
 
 
@@ -21448,6 +24610,280 @@ cdef class MAXINDEX_Stream(Stream):
         return stream
 
 
+cdef class MCGD_Stream(Stream):
+    """ MCGD(real[, timeperiod=?])
+
+    McGinley Dynamic (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 14
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_MCGD_Close(<TA_MCGD_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_MCGD_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_MCGD_Lookback(timeperiod) + 1
+                retCode = TA_MCGD_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_MCGD_Close(<TA_MCGD_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_MCGD_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_MCGD_Stream* handle = NULL
+        cdef MCGD_Stream stream = MCGD_Stream.__new__(MCGD_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_MCGD_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_MCGD_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_MCGD_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MCGD_Update(<TA_MCGD_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MCGD_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MCGD_Peek(<TA_MCGD_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MCGD_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MCGD_Value(<TA_MCGD_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MCGD_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_MCGD_OutRange(<TA_MCGD_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_MCGD_Advance(<TA_MCGD_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_MCGD_Stream* clone = NULL
+        cdef MCGD_Stream stream = MCGD_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MCGD_Clone(<TA_MCGD_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_MCGD_Clone", retCode)
+        return stream
+
+
+cdef class MEDIAN_Stream(Stream):
+    """ MEDIAN(real[, timeperiod=?])
+
+    Rolling Median (Statistic Functions)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 30
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_MEDIAN_Close(<TA_MEDIAN_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_MEDIAN_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_MEDIAN_Lookback(timeperiod) + 1
+                retCode = TA_MEDIAN_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_MEDIAN_Close(<TA_MEDIAN_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_MEDIAN_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_MEDIAN_Stream* handle = NULL
+        cdef MEDIAN_Stream stream = MEDIAN_Stream.__new__(MEDIAN_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_MEDIAN_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_MEDIAN_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_MEDIAN_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MEDIAN_Update(<TA_MEDIAN_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MEDIAN_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MEDIAN_Peek(<TA_MEDIAN_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MEDIAN_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MEDIAN_Value(<TA_MEDIAN_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_MEDIAN_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_MEDIAN_OutRange(<TA_MEDIAN_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_MEDIAN_Advance(<TA_MEDIAN_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_MEDIAN_Stream* clone = NULL
+        cdef MEDIAN_Stream stream = MEDIAN_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_MEDIAN_Clone(<TA_MEDIAN_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_MEDIAN_Clone", retCode)
+        return stream
+
+
 cdef class MEDPRICE_Stream(Stream):
     """ MEDPRICE(high, low)
 
@@ -23560,6 +26996,146 @@ cdef class OBV_Stream(Stream):
         return stream
 
 
+cdef class PERCENTB_Stream(Stream):
+    """ PERCENTB(real[, timeperiod=?, nbdevup=?, nbdevdn=?, matype=?])
+
+    Bollinger Bands %B (Volatility Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        nbdevup: 2.0
+        nbdevdn: 2.0
+        matype: 0 (Simple Moving Average)
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_PERCENTB_Close(<TA_PERCENTB_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, double nbdevup=-4e37, double nbdevdn=-4e37, int matype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_PERCENTB_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_PERCENTB_Lookback(timeperiod, nbdevup, nbdevdn, matype) + 1
+                retCode = TA_PERCENTB_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_PERCENTB_Close(<TA_PERCENTB_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_PERCENTB_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, double nbdevup=-4e37, double nbdevdn=-4e37, int matype=0):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_PERCENTB_Stream* handle = NULL
+        cdef PERCENTB_Stream stream = PERCENTB_Stream.__new__(PERCENTB_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_PERCENTB_Lookback(timeperiod, nbdevup, nbdevdn, matype)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_PERCENTB_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, nbdevup, nbdevdn, matype, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_PERCENTB_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PERCENTB_Update(<TA_PERCENTB_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PERCENTB_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PERCENTB_Peek(<TA_PERCENTB_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PERCENTB_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PERCENTB_Value(<TA_PERCENTB_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PERCENTB_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_PERCENTB_OutRange(<TA_PERCENTB_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_PERCENTB_Advance(<TA_PERCENTB_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_PERCENTB_Stream* clone = NULL
+        cdef PERCENTB_Stream stream = PERCENTB_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PERCENTB_Clone(<TA_PERCENTB_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_PERCENTB_Clone", retCode)
+        return stream
+
+
 cdef class PERCENTILE_Stream(Stream):
     """ PERCENTILE(real[, timeperiod=?, percentile=?])
 
@@ -23568,7 +27144,7 @@ cdef class PERCENTILE_Stream(Stream):
     Inputs:
         real: (any ndarray)
     Parameters:
-        timeperiod: 30
+        timeperiod: 100
         percentile: 50.0
     Outputs:
         real
@@ -24251,6 +27827,148 @@ cdef class PPO_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_PPO_Clone", retCode)
+        return stream
+
+
+cdef class PSO_Stream(Stream):
+    """ PSO(high, low, close[, fastk_period=?, emaperiod=?])
+
+    Premier Stochastic Oscillator (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        fastk_period: 8
+        emaperiod: 5
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_PSO_Close(<TA_PSO_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int fastk_period=-2**31, int emaperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_PSO_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_PSO_Lookback(fastk_period, emaperiod) + 1
+                retCode = TA_PSO_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, emaperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_PSO_Close(<TA_PSO_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_PSO_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int fastk_period=-2**31, int emaperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_PSO_Stream* handle = NULL
+        cdef PSO_Stream stream = PSO_Stream.__new__(PSO_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_PSO_Lookback(fastk_period, emaperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_PSO_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, fastk_period, emaperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_PSO_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PSO_Update(<TA_PSO_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PSO_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PSO_Peek(<TA_PSO_Stream*>self._handle, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PSO_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PSO_Value(<TA_PSO_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_PSO_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_PSO_OutRange(<TA_PSO_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_PSO_Advance(<TA_PSO_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_PSO_Stream* clone = NULL
+        cdef PSO_Stream stream = PSO_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_PSO_Clone(<TA_PSO_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_PSO_Clone", retCode)
         return stream
 
 
@@ -25491,6 +29209,150 @@ cdef class ROCR100_Stream(Stream):
         return stream
 
 
+cdef class ROGERSSATCHELL_Stream(Stream):
+    """ ROGERSSATCHELL(open, high, low, close[, timeperiod=?, annualization=?])
+
+    Rogers-Satchell Volatility (Volatility Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        timeperiod: 10
+        annualization: 252.0
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_ROGERSSATCHELL_Close(<TA_ROGERSSATCHELL_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, open, high, low, close, int timeperiod=-2**31, double annualization=252.0):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_ROGERSSATCHELL_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_ROGERSSATCHELL_Lookback(timeperiod, annualization) + 1
+                retCode = TA_ROGERSSATCHELL_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, annualization, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_ROGERSSATCHELL_Close(<TA_ROGERSSATCHELL_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ROGERSSATCHELL_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(open, high, low, close, int timeperiod=-2**31, double annualization=252.0):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_ROGERSSATCHELL_Stream* handle = NULL
+        cdef ROGERSSATCHELL_Stream stream = ROGERSSATCHELL_Stream.__new__(ROGERSSATCHELL_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_ROGERSSATCHELL_Lookback(timeperiod, annualization)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_ROGERSSATCHELL_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, timeperiod, annualization, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ROGERSSATCHELL_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((open, high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ROGERSSATCHELL_Update(<TA_ROGERSSATCHELL_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ROGERSSATCHELL_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ROGERSSATCHELL_Peek(<TA_ROGERSSATCHELL_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ROGERSSATCHELL_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ROGERSSATCHELL_Value(<TA_ROGERSSATCHELL_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_ROGERSSATCHELL_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_ROGERSSATCHELL_OutRange(<TA_ROGERSSATCHELL_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_ROGERSSATCHELL_Advance(<TA_ROGERSSATCHELL_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_ROGERSSATCHELL_Stream* clone = NULL
+        cdef ROGERSSATCHELL_Stream stream = ROGERSSATCHELL_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ROGERSSATCHELL_Clone(<TA_ROGERSSATCHELL_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_ROGERSSATCHELL_Clone", retCode)
+        return stream
+
+
 cdef class RSI_Stream(Stream):
     """ RSI(real[, timeperiod=?])
 
@@ -25763,6 +29625,146 @@ cdef class RVI_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_RVI_Clone", retCode)
+        return stream
+
+
+cdef class RVIR_Stream(Stream):
+    """ RVIR(high, low[, timeperiod=?, stddevperiod=?])
+
+    Relative Volatility Index, refined high/low form (Volatility Indicators)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        timeperiod: 14
+        stddevperiod: 10
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_RVIR_Close(<TA_RVIR_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, int timeperiod=-2**31, int stddevperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_RVIR_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_RVIR_Lookback(timeperiod, stddevperiod) + 1
+                retCode = TA_RVIR_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, stddevperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_RVIR_Close(<TA_RVIR_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_RVIR_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, int timeperiod=-2**31, int stddevperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_RVIR_Stream* handle = NULL
+        cdef RVIR_Stream stream = RVIR_Stream.__new__(RVIR_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_RVIR_Lookback(timeperiod, stddevperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_RVIR_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, timeperiod, stddevperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_RVIR_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((high, low,), outreal)
+
+    @cython.binding(False)
+    def update(self, double high, double low):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_RVIR_Update(<TA_RVIR_Stream*>self._handle, high, low, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_RVIR_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double high, double low):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_RVIR_Peek(<TA_RVIR_Stream*>self._handle, high, low, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_RVIR_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_RVIR_Value(<TA_RVIR_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_RVIR_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_RVIR_OutRange(<TA_RVIR_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_RVIR_Advance(<TA_RVIR_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_RVIR_Stream* clone = NULL
+        cdef RVIR_Stream stream = RVIR_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_RVIR_Clone(<TA_RVIR_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_RVIR_Clone", retCode)
         return stream
 
 
@@ -26186,6 +30188,149 @@ cdef class SAREXT_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_SAREXT_Clone", retCode)
+        return stream
+
+
+cdef class SI_Stream(Stream):
+    """ SI(open, high, low, close[, limitmove=?])
+
+    Wilder Swing Index (Momentum Indicators)
+
+    Inputs:
+        prices: ['open', 'high', 'low', 'close']
+    Parameters:
+        limitmove: 3.0
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SI_Close(<TA_SI_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, open, high, low, close, double limitmove=-4e37):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SI_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SI_Lookback(limitmove) + 1
+                retCode = TA_SI_Open(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, limitmove, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SI_Close(<TA_SI_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SI_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(open, high, low, close, double limitmove=-4e37):
+        cdef np.ndarray a_open = _stream_input(open)
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_open, a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SI_Stream* handle = NULL
+        cdef SI_Stream stream = SI_Stream.__new__(SI_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SI_Lookback(limitmove)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SI_OpenAndFill(&handle, <double*>a_open.data + begidx, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, limitmove, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SI_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((open, high, low, close,), outreal)
+
+    @cython.binding(False)
+    def update(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SI_Update(<TA_SI_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SI_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double open, double high, double low, double close):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SI_Peek(<TA_SI_Stream*>self._handle, open, high, low, close, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SI_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SI_Value(<TA_SI_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SI_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SI_OutRange(<TA_SI_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SI_Advance(<TA_SI_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SI_Stream* clone = NULL
+        cdef SI_Stream stream = SI_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SI_Clone(<TA_SI_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SI_Clone", retCode)
         return stream
 
 
@@ -26879,6 +31024,298 @@ cdef class SQRT_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_SQRT_Clone", retCode)
+        return stream
+
+
+cdef class SQZMOM_Stream(Stream):
+    """ SQZMOM(high, low, close[, bbperiod=?, nbdev=?, kcperiod=?, factorwide=?, factornormal=?, factornarrow=?])
+
+    Squeeze Momentum and Level (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        bbperiod: 20
+        nbdev: 2.0
+        kcperiod: 20
+        factorwide: 2.0
+        factornormal: 1.5
+        factornarrow: 1.0
+    Outputs:
+        momentum
+        squeeze
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SQZMOM_Close(<TA_SQZMOM_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int bbperiod=-2**31, double nbdev=-4e37, int kcperiod=-2**31, double factorwide=-4e37, double factornormal=-4e37, double factornarrow=-4e37):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SQZMOM_Stream* handle = NULL
+        cdef double outmomentum
+        cdef int outsqueeze
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SQZMOM_Lookback(bbperiod, nbdev, kcperiod, factorwide, factornormal, factornarrow) + 1
+                retCode = TA_SQZMOM_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, bbperiod, nbdev, kcperiod, factorwide, factornormal, factornarrow, &outmomentum, &outsqueeze)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SQZMOM_Close(<TA_SQZMOM_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SQZMOM_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int bbperiod=-2**31, double nbdev=-4e37, int kcperiod=-2**31, double factorwide=-4e37, double factornormal=-4e37, double factornarrow=-4e37):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outmomentum
+        cdef np.ndarray outsqueeze
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SQZMOM_Stream* handle = NULL
+        cdef SQZMOM_Stream stream = SQZMOM_Stream.__new__(SQZMOM_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SQZMOM_Lookback(bbperiod, nbdev, kcperiod, factorwide, factornormal, factornarrow)
+            outmomentum = make_double_array(length, lookback)
+            outsqueeze = make_int_array(length, lookback)
+            with nogil:
+                retCode = TA_SQZMOM_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, bbperiod, nbdev, kcperiod, factorwide, factornormal, factornarrow, &outbegidx, &outnbelement, <double*>outmomentum.data + lookback, <int*>outsqueeze.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SQZMOM_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low, close,), outmomentum), _stream_like((high, low, close,), outsqueeze))
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outmomentum
+        cdef int outsqueeze
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SQZMOM_Update(<TA_SQZMOM_Stream*>self._handle, high, low, close, &outmomentum, &outsqueeze)
+        if retCode != 0:
+            _ta_check_success("TA_SQZMOM_Update", retCode)
+        return (outmomentum, outsqueeze)
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outmomentum
+        cdef int outsqueeze
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SQZMOM_Peek(<TA_SQZMOM_Stream*>self._handle, high, low, close, &outmomentum, &outsqueeze)
+        if retCode != 0:
+            _ta_check_success("TA_SQZMOM_Peek", retCode)
+        return (outmomentum, outsqueeze)
+
+    @property
+    def value(self):
+        cdef double outmomentum
+        cdef int outsqueeze
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SQZMOM_Value(<TA_SQZMOM_Stream*>self._handle, &outmomentum, &outsqueeze)
+        if retCode != 0:
+            _ta_check_success("TA_SQZMOM_Value", retCode)
+        return (outmomentum, outsqueeze)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SQZMOM_OutRange(<TA_SQZMOM_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SQZMOM_Advance(<TA_SQZMOM_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SQZMOM_Stream* clone = NULL
+        cdef SQZMOM_Stream stream = SQZMOM_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SQZMOM_Clone(<TA_SQZMOM_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SQZMOM_Clone", retCode)
+        return stream
+
+
+cdef class STC_Stream(Stream):
+    """ STC(real[, fastperiod=?, slowperiod=?, cycleperiod=?])
+
+    Schaff Trend Cycle (Momentum Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        fastperiod: 23
+        slowperiod: 50
+        cycleperiod: 10
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_STC_Close(<TA_STC_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int fastperiod=-2**31, int slowperiod=-2**31, int cycleperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_STC_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_STC_Lookback(fastperiod, slowperiod, cycleperiod) + 1
+                retCode = TA_STC_Open(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, cycleperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_STC_Close(<TA_STC_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_STC_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int fastperiod=-2**31, int slowperiod=-2**31, int cycleperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_STC_Stream* handle = NULL
+        cdef STC_Stream stream = STC_Stream.__new__(STC_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_STC_Lookback(fastperiod, slowperiod, cycleperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_STC_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, fastperiod, slowperiod, cycleperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_STC_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_STC_Update(<TA_STC_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_STC_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_STC_Peek(<TA_STC_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_STC_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_STC_Value(<TA_STC_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_STC_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_STC_OutRange(<TA_STC_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_STC_Advance(<TA_STC_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_STC_Stream* clone = NULL
+        cdef STC_Stream stream = STC_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_STC_Clone(<TA_STC_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_STC_Clone", retCode)
         return stream
 
 
@@ -27890,6 +32327,692 @@ cdef class SUPERTREND_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_SUPERTREND_Clone", retCode)
+        return stream
+
+
+cdef class SWAK_2PHP_Stream(Stream):
+    """ SWAK_2PHP(real[, timeperiod=?])
+
+    Swiss Army Knife - Two-Pole High-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SWAK_2PHP_Close(<TA_SWAK_2PHP_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SWAK_2PHP_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SWAK_2PHP_Lookback(timeperiod) + 1
+                retCode = TA_SWAK_2PHP_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SWAK_2PHP_Close(<TA_SWAK_2PHP_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_2PHP_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SWAK_2PHP_Stream* handle = NULL
+        cdef SWAK_2PHP_Stream stream = SWAK_2PHP_Stream.__new__(SWAK_2PHP_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SWAK_2PHP_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SWAK_2PHP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_2PHP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_2PHP_Update(<TA_SWAK_2PHP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_2PHP_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_2PHP_Peek(<TA_SWAK_2PHP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_2PHP_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_2PHP_Value(<TA_SWAK_2PHP_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_2PHP_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SWAK_2PHP_OutRange(<TA_SWAK_2PHP_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SWAK_2PHP_Advance(<TA_SWAK_2PHP_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SWAK_2PHP_Stream* clone = NULL
+        cdef SWAK_2PHP_Stream stream = SWAK_2PHP_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_2PHP_Clone(<TA_SWAK_2PHP_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_2PHP_Clone", retCode)
+        return stream
+
+
+cdef class SWAK_BP_Stream(Stream):
+    """ SWAK_BP(real[, timeperiod=?, delta=?])
+
+    Swiss Army Knife - Band-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+        delta: 0.1
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SWAK_BP_Close(<TA_SWAK_BP_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, double delta=0.1):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SWAK_BP_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SWAK_BP_Lookback(timeperiod, delta) + 1
+                retCode = TA_SWAK_BP_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, delta, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SWAK_BP_Close(<TA_SWAK_BP_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_BP_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, double delta=0.1):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SWAK_BP_Stream* handle = NULL
+        cdef SWAK_BP_Stream stream = SWAK_BP_Stream.__new__(SWAK_BP_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SWAK_BP_Lookback(timeperiod, delta)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SWAK_BP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, delta, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_BP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BP_Update(<TA_SWAK_BP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BP_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BP_Peek(<TA_SWAK_BP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BP_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BP_Value(<TA_SWAK_BP_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BP_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SWAK_BP_OutRange(<TA_SWAK_BP_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SWAK_BP_Advance(<TA_SWAK_BP_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SWAK_BP_Stream* clone = NULL
+        cdef SWAK_BP_Stream stream = SWAK_BP_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BP_Clone(<TA_SWAK_BP_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BP_Clone", retCode)
+        return stream
+
+
+cdef class SWAK_BUTTER_Stream(Stream):
+    """ SWAK_BUTTER(real[, timeperiod=?])
+
+    Swiss Army Knife - Butterworth Filter (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SWAK_BUTTER_Close(<TA_SWAK_BUTTER_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SWAK_BUTTER_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SWAK_BUTTER_Lookback(timeperiod) + 1
+                retCode = TA_SWAK_BUTTER_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SWAK_BUTTER_Close(<TA_SWAK_BUTTER_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_BUTTER_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SWAK_BUTTER_Stream* handle = NULL
+        cdef SWAK_BUTTER_Stream stream = SWAK_BUTTER_Stream.__new__(SWAK_BUTTER_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SWAK_BUTTER_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SWAK_BUTTER_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_BUTTER_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BUTTER_Update(<TA_SWAK_BUTTER_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BUTTER_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BUTTER_Peek(<TA_SWAK_BUTTER_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BUTTER_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BUTTER_Value(<TA_SWAK_BUTTER_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BUTTER_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SWAK_BUTTER_OutRange(<TA_SWAK_BUTTER_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SWAK_BUTTER_Advance(<TA_SWAK_BUTTER_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SWAK_BUTTER_Stream* clone = NULL
+        cdef SWAK_BUTTER_Stream stream = SWAK_BUTTER_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_BUTTER_Clone(<TA_SWAK_BUTTER_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_BUTTER_Clone", retCode)
+        return stream
+
+
+cdef class SWAK_GAUSS_Stream(Stream):
+    """ SWAK_GAUSS(real[, timeperiod=?])
+
+    Swiss Army Knife - Gaussian Filter (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SWAK_GAUSS_Close(<TA_SWAK_GAUSS_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SWAK_GAUSS_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SWAK_GAUSS_Lookback(timeperiod) + 1
+                retCode = TA_SWAK_GAUSS_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SWAK_GAUSS_Close(<TA_SWAK_GAUSS_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_GAUSS_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SWAK_GAUSS_Stream* handle = NULL
+        cdef SWAK_GAUSS_Stream stream = SWAK_GAUSS_Stream.__new__(SWAK_GAUSS_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SWAK_GAUSS_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SWAK_GAUSS_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_GAUSS_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_GAUSS_Update(<TA_SWAK_GAUSS_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_GAUSS_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_GAUSS_Peek(<TA_SWAK_GAUSS_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_GAUSS_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_GAUSS_Value(<TA_SWAK_GAUSS_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_GAUSS_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SWAK_GAUSS_OutRange(<TA_SWAK_GAUSS_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SWAK_GAUSS_Advance(<TA_SWAK_GAUSS_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SWAK_GAUSS_Stream* clone = NULL
+        cdef SWAK_GAUSS_Stream stream = SWAK_GAUSS_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_GAUSS_Clone(<TA_SWAK_GAUSS_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_GAUSS_Clone", retCode)
+        return stream
+
+
+cdef class SWAK_HP_Stream(Stream):
+    """ SWAK_HP(real[, timeperiod=?])
+
+    Swiss Army Knife - High-Pass Filter (Cycle Indicators)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 20
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_SWAK_HP_Close(<TA_SWAK_HP_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_SWAK_HP_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_SWAK_HP_Lookback(timeperiod) + 1
+                retCode = TA_SWAK_HP_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_SWAK_HP_Close(<TA_SWAK_HP_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_HP_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_SWAK_HP_Stream* handle = NULL
+        cdef SWAK_HP_Stream stream = SWAK_HP_Stream.__new__(SWAK_HP_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_SWAK_HP_Lookback(timeperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_SWAK_HP_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_SWAK_HP_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_HP_Update(<TA_SWAK_HP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_HP_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_HP_Peek(<TA_SWAK_HP_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_HP_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_HP_Value(<TA_SWAK_HP_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_HP_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_SWAK_HP_OutRange(<TA_SWAK_HP_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_SWAK_HP_Advance(<TA_SWAK_HP_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_SWAK_HP_Stream* clone = NULL
+        cdef SWAK_HP_Stream stream = SWAK_HP_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_SWAK_HP_Clone(<TA_SWAK_HP_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_SWAK_HP_Clone", retCode)
         return stream
 
 
@@ -29683,6 +34806,144 @@ cdef class VHF_Stream(Stream):
         return stream
 
 
+cdef class VIDYA_Stream(Stream):
+    """ VIDYA(real[, timeperiod=?, cmoperiod=?])
+
+    Variable Index Dynamic Average (Overlap Studies)
+
+    Inputs:
+        real: (any ndarray)
+    Parameters:
+        timeperiod: 12
+        cmoperiod: 9
+    Outputs:
+        real
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_VIDYA_Close(<TA_VIDYA_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, real, int timeperiod=-2**31, int cmoperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_VIDYA_Stream* handle = NULL
+        cdef double outreal
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_VIDYA_Lookback(timeperiod, cmoperiod) + 1
+                retCode = TA_VIDYA_Open(&handle, <double*>a_real.data + begidx, historylen, timeperiod, cmoperiod, &outreal)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_VIDYA_Close(<TA_VIDYA_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_VIDYA_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(real, int timeperiod=-2**31, int cmoperiod=-2**31):
+        cdef np.ndarray a_real = _stream_input(real)
+        cdef tuple arrays = (a_real,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outreal
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_VIDYA_Stream* handle = NULL
+        cdef VIDYA_Stream stream = VIDYA_Stream.__new__(VIDYA_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_VIDYA_Lookback(timeperiod, cmoperiod)
+            outreal = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_VIDYA_OpenAndFill(&handle, <double*>a_real.data + begidx, historylen, timeperiod, cmoperiod, &outbegidx, &outnbelement, <double*>outreal.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_VIDYA_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, _stream_like((real,), outreal)
+
+    @cython.binding(False)
+    def update(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_VIDYA_Update(<TA_VIDYA_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_VIDYA_Update", retCode)
+        return outreal
+
+    @cython.binding(False)
+    def peek(self, double real):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_VIDYA_Peek(<TA_VIDYA_Stream*>self._handle, real, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_VIDYA_Peek", retCode)
+        return outreal
+
+    @property
+    def value(self):
+        cdef double outreal
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_VIDYA_Value(<TA_VIDYA_Stream*>self._handle, &outreal)
+        if retCode != 0:
+            _ta_check_success("TA_VIDYA_Value", retCode)
+        return outreal
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_VIDYA_OutRange(<TA_VIDYA_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_VIDYA_Advance(<TA_VIDYA_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_VIDYA_Stream* clone = NULL
+        cdef VIDYA_Stream stream = VIDYA_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_VIDYA_Clone(<TA_VIDYA_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_VIDYA_Clone", retCode)
+        return stream
+
+
 cdef class VORTEX_Stream(Stream):
     """ VORTEX(high, low, close[, timeperiod=?])
 
@@ -30251,6 +35512,156 @@ cdef class WAD_Stream(Stream):
         return stream
 
 
+cdef class WAVETREND_Stream(Stream):
+    """ WAVETREND(high, low, close[, channelperiod=?, averageperiod=?, signalperiod=?])
+
+    WaveTrend Oscillator (Momentum Indicators)
+
+    Inputs:
+        prices: ['high', 'low', 'close']
+    Parameters:
+        channelperiod: 10
+        averageperiod: 21
+        signalperiod: 4
+    Outputs:
+        wt1
+        wt2
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_WAVETREND_Close(<TA_WAVETREND_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, close, int channelperiod=-2**31, int averageperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_WAVETREND_Stream* handle = NULL
+        cdef double outwt1
+        cdef double outwt2
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_WAVETREND_Lookback(channelperiod, averageperiod, signalperiod) + 1
+                retCode = TA_WAVETREND_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, channelperiod, averageperiod, signalperiod, &outwt1, &outwt2)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_WAVETREND_Close(<TA_WAVETREND_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_WAVETREND_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, close, int channelperiod=-2**31, int averageperiod=-2**31, int signalperiod=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef np.ndarray a_close = _stream_input(close)
+        cdef tuple arrays = (a_high, a_low, a_close,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outwt1
+        cdef np.ndarray outwt2
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_WAVETREND_Stream* handle = NULL
+        cdef WAVETREND_Stream stream = WAVETREND_Stream.__new__(WAVETREND_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_WAVETREND_Lookback(channelperiod, averageperiod, signalperiod)
+            outwt1 = make_double_array(length, lookback)
+            outwt2 = make_double_array(length, lookback)
+            with nogil:
+                retCode = TA_WAVETREND_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, <double*>a_close.data + begidx, historylen, channelperiod, averageperiod, signalperiod, &outbegidx, &outnbelement, <double*>outwt1.data + lookback, <double*>outwt2.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_WAVETREND_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        return stream, (_stream_like((high, low, close,), outwt1), _stream_like((high, low, close,), outwt2))
+
+    @cython.binding(False)
+    def update(self, double high, double low, double close):
+        cdef double outwt1
+        cdef double outwt2
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_WAVETREND_Update(<TA_WAVETREND_Stream*>self._handle, high, low, close, &outwt1, &outwt2)
+        if retCode != 0:
+            _ta_check_success("TA_WAVETREND_Update", retCode)
+        return (outwt1, outwt2)
+
+    @cython.binding(False)
+    def peek(self, double high, double low, double close):
+        cdef double outwt1
+        cdef double outwt2
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_WAVETREND_Peek(<TA_WAVETREND_Stream*>self._handle, high, low, close, &outwt1, &outwt2)
+        if retCode != 0:
+            _ta_check_success("TA_WAVETREND_Peek", retCode)
+        return (outwt1, outwt2)
+
+    @property
+    def value(self):
+        cdef double outwt1
+        cdef double outwt2
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_WAVETREND_Value(<TA_WAVETREND_Stream*>self._handle, &outwt1, &outwt2)
+        if retCode != 0:
+            _ta_check_success("TA_WAVETREND_Value", retCode)
+        return (outwt1, outwt2)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_WAVETREND_OutRange(<TA_WAVETREND_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_WAVETREND_Advance(<TA_WAVETREND_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_WAVETREND_Stream* clone = NULL
+        cdef WAVETREND_Stream stream = WAVETREND_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_WAVETREND_Clone(<TA_WAVETREND_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_WAVETREND_Clone", retCode)
+        return stream
+
+
 cdef class WCLPRICE_Stream(Stream):
     """ WCLPRICE(high, low, close)
 
@@ -30665,6 +36076,170 @@ cdef class WMA_Stream(Stream):
                     _ta_stream_registered()
         if retCode != 0:
             _ta_check_success("TA_WMA_Clone", retCode)
+        return stream
+
+
+cdef class ZIGZAG_Stream(Stream):
+    """ ZIGZAG(high, low[, sensitivity=?, mintrendlength=?])
+
+    Zig Zag (Overlap Studies)
+
+    Inputs:
+        prices: ['high', 'low']
+    Parameters:
+        sensitivity: 5.0
+        mintrendlength: 1
+    Outputs:
+        zigzag
+        trend
+        pivotidx
+    """
+
+    def __dealloc__(self):
+        with nogil:
+            if self._handle is not NULL:
+                TA_ZIGZAG_Close(<TA_ZIGZAG_Stream*>self._handle)
+                self._handle = NULL
+                _ta_stream_closed()
+
+    def __init__(self, high, low, double sensitivity=5.0, int mintrendlength=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef TA_ZIGZAG_Stream* handle = NULL
+        cdef double outzigzag
+        cdef int outtrend
+        cdef int outpivotidx
+        cdef TA_RetCode retCode
+        cdef int need
+        _ta_acquire_read()
+        try:
+            with nogil:
+                need = lib.TA_ZIGZAG_Lookback(sensitivity, mintrendlength) + 1
+                retCode = TA_ZIGZAG_Open(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, sensitivity, mintrendlength, &outzigzag, &outtrend, &outpivotidx)
+                if retCode == 0:
+                    with self._mutex:
+                        if self._handle is not NULL:
+                            TA_ZIGZAG_Close(<TA_ZIGZAG_Stream*>self._handle)
+                        else:
+                            _ta_stream_registered()
+                        self._handle = <void*>handle
+                        self._begidx = begidx
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ZIGZAG_Open", retCode, historylen, need)
+
+    @staticmethod
+    def open_and_fill(high, low, double sensitivity=5.0, int mintrendlength=-2**31):
+        cdef np.ndarray a_high = _stream_input(high)
+        cdef np.ndarray a_low = _stream_input(low)
+        cdef tuple arrays = (a_high, a_low,)
+        cdef np.npy_intp length = check_length(arrays)
+        cdef int begidx = check_begidx(length, arrays)
+        cdef int historylen = _stream_history(length, begidx)
+        cdef int lookback
+        cdef np.ndarray outzigzag
+        cdef np.ndarray outtrend
+        cdef np.ndarray outpivotidx
+        cdef int outbegidx
+        cdef int outnbelement
+        cdef TA_ZIGZAG_Stream* handle = NULL
+        cdef ZIGZAG_Stream stream = ZIGZAG_Stream.__new__(ZIGZAG_Stream)
+        cdef TA_RetCode retCode
+        _ta_acquire_read()
+        try:
+            with nogil:
+                lookback = begidx + lib.TA_ZIGZAG_Lookback(sensitivity, mintrendlength)
+            outzigzag = make_double_array(length, lookback)
+            outtrend = make_int_array(length, lookback)
+            outpivotidx = make_int_array(length, lookback)
+            with nogil:
+                retCode = TA_ZIGZAG_OpenAndFill(&handle, <double*>a_high.data + begidx, <double*>a_low.data + begidx, historylen, sensitivity, mintrendlength, &outbegidx, &outnbelement, <double*>outzigzag.data + lookback, <int*>outtrend.data + lookback, <int*>outpivotidx.data + lookback)
+                if retCode == 0:
+                    stream._handle = <void*>handle
+                    stream._begidx = begidx
+                    _ta_stream_registered()
+        finally:
+            with nogil:
+                _ta_end_read()
+        if retCode != 0:
+            _stream_open_failed("TA_ZIGZAG_OpenAndFill", retCode, historylen, lookback - begidx + 1)
+        cdef np.npy_intp i
+        cdef int* outpivotidx_data = <int*>outpivotidx.data
+        for i in range(lookback, length):
+            outpivotidx_data[i] += begidx
+        return stream, (_stream_like((high, low,), outzigzag), _stream_like((high, low,), outtrend), _stream_like((high, low,), outpivotidx))
+
+    @cython.binding(False)
+    def update(self, double high, double low):
+        cdef double outzigzag
+        cdef int outtrend
+        cdef int outpivotidx
+        cdef TA_RetCode retCode
+        cdef int begidx
+        with nogil:
+            with self._mutex:
+                retCode = TA_ZIGZAG_Update(<TA_ZIGZAG_Stream*>self._handle, high, low, &outzigzag, &outtrend, &outpivotidx)
+                begidx = self._begidx
+        if retCode != 0:
+            _ta_check_success("TA_ZIGZAG_Update", retCode)
+        return (outzigzag, outtrend, outpivotidx + begidx)
+
+    @cython.binding(False)
+    def peek(self, double high, double low):
+        cdef double outzigzag
+        cdef int outtrend
+        cdef int outpivotidx
+        cdef TA_RetCode retCode
+        cdef int begidx
+        with nogil:
+            with self._mutex:
+                retCode = TA_ZIGZAG_Peek(<TA_ZIGZAG_Stream*>self._handle, high, low, &outzigzag, &outtrend, &outpivotidx)
+                begidx = self._begidx
+        if retCode != 0:
+            _ta_check_success("TA_ZIGZAG_Peek", retCode)
+        return (outzigzag, outtrend, outpivotidx + begidx)
+
+    @property
+    def value(self):
+        cdef double outzigzag
+        cdef int outtrend
+        cdef int outpivotidx
+        cdef TA_RetCode retCode
+        cdef int begidx
+        with nogil:
+            with self._mutex:
+                retCode = TA_ZIGZAG_Value(<TA_ZIGZAG_Stream*>self._handle, &outzigzag, &outtrend, &outpivotidx)
+                begidx = self._begidx
+        if retCode != 0:
+            _ta_check_success("TA_ZIGZAG_Value", retCode)
+        return (outzigzag, outtrend, outpivotidx + begidx)
+
+    cdef TA_RetCode _out_range(self, int* outbegidx, int* outnbelement) noexcept nogil:
+        return TA_ZIGZAG_OutRange(<TA_ZIGZAG_Stream*>self._handle, outbegidx, outnbelement)
+
+    cdef TA_RetCode _advance(self) noexcept nogil:
+        return TA_ZIGZAG_Advance(<TA_ZIGZAG_Stream*>self._handle)
+
+    @cython.binding(False)
+    def copy(self):
+        cdef TA_ZIGZAG_Stream* clone = NULL
+        cdef ZIGZAG_Stream stream = ZIGZAG_Stream.__new__(type(self))
+        cdef TA_RetCode retCode
+        with nogil:
+            with self._mutex:
+                retCode = TA_ZIGZAG_Clone(<TA_ZIGZAG_Stream*>self._handle, &clone)
+                if retCode == 0:
+                    stream._handle = <void*>clone
+                    stream._begidx = self._begidx
+                    _ta_stream_registered()
+        if retCode != 0:
+            _ta_check_success("TA_ZIGZAG_Clone", retCode)
         return stream
 
 
