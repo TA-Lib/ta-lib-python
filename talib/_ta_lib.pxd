@@ -116,6 +116,7 @@ cdef extern from "ta-lib/ta_common.h" nogil:
     const char *TA_GetVersionBuild()
     const char *TA_GetVersionDate()
     const char *TA_GetVersionTime()
+    TA_RetCode TA_GetRuntimeInfo(const char *key, int *value)
 
     ctypedef double TA_Real
     ctypedef int TA_Integer

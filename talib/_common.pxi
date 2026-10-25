@@ -293,6 +293,17 @@ def _ta_set_compatibility(value):
             ret_code = lib.TA_SetCompatibility(c_value)
     _ta_check_success('TA_SetCompatibility', ret_code)
 
+def _ta_get_runtime_info(key):
+    cdef TA_RetCode ret_code
+    cdef int value = 0
+    cdef bytes c_key = key.encode('ascii')
+    cdef const char *k = c_key
+    with _TA_ReadLease():
+        with nogil:
+            ret_code = lib.TA_GetRuntimeInfo(k, &value)
+    _ta_check_success('TA_GetRuntimeInfo', ret_code)
+    return value
+
 def _ta_get_compatibility():
     cdef int value
     with _TA_ReadLease():
