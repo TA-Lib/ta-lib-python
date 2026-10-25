@@ -3,7 +3,7 @@ import sys
 import textwrap
 
 import numpy as np
-from numpy.testing import assert_array_equal, assert_array_almost_equal
+from numpy.testing import assert_allclose, assert_array_equal, assert_array_almost_equal
 import pytest
 
 import talib
@@ -365,6 +365,34 @@ def test_MAXINDEX():
     d = np.array([1., 2, 3])
     e = func.MAXINDEX(d, 10)
     assert_array_equal(e, [0,0,0])
+
+
+# TA-Lib C may compute these with a vectorized math library that differs from
+# numpy's in the last bits, so compare within a tolerance, not bit for bit.
+MATH_TRANSFORM_DOMAINS = {
+    'ACOS': (np.arccos, -0.99, 0.99),
+    'ASIN': (np.arcsin, -0.99, 0.99),
+    'ATAN': (np.arctan, -50.0, 50.0),
+    'CEIL': (np.ceil, -50.0, 50.0),
+    'COS': (np.cos, -10.0, 10.0),
+    'COSH': (np.cosh, -20.0, 20.0),
+    'EXP': (np.exp, -20.0, 20.0),
+    'FLOOR': (np.floor, -50.0, 50.0),
+    'LN': (np.log, 0.01, 1000.0),
+    'LOG10': (np.log10, 0.01, 1000.0),
+    'SIN': (np.sin, -10.0, 10.0),
+    'SINH': (np.sinh, -20.0, 20.0),
+    'SQRT': (np.sqrt, 0.01, 1000.0),
+    'TAN': (np.tan, -1.4, 1.4),
+    'TANH': (np.tanh, -5.0, 5.0),
+}
+
+
+@pytest.mark.parametrize('name', sorted(MATH_TRANSFORM_DOMAINS))
+def test_math_transform_matches_numpy(name):
+    reference, low, high = MATH_TRANSFORM_DOMAINS[name]
+    x = np.linspace(low, high, 1001)
+    assert_allclose(getattr(func, name)(x), reference(x), rtol=1e-13)
 
 
 # The func API bakes each parameter's default into its own signature, while the
