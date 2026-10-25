@@ -1,7 +1,7 @@
 0.8.3
 =====
 
-- [NEW]: Source builds download and verify TA-Lib C 0.8.1, build it as a
+- [NEW]: Source builds download and verify TA-Lib C 0.8.3, build it as a
   static library and link it into the extension. A compiler, CMake and network
   access are required; a separate TA-Lib C installation is no longer needed.
   Generated C files remain included in source distributions.

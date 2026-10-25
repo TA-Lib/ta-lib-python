@@ -68,7 +68,7 @@ conda install -c conda-forge ta-lib
 Binary wheels include the [TA-Lib](http://ta-lib.org) C library and do not
 require a compiler or a separate TA-Lib C installation.
 
-Starting with version 0.8.3, source builds download the pinned TA-Lib C 0.8.1
+Starting with version 0.8.3, source builds download the pinned TA-Lib C 0.8.3
 release, verify its checksum, and build and statically link it into the Python
 extension. This requires network access, a C compiler and CMake. On Windows,
 source builds require the Microsoft C++ Build Tools. CMake is installed
@@ -123,24 +123,24 @@ your-arm64-python -m pip install --no-cache-dir ta-lib
 
 For 64-bit Windows, the easiest way is to get the *executable installer*:
 
-1. Download [ta-lib-0.8.1-windows-x86_64.msi](https://github.com/ta-lib/ta-lib/releases/download/v0.8.1/ta-lib-0.8.1-windows-x86_64.msi).
+1. Download [ta-lib-0.8.3-windows-x86_64.msi](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_64.msi).
 2. Run the Installer or run `msiexec` [from the command-line](https://learn.microsoft.com/en-us/windows/win32/msi/standard-installer-command-line-options).
 
 Alternatively, if you prefer to get the libraries without installing, or
 would like to use the 32-bit version:
 
-* Intel/AMD 64-bit [ta-lib-0.8.1-windows-x86_64.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.1/ta-lib-0.8.1-windows-x86_64.zip)
-* Intel/AMD 32-bit [ta-lib-0.8.1-windows-x86_32.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.1/ta-lib-0.8.1-windows-x86_32.zip)
+* Intel/AMD 64-bit [ta-lib-0.8.3-windows-x86_64.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_64.zip)
+* Intel/AMD 32-bit [ta-lib-0.8.3-windows-x86_32.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_32.zip)
 
 #### Linux
 
 Download
-[ta-lib-0.8.1-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/download/v0.8.1/ta-lib-0.8.1-src.tar.gz)
+[ta-lib-0.8.3-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-src.tar.gz)
 and:
 
 ```shell
-tar -xzf ta-lib-0.8.1-src.tar.gz
-cd ta-lib-0.8.1/
+tar -xzf ta-lib-0.8.3-src.tar.gz
+cd ta-lib-0.8.3/
 ./configure --prefix=/usr
 make
 sudo make install
