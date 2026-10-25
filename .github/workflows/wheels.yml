@@ -196,6 +196,7 @@ jobs:
         env:
           CIBW_TEST_COMMAND: >
             cd .. &&
+            python -c "import talib; assert talib._ta_lib._ta_get_runtime_info('vmath.transcendental') == 1, 'TA-Lib C is not using vForce'" &&
             pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_MACOS: arm64
           CIBW_ENVIRONMENT_MACOS : >
