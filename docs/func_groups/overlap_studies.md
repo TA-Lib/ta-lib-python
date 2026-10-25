@@ -4,9 +4,19 @@
 upperband, middleband, lowerband = ACCBANDS(high, low, close, timeperiod=20)
 ```
 
+### ALMA - Arnaud Legoux Moving Average
+```python
+real = ALMA(close, timeperiod=9, sigma=6, offset=0.85)
+```
+
 ### BBANDS - Bollinger Bands
 ```python
 upperband, middleband, lowerband = BBANDS(close, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
+```
+
+### CKSP - Chande Kroll Stop
+```python
+highstop, lowstop = CKSP(high, low, close, timeperiod=10, multiplier=1, stopperiod=9)
 ```
 
 ### DEMA - Double Exponential Moving Average
@@ -25,6 +35,12 @@ NOTE: The ``EMA`` function has an unstable period.
 real = EMA(close, timeperiod=30)
 ```
 
+### FRAMA - Fractal Adaptive Moving Average
+NOTE: The ``FRAMA`` function has an unstable period.  
+```python
+real = FRAMA(high, low, timeperiod=16)
+```
+
 ### HMA - Hull Moving Average
 ```python
 real = HMA(close, timeperiod=20)
@@ -34,6 +50,11 @@ real = HMA(close, timeperiod=20)
 NOTE: The ``HT_TRENDLINE`` function has an unstable period.  
 ```python
 real = HT_TRENDLINE(close)
+```
+
+### ICHIMOKU - Ichimoku Kinko Hyo
+```python
+tenkansen, kijunsen, senkouspana, senkouspanb = ICHIMOKU(high, low, tenkanperiod=9, kijunperiod=26, senkoubperiod=52)
 ```
 
 ### KAMA - Kaufman Adaptive Moving Average
@@ -61,6 +82,12 @@ mama, fama = MAMA(close, fastlimit=0, slowlimit=0)
 ### MAVP - Moving average with variable period
 ```python
 real = MAVP(close, periods, minperiod=2, maxperiod=30, matype=0)
+```
+
+### MCGD - McGinley Dynamic
+NOTE: The ``MCGD`` function has an unstable period.  
+```python
+real = MCGD(close, timeperiod=14)
 ```
 
 ### MIDPOINT - MidPoint over period
@@ -99,6 +126,18 @@ real = SMA(close, timeperiod=30)
 supertrend, trend = SUPERTREND(high, low, close, timeperiod=10, multiplier=3)
 ```
 
+### SWAK_BUTTER - Swiss Army Knife - Butterworth Filter
+NOTE: The ``SWAK_BUTTER`` function has an unstable period.  
+```python
+real = SWAK_BUTTER(close, timeperiod=20)
+```
+
+### SWAK_GAUSS - Swiss Army Knife - Gaussian Filter
+NOTE: The ``SWAK_GAUSS`` function has an unstable period.  
+```python
+real = SWAK_GAUSS(close, timeperiod=20)
+```
+
 ### T3 - Triple Exponential Moving Average (T3)
 NOTE: The ``T3`` function has an unstable period.  
 ```python
@@ -115,6 +154,12 @@ real = TEMA(close, timeperiod=30)
 real = TRIMA(close, timeperiod=30)
 ```
 
+### VIDYA - Variable Index Dynamic Average
+NOTE: The ``VIDYA`` function has an unstable period.  
+```python
+real = VIDYA(close, timeperiod=12, cmoperiod=9)
+```
+
 ### VWMA - Volume Weighted Moving Average
 ```python
 real = VWMA(close, volume, timeperiod=30)
@@ -123,6 +168,11 @@ real = VWMA(close, volume, timeperiod=30)
 ### WMA - Weighted Moving Average
 ```python
 real = WMA(close, timeperiod=30)
+```
+
+### ZIGZAG - Zig Zag
+```python
+zigzag, trend, pivotidx = ZIGZAG(high, low, sensitivity=5, mintrendlength=1)
 ```
 
 ### ZLEMA - Zero-Lag Exponential Moving Average

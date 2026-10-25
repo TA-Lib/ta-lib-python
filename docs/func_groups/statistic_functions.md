@@ -9,6 +9,11 @@ real = BETA(high, low, timeperiod=5)
 real = CORREL(high, low, timeperiod=30)
 ```
 
+### KURTOSIS - Rolling Excess Kurtosis
+```python
+real = KURTOSIS(close, timeperiod=30)
+```
+
 ### LINEARREG - Linear Regression
 ```python
 real = LINEARREG(close, timeperiod=14)
@@ -29,9 +34,14 @@ real = LINEARREG_INTERCEPT(close, timeperiod=14)
 real = LINEARREG_SLOPE(close, timeperiod=14)
 ```
 
+### MEDIAN - Rolling Median
+```python
+real = MEDIAN(close, timeperiod=30)
+```
+
 ### PERCENTILE - Percentile (nearest rank)
 ```python
-real = PERCENTILE(close, timeperiod=30, percentile=50)
+real = PERCENTILE(close, timeperiod=100, percentile=50)
 ```
 
 ### PERCENTRANK - Percent Rank

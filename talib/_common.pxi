@@ -166,7 +166,7 @@ def _ta_shutdown(bint at_exit=False):
 
 class MA_Type(object):
     SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, HMA, DISABLED, DEFAULT, \
-        ZLEMA, RMA = range(14)
+        ZLEMA, RMA, VIDYA, ALMA = range(16)
 
     def __init__(self):
         self._lookup = {
@@ -184,6 +184,8 @@ class MA_Type(object):
             MA_Type.DEFAULT: "The Function's Own Default Moving Average",
             MA_Type.ZLEMA: 'Zero-Lag Exponential Moving Average',
             MA_Type.RMA: "Wilder's Smoothed Moving Average",
+            MA_Type.VIDYA: 'Variable Index Dynamic Average',
+            MA_Type.ALMA: 'Arnaud Legoux Moving Average',
             }
 
     def __getitem__(self, type_):
@@ -193,7 +195,7 @@ MA_Type = MA_Type()
 
 # Take every id straight from the C header instead of hardcoding a list.
 # Cython resolves each `lib.TA_FUNC_UNST_*` at build time from the ta_defs.h
-# it compiles against, so this one table is correct for every TA-Lib release.
+# it compiles against, so the numbers always match the TA-Lib C it links.
 _ta_func_unst_ids = {
     # Not sourced from the header: TA_FUNC_UNST_NONE does not exist in newer
     # ta-lib releases, and -1 is a Python-side sentinel anyway.
@@ -221,6 +223,16 @@ _ta_func_unst_ids = {
     'RMA': lib.TA_FUNC_UNST_RMA,
     'HA': lib.TA_FUNC_UNST_HA,
     'RVI': lib.TA_FUNC_UNST_RVI,
+    'FRAMA': lib.TA_FUNC_UNST_FRAMA,
+    'MCGD': lib.TA_FUNC_UNST_MCGD,
+    'VIDYA': lib.TA_FUNC_UNST_VIDYA,
+    'STC': lib.TA_FUNC_UNST_STC,
+    'SWAK_GAUSS': lib.TA_FUNC_UNST_SWAK_GAUSS,
+    'SWAK_BUTTER': lib.TA_FUNC_UNST_SWAK_BUTTER,
+    'SWAK_HP': lib.TA_FUNC_UNST_SWAK_HP,
+    'SWAK_2PHP': lib.TA_FUNC_UNST_SWAK_2PHP,
+    'SWAK_BP': lib.TA_FUNC_UNST_SWAK_BP,
+    'FISHER': lib.TA_FUNC_UNST_FISHER,
     'ALL': lib.TA_FUNC_UNST_ALL,
 }
 

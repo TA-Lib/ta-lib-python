@@ -18,6 +18,8 @@ class MA_Type(Enum):
     DEFAULT = 11
     ZLEMA = 12
     RMA = 13
+    VIDYA = 14
+    ALMA = 15
 
 #Overlap Studies Functions
 
@@ -166,6 +168,64 @@ def ZLEMA(
         real: NDArray[np.float64],
         timeperiod: int= 30
         )-> NDArray[np.float64]: ...
+
+def ALMA(
+        real: NDArray[np.float64],
+        timeperiod: int= 9,
+        sigma: float= 6.0,
+        offset: float= 0.85
+        )-> NDArray[np.float64]: ...
+
+def CKSP(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10,
+        multiplier: float= 1.0,
+        stopperiod: int= 9
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def FRAMA(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 16
+        )-> NDArray[np.float64]: ...
+
+def ICHIMOKU(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        tenkanperiod: int= 9,
+        kijunperiod: int= 26,
+        senkoubperiod: int= 52
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
+
+def MCGD(
+        real: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def SWAK_BUTTER(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def SWAK_GAUSS(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def VIDYA(
+        real: NDArray[np.float64],
+        timeperiod: int= 12,
+        cmoperiod: int= 9
+        )-> NDArray[np.float64]: ...
+
+def ZIGZAG(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        sensitivity: float= 5.0,
+        mintrendlength: int= 1
+        )-> Tuple[NDArray[np.float64], NDArray[np.int32], NDArray[np.int32]]: ...
 
 #Momentum Indicator Functions
 
@@ -477,6 +537,137 @@ def WILLR(
         timeperiod: int= 14
         )-> NDArray[np.float64]: ...
 
+def ASI(
+        open: NDArray[np.float64],
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        limitmove: float= 3.0
+        )-> NDArray[np.float64]: ...
+
+def CG(
+        real: NDArray[np.float64],
+        timeperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def CHOP(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def CHOPTR(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 14
+        )-> NDArray[np.float64]: ...
+
+def CRSI(
+        real: NDArray[np.float64],
+        timeperiod: int= 3,
+        streakperiod: int= 2,
+        rankperiod: int= 100
+        )-> NDArray[np.float64]: ...
+
+def CTI(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def DOSC(
+        real: NDArray[np.float64],
+        timeperiod: int= 14,
+        firstperiod: int= 5,
+        secondperiod: int= 3,
+        signalperiod: int= 9
+        )-> NDArray[np.float64]: ...
+
+def FISHER(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 10
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def IBS(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64]
+        )-> NDArray[np.float64]: ...
+
+def KST(
+        real: NDArray[np.float64],
+        roc1period: int= 10,
+        roc2period: int= 15,
+        roc3period: int= 20,
+        roc4period: int= 30,
+        sma1period: int= 10,
+        sma2period: int= 10,
+        sma3period: int= 10,
+        sma4period: int= 15,
+        signalperiod: int= 9
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def KSTEXT(
+        real: NDArray[np.float64],
+        roc1period: int= 10,
+        roc2period: int= 15,
+        roc3period: int= 20,
+        roc4period: int= 30,
+        ma1period: int= 10,
+        ma2period: int= 10,
+        ma3period: int= 10,
+        ma4period: int= 15,
+        signalperiod: int= 9,
+        rocmatype: MA_Type = MA_Type.SMA,
+        signalmatype: MA_Type = MA_Type.SMA
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
+def PSO(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        fastk_period: int= 8,
+        emaperiod: int= 5
+        )-> NDArray[np.float64]: ...
+
+def SI(
+        open: NDArray[np.float64],
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        limitmove: float= 3.0
+        )-> NDArray[np.float64]: ...
+
+def SQZMOM(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        bbperiod: int= 20,
+        nbdev: float= 2.0,
+        kcperiod: int= 20,
+        factorwide: float= 2.0,
+        factornormal: float= 1.5,
+        factornarrow: float= 1.0
+        )-> Tuple[NDArray[np.float64], NDArray[np.int32]]: ...
+
+def STC(
+        real: NDArray[np.float64],
+        fastperiod: int= 23,
+        slowperiod: int= 50,
+        cycleperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
+def WAVETREND(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        channelperiod: int= 10,
+        averageperiod: int= 21,
+        signalperiod: int= 4
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
 #Volume Indicator Functions
 
 def AD(
@@ -554,6 +745,24 @@ def VWAP(
         volume: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
+def EMV(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        volume: NDArray[np.float64],
+        timeperiod: int= 14,
+        volumedivisor: float= 10000.0
+        )-> NDArray[np.float64]: ...
+
+def KVO(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        volume: NDArray[np.float64],
+        fastperiod: int= 34,
+        slowperiod: int= 55,
+        signalperiod: int= 13
+        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+
 #Volatility Indicator Functions
 
 def ADR(
@@ -602,6 +811,38 @@ def TRANGE(
         close: NDArray[np.float64]
         )-> NDArray[np.float64]: ...
 
+def BBW(
+        real: NDArray[np.float64],
+        timeperiod: int= 20,
+        nbdevup: float= 2.0,
+        nbdevdn: float= 2.0,
+        matype: MA_Type = MA_Type.SMA
+        )-> NDArray[np.float64]: ...
+
+def PERCENTB(
+        real: NDArray[np.float64],
+        timeperiod: int= 20,
+        nbdevup: float= 2.0,
+        nbdevdn: float= 2.0,
+        matype: MA_Type = MA_Type.SMA
+        )-> NDArray[np.float64]: ...
+
+def ROGERSSATCHELL(
+        open: NDArray[np.float64],
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        close: NDArray[np.float64],
+        timeperiod: int= 10,
+        annualization: float= 252.0
+        )-> NDArray[np.float64]: ...
+
+def RVIR(
+        high: NDArray[np.float64],
+        low: NDArray[np.float64],
+        timeperiod: int= 14,
+        stddevperiod: int= 10
+        )-> NDArray[np.float64]: ...
+
 # Price Transform Functions
 
 def AVGPRICE(
@@ -646,6 +887,22 @@ def HT_PHASOR(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np
 def HT_SINE(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 
 def HT_TRENDMODE(real: NDArray[np.float64])-> Tuple[NDArray[np.float64], NDArray[np.int32]]: ...
+
+def SWAK_2PHP(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
+
+def SWAK_BP(
+        real: NDArray[np.float64],
+        timeperiod: int= 20,
+        delta: float= 0.1
+        )-> NDArray[np.float64]: ...
+
+def SWAK_HP(
+        real: NDArray[np.float64],
+        timeperiod: int= 20
+        )-> NDArray[np.float64]: ...
 
 #Pattern Recognition Functions
 
@@ -1119,7 +1376,7 @@ def LINEARREG_SLOPE(
 
 def PERCENTILE(
         real: NDArray[np.float64],
-        timeperiod: int= 30,
+        timeperiod: int= 100,
         percentile: float= 50.0
         )-> NDArray[np.float64]: ...
 
@@ -1143,6 +1400,16 @@ def VAR(
         real: NDArray[np.float64], 
         timeperiod: int= 5, 
         nbdev: float= 1
+        )-> NDArray[np.float64]: ...
+
+def KURTOSIS(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
+        )-> NDArray[np.float64]: ...
+
+def MEDIAN(
+        real: NDArray[np.float64],
+        timeperiod: int= 30
         )-> NDArray[np.float64]: ...
 
 # Math Transform Functions
@@ -1221,7 +1488,7 @@ def MINMAX(
 def MINMAXINDEX(
         real: NDArray[np.float64], 
         timeperiod: int= 30
-        )-> Tuple[NDArray[np.float64], NDArray[np.float64]]: ...
+        )-> Tuple[NDArray[np.int32], NDArray[np.int32]]: ...
 
 def MULT(
         real0: NDArray[np.float64], 
