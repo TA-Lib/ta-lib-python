@@ -50,6 +50,13 @@ Functions documented as having an unstable period start with that extra
 unstable-period setting at ``0``. ``get_unstable_period()`` only returns a
 non-zero value after you set one explicitly with ``set_unstable_period()``.
 
+Instead of a count, ``set_unstable_period()`` also takes an Auto level. With
+``talib.set_unstable_period('ALL', talib.UNSTABLE_AUTO_PREC_4)`` each function
+works out how many leading values to discard, so that the first 4 significant
+digits of what it returns no longer depend on where your data starts;
+``UNSTABLE_AUTO_PREC_8`` targets 8. ``get_unstable_period()`` then returns the
+level. See [Unstable Period](https://ta-lib.org/api/unstable-period/#auto).
+
 Documentation for all functions:
 
 * [Overlap Studies](func_groups/overlap_studies.md)

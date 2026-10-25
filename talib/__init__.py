@@ -108,6 +108,7 @@ try:
         _ta_initialize, _ta_shutdown, MA_Type, __ta_version__,
         _ta_set_unstable_period as set_unstable_period,
         _ta_get_unstable_period as get_unstable_period,
+        UNSTABLE_AUTO_PREC_4, UNSTABLE_AUTO_PREC_8,
         _ta_set_compatibility as set_compatibility,
         _ta_get_compatibility as get_compatibility,
         InsufficientHistory,

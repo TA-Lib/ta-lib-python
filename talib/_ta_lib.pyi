@@ -21,6 +21,9 @@ class MA_Type(Enum):
     VIDYA = 14
     ALMA = 15
 
+UNSTABLE_AUTO_PREC_4: int
+UNSTABLE_AUTO_PREC_8: int
+
 #Overlap Studies Functions
 
 def BBANDS(
