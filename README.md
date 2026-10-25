@@ -546,7 +546,8 @@ slowk, slowd = STOCH(inputs, 5, 3, 0, 3, 0, prices=['high', 'low', 'open'])
 The Streaming API keeps a handle per indicator instead of recomputing from the
 whole array. Opening one costs a pass over the history; every bar after that is
 O(1), and each value it produces is identical to the one the Function API
-reports for that bar.
+reports for that bar. On Apple Silicon macOS, a function using a transcendental
+math function (SIN, EXP, LN, ...) may differ from it in the last bits.
 
 ```python
 import talib

@@ -20,6 +20,13 @@ def _flagged(flag):
 # group dict: a function the flag knows and the dict does not would otherwise be
 # silently absent from every parametrised test below.
 FUNCTIONS = sorted(_flagged('Function has a streaming API'))
+# Where TA-Lib C computes a batch call with a vector math library (Apple's vForce
+# on Apple Silicon macOS), the transcendental Math Transform functions (SIN, LN,
+# ...), one math call per bar, may differ from it in the last bits on a stream's
+# update. Every other function, and every other tier, agrees bit for bit.
+NEAR = (_flagged('Uses a transcendental math function')
+        & set(talib.get_function_groups()['Math Transform'])
+        if talib._ta_lib._ta_get_runtime_info('vmath.transcendental') else set())
 CANDLESTICKS = _flagged('Output is a candlestick')
 NAN_BARS = 5
 
@@ -74,6 +81,23 @@ def opened(name, args, warmup):
     pytest.fail('%s did not open on %d bars' % (name, warmup + 3))
 
 
+def agrees(name, got, want):
+    """Bit-exact, or for a NEAR function equal or within 8 ulps of the same
+    sign (the bound TA-Lib C's own tests hold these functions to)."""
+    if repr(got) == repr(want):
+        return True
+    if name not in NEAR:
+        return False
+    a, b = np.float64(got), np.float64(want)
+    if np.isnan(a) or np.isnan(b) or np.isinf(a) or np.isinf(b):
+        return False
+    if a == b:
+        return True
+    if np.signbit(a) != np.signbit(b):
+        return False
+    return abs(int(a.view(np.int64)) - int(b.view(np.int64))) <= 8
+
+
 def carried(name, data, warmup):
     """Open on a prefix, then update through the rest, against the batch series."""
     args = series(name, data)
@@ -85,7 +109,7 @@ def carried(name, data, warmup):
     for bar in range(warmup, len(data['close'])):
         produced = handle.update(*[a[bar] for a in args])
         for got, want in paired(outputs(produced), expected):
-            assert repr(got) == repr(want[bar].item()), (name, bar)
+            assert agrees(name, got, want[bar].item()), (name, bar)
         updated += 1
     assert updated == len(data['close']) - warmup
     return handle

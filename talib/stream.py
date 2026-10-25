@@ -2,7 +2,8 @@
 
 A handle is opened on history, then carried forward one bar at a time. Every
 value it produces is bit-identical to what the Function API reports for the
-same bar.
+same bar, except on Apple Silicon macOS, where a function using a
+transcendental math function (SIN, EXP, LN, ...) may differ in the last bits.
 
     from talib import stream
 
