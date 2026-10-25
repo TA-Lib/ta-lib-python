@@ -247,6 +247,9 @@ _ta_func_unst_retired = {
     'STOCHRSI': "STOCHRSI has no unstable period of its own; it follows the inner RSI. Set 'RSI' instead.",
 }
 
+UNSTABLE_AUTO_PREC_4 = lib.TA_UNSTABLE_AUTO_PREC_4
+UNSTABLE_AUTO_PREC_8 = lib.TA_UNSTABLE_AUTO_PREC_8
+
 def _ta_func_unst_id(name):
     if name in _ta_func_unst_retired:
         warnings.warn(

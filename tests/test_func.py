@@ -194,6 +194,22 @@ def test_unstable_period_moves_its_own_function(name):
     assert _leading_unset(call()) == baseline
 
 
+def test_unstable_period_takes_an_auto_level():
+    close = np.cumsum(np.random.RandomState(2).randn(2000)) + 100.0
+    talib.set_unstable_period('ALL', 0)
+    plain = _leading_unset(func.EMA(close, 30))
+    try:
+        talib.set_unstable_period('ALL', talib.UNSTABLE_AUTO_PREC_4)
+        assert talib.get_unstable_period('EMA') == talib.UNSTABLE_AUTO_PREC_4
+        prec4 = _leading_unset(func.EMA(close, 30))
+        talib.set_unstable_period('EMA', talib.UNSTABLE_AUTO_PREC_8)
+        assert talib.get_unstable_period('EMA') == talib.UNSTABLE_AUTO_PREC_8
+        prec8 = _leading_unset(func.EMA(close, 30))
+    finally:
+        talib.set_unstable_period('ALL', 0)
+    assert plain < prec4 < prec8 < len(close)
+
+
 def test_unstable_period_all():
     talib.set_unstable_period('ALL', 0)
     baseline = {name: _leading_unset(call())

@@ -86,6 +86,10 @@ cdef extern from "ta-lib/ta_defs.h":
     const TA_FuncUnstId TA_FUNC_UNST_FISHER
     const TA_FuncUnstId TA_FUNC_UNST_ALL
 
+    # The Auto levels, passed to TA_SetUnstablePeriod in place of a count.
+    const unsigned int TA_UNSTABLE_AUTO_PREC_4
+    const unsigned int TA_UNSTABLE_AUTO_PREC_8
+
     ctypedef int TA_RangeType
     const TA_RangeType TA_RangeType_RealBody = 0
     const TA_RangeType TA_RangeType_HighLow = 1
