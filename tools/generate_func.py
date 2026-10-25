@@ -425,19 +425,20 @@ for f in functions:
     print('        with nogil:')
     print('            _ta_end_read()')
     print('    _ta_check_success("%s", retCode)' % name)
-    if 'INDEX' in f:
-        for arg in args:
-            var = arg.split()[-1]
+    # An index output counts from begidx; shift it back to the caller's coordinates.
+    for arg in args:
+        var = arg.split()[-1]
 
-            if 'out' not in var:
-                continue
+        if 'out' not in var:
+            continue
 
-            if var.endswith('[]'):
-                var = cleanup(var[:-2])
-                print('    %s_data = <int*>%s.data' % (var, var))
-                print('    with nogil:')
-                print('        for i from lookback <= i < length:')
-                print('            %s_data[i] += begidx' % var)
+        if (var.endswith('[]') and arg.split()[0] == 'int'
+                and ('INDEX' in name or var[:-2].endswith('Idx'))):
+            var = cleanup(var[:-2])
+            print('    %s_data = <int*>%s.data' % (var, var))
+            print('    with nogil:')
+            print('        for i from lookback <= i < length:')
+            print('            %s_data[i] += begidx' % var)
     print('    return ', end='')
     i = 0
     for arg in args:
