@@ -89,10 +89,15 @@ def declare(name, decls):
         yield '    TA_RetCode TA_%s_%s(%s)' % (name, verb, ', '.join(args))
 
 
+def is_index_output(name, ctype, var):
+    """An output holding a bar index, which the caller reads in its own coordinates."""
+    return ctype == 'int' and ('INDEX' in name or var.endswith('Idx'))
+
+
 def parse(name, decls, defaults, output_names):
     open_args = decls['Open']
     history = open_args.index('int historyLen')
-    inputs, params, outputs = [], [], []
+    inputs, params, outputs, indexes = [], [], [], set()
     for arg in open_args[1:history]:
         ctype, var, stars, array = split_arg(arg)
         assert (ctype, array) == ('const double', True), arg
@@ -103,6 +108,8 @@ def parse(name, decls, defaults, output_names):
             spelled = (output_names[len(outputs)] if output_names
                        else cleanup(var)[len('out'):])
             outputs.append((ctype, 'out%s' % spelled))
+            if is_index_output(name, ctype, var):
+                indexes.add('out%s' % spelled)
             continue
         key = var[len('optIn'):]
         key = key[0].lower() + key[1:]
@@ -118,7 +125,8 @@ def parse(name, decls, defaults, output_names):
         params.append(('double' if ctype == 'double' else 'int',
                        cleanup(var), default))
     assert output_names is None or len(outputs) == len(output_names), name
-    return {'name': name, 'inputs': inputs, 'params': params, 'outputs': outputs}
+    return {'name': name, 'inputs': inputs, 'params': params, 'outputs': outputs,
+            'indexes': indexes}
 
 
 PREAMBLE = '''\
@@ -274,9 +282,11 @@ def emit(func, docstring):
     out_ptrs = ['&%s' % py for _, py in outputs]
     # An index output counts from the first bar the stream opened on; the batch
     # tier reports it in the caller's coordinates, so shift it back the same way.
-    shift = ' + begidx' if 'INDEX' in name else ''
-    value = (outputs[0][1] + shift if len(outputs) == 1
-             else '(%s)' % ', '.join(py + shift for _, py in outputs))
+    indexes = func['indexes']
+    shift = bool(indexes)
+    shifted = [py + (' + begidx' if py in indexes else '') for _, py in outputs]
+    value = (shifted[0] if len(outputs) == 1
+             else '(%s)' % ', '.join(shifted))
     live = '<%s*>self._handle' % handle
     lookback_args = ', '.join(py for _, py, _ in params)
     out = []
@@ -380,6 +390,8 @@ def emit(func, docstring):
     if shift:
         out.append('        cdef np.npy_intp i')
         for ctype, py in outputs:
+            if py not in indexes:
+                continue
             out.append('        cdef %s* %s_data = <%s*>%s.data' % (ctype, py, ctype, py))
             out.append('        for i in range(lookback, length):')
             out.append('            %s_data[i] += begidx' % py)
