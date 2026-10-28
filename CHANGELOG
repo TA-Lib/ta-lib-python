@@ -1,6 +1,17 @@
 0.8.3
 =====
 
+- [NEW]: Update to TA-Lib C 0.8.3.
+
+- [NEW]: This includes new TA functions: ALMA, ASI, BBW, CG, CHOP, CHOPTR,
+  CKSP, CRSI, CTI, DOSC, EMV, FISHER, FRAMA, IBS, ICHIMOKU, KST, KSTEXT,
+  KURTOSIS, KVO, MCGD, MEDIAN, PERCENTB, PSO, ROGERSSATCHELL, RVIR, SI, SQZMOM,
+  STC, SWAK_2PHP, SWAK_BP, SWAK_BUTTER, SWAK_GAUSS, SWAK_HP, VIDYA, WAVETREND,
+  ZIGZAG
+
+- [NEW]: Additional moving average types ``MA_Type.VIDYA`` and
+  ``MA_Type.ALMA``.
+
 - [NEW]: Source builds download and verify TA-Lib C 0.8.3, build it as a
   static library and link it into the extension. A compiler, CMake and network
   access are required; a separate TA-Lib C installation is no longer needed.
