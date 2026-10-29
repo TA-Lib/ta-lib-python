@@ -58,9 +58,9 @@ if _pl_Series is not None or _pd_Series is not None:
 
             # Use float64 values if polars or pandas, else use values as passed
             if use_pl:
-                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pl_Series) else
+                _args = [arg.to_numpy().astype(float, copy=False) if isinstance(arg, _pl_Series) else
                          arg for arg in args]
-                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pl_Series) else
+                _kwds = {k: v.to_numpy().astype(float, copy=False) if isinstance(v, _pl_Series) else
                             v for k, v in kwds.items()}
 
             elif use_pd:
@@ -68,9 +68,9 @@ if _pl_Series is not None or _pd_Series is not None:
                              for arg in chain(args, kwds.values())
                              if isinstance(arg, _pd_Series))
 
-                _args = [arg.to_numpy().astype(float) if isinstance(arg, _pd_Series) else
+                _args = [arg.to_numpy().astype(float, copy=False) if isinstance(arg, _pd_Series) else
                          arg for arg in args]
-                _kwds = {k: v.to_numpy().astype(float) if isinstance(v, _pd_Series) else
+                _kwds = {k: v.to_numpy().astype(float, copy=False) if isinstance(v, _pd_Series) else
                             v for k, v in kwds.items()}
 
             else:
