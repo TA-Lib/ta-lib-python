@@ -2894,7 +2894,7 @@ cdef np.ndarray _stream_input(object values):
         return check_array(values)
     for series in (_PANDAS_SERIES, _POLARS_SERIES):
         if series is not None and isinstance(values, series):
-            return check_array(values.to_numpy().astype(float))
+            return check_array(values.to_numpy().astype(float, copy=False))
     raise TypeError("input must be a numpy array or a pandas or polars Series, "
                     "not %s" % type(values).__name__)
 
