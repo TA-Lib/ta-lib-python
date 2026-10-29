@@ -1,3 +1,8 @@
+0.8.4
+=====
+
+- [NEW]: Improve performance when using pandas by reducing float array copies.
+
 0.8.3
 =====
 
