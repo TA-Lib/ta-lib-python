@@ -502,10 +502,10 @@ class Function(object):
             series = local.input_arrays[price_series]
             if _PANDAS_SERIES is not None and \
                     isinstance(series, _PANDAS_SERIES):
-                series = series.values.astype(float)
+                series = series.values.astype(float, copy=False)
             elif _POLARS_SERIES is not None and \
                     isinstance(series, _POLARS_SERIES):
-                series = series.to_numpy().astype(float)
+                series = series.to_numpy().astype(float, copy=False)
             args.append(series)
         for opt_input in local.opt_inputs:
             value = self.__get_opt_input_value(opt_input)
