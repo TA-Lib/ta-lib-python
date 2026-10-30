@@ -444,3 +444,18 @@ def test_threading():
 
     with ThreadPoolExecutor(4) as pool:
         list(pool.map(worker, range(4)))
+
+
+@pytest.mark.parametrize("frame_type", ["pandas", "polars"])
+@pytest.mark.parametrize("empty", [False, True])
+def test_run_with_dataframe(frame_type, empty):
+    module = pytest.importorskip(frame_type)
+    values = np.array([] if empty else [2.0, 4.0, 6.0, 8.0])
+    frame = module.DataFrame({"close": values})
+    indicator = abstract.Function('SMA', timeperiod=2)
+    result = indicator.run(frame)
+    assert isinstance(result, module.Series)
+    assert_array_equal(result.to_numpy(), talib.SMA(values, timeperiod=2))
+    if frame_type == 'pandas':
+        assert result.index.equals(frame.index)
+    assert_array_equal(indicator.run().to_numpy(), result.to_numpy())
