@@ -408,7 +408,7 @@ class Function(object):
         This is a shortcut to the outputs property that also allows setting
         the input_arrays dict.
         """
-        if input_arrays:
+        if input_arrays is not None:
             self.set_input_arrays(input_arrays)
         self.__call_function()
         return self.outputs
