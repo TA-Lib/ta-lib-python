@@ -76,10 +76,11 @@ automatically when using pip's default build isolation.
 
 To use an existing TA-Lib C installation instead, set ``TA_INCLUDE_PATH`` or
 ``TA_LIBRARY_PATH`` before building. Setting either variable disables the
-bundled C build, including its download; if only one is set, the other uses
-the standard search paths. These variables accept multiple directories
-separated by ``os.pathsep`` (``:`` on Unix, ``;`` on Windows). They apply to
-source builds, not prebuilt wheels.
+bundled C build, including its download. If only one is set, the other is
+looked up with ``pkg-config``, then ``brew`` on macOS, then common install
+locations, and is otherwise left to the compiler's default search. These
+variables accept multiple directories separated by ``os.pathsep`` (``:`` on
+Unix, ``;`` on Windows). They apply to source builds, not prebuilt wheels.
 
 The following instructions are for installing your own TA-Lib C library.
 You can also follow its [installation directions](https://ta-lib.org/install/).

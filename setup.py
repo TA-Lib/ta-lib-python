@@ -5,6 +5,7 @@ import os
 import os.path
 import hashlib
 import shlex
+import shutil
 import subprocess
 import tarfile
 import tempfile
@@ -76,6 +77,46 @@ def build_talib(directory, plat_name):
     return prefix
 
 
+def tool_output(*args):
+    """Return a tool's stripped output, or None if it is missing or fails."""
+    if shutil.which(args[0]) is None:
+        return None
+    try:
+        result = subprocess.run(args, capture_output=True, text=True, timeout=10)
+    except Exception:
+        return None
+    output = result.stdout.strip()
+    return output if result.returncode == 0 and output else None
+
+
+def find_talib():
+    """Return the first include and library directories that hold TA-Lib C."""
+    includes, libraries = [], []
+    includedir = tool_output('pkg-config', '--variable=includedir', 'ta-lib')
+    if includedir:
+        includes += [includedir, os.path.dirname(includedir)]
+    libdir = tool_output('pkg-config', '--variable=libdir', 'ta-lib')
+    if libdir:
+        libraries.append(libdir)
+    if sys.platform == 'darwin':
+        prefix = tool_output('brew', '--prefix', '--installed', 'ta-lib')
+        if prefix:
+            includes.append(os.path.join(prefix, 'include'))
+            libraries.append(os.path.join(prefix, 'lib'))
+    includes += ['/usr/include', '/usr/local/include', '/opt/include',
+                 '/opt/local/include', '/opt/homebrew/include',
+                 '/opt/homebrew/opt/ta-lib/include']
+    libraries += ['/usr/lib', '/usr/local/lib', '/usr/lib64',
+                  '/usr/local/lib64', '/opt/lib', '/opt/local/lib',
+                  '/opt/homebrew/lib', '/opt/homebrew/opt/ta-lib/lib']
+    include = next((d for d in includes if
+                    os.path.isfile(os.path.join(d, 'ta-lib', 'ta_defs.h'))), None)
+    library = next((d for d in libraries if any(
+        os.path.exists(os.path.join(d, 'libta-lib' + suffix))
+        for suffix in ('.so', '.dylib', '.a'))), None)
+    return [include] if include else [], [library] if library else []
+
+
 # Get the Cython build_ext or fall back to setuptools build_ext
 try:
     from Cython.Distutils import build_ext
@@ -106,12 +147,9 @@ class NumpyBuildExt(build_ext):
                                 r'c:\Program Files (x86)\TA-Lib\lib']
                 library = 'ta-lib-static'
             else:
-                include_dirs = ['/usr/include', '/usr/local/include', '/opt/include',
-                                '/opt/local/include', '/opt/homebrew/include',
-                                '/opt/homebrew/opt/ta-lib/include']
-                library_dirs = ['/usr/lib', '/usr/local/lib', '/usr/lib64',
-                                '/usr/local/lib64', '/opt/lib', '/opt/local/lib',
-                                '/opt/homebrew/lib', '/opt/homebrew/opt/ta-lib/lib']
+                both = ('TA_INCLUDE_PATH' in os.environ and
+                        'TA_LIBRARY_PATH' in os.environ)
+                include_dirs, library_dirs = ([], []) if both else find_talib()
                 library = 'ta-lib'
             if 'TA_INCLUDE_PATH' in os.environ:
                 include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
