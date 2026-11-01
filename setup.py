@@ -106,12 +106,17 @@ class NumpyBuildExt(build_ext):
                                 r'c:\Program Files (x86)\TA-Lib\lib']
                 library = 'ta-lib-static'
             else:
-                include_dirs = ['/usr/include', '/usr/local/include', '/opt/include',
-                                '/opt/local/include', '/opt/homebrew/include',
-                                '/opt/homebrew/opt/ta-lib/include']
-                library_dirs = ['/usr/lib', '/usr/local/lib', '/usr/lib64',
-                                '/usr/local/lib64', '/opt/lib', '/opt/local/lib',
-                                '/opt/homebrew/lib', '/opt/homebrew/opt/ta-lib/lib']
+                # Common Unix prefixes
+                include_dirs = ['/usr/include', '/usr/local/include']
+                library_dirs = ['/usr/lib', '/usr/local/lib']
+                if sys.platform == 'darwin':
+                    # Homebrew (Apple Silicon).
+                    include_dirs += ['/opt/homebrew/include',
+                                     '/opt/homebrew/opt/ta-lib/include']
+                    library_dirs += ['/opt/homebrew/lib',
+                                     '/opt/homebrew/opt/ta-lib/lib']
+                elif sys.platform.startswith('linux'):
+                    library_dirs += ['/usr/lib64', '/usr/local/lib64']
                 library = 'ta-lib'
             if 'TA_INCLUDE_PATH' in os.environ:
                 include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
