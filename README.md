@@ -8,23 +8,20 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/TA-Lib?label=Python)](https://pypi.org/project/TA-Lib/)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-This is a Python wrapper for [TA-LIB](http://ta-lib.org) based on Cython
-instead of SWIG. From the homepage:
+This is a Python wrapper for [TA-Lib](https://ta-lib.org). From the homepage:
 
-> TA-Lib is widely used by trading software developers requiring to perform
-> technical analysis of financial market data.
+> TA-Lib implements the standard technical analysis algorithms used across the
+> industry, and is often the reference other libraries test their results
+> against.
 >
-> * Includes 150+ indicators such as ADX, MACD, RSI, Stochastic, Bollinger
->   Bands, etc.
-> * Candlestick pattern recognition
-> * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
+> * 200+ indicators: ADX, MACD, RSI, Stochastic, Bollinger Bands and more,
+>   plus candlestick pattern recognition
+> * Batch and streaming: compute a whole array, or update one bar at a time
+>   without recomputing the history
+> * Native in five languages: C/C++, Java, C#, Rust and TypeScript
 
-The original Python bindings included with TA-Lib use
-[SWIG](http://swig.org) which unfortunately are difficult to install and
-aren't as efficient as they could be. Therefore this project uses
-[Cython](https://cython.org) and [Numpy](https://numpy.org) to efficiently
-and cleanly bind to TA-Lib - producing results 2-4 times faster than the
-SWIG interface.
+`ta-lib-python` uses [Cython](https://cython.org) and [Numpy](https://numpy.org)
+to efficiently and cleanly bind to the native C library.
 
 In addition, this project also supports the use of the
 [Polars](https://www.pola.rs) and [Pandas](https://pandas.pydata.org)
@@ -32,10 +29,7 @@ libraries.
 
 ## Versions 🗂️
 
-The upstream TA-Lib C library released version 0.6.1 and changed the library
-name to `-lta-lib` from `-lta_lib`. After trying to support both via
-autodetect and having some issues, we have decided to currently support three
-feature branches:
+Which TA-Lib C and `numpy` each `ta-lib-python` release line supports:
 
 * `ta-lib-python` 0.4.x (supports `ta-lib` 0.4.x and `numpy` 1)
 * `ta-lib-python` 0.5.x (supports `ta-lib` 0.4.x and `numpy` 2)
@@ -51,106 +45,14 @@ You can install from PyPI:
 python -m pip install TA-Lib
 ```
 
-Or checkout the sources and run `setup.py` yourself:
-
-```shell
-python setup.py install
-```
-
-It also appears possible to install via [Conda Forge](https://anaconda.org/conda-forge/ta-lib):
+Or from [Conda Forge](https://anaconda.org/conda-forge/ta-lib):
 
 ```shell
 conda install -c conda-forge ta-lib
 ```
 
-### Dependencies 🧩
-
-Binary wheels include the [TA-Lib](http://ta-lib.org) C library and do not
+Binary wheels include the [TA-Lib](https://ta-lib.org) C library and do not
 require a compiler or a separate TA-Lib C installation.
-
-Starting with version 0.8.3, source builds download the pinned TA-Lib C 0.8.3
-release, verify its checksum, and build and statically link it into the Python
-extension. This requires network access, a C compiler and CMake. On Windows,
-source builds require the Microsoft C++ Build Tools. CMake is installed
-automatically when using pip's default build isolation.
-
-To use an existing TA-Lib C installation instead, set ``TA_INCLUDE_PATH`` or
-``TA_LIBRARY_PATH`` before building. Setting either variable disables the
-bundled C build, including its download; if only one is set, the other uses
-the standard search paths. These variables accept multiple directories
-separated by ``os.pathsep`` (``:`` on Unix, ``;`` on Windows). They apply to
-source builds, not prebuilt wheels.
-
-The following instructions are for installing your own TA-Lib C library.
-You can also follow its [installation directions](https://ta-lib.org/install/).
-
-> Some Conda Forge users have reported success installing the underlying TA-Lib C
-> library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
->
-> ``$ conda install -c conda-forge libta-lib``
-
-#### Mac OS X
-
-You can simply install using Homebrew:
-
-```shell
-brew install ta-lib
-```
-
-If you are using Apple Silicon, such as the M1 processors, and building mixed
-architecture Homebrew projects, you might want to make sure it's being built
-for your architecture:
-
-```shell
-arch -arm64 brew install ta-lib
-```
-
-To link a source build against the Homebrew installation, set:
-
-```shell
-export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
-export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
-```
-
-You might also find this helpful, particularly if you have tried several
-different installations without success:
-
-```shell
-your-arm64-python -m pip install --no-cache-dir ta-lib
-```
-
-#### Windows
-
-For 64-bit Windows, the easiest way is to get the *executable installer*:
-
-1. Download [ta-lib-0.8.3-windows-x86_64.msi](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_64.msi).
-2. Run the Installer or run `msiexec` [from the command-line](https://learn.microsoft.com/en-us/windows/win32/msi/standard-installer-command-line-options).
-
-Alternatively, if you prefer to get the libraries without installing, or
-would like to use the 32-bit version:
-
-* Intel/AMD 64-bit [ta-lib-0.8.3-windows-x86_64.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_64.zip)
-* Intel/AMD 32-bit [ta-lib-0.8.3-windows-x86_32.zip](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-windows-x86_32.zip)
-
-#### Linux
-
-Download
-[ta-lib-0.8.3-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/download/v0.8.3/ta-lib-0.8.3-src.tar.gz)
-and:
-
-```shell
-tar -xzf ta-lib-0.8.3-src.tar.gz
-cd ta-lib-0.8.3/
-./configure --prefix=/usr
-make
-sudo make install
-```
-
-> If you build `TA-Lib` using `make -jX` it will fail but that's OK!
-> Simply rerun ``make -jX`` followed by ``[sudo] make install``.
-
-Note: if your directory path includes spaces, the installation will probably
-fail with ``No such file or directory`` errors.
 
 ### Wheels ⚙️
 
@@ -182,225 +84,16 @@ Supported Python versions:
 * 3.13
 * 3.14
 
-In the event that your operating system, architecture, or Python version are
+In the event that your operating system, architecture, or Python version is
 not available as a binary wheel, it is fairly easy to install from source
-using the instructions above.
-
-### Troubleshooting 🛠️
-
-If you installed the underlying `TA-Lib` library with a custom prefix
-(e.g., with `./configure --prefix=$PREFIX`), then when you go to install
-this Python wrapper you can select that installation instead of the bundled
-build using the `TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
-
-```shell
-export TA_LIBRARY_PATH=$PREFIX/lib
-export TA_INCLUDE_PATH=$PREFIX/include
-python -m pip install --no-binary=TA-Lib TA-Lib
-```
-
----
-
-Sometimes installation will produce build errors like this:
-
-```shell
-talib/_ta_lib.c:601:10: fatal error: ta-lib/ta_defs.h: No such file or directory
-  601 | #include "ta-lib/ta_defs.h"
-      |          ^~~~~~~~~~~~~~~~~~
-compilation terminated.
-```
-
-or:
-
-```shell
-common.obj : error LNK2001: unresolved external symbol TA_SetUnstablePeriod
-common.obj : error LNK2001: unresolved external symbol TA_Shutdown
-common.obj : error LNK2001: unresolved external symbol TA_Initialize
-common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
-common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
-```
-
-When using ``TA_INCLUDE_PATH`` or ``TA_LIBRARY_PATH``, check that they point
-to the headers and libraries of a compatible TA-Lib C installation. On Windows,
-the library architecture must match Python (for example, a 64-bit Python needs
-a 64-bit TA-Lib C library).
-
----
-
-Sometimes installation will fail with errors like this:
-
-```shell
-talib/common.c:8:22: fatal error: pyconfig.h: No such file or directory
- #include "pyconfig.h"
-                      ^
-compilation terminated.
-error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
-```
-
-This typically means that you need the Python headers, and should run
-something like:
-
-```shell
-sudo apt-get install python3-dev
-```
-
----
-
-Sometimes building the underlying `TA-Lib` library has errors running
-`make` that look like this:
-
-```shell
-../libtool: line 1717: cd: .libs/libta_lib.lax/libta_abstract.a: No such file or directory
-make[2]: *** [libta_lib.la] Error 1
-make[1]: *** [all-recursive] Error 1
-make: *** [all-recursive] Error 1
-```
-
-This might mean that the directory path to the underlying `TA-Lib` library
-has spaces in the directory names.  Try putting it in a path that does not have
-any spaces and trying again.
-
----
-
-Sometimes you might get this error running `setup.py`:
-
-```shell
-/usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory
-#include <bits/libc-header-start.h>
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-```
-
-This is likely an issue with trying to compile for 32-bit platform but
-without the appropriate headers.  You might find some success looking at the
-first answer to [this question](https://stackoverflow.com/questions/54082459/fatal-error-bits-libc-header-start-h-no-such-file-or-directory-while-compili).
-
----
-
-If you get an error on macOS like this:
-
-```shell
-code signature in <141BC883-189B-322C-AE90-CBF6B5206F67>
-'python3.9/site-packages/talib/_ta_lib.cpython-39-darwin.so' not valid for
-use in process: Trying to load an unsigned library)
-```
-
-You might look at [this question](https://stackoverflow.com/questions/69610572/how-can-i-solve-the-below-error-while-importing-nltk-package)
-and use ``xcrun codesign`` to fix it.
-
----
-
-If you wonder why `STOCHRSI` gives you different results than you expect,
-probably you want `STOCH` applied to `RSI`, which is a little different
-than the `STOCHRSI` which is `STOCHF` applied to `RSI`:
-
-```python
->>> import talib
->>> import numpy as np
->>> c = np.random.randn(100)
-
-# this is the library function
->>> k, d = talib.STOCHRSI(c)
-
-# this produces the same result, calling STOCHF
->>> rsi = talib.RSI(c)
->>> k, d = talib.STOCHF(rsi, rsi, rsi)
-
-# you might want this instead, calling STOCH
->>> rsi = talib.RSI(c)
->>> k, d = talib.STOCH(rsi, rsi, rsi)
-```
-
----
-
-If the build appears to hang, you might be running on a VM with not enough memory - try 1 GB or 2 GB.
-
-It has also been reported that using a swapfile could help, for example:
-
-```shell
-sudo fallocate -l 1G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-```
-
----
-
-If you get "permission denied" errors such as this, you might need to give
-your user access to the location where the underlying TA-Lib C library is
-installed -- or install it to a user-accessible location.
-
-```shell
-talib/_ta_lib.c:747:28: fatal error: /usr/include/ta-lib/ta_defs.h: Permission denied
- #include "ta-lib/ta-defs.h"
-                            ^
-compilation terminated
-error: command 'gcc' failed with exit status 1
-```
-
----
-
-If you're having trouble compiling the underlying TA-Lib C library on ARM64,
-you might need to configure it with an explicit build type before running
-`make` and `make install`, for example:
-
-```shell
-./configure --build=aarch64-unknown-linux-gnu
-```
-
-This is caused by old `config.guess` file, so another way to solve this is
-to copy a newer version of config.guess into the underlying TA-Lib C library
-sources:
-
-```shell
-cp /usr/share/automake-1.16/config.guess /path/to/extracted/ta-lib/config.guess
-```
-
-And then re-run configure:
-
-```shell
-./configure
-```
-
----
-
-If you're having trouble using [PyInstaller](https://pyinstaller.org) and
-get an error that looks like this:
-
-```shell
-...site-packages\PyInstaller\loader\pyimod03_importers.py", line 493, in exec_module
-    exec(bytecode, module.__dict__)
-  File "talib\__init__.py", line 72, in <module>
-ModuleNotFoundError: No module named 'talib.stream'
-```
-
-Then, perhaps you can use the `--hidden-import` argument to fix this:
-
-```shell
-pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
-```
-
----
-
-If you want to use `numpy<2`, then you should use `ta-lib<0.5`.
-
-If you want to use `numpy>=2`, then you should use `ta-lib>=0.5`.
-
----
-
-If you have trouble getting the code autocompletions to work in Visual
-Studio Code, a suggestion was made to look for the `Python` extension
-settings, and an option for `Language Server`, and change it from
-`Default` (which means `Pylance if it is installed, Jedi otherwise`), to
-manually set `Jedi` and the completions should work. It is possible that
-you might need to [install it manually](https://github.com/pappasam/jedi-language-server) for this to
-work.
+using the instructions in [Building from source](#building-from-source-) below.
 
 ## Function API
 
 Similar to TA-Lib, the Function API provides a lightweight wrapper of the
 exposed TA-Lib indicators.
 
-Each function returns an output array and have default values for their
+Each function returns an output array and has default values for their
 parameters, unless specified as keyword arguments. Typically, these functions
 will have an initial "lookback" period (a required number of observations
 before an output is generated) set to `NaN`.
@@ -646,6 +339,165 @@ contract too. Separate subinterpreters are not supported.
 Free-threaded Python requires a matching free-threaded extension build and
 compatible dependencies. Importing TA-Lib does not enable the GIL in that build.
 
+## Building from source 🧩
+
+Checkout the sources and build them yourself:
+
+```shell
+python -m pip install .
+```
+
+Starting with version 0.8.3, source builds download the pinned TA-Lib C
+release, verify its checksum, and build and statically link it into the Python
+extension. This requires network access, a C compiler and CMake. On Windows,
+source builds require the Microsoft C++ Build Tools. CMake is installed
+automatically when using pip's default build isolation.
+
+To use an existing TA-Lib C installation instead, set ``TA_INCLUDE_PATH`` or
+``TA_LIBRARY_PATH`` before building. Setting either variable disables the
+bundled C build, including its download; if only one is set, the other uses
+the standard search paths. These variables accept multiple directories
+separated by ``os.pathsep`` (``:`` on Unix, ``;`` on Windows). They apply to
+source builds, not prebuilt wheels.
+
+To install the TA-Lib C library yourself, follow its
+[installation directions](https://ta-lib.org/install/c/). On macOS, for
+example, to link a source build against the Homebrew installation, set:
+
+```shell
+export TA_INCLUDE_PATH="$(brew --prefix ta-lib)/include"
+export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
+```
+
+> Some Conda Forge users have reported success installing the underlying TA-Lib C
+> library using [the libta-lib package](https://anaconda.org/conda-forge/libta-lib):
+>
+> ``$ conda install -c conda-forge libta-lib``
+>
+> and then point the two variables above at its ``include`` and ``lib``.
+
+## Troubleshooting 🛠️
+
+If you installed the underlying `TA-Lib` library with a custom prefix
+(e.g., with `./configure --prefix=$PREFIX`), then when you go to install
+this Python wrapper you can select that installation instead of the bundled
+build using the `TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
+
+```shell
+export TA_LIBRARY_PATH=$PREFIX/lib
+export TA_INCLUDE_PATH=$PREFIX/include
+python -m pip install --no-binary=TA-Lib TA-Lib
+```
+
+---
+
+Sometimes installation will produce build errors like this:
+
+```shell
+talib/_ta_lib.c:601:10: fatal error: ta-lib/ta_defs.h: No such file or directory
+  601 | #include "ta-lib/ta_defs.h"
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+```
+
+or:
+
+```shell
+common.obj : error LNK2001: unresolved external symbol TA_SetUnstablePeriod
+common.obj : error LNK2001: unresolved external symbol TA_Shutdown
+common.obj : error LNK2001: unresolved external symbol TA_Initialize
+common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
+common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
+```
+
+When using ``TA_INCLUDE_PATH`` or ``TA_LIBRARY_PATH``, check that they point
+to the headers and libraries of a compatible TA-Lib C installation. On Windows,
+the library architecture must match Python (for example, a 64-bit Python needs
+a 64-bit TA-Lib C library).
+
+---
+
+Sometimes installation will fail with errors like this:
+
+```shell
+talib/common.c:8:22: fatal error: pyconfig.h: No such file or directory
+ #include "pyconfig.h"
+                      ^
+compilation terminated.
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+```
+
+This typically means that you need the Python headers, and should run
+something like:
+
+```shell
+sudo apt-get install python3-dev
+```
+
+---
+
+If you get an error on macOS like this:
+
+```shell
+code signature in <141BC883-189B-322C-AE90-CBF6B5206F67>
+'python3.9/site-packages/talib/_ta_lib.cpython-39-darwin.so' not valid for
+use in process: Trying to load an unsigned library)
+```
+
+You might look at [this question](https://stackoverflow.com/questions/69610572/how-can-i-solve-the-below-error-while-importing-nltk-package)
+and use ``xcrun codesign`` to fix it.
+
+---
+
+If the build appears to hang, you might be running on a VM with not enough memory - try 1 GB or 2 GB.
+
+It has also been reported that using a swapfile could help, for example:
+
+```shell
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+---
+
+If you get "permission denied" errors such as this, you might need to give
+your user access to the location where the underlying TA-Lib C library is
+installed -- or install it to a user-accessible location.
+
+```shell
+talib/_ta_lib.c:747:28: fatal error: /usr/include/ta-lib/ta_defs.h: Permission denied
+ #include "ta-lib/ta-defs.h"
+                            ^
+compilation terminated
+error: command 'gcc' failed with exit status 1
+```
+
+---
+
+If you're having trouble using [PyInstaller](https://pyinstaller.org) and
+get an error that looks like this:
+
+```shell
+...site-packages\PyInstaller\loader\pyimod03_importers.py", line 493, in exec_module
+    exec(bytecode, module.__dict__)
+  File "talib\__init__.py", line 72, in <module>
+ModuleNotFoundError: No module named 'talib.stream'
+```
+
+Then, perhaps you can use the `--hidden-import` argument to fix this:
+
+```shell
+pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
+```
+
+---
+
+If you want to use `numpy<2`, then you should use `ta-lib<0.5`.
+
+If you want to use `numpy>=2`, then you should use `ta-lib>=0.5`.
+
 ## Supported Indicators and Functions 📋
 
 We can show all the TA functions supported by TA-Lib, either as a `list` or
@@ -671,45 +523,87 @@ for group, names in talib.get_function_groups().items():
 * Overlap Studies
 * Momentum Indicators
 * Volume Indicators
-* Volatility Indicators
-* Price Transform
 * Cycle Indicators
+* Price Transform
+* Volatility Indicators
 * Pattern Recognition
+* Statistic Functions
+* Math Transform
+* Math Operators
 
 #### Overlap Studies
 
 ```text
+ACCBANDS             Acceleration Bands
+ALMA                 Arnaud Legoux Moving Average
 BBANDS               Bollinger Bands
+CKSP                 Chande Kroll Stop
 DEMA                 Double Exponential Moving Average
+DONCHIAN             Donchian Channels
 EMA                  Exponential Moving Average
+FRAMA                Fractal Adaptive Moving Average
+HMA                  Hull Moving Average
 HT_TRENDLINE         Hilbert Transform - Instantaneous Trendline
+ICHIMOKU             Ichimoku Kinko Hyo
 KAMA                 Kaufman Adaptive Moving Average
+KC                   Keltner Channels
 MA                   Moving average
 MAMA                 MESA Adaptive Moving Average
 MAVP                 Moving average with variable period
+MCGD                 McGinley Dynamic
 MIDPOINT             MidPoint over period
 MIDPRICE             Midpoint Price over period
+RMA                  Wilder's Smoothed Moving Average
 SAR                  Parabolic SAR
 SAREXT               Parabolic SAR - Extended
 SMA                  Simple Moving Average
+SUPERTREND           SuperTrend
+SWAK_BUTTER          Swiss Army Knife - Butterworth Filter
+SWAK_GAUSS           Swiss Army Knife - Gaussian Filter
 T3                   Triple Exponential Moving Average (T3)
 TEMA                 Triple Exponential Moving Average
 TRIMA                Triangular Moving Average
+VIDYA                Variable Index Dynamic Average
+VWMA                 Volume Weighted Moving Average
 WMA                  Weighted Moving Average
+ZIGZAG               Zig Zag
+ZLEMA                Zero-Lag Exponential Moving Average
 ```
 
 #### Momentum Indicators
 
 ```text
+AC                   Accelerator/Decelerator Oscillator
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
+AO                   Awesome Oscillator
 APO                  Absolute Price Oscillator
 AROON                Aroon
 AROONOSC             Aroon Oscillator
+ASI                  Wilder Accumulative Swing Index
 BOP                  Balance Of Power
 CCI                  Commodity Channel Index
+CG                   Center of Gravity Oscillator
+CHOP                 Choppiness Index
+CHOPTR               Choppiness Index (True Range Box)
 CMO                  Chande Momentum Oscillator
+CMOU                 Chande Momentum Oscillator (Unsmoothed)
+COPPOCK              Coppock Curve
+CRSI                 Connors Relative Strength Index
+CTI                  Correlation Trend Indicator
+DOSC                 Derivative Oscillator
+DPO                  Detrended Price Oscillator
 DX                   Directional Movement Index
+ER                   Kaufman Efficiency Ratio
+ERI                  Elder Ray Index (Bull Power / Bear Power)
+FISHER               Fisher Transform
+FOSC                 Forecast Oscillator
+FRACTAL              Williams Fractal
+IBS                  Internal Bar Strength
+IMI                  Intraday Momentum Index
+KDJ                  KDJ Stochastic
+KST                  Know Sure Thing (Pring)
+KSTEXT               Know Sure Thing with controllable MA type
 MACD                 Moving Average Convergence/Divergence
 MACDEXT              MACD with controllable MA type
 MACDFIX              Moving Average Convergence/Divergence Fix 12/26
@@ -720,16 +614,27 @@ MOM                  Momentum
 PLUS_DI              Plus Directional Indicator
 PLUS_DM              Plus Directional Movement
 PPO                  Percentage Price Oscillator
+PSO                  Premier Stochastic Oscillator
+QSTICK               Qstick
 ROC                  Rate of change : ((price/prevPrice)-1)*100
 ROCP                 Rate of change Percentage: (price-prevPrice)/prevPrice
 ROCR                 Rate of change ratio: (price/prevPrice)
 ROCR100              Rate of change ratio 100 scale: (price/prevPrice)*100
 RSI                  Relative Strength Index
+SI                   Wilder Swing Index
+SMI                  Stochastic Momentum Index
+SQZMOM               Squeeze Momentum and Level
+STC                  Schaff Trend Cycle
 STOCH                Stochastic
 STOCHF               Stochastic Fast
 STOCHRSI             Stochastic Relative Strength Index
 TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+TSI                  True Strength Index
 ULTOSC               Ultimate Oscillator
+VHF                  Vertical Horizontal Filter
+VORTEX               Vortex Indicator
+WAD                  Williams' Accumulation/Distribution
+WAVETREND            WaveTrend Oscillator
 WILLR                Williams' %R
 ```
 
@@ -738,7 +643,18 @@ WILLR                Williams' %R
 ```text
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
+CMF                  Chaikin Money Flow
+EFI                  Elder's Force Index
+EMV                  Arms Ease of Movement
+KVO                  Klinger Volume Oscillator
+MARKETFI             Market Facilitation Index
+NVI                  Negative Volume Index
 OBV                  On Balance Volume
+PVI                  Positive Volume Index
+PVO                  Percentage Volume Oscillator
+PVT                  Price Volume Trend
+RVOL                 Relative Volume
+VWAP                 Volume Weighted Average Price
 ```
 
 #### Cycle Indicators
@@ -749,12 +665,17 @@ HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
 HT_PHASOR            Hilbert Transform - Phasor Components
 HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
+SWAK_2PHP            Swiss Army Knife - Two-Pole High-Pass Filter
+SWAK_BP              Swiss Army Knife - Band-Pass Filter
+SWAK_HP              Swiss Army Knife - High-Pass Filter
 ```
 
 #### Price Transform
 
 ```text
+AVGDEV               Average Deviation
 AVGPRICE             Average Price
+HA                   Heikin-Ashi Candles
 MEDPRICE             Median Price
 TYPPRICE             Typical Price
 WCLPRICE             Weighted Close Price
@@ -763,8 +684,16 @@ WCLPRICE             Weighted Close Price
 #### Volatility Indicators
 
 ```text
+ADR                  Average Day Range
 ATR                  Average True Range
+BBW                  Bollinger BandWidth
+CVI                  Chaikin's Volatility
+MASSI                Mass Index
 NATR                 Normalized Average True Range
+PERCENTB             Bollinger Bands %B
+ROGERSSATCHELL       Rogers-Satchell Volatility
+RVI                  Relative Volatility Index
+RVIR                 Relative Volatility Index, refined high/low form
 TRANGE               True Range
 ```
 
@@ -839,11 +768,52 @@ CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 ```text
 BETA                 Beta
 CORREL               Pearson's Correlation Coefficient (r)
+KURTOSIS             Rolling Excess Kurtosis
 LINEARREG            Linear Regression
 LINEARREG_ANGLE      Linear Regression Angle
 LINEARREG_INTERCEPT  Linear Regression Intercept
 LINEARREG_SLOPE      Linear Regression Slope
+MEDIAN               Rolling Median
+PERCENTILE           Percentile (nearest rank)
+PERCENTRANK          Percent Rank
 STDDEV               Standard Deviation
 TSF                  Time Series Forecast
 VAR                  Variance
+```
+
+#### Math Transform
+
+```text
+ACOS                 Vector Trigonometric ACos
+ASIN                 Vector Trigonometric ASin
+ATAN                 Vector Trigonometric ATan
+CEIL                 Vector Ceil
+COS                  Vector Trigonometric Cos
+COSH                 Vector Trigonometric Cosh
+EXP                  Vector Arithmetic Exp
+FLOOR                Vector Floor
+LN                   Vector Log Natural
+LOG10                Vector Log10
+SIN                  Vector Trigonometric Sin
+SINH                 Vector Trigonometric Sinh
+SQRT                 Vector Square Root
+TAN                  Vector Trigonometric Tan
+TANH                 Vector Trigonometric Tanh
+```
+
+#### Math Operators
+
+```text
+ADD                  Vector Arithmetic Add
+CUMSUM               Cumulative Sum
+DIV                  Vector Arithmetic Div
+MAX                  Highest value over a specified period
+MAXINDEX             Index of highest value over a specified period
+MIN                  Lowest value over a specified period
+MININDEX             Index of lowest value over a specified period
+MINMAX               Lowest and highest values over a specified period
+MINMAXINDEX          Indexes of lowest and highest values over a specified period
+MULT                 Vector Arithmetic Mult
+SUB                  Vector Arithmetic Subtraction
+SUM                  Summation
 ```

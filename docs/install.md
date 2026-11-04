@@ -6,47 +6,22 @@ You can install from PyPI:
 $ pip install TA-Lib
 ```
 
-Or checkout the sources and run ``setup.py`` yourself:
+Binary wheels include the TA-Lib C library and do not require a compiler or a
+separate TA-Lib C installation.
+
+Or checkout the sources and build them yourself:
 
 ```
-$ python setup.py install
+$ python -m pip install .
 ```
 
-### Troubleshooting Install Errors
+Source builds download and statically link the pinned TA-Lib C release. To use
+an existing TA-Lib C installation instead, set ``TA_INCLUDE_PATH`` or
+``TA_LIBRARY_PATH`` before building. To install the TA-Lib C library yourself,
+follow its [installation directions](https://ta-lib.org/install/c/).
 
-```
-func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
-compilation terminated.
-```
-
-If you get build errors like this, it typically means that it can't find the
-underlying ``TA-Lib`` library and needs to be installed:
-
-# Dependencies
-To use TA-Lib for python, you need to have the [TA-Lib](https://ta-lib.org/hdr_dw.html)
-already installed:
-
-#### Mac OS X
-```
-$ brew install ta-lib
-```
-
-#### Windows
-Download [ta-lib-0.4.0-msvc.zip](https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip)
-and unzip to ``C:\ta-lib``
-
-#### Linux
-Download [ta-lib-0.4.0-src.tar.gz](https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz) and:
-```
-$ tar zxvf ta-lib-0.4.0-src.tar.gz
-$ cd ta-lib
-$ ./configure --prefix=/usr
-$ make
-$ sudo make install
-```
-
-> If you build ``TA-Lib`` using ``make -jX`` it will fail but that's OK!
-> Simply rerun ``make -jX`` followed by ``[sudo] make install``.
+See the [README](https://github.com/ta-lib/ta-lib-python) for troubleshooting
+install errors.
 
 [Documentation Index](doc_index.md)
 [FLOAT_RIGHTNext: Using the Function API](func.md)
