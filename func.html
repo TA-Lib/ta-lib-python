@@ -56,12 +56,22 @@ because the first RSI value is derived from 14 consecutive price changes.</p>
 
 <span class="highlight n">upper</span><span class="highlight p">,</span> <span class="highlight n">middle</span><span class="highlight p">,</span> <span class="highlight n">lower</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight n">MA_Type</span><span class="highlight o">.</span><span class="highlight n">T3</span><span class="highlight p">)</span>
 </pre></div>
+<p>Every <code>matype</code> argument (for example <code>STOCH</code>'s <code>slowk_matype</code> and
+<code>slowd_matype</code>) takes an <code>MA_Type</code> value. The integer defaults shown in the
+function docs are those values: <code>0</code> is <code>MA_Type.SMA</code>, and <code>MA_Type[n]</code> names
+value <code>n</code>.</p>
 <p>Calculating momentum of the close prices, with a time period of 5:</p>
 <div class="highlight"><pre><span></span><span class="highlight n">output</span> <span class="highlight o">=</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">MOM</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">)</span>
 </pre></div>
 <p>Functions documented as having an unstable period start with that extra
 unstable-period setting at <code>0</code>. <code>get_unstable_period()</code> only returns a
 non-zero value after you set one explicitly with <code>set_unstable_period()</code>.</p>
+<p>Instead of a count, <code>set_unstable_period()</code> also takes an Auto level. With
+<code>talib.set_unstable_period('ALL', talib.UNSTABLE_AUTO_PREC_4)</code> each function
+works out how many leading values to discard, so that the first 4 significant
+digits of what it returns no longer depend on where your data starts;
+<code>UNSTABLE_AUTO_PREC_8</code> targets 8. <code>get_unstable_period()</code> then returns the
+level. See <a href="https://ta-lib.org/api/unstable-period/#auto">Unstable Period</a>.</p>
 <p>Documentation for all functions:</p>
 <ul>
 <li><a href="func_groups/overlap_studies.html">Overlap Studies</a></li>

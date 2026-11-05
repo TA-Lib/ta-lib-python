@@ -36,18 +36,31 @@
 <h3>ACCBANDS - Acceleration Bands</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">ACCBANDS</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
+<h3>ALMA - Arnaud Legoux Moving Average</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ALMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">,</span> <span class="highlight n">sigma</span><span class="highlight o">=</span><span class="highlight mi">6</span><span class="highlight p">,</span> <span class="highlight n">offset</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+</pre></div>
 <h3>BBANDS - Bollinger Bands</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">BBANDS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">nbdevup</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">nbdevdn</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Bollinger Bands at <a href="https://www.tadoc.org/indicator/BBANDS.htm">tadoc.org</a>.</p>
+<h3>CKSP - Chande Kroll Stop</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">highstop</span><span class="highlight p">,</span> <span class="highlight n">lowstop</span> <span class="highlight o">=</span> <span class="highlight n">CKSP</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">multiplier</span><span class="highlight o">=</span><span class="highlight mi">1</span><span class="highlight p">,</span> <span class="highlight n">stopperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">)</span>
 </pre></div>
 <h3>DEMA - Double Exponential Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">DEMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Double Exponential Moving Average at <a href="https://www.tadoc.org/indicator/DEMA.htm">tadoc.org</a>.</p>
 <h3>DONCHIAN - Donchian Channels</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">DONCHIAN</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
 <h3>EMA - Exponential Moving Average</h3>
 <p>NOTE: The <code>EMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">EMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Exponential Moving Average at <a href="https://www.tadoc.org/indicator/EMA.htm">tadoc.org</a>.</p>
+<h3>FRAMA - Fractal Adaptive Moving Average</h3>
+<p>NOTE: The <code>FRAMA</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">FRAMA</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">16</span><span class="highlight p">)</span>
 </pre></div>
 <h3>HMA - Hull Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">HMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
@@ -56,10 +69,15 @@
 <p>NOTE: The <code>HT_TRENDLINE</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">HT_TRENDLINE</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Hilbert Transform - Instantaneous Trendline at <a href="https://www.tadoc.org/indicator/HT_TRENDLINE.htm">tadoc.org</a>.</p>
+<h3>ICHIMOKU - Ichimoku Kinko Hyo</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">tenkansen</span><span class="highlight p">,</span> <span class="highlight n">kijunsen</span><span class="highlight p">,</span> <span class="highlight n">senkouspana</span><span class="highlight p">,</span> <span class="highlight n">senkouspanb</span> <span class="highlight o">=</span> <span class="highlight n">ICHIMOKU</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">tenkanperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">,</span> <span class="highlight n">kijunperiod</span><span class="highlight o">=</span><span class="highlight mi">26</span><span class="highlight p">,</span> <span class="highlight n">senkoubperiod</span><span class="highlight o">=</span><span class="highlight mi">52</span><span class="highlight p">)</span>
+</pre></div>
 <h3>KAMA - Kaufman Adaptive Moving Average</h3>
 <p>NOTE: The <code>KAMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">KAMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Kaufman Adaptive Moving Average at <a href="https://www.tadoc.org/indicator/KAMA.htm">tadoc.org</a>.</p>
 <h3>KC - Keltner Channels</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">upperband</span><span class="highlight p">,</span> <span class="highlight n">middleband</span><span class="highlight p">,</span> <span class="highlight n">lowerband</span> <span class="highlight o">=</span> <span class="highlight n">KC</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">atrperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">nbdev</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">)</span>
 </pre></div>
@@ -70,15 +88,22 @@
 <p>NOTE: The <code>MAMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">mama</span><span class="highlight p">,</span> <span class="highlight n">fama</span> <span class="highlight o">=</span> <span class="highlight n">MAMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">fastlimit</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">slowlimit</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the MESA Adaptive Moving Average at <a href="https://www.tadoc.org/indicator/MAMA.htm">tadoc.org</a>.</p>
 <h3>MAVP - Moving average with variable period</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MAVP</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">periods</span><span class="highlight p">,</span> <span class="highlight n">minperiod</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">maxperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+</pre></div>
+<h3>MCGD - McGinley Dynamic</h3>
+<p>NOTE: The <code>MCGD</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MCGD</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
 <h3>MIDPOINT - MidPoint over period</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIDPOINT</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the MidPoint over period at <a href="https://www.tadoc.org/indicator/MIDPOINT.htm">tadoc.org</a>.</p>
 <h3>MIDPRICE - Midpoint Price over period</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MIDPRICE</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Midpoint Price over period at <a href="https://www.tadoc.org/indicator/MIDPRICE.htm">tadoc.org</a>.</p>
 <h3>RMA - Wilder's Smoothed Moving Average</h3>
 <p>NOTE: The <code>RMA</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
@@ -86,31 +111,55 @@
 <h3>SAR - Parabolic SAR</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SAR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">acceleration</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">maximum</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Parabolic SAR at <a href="https://www.tadoc.org/indicator/SAR.htm">tadoc.org</a>.</p>
 <h3>SAREXT - Parabolic SAR - Extended</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SAREXT</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">startvalue</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">offsetonreverse</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationinitlong</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationlong</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationmaxlong</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationinitshort</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationshort</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">,</span> <span class="highlight n">accelerationmaxshort</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
 <h3>SMA - Simple Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Simple Moving Average at <a href="https://www.tadoc.org/indicator/SMA.htm">tadoc.org</a>.</p>
 <h3>SUPERTREND - SuperTrend</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">supertrend</span><span class="highlight p">,</span> <span class="highlight n">trend</span> <span class="highlight o">=</span> <span class="highlight n">SUPERTREND</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">multiplier</span><span class="highlight o">=</span><span class="highlight mi">3</span><span class="highlight p">)</span>
+</pre></div>
+<h3>SWAK_BUTTER - Swiss Army Knife - Butterworth Filter</h3>
+<p>NOTE: The <code>SWAK_BUTTER</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SWAK_BUTTER</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
+</pre></div>
+<h3>SWAK_GAUSS - Swiss Army Knife - Gaussian Filter</h3>
+<p>NOTE: The <code>SWAK_GAUSS</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">SWAK_GAUSS</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">)</span>
 </pre></div>
 <h3>T3 - Triple Exponential Moving Average (T3)</h3>
 <p>NOTE: The <code>T3</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">T3</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">vfactor</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Triple Exponential Moving Average (T3) at <a href="https://www.tadoc.org/indicator/T3.htm">tadoc.org</a>.</p>
 <h3>TEMA - Triple Exponential Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TEMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Triple Exponential Moving Average at <a href="https://www.tadoc.org/indicator/TEMA.htm">tadoc.org</a>.</p>
 <h3>TRIMA - Triangular Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TRIMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Triangular Moving Average at <a href="https://www.tadoc.org/indicator/TRIMA.htm">tadoc.org</a>.</p>
+<h3>VIDYA - Variable Index Dynamic Average</h3>
+<p>NOTE: The <code>VIDYA</code> function has an unstable period.</p>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">VIDYA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">12</span><span class="highlight p">,</span> <span class="highlight n">cmoperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Variable Index Dynamic Average at <a href="https://www.tadoc.org/indicator/VIDYA.htm">tadoc.org</a>.</p>
 <h3>VWMA - Volume Weighted Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">VWMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">volume</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Volume Weighted Moving Average at <a href="https://www.tadoc.org/indicator/VWMA.htm">tadoc.org</a>.</p>
 <h3>WMA - Weighted Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">WMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Weighted Moving Average at <a href="https://www.tadoc.org/indicator/WMA.htm">tadoc.org</a>.</p>
+<h3>ZIGZAG - Zig Zag</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">zigzag</span><span class="highlight p">,</span> <span class="highlight n">trend</span><span class="highlight p">,</span> <span class="highlight n">pivotidx</span> <span class="highlight o">=</span> <span class="highlight n">ZIGZAG</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">sensitivity</span><span class="highlight o">=</span><span class="highlight mi">5</span><span class="highlight p">,</span> <span class="highlight n">mintrendlength</span><span class="highlight o">=</span><span class="highlight mi">1</span><span class="highlight p">)</span>
+</pre></div>
+<p>Learn more about the Zig Zag at <a href="https://www.tadoc.org/indicator/ZIGZAG.htm">tadoc.org</a>.</p>
 <h3>ZLEMA - Zero-Lag Exponential Moving Average</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ZLEMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
 </pre></div>

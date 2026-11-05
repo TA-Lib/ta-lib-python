@@ -36,13 +36,19 @@
 <h3>ADR - Average Day Range</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ADR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Average Day Range at <a href="https://www.tadoc.org/indicator/ADR.htm">tadoc.org</a>.</p>
 <h3>ATR - Average True Range</h3>
 <p>NOTE: The <code>ATR</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ATR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Average True Range at <a href="https://www.tadoc.org/indicator/ATR.htm">tadoc.org</a>.</p>
+<h3>BBW - Bollinger BandWidth</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">BBW</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">nbdevup</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">nbdevdn</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+</pre></div>
 <h3>CVI - Chaikin's Volatility</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">CVI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">rocperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Chaikin's Volatility at <a href="https://www.tadoc.org/indicator/CVI.htm">tadoc.org</a>.</p>
 <h3>MASSI - Mass Index</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">MASSI</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">fastperiod</span><span class="highlight o">=</span><span class="highlight mi">9</span><span class="highlight p">,</span> <span class="highlight n">slowperiod</span><span class="highlight o">=</span><span class="highlight mi">25</span><span class="highlight p">)</span>
 </pre></div>
@@ -50,13 +56,25 @@
 <p>NOTE: The <code>NATR</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">NATR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Normalized Average True Range at <a href="https://www.tadoc.org/indicator/NATR.htm">tadoc.org</a>.</p>
+<h3>PERCENTB - Bollinger Bands %B</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">PERCENTB</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">20</span><span class="highlight p">,</span> <span class="highlight n">nbdevup</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">nbdevdn</span><span class="highlight o">=</span><span class="highlight mi">2</span><span class="highlight p">,</span> <span class="highlight n">matype</span><span class="highlight o">=</span><span class="highlight mi">0</span><span class="highlight p">)</span>
+</pre></div>
+<h3>ROGERSSATCHELL - Rogers-Satchell Volatility</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">ROGERSSATCHELL</span><span class="highlight p">(</span><span class="highlight nb">open</span><span class="highlight p">,</span> <span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">,</span> <span class="highlight n">annualization</span><span class="highlight o">=</span><span class="highlight mi">252</span><span class="highlight p">)</span>
+</pre></div>
 <h3>RVI - Relative Volatility Index</h3>
 <p>NOTE: The <code>RVI</code> function has an unstable period.</p>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RVI</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">,</span> <span class="highlight n">stddevperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the Relative Volatility Index at <a href="https://www.tadoc.org/indicator/RVI.htm">tadoc.org</a>.</p>
+<h3>RVIR - Relative Volatility Index, refined high/low form</h3>
+<div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">RVIR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">,</span> <span class="highlight n">stddevperiod</span><span class="highlight o">=</span><span class="highlight mi">10</span><span class="highlight p">)</span>
+</pre></div>
 <h3>TRANGE - True Range</h3>
 <div class="highlight"><pre><span></span><span class="highlight n">real</span> <span class="highlight o">=</span> <span class="highlight n">TRANGE</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">)</span>
 </pre></div>
+<p>Learn more about the True Range at <a href="https://www.tadoc.org/indicator/TRANGE.htm">tadoc.org</a>.</p>
 <p><a href="../doc_index.html">Documentation Index</a>
 <a class="float-right" href="../funcs.html">All Function Groups</a></p>
         </section>
