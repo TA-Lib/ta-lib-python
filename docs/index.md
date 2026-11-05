@@ -1,20 +1,19 @@
 # About
 
-This is a Python wrapper for [TA-LIB](https://ta-lib.org) based on Cython
-instead of SWIG. From the homepage:
+This is a Python wrapper for [TA-Lib](https://ta-lib.org). From the homepage:
 
-> TA-Lib is widely used by trading software developers requiring to perform
-> technical analysis of financial market data.
+> TA-Lib implements the standard technical analysis algorithms used across the
+> industry, and is often the reference other libraries test their results
+> against.
+>
+> * 200+ indicators: ADX, MACD, RSI, Stochastic, Bollinger Bands and more,
+>   plus candlestick pattern recognition
+> * Batch and streaming: compute a whole array, or update one bar at a time
+>   without recomputing the history
+> * Native in five languages: C/C++, Java, C#, Rust and TypeScript
 
-> * Includes 150+ indicators such as ADX, MACD, RSI, Stochastic, Bollinger
->   Bands, etc.
-> * Candlestick pattern recognition
-> * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
-
-The original Python bindings use [SWIG](https://swig.org) which unfortunately
-are difficult to install and aren't as efficient as they could be. Therefore
-this project uses Cython and Numpy to efficiently and cleanly bind to TA-Lib
--- producing results 2-4 times faster than the SWIG interface.
+`ta-lib-python` uses [Cython](https://cython.org) and [Numpy](https://numpy.org)
+to efficiently and cleanly bind to the native C library.
 
 #### [Install TA-Lib](install.md) or [Read the Docs](doc_index.md)
 
@@ -111,17 +110,24 @@ slowk, slowd = STOCH(input_arrays, 5, 3, 0, 3, 0, prices=['high', 'low', 'open']
 
 Learn about more advanced usage of TA-Lib [here](abstract.md).
 
-## Supported Indicators
+## Supported Indicators and Functions
 
-We can show all the TA functions supported by TA-Lib, either as a ``list`` or
-as a ``dict`` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
+We can show all the TA functions supported by TA-Lib, either as a `list` or
+as a `dict` sorted by group (e.g. "Overlap Studies", "Momentum Indicators",
 etc):
 
 ```python
 import talib
 
-print talib.get_functions()
-print talib.get_function_groups()
+# list of functions
+for name in talib.get_functions():
+    print(name)
+
+# dict of functions by group
+for group, names in talib.get_function_groups().items():
+    print(group)
+    for name in names:
+        print(f"  {name}")
 ```
 
 ### Function Groups
@@ -129,9 +135,9 @@ print talib.get_function_groups()
 * [Overlap Studies](func_groups/overlap_studies.md)
 * [Momentum Indicators](func_groups/momentum_indicators.md)
 * [Volume Indicators](func_groups/volume_indicators.md)
-* [Volatility Indicators](func_groups/volatility_indicators.md)
-* [Price Transform](func_groups/price_transform.md)
 * [Cycle Indicators](func_groups/cycle_indicators.md)
+* [Price Transform](func_groups/price_transform.md)
+* [Volatility Indicators](func_groups/volatility_indicators.md)
 * [Pattern Recognition](func_groups/pattern_recognition.md)
 * [Statistic Functions](func_groups/statistic_functions.md)
 * [Math Transform](func_groups/math_transform.md)
@@ -139,38 +145,77 @@ print talib.get_function_groups()
 
 #### [Overlap Studies](func_groups/overlap_studies.md)
 
-```
+```text
+ACCBANDS             Acceleration Bands
+ALMA                 Arnaud Legoux Moving Average
 BBANDS               Bollinger Bands
+CKSP                 Chande Kroll Stop
 DEMA                 Double Exponential Moving Average
+DONCHIAN             Donchian Channels
 EMA                  Exponential Moving Average
+FRAMA                Fractal Adaptive Moving Average
+HMA                  Hull Moving Average
 HT_TRENDLINE         Hilbert Transform - Instantaneous Trendline
+ICHIMOKU             Ichimoku Kinko Hyo
 KAMA                 Kaufman Adaptive Moving Average
+KC                   Keltner Channels
 MA                   Moving average
 MAMA                 MESA Adaptive Moving Average
 MAVP                 Moving average with variable period
+MCGD                 McGinley Dynamic
 MIDPOINT             MidPoint over period
 MIDPRICE             Midpoint Price over period
+RMA                  Wilder's Smoothed Moving Average
 SAR                  Parabolic SAR
 SAREXT               Parabolic SAR - Extended
 SMA                  Simple Moving Average
+SUPERTREND           SuperTrend
+SWAK_BUTTER          Swiss Army Knife - Butterworth Filter
+SWAK_GAUSS           Swiss Army Knife - Gaussian Filter
 T3                   Triple Exponential Moving Average (T3)
 TEMA                 Triple Exponential Moving Average
 TRIMA                Triangular Moving Average
+VIDYA                Variable Index Dynamic Average
+VWMA                 Volume Weighted Moving Average
 WMA                  Weighted Moving Average
+ZIGZAG               Zig Zag
+ZLEMA                Zero-Lag Exponential Moving Average
 ```
 
 #### [Momentum Indicators](func_groups/momentum_indicators.md)
 
-```
+```text
+AC                   Accelerator/Decelerator Oscillator
 ADX                  Average Directional Movement Index
 ADXR                 Average Directional Movement Index Rating
+AO                   Awesome Oscillator
 APO                  Absolute Price Oscillator
 AROON                Aroon
 AROONOSC             Aroon Oscillator
+ASI                  Wilder Accumulative Swing Index
 BOP                  Balance Of Power
 CCI                  Commodity Channel Index
+CG                   Center of Gravity Oscillator
+CHOP                 Choppiness Index
+CHOPTR               Choppiness Index (True Range Box)
 CMO                  Chande Momentum Oscillator
+CMOU                 Chande Momentum Oscillator (Unsmoothed)
+COPPOCK              Coppock Curve
+CRSI                 Connors Relative Strength Index
+CTI                  Correlation Trend Indicator
+DOSC                 Derivative Oscillator
+DPO                  Detrended Price Oscillator
 DX                   Directional Movement Index
+ER                   Kaufman Efficiency Ratio
+ERI                  Elder Ray Index (Bull Power / Bear Power)
+FISHER               Fisher Transform
+FOSC                 Forecast Oscillator
+FRACTAL              Williams Fractal
+IBS                  Internal Bar Strength
+IMI                  Intraday Momentum Index
+KDJ                  KDJ Stochastic
+KST                  Know Sure Thing (Pring)
+KSTEXT               Know Sure Thing with controllable MA type
 MACD                 Moving Average Convergence/Divergence
 MACDEXT              MACD with controllable MA type
 MACDFIX              Moving Average Convergence/Divergence Fix 12/26
@@ -181,57 +226,92 @@ MOM                  Momentum
 PLUS_DI              Plus Directional Indicator
 PLUS_DM              Plus Directional Movement
 PPO                  Percentage Price Oscillator
+PSO                  Premier Stochastic Oscillator
+QSTICK               Qstick
 ROC                  Rate of change : ((price/prevPrice)-1)*100
 ROCP                 Rate of change Percentage: (price-prevPrice)/prevPrice
 ROCR                 Rate of change ratio: (price/prevPrice)
 ROCR100              Rate of change ratio 100 scale: (price/prevPrice)*100
 RSI                  Relative Strength Index
+SI                   Wilder Swing Index
+SMI                  Stochastic Momentum Index
+SQZMOM               Squeeze Momentum and Level
+STC                  Schaff Trend Cycle
 STOCH                Stochastic
 STOCHF               Stochastic Fast
 STOCHRSI             Stochastic Relative Strength Index
 TRIX                 1-day Rate-Of-Change (ROC) of a Triple Smooth EMA
+TSI                  True Strength Index
 ULTOSC               Ultimate Oscillator
+VHF                  Vertical Horizontal Filter
+VORTEX               Vortex Indicator
+WAD                  Williams' Accumulation/Distribution
+WAVETREND            WaveTrend Oscillator
 WILLR                Williams' %R
 ```
 
 #### [Volume Indicators](func_groups/volume_indicators.md)
 
-```
+```text
 AD                   Chaikin A/D Line
 ADOSC                Chaikin A/D Oscillator
+CMF                  Chaikin Money Flow
+EFI                  Elder's Force Index
+EMV                  Arms Ease of Movement
+KVO                  Klinger Volume Oscillator
+MARKETFI             Market Facilitation Index
+NVI                  Negative Volume Index
 OBV                  On Balance Volume
-```
-
-#### [Volatility Indicators](func_groups/volatility_indicators.md)
-
-```
-ATR                  Average True Range
-NATR                 Normalized Average True Range
-TRANGE               True Range
-```
-
-#### [Price Transform](func_groups/price_transform.md)
-
-```
-AVGPRICE             Average Price
-MEDPRICE             Median Price
-TYPPRICE             Typical Price
-WCLPRICE             Weighted Close Price
+PVI                  Positive Volume Index
+PVO                  Percentage Volume Oscillator
+PVT                  Price Volume Trend
+RVOL                 Relative Volume
+VWAP                 Volume Weighted Average Price
 ```
 
 #### [Cycle Indicators](func_groups/cycle_indicators.md)
 
-```
+```text
 HT_DCPERIOD          Hilbert Transform - Dominant Cycle Period
 HT_DCPHASE           Hilbert Transform - Dominant Cycle Phase
 HT_PHASOR            Hilbert Transform - Phasor Components
 HT_SINE              Hilbert Transform - SineWave
 HT_TRENDMODE         Hilbert Transform - Trend vs Cycle Mode
+SWAK_2PHP            Swiss Army Knife - Two-Pole High-Pass Filter
+SWAK_BP              Swiss Army Knife - Band-Pass Filter
+SWAK_HP              Swiss Army Knife - High-Pass Filter
+```
+
+#### [Price Transform](func_groups/price_transform.md)
+
+```text
+AVGDEV               Average Deviation
+AVGPRICE             Average Price
+HA                   Heikin-Ashi Candles
+MEDPRICE             Median Price
+TYPPRICE             Typical Price
+WCLPRICE             Weighted Close Price
+```
+
+#### [Volatility Indicators](func_groups/volatility_indicators.md)
+
+```text
+ADR                  Average Day Range
+ATR                  Average True Range
+BBW                  Bollinger BandWidth
+CVI                  Chaikin's Volatility
+MASSI                Mass Index
+NATR                 Normalized Average True Range
+PERCENTB             Bollinger Bands %B
+ROGERSSATCHELL       Rogers-Satchell Volatility
+RVI                  Relative Volatility Index
+RVIR                 Relative Volatility Index, refined high/low form
+TRANGE               True Range
 ```
 
 #### [Pattern Recognition](func_groups/pattern_recognition.md)
 
-```
+```text
 CDL2CROWS            Two Crows
 CDL3BLACKCROWS       Three Black Crows
 CDL3INSIDE           Three Inside Up/Down
@@ -297,14 +377,55 @@ CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods
 
 #### [Statistic Functions](func_groups/statistic_functions.md)
 
-```
+```text
 BETA                 Beta
 CORREL               Pearson's Correlation Coefficient (r)
+KURTOSIS             Rolling Excess Kurtosis
 LINEARREG            Linear Regression
 LINEARREG_ANGLE      Linear Regression Angle
 LINEARREG_INTERCEPT  Linear Regression Intercept
 LINEARREG_SLOPE      Linear Regression Slope
+MEDIAN               Rolling Median
+PERCENTILE           Percentile (nearest rank)
+PERCENTRANK          Percent Rank
 STDDEV               Standard Deviation
 TSF                  Time Series Forecast
 VAR                  Variance
+```
+
+#### [Math Transform](func_groups/math_transform.md)
+
+```text
+ACOS                 Vector Trigonometric ACos
+ASIN                 Vector Trigonometric ASin
+ATAN                 Vector Trigonometric ATan
+CEIL                 Vector Ceil
+COS                  Vector Trigonometric Cos
+COSH                 Vector Trigonometric Cosh
+EXP                  Vector Arithmetic Exp
+FLOOR                Vector Floor
+LN                   Vector Log Natural
+LOG10                Vector Log10
+SIN                  Vector Trigonometric Sin
+SINH                 Vector Trigonometric Sinh
+SQRT                 Vector Square Root
+TAN                  Vector Trigonometric Tan
+TANH                 Vector Trigonometric Tanh
+```
+
+#### [Math Operators](func_groups/math_operators.md)
+
+```text
+ADD                  Vector Arithmetic Add
+CUMSUM               Cumulative Sum
+DIV                  Vector Arithmetic Div
+MAX                  Highest value over a specified period
+MAXINDEX             Index of highest value over a specified period
+MIN                  Lowest value over a specified period
+MININDEX             Index of lowest value over a specified period
+MINMAX               Lowest and highest values over a specified period
+MINMAXINDEX          Indexes of lowest and highest values over a specified period
+MULT                 Vector Arithmetic Mult
+SUB                  Vector Arithmetic Subtraction
+SUM                  Summation
 ```

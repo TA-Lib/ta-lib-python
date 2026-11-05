@@ -11,7 +11,7 @@ license-files = ["LICENSE"]
 authors = [
     {name = "John Benediktsson", email = "mrjbq7@gmail.com"}
 ]
-urls = {homepage = "http://github.com/ta-lib/ta-lib-python", download = "https://github.com/ta-lib/ta-lib-python/releases"}
+urls = {homepage = "http://github.com/ta-lib/ta-lib-python", download = "https://github.com/ta-lib/ta-lib-python/releases", "TA-Lib C" = "https://github.com/TA-Lib/ta-lib"}
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Operating System :: Unix",
