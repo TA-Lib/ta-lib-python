@@ -198,6 +198,7 @@ def get_markdown_file_paths():
         'func.md',
         'funcs.md',
         'abstract.md',
+        'stream.md',
     ]
     file_names.extend(
         ['func_groups/%s' % x for x in os.listdir(FUNCTION_GROUPS_DIR) if x.endswith('.md')]

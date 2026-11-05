@@ -71,6 +71,8 @@ digits of what it returns no longer depend on where your data starts;
 ``UNSTABLE_AUTO_PREC_8`` targets 8. ``get_unstable_period()`` then returns the
 level. See [Unstable Period](https://ta-lib.org/api/unstable-period/#auto).
 
+For incremental calculations on new bars, see [Using the Streaming API](stream.md).
+
 ## Abstract API Quick Start
 
 If you're already familiar with using the function API, you should feel right

@@ -101,3 +101,4 @@ For more details, take a look at the
 [code](https://github.com/ta-lib/ta-lib-python/blob/master/talib/abstract.pyx#L46).
 
 [Documentation Index](doc_index.md)
+[FLOAT_RIGHTNext: Using the Streaming API](stream.md)

@@ -3,6 +3,7 @@
 * [Installation and Troubleshooting](install.md)
 * [Using the Function API](func.md)
 * [Using the Abstract API](abstract.md)
+* [Using the Streaming API](stream.md)
 * [All Functions](funcs.md)
     * [Overlap Studies](func_groups/overlap_studies.md)
     * [Momentum Indicators](func_groups/momentum_indicators.md)
