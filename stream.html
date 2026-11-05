@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="TA-Lib : Python wrapper for TA-Lib (https://ta-lib.org/)." />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <title>TA-Lib</title>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/ta-lib/ta-lib-python">View on GitHub</a>
+            <div class="clearfix">
+                <ul id="menu" class="drop">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="doc_index.html">Documentation</a></li>
+                </ul>
+            </div>
+            <br>
+            <h1 id="project_title"><a href="https://ta-lib.github.io/ta-lib-python/">TA-Lib</a></h1>
+            <h2 id="project_tagline">Python wrapper for TA-Lib (https://ta-lib.org/).</h2>
+            <section id="downloads">
+                <a class="zip_download_link" href="https://github.com/ta-lib/ta-lib-python/zipball/master">Download this project as a .zip file</a>
+                <a class="tar_download_link" href="https://github.com/ta-lib/ta-lib-python/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+<h1>Streaming API</h1>
+<p>The Streaming API keeps a handle per indicator instead of recomputing from the
+whole array. Opening one costs a pass over the history; each closed bar after
+that takes O(1) work. Values agree with the Function API for the same bars.
+On Apple Silicon macOS, functions using transcendental math (such as SIN,
+EXP and LN) may differ in the last bits.</p>
+<h2>Open a handle and feed closed bars</h2>
+<p>The constructor takes the same input arrays and parameters as the corresponding
+Function API call. Its <code>value</code> property reports the result at the last history
+bar. After opening, pass scalar inputs for each new bar to <code>update()</code>:</p>
+<div class="highlight"><pre><span></span><span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">numpy</span><span class="highlight w"> </span><span class="highlight k">as</span><span class="highlight w"> </span><span class="highlight nn">np</span>
+<span class="highlight kn">import</span><span class="highlight w"> </span><span class="highlight nn">talib</span>
+<span class="highlight kn">from</span><span class="highlight w"> </span><span class="highlight nn">talib</span><span class="highlight w"> </span><span class="highlight kn">import</span> <span class="highlight n">abstract</span><span class="highlight p">,</span> <span class="highlight n">stream</span>
+
+<span class="highlight n">close</span> <span class="highlight o">=</span> <span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">arange</span><span class="highlight p">(</span><span class="highlight mf">1.0</span><span class="highlight p">,</span> <span class="highlight mf">101.0</span><span class="highlight p">)</span>
+<span class="highlight n">s</span> <span class="highlight o">=</span> <span class="highlight n">stream</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)</span>
+<span class="highlight k">assert</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">value</span> <span class="highlight o">==</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">SMA</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">30</span><span class="highlight p">)[</span><span class="highlight o">-</span><span class="highlight mi">1</span><span class="highlight p">]</span>
+
+<span class="highlight k">for</span> <span class="highlight n">price</span> <span class="highlight ow">in</span> <span class="highlight p">(</span><span class="highlight mf">101.0</span><span class="highlight p">,</span> <span class="highlight mf">102.0</span><span class="highlight p">,</span> <span class="highlight mf">103.0</span><span class="highlight p">):</span>
+    <span class="highlight n">latest</span> <span class="highlight o">=</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight n">price</span><span class="highlight p">)</span>
+    <span class="highlight k">assert</span> <span class="highlight n">latest</span> <span class="highlight o">==</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">value</span>
+</pre></div>
+<p>A single-output function returns a float, or an int for an integer output.
+A multi-output function returns a plain tuple in the same output order as the
+Function API. Supply multiple scalar inputs in the constructor's input order:</p>
+<div class="highlight"><pre><span></span><span class="highlight n">m</span> <span class="highlight o">=</span> <span class="highlight n">stream</span><span class="highlight o">.</span><span class="highlight n">MACD</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">)</span>
+<span class="highlight n">macd</span><span class="highlight p">,</span> <span class="highlight n">macdsignal</span><span class="highlight p">,</span> <span class="highlight n">macdhist</span> <span class="highlight o">=</span> <span class="highlight n">m</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight mf">101.0</span><span class="highlight p">)</span>
+<span class="highlight k">assert</span> <span class="highlight n">m</span><span class="highlight o">.</span><span class="highlight n">value</span><span class="highlight p">[</span><span class="highlight mi">2</span><span class="highlight p">]</span> <span class="highlight o">==</span> <span class="highlight n">macdhist</span>
+<span class="highlight k">assert</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">'MACD'</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">output_names</span> <span class="highlight o">==</span> <span class="highlight p">[</span><span class="highlight s1">'macd'</span><span class="highlight p">,</span> <span class="highlight s1">'macdsignal'</span><span class="highlight p">,</span> <span class="highlight s1">'macdhist'</span><span class="highlight p">]</span>
+
+<span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span> <span class="highlight o">=</span> <span class="highlight n">close</span> <span class="highlight o">+</span> <span class="highlight mf">1.0</span><span class="highlight p">,</span> <span class="highlight n">close</span> <span class="highlight o">-</span> <span class="highlight mf">1.0</span>
+<span class="highlight n">atr</span> <span class="highlight o">=</span> <span class="highlight n">stream</span><span class="highlight o">.</span><span class="highlight n">ATR</span><span class="highlight p">(</span><span class="highlight n">high</span><span class="highlight p">,</span> <span class="highlight n">low</span><span class="highlight p">,</span> <span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
+<span class="highlight n">latest_atr</span> <span class="highlight o">=</span> <span class="highlight n">atr</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight mf">102.0</span><span class="highlight p">,</span> <span class="highlight mf">100.0</span><span class="highlight p">,</span> <span class="highlight mf">101.0</span><span class="highlight p">)</span>
+</pre></div>
+<p>See <a href="funcs.html">All Functions</a> for indicator inputs, parameters and output order.</p>
+<h2>Preview and copy</h2>
+<p>Use <code>peek()</code> for a forming bar that may still change. It returns what <code>update()</code>
+would produce without committing the bar or changing the handle's value or
+range. Call <code>update()</code> once when that bar closes. <code>copy()</code> creates an independent
+handle at the same position:</p>
+<div class="highlight"><pre><span></span><span class="highlight n">before</span> <span class="highlight o">=</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">value</span>
+<span class="highlight n">preview</span> <span class="highlight o">=</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">peek</span><span class="highlight p">(</span><span class="highlight mf">104.0</span><span class="highlight p">)</span>
+<span class="highlight k">assert</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">value</span> <span class="highlight o">==</span> <span class="highlight n">before</span>
+<span class="highlight n">fork</span> <span class="highlight o">=</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">copy</span><span class="highlight p">()</span>
+<span class="highlight k">assert</span> <span class="highlight n">fork</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight mf">104.0</span><span class="highlight p">)</span> <span class="highlight o">==</span> <span class="highlight n">preview</span>
+<span class="highlight k">assert</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight mf">104.0</span><span class="highlight p">)</span> <span class="highlight o">==</span> <span class="highlight n">preview</span>
+</pre></div>
+<h2>Warm-up and missing bars</h2>
+<p>Opening requires at least <code>lookback + 1</code> bars, and some indicators need more
+history for seeding. Catch <code>talib.InsufficientHistory</code> and collect more bars
+before trying again:</p>
+<div class="highlight"><pre><span></span><span class="highlight n">need</span> <span class="highlight o">=</span> <span class="highlight n">abstract</span><span class="highlight o">.</span><span class="highlight n">Function</span><span class="highlight p">(</span><span class="highlight s1">'RSI'</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span><span class="highlight o">.</span><span class="highlight n">lookback</span> <span class="highlight o">+</span> <span class="highlight mi">1</span>
+<span class="highlight n">history</span> <span class="highlight o">=</span> <span class="highlight n">close</span><span class="highlight p">[:</span><span class="highlight mi">5</span><span class="highlight p">]</span>
+<span class="highlight k">try</span><span class="highlight p">:</span>
+    <span class="highlight n">rsi</span> <span class="highlight o">=</span> <span class="highlight n">stream</span><span class="highlight o">.</span><span class="highlight n">RSI</span><span class="highlight p">(</span><span class="highlight n">history</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
+<span class="highlight k">except</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">InsufficientHistory</span><span class="highlight p">:</span>
+    <span class="highlight k">pass</span>  <span class="highlight c1"># Collect more history before opening again.</span>
+</pre></div>
+<p>Leading bars containing NaN in any input are skipped and do not count toward
+warm-up. NaN or infinity elsewhere in the opening history has undefined
+behavior in TA-Lib C; for some window functions, streaming and batch results
+can disagree. Supply finite history after the leading NaNs.</p>
+<p><code>update()</code> rejects a nonfinite input and leaves both the value and range
+unchanged. If you intend to skip that bar rather than retry it, call <code>advance()</code>
+to count it. This keeps handles following the same feed aligned.
+<code>advance()</code> moves the range while holding the current value; it does not feed
+a replacement price into the indicator.</p>
+<p><code>out_range</code> is an <code>OutRange(begidx, nbelement)</code> named tuple describing the output
+range in input-series coordinates:</p>
+<div class="highlight"><pre><span></span><span class="highlight n">output_range</span> <span class="highlight o">=</span> <span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">out_range</span>
+<span class="highlight n">first_output_bar</span> <span class="highlight o">=</span> <span class="highlight n">output_range</span><span class="highlight o">.</span><span class="highlight n">begidx</span>
+<span class="highlight n">output_count</span> <span class="highlight o">=</span> <span class="highlight n">output_range</span><span class="highlight o">.</span><span class="highlight n">nbelement</span>
+<span class="highlight n">s</span><span class="highlight o">.</span><span class="highlight n">advance</span><span class="highlight p">()</span>
+</pre></div>
+<h2>Get history outputs and a handle together</h2>
+<p><code>open_and_fill()</code> returns the handle and the Function API's output series for
+the opening history in one pass. Multiple outputs are returned as a tuple of
+arrays:</p>
+<div class="highlight"><pre><span></span><span class="highlight n">rsi</span><span class="highlight p">,</span> <span class="highlight n">values</span> <span class="highlight o">=</span> <span class="highlight n">stream</span><span class="highlight o">.</span><span class="highlight n">RSI</span><span class="highlight o">.</span><span class="highlight n">open_and_fill</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">)</span>
+<span class="highlight n">np</span><span class="highlight o">.</span><span class="highlight n">testing</span><span class="highlight o">.</span><span class="highlight n">assert_array_equal</span><span class="highlight p">(</span><span class="highlight n">values</span><span class="highlight p">,</span> <span class="highlight n">talib</span><span class="highlight o">.</span><span class="highlight n">RSI</span><span class="highlight p">(</span><span class="highlight n">close</span><span class="highlight p">,</span> <span class="highlight n">timeperiod</span><span class="highlight o">=</span><span class="highlight mi">14</span><span class="highlight p">))</span>
+<span class="highlight k">assert</span> <span class="highlight n">rsi</span><span class="highlight o">.</span><span class="highlight n">value</span> <span class="highlight o">==</span> <span class="highlight n">values</span><span class="highlight p">[</span><span class="highlight o">-</span><span class="highlight mi">1</span><span class="highlight p">]</span>
+<span class="highlight n">next_rsi</span> <span class="highlight o">=</span> <span class="highlight n">rsi</span><span class="highlight o">.</span><span class="highlight n">update</span><span class="highlight p">(</span><span class="highlight mf">101.0</span><span class="highlight p">)</span>
+</pre></div>
+<h2>Lifetime and threads</h2>
+<p>Handles cannot be pickled or shared with another process. Keep the history and
+reopen a handle in the other process instead.</p>
+<p>Native stream operations release the GIL on regular CPython. Independent
+handles can run concurrently; operations on one handle use a per-handle mutex.
+Do not modify or resize input arrays during a call.</p>
+<p>Unstable periods, compatibility and candle settings are process-wide. Set them
+before opening streams. Changing settings while a calculation is active or
+any stream handle (including a copy) is alive raises <code>RuntimeError</code>. Release
+all handles before changing those settings.</p>
+<p><a href="doc_index.html">Documentation Index</a></p>
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TA-Lib written by <a href="https://github.com/mrjbq7">mrjbq7</a>
+        and <a href="https://github.com/ta-lib/ta-lib-python/network/members">contributors</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+  </body>
+</html>
