@@ -37,40 +37,18 @@
 
 <pre><code>$ pip install TA-Lib
 </code></pre>
-<p>Or checkout the sources and run <code>setup.py</code> yourself:</p>
+<p>Binary wheels include the TA-Lib C library and do not require a compiler or a
+separate TA-Lib C installation.</p>
+<p>Or checkout the sources and build them yourself:</p>
 
-<pre><code>$ python setup.py install
+<pre><code>$ python -m pip install .
 </code></pre>
-<h3>Troubleshooting Install Errors</h3>
-
-<pre><code>func.c:256:28: fatal error: ta-lib/ta_libc.h: No such file or directory
-compilation terminated.
-</code></pre>
-<p>If you get build errors like this, it typically means that it can't find the
-underlying <code>TA-Lib</code> library and needs to be installed:</p>
-<h1>Dependencies</h1>
-<p>To use TA-Lib for python, you need to have the <a href="https://ta-lib.org/hdr_dw.html">TA-Lib</a>
-already installed:</p>
-<h4>Mac OS X</h4>
-
-<pre><code>$ brew install ta-lib
-</code></pre>
-<h4>Windows</h4>
-<p>Download <a href="https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip">ta-lib-0.4.0-msvc.zip</a>
-and unzip to <code>C:\ta-lib</code></p>
-<h4>Linux</h4>
-<p>Download <a href="https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz">ta-lib-0.4.0-src.tar.gz</a> and:</p>
-
-<pre><code>$ tar zxvf ta-lib-0.4.0-src.tar.gz
-$ cd ta-lib
-$ ./configure --prefix=/usr
-$ make
-$ sudo make install
-</code></pre>
-<blockquote>
-<p>If you build <code>TA-Lib</code> using <code>make -jX</code> it will fail but that's OK!
-Simply rerun <code>make -jX</code> followed by <code>[sudo] make install</code>.</p>
-</blockquote>
+<p>Source builds download and statically link the pinned TA-Lib C release. To use
+an existing TA-Lib C installation instead, set <code>TA_INCLUDE_PATH</code> or
+<code>TA_LIBRARY_PATH</code> before building. To install the TA-Lib C library yourself,
+follow its <a href="https://ta-lib.org/install/c/">installation directions</a>.</p>
+<p>See the <a href="https://github.com/ta-lib/ta-lib-python">README</a> for troubleshooting
+install errors.</p>
 <p><a href="doc_index.html">Documentation Index</a>
 <a class="float-right" href="func.html">Next: Using the Function API</a></p>
         </section>
