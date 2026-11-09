@@ -138,8 +138,10 @@ def test_info():
         'input_names': OrderedDict([('price', 'open')]),
         'name': 'STOCHRSI',
         'output_flags': OrderedDict([
-            ('fastk', ['Line']),
-            ('fastd', ['Line']),
+            ('fastk', ['Line', 'Output can be positive',
+                       'Output can be zero']),
+            ('fastd', ['Dashed Line', 'Output can be positive',
+                       'Output can be negative', 'Output can be zero']),
             ]),
         'output_names': ['fastk', 'fastd'],
         'parameters': OrderedDict([
@@ -200,7 +202,8 @@ def test_flags_newer_than_0_8_1():
     dpo = abstract.Function('DPO')
     assert 'An output is display-shifted' in dpo.function_flags
     assert dpo.output_flags == OrderedDict([
-        ('real', ['Line', 'Output is display-shifted']),
+        ('real', ['Line', 'Output can be positive', 'Output can be negative',
+                  'Output can be zero', 'Output is display-shifted']),
         ])
 
     ln_flags = abstract.Function('LN').function_flags
