@@ -669,6 +669,9 @@ TA_OUTPUT_FLAGS = {
     8192: 'Output is optional (nullable)',
     16384: 'Output is display-shifted',
     32768: 'Weak Pattern (+/-80 = a weaker form of the pattern)',
+    65536: 'Value is a bar index into the input arrays',
+    131072: 'Segmented line (never connect across a change of the integer output)',
+    262144: 'Color Pattern (Black candle < 0, None = 0, White candle > 0)',
 }
 
 def _ta_getFuncInfo(char *function_name):
