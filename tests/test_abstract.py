@@ -182,7 +182,9 @@ _TA_VERSION = tuple(int(p) for p in talib.__ta_version__.split()[0].split(b'.'))
 @pytest.mark.skipif(_TA_VERSION < (0, 8, 2),
                     reason='these flags are newer than TA-Lib C 0.8.1')
 def test_flags_newer_than_0_8_1():
-    pattern = ['Line',
+    # From 0.8.4 a pattern output carries no display hint.
+    line = ['Line'] if _TA_VERSION < (0, 8, 4) else []
+    pattern = line + [
                'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
                'Output can be positive',
                'Output can be negative',
@@ -191,7 +193,7 @@ def test_flags_newer_than_0_8_1():
         ('integer', pattern + ['Weak Pattern (+/-80 = a weaker form of the pattern)']),
         ])
     assert abstract.Function('CDLHIKKAKE').output_flags == OrderedDict([
-        ('integer', ['Line',
+        ('integer', line + [
                      'Bull/Bear Pattern (Bearish < 0, Neutral = 0, Bullish > 0)',
                      'Confirmation Pattern (+/-200 = this bar confirms an earlier pattern)',
                      'Output can be positive',
@@ -205,6 +207,14 @@ def test_flags_newer_than_0_8_1():
         ('real', ['Line', 'Output can be positive', 'Output can be negative',
                   'Output can be zero', 'Output is display-shifted']),
         ])
+
+    if _TA_VERSION >= (0, 8, 4):
+        assert abstract.Function('CDLSPINNINGTOP').output_flags == OrderedDict([
+            ('integer', ['Output can be positive',
+                         'Output can be negative',
+                         'Output can be zero',
+                         'Color Pattern (Black candle < 0, None = 0, White candle > 0)']),
+            ])
 
     ln_flags = abstract.Function('LN').function_flags
     assert 'Uses a transcendental math function' in ln_flags
