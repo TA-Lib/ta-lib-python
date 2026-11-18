@@ -347,6 +347,12 @@ Checkout the sources and build them yourself:
 python -m pip install .
 ```
 
+Or build the PyPI source distribution instead of installing a wheel:
+
+```shell
+python -m pip install --no-binary=TA-Lib TA-Lib
+```
+
 Starting with version 0.8.3, source builds download the pinned TA-Lib C
 release, verify its checksum, and build and statically link it into the Python
 extension. This requires network access, a C compiler and CMake. On Windows,
@@ -378,19 +384,6 @@ export TA_LIBRARY_PATH="$(brew --prefix ta-lib)/lib"
 
 ## Troubleshooting 🛠️
 
-If you installed the underlying `TA-Lib` library with a custom prefix
-(e.g., with `./configure --prefix=$PREFIX`), then when you go to install
-this Python wrapper you can select that installation instead of the bundled
-build using the `TA_LIBRARY_PATH` and `TA_INCLUDE_PATH` environment variables:
-
-```shell
-export TA_LIBRARY_PATH=$PREFIX/lib
-export TA_INCLUDE_PATH=$PREFIX/include
-python -m pip install --no-binary=TA-Lib TA-Lib
-```
-
----
-
 Sometimes installation will produce build errors like this:
 
 ```shell
@@ -400,15 +393,7 @@ talib/_ta_lib.c:601:10: fatal error: ta-lib/ta_defs.h: No such file or directory
 compilation terminated.
 ```
 
-or:
-
-```shell
-common.obj : error LNK2001: unresolved external symbol TA_SetUnstablePeriod
-common.obj : error LNK2001: unresolved external symbol TA_Shutdown
-common.obj : error LNK2001: unresolved external symbol TA_Initialize
-common.obj : error LNK2001: unresolved external symbol TA_GetUnstablePeriod
-common.obj : error LNK2001: unresolved external symbol TA_GetVersionString
-```
+or, on Windows, `LNK2001: unresolved external symbol TA_...` link errors.
 
 When using ``TA_INCLUDE_PATH`` or ``TA_LIBRARY_PATH``, check that they point
 to the headers and libraries of a compatible TA-Lib C installation. On Windows,
@@ -436,67 +421,7 @@ sudo apt-get install python3-dev
 
 ---
 
-If you get an error on macOS like this:
-
-```shell
-code signature in <141BC883-189B-322C-AE90-CBF6B5206F67>
-'python3.9/site-packages/talib/_ta_lib.cpython-39-darwin.so' not valid for
-use in process: Trying to load an unsigned library)
-```
-
-You might look at [this question](https://stackoverflow.com/questions/69610572/how-can-i-solve-the-below-error-while-importing-nltk-package)
-and use ``xcrun codesign`` to fix it.
-
----
-
 If the build appears to hang, you might be running on a VM with not enough memory - try 1 GB or 2 GB.
-
-It has also been reported that using a swapfile could help, for example:
-
-```shell
-sudo fallocate -l 1G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-```
-
----
-
-If you get "permission denied" errors such as this, you might need to give
-your user access to the location where the underlying TA-Lib C library is
-installed -- or install it to a user-accessible location.
-
-```shell
-talib/_ta_lib.c:747:28: fatal error: /usr/include/ta-lib/ta_defs.h: Permission denied
- #include "ta-lib/ta-defs.h"
-                            ^
-compilation terminated
-error: command 'gcc' failed with exit status 1
-```
-
----
-
-If you're having trouble using [PyInstaller](https://pyinstaller.org) and
-get an error that looks like this:
-
-```shell
-...site-packages\PyInstaller\loader\pyimod03_importers.py", line 493, in exec_module
-    exec(bytecode, module.__dict__)
-  File "talib\__init__.py", line 72, in <module>
-ModuleNotFoundError: No module named 'talib.stream'
-```
-
-Then, perhaps you can use the `--hidden-import` argument to fix this:
-
-```shell
-pyinstaller --hidden-import talib.stream "replaceToYourFileName.py"
-```
-
----
-
-If you want to use `numpy<2`, then you should use `ta-lib<0.5`.
-
-If you want to use `numpy>=2`, then you should use `ta-lib>=0.5`.
 
 ## Supported Indicators and Functions 📋
 
