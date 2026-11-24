@@ -459,3 +459,12 @@ def test_run_with_dataframe(frame_type, empty):
     if frame_type == 'pandas':
         assert result.index.equals(frame.index)
     assert_array_equal(indicator.run().to_numpy(), result.to_numpy())
+
+
+def test_outputs_use_restored_parameters_after_temporary_call(ford_2012):
+    sma = abstract.Function('SMA', ford_2012, timeperiod=10)
+    expected = func.SMA(ford_2012['close'], 10)
+    temporary = sma(timeperiod=20, price='open')
+    assert_array_equal(temporary, func.SMA(ford_2012['open'], 20))
+    assert sma.parameters == {'timeperiod': 10}
+    assert_array_equal(sma.outputs, expected)

@@ -466,6 +466,7 @@ class Function(object):
         try:
             self.set_function_args(*args, **kwargs)
             self.__call_function()
+            result = self.outputs
         finally:
             # restore opt_input values to as they were before this call
             for param_name, value in opt_input_values:
@@ -477,7 +478,9 @@ class Function(object):
                 local.input_names[input_name]['price_series'] = value
                 local.info['input_names'][input_name] = value
 
-        return self.outputs
+            local.outputs_valid = False
+
+        return result
 
     # figure out which price series names we're using for inputs
     def __input_price_series_names(self):
