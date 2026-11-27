@@ -11,6 +11,9 @@ env:
   PIP_VERBOSE: 1
   CIBW_BEFORE_BUILD: pip install -U setuptools Cython wheel meson-python ninja && pip install -U numpy
   CIBW_SKIP: "pp* cp39-* cp313t*"
+  # No CFLAGS in a job's environment: setuptools would use it in place of Python's own compile
+  # flags, -O3 included. Those flags carry -g, which --strip removes from the Linux wheels.
+  CIBW_REPAIR_WHEEL_COMMAND_LINUX: "auditwheel repair --strip -w {dest_dir} {wheel}"
 
 jobs:
   build_linux_x86_64:
@@ -27,8 +30,6 @@ jobs:
         env:
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
-          CIBW_ENVIRONMENT_PASS_LINUX: CFLAGS
-          CFLAGS: -D_GNU_SOURCE
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
@@ -56,8 +57,6 @@ jobs:
         env:
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-          CIBW_ENVIRONMENT_PASS_LINUX: CFLAGS
-          CFLAGS: -D_GNU_SOURCE
           CIBW_TEST_SKIP: "cp*-musllinux*"
           CIBW_TEST_COMMAND: >
             cd .. &&
