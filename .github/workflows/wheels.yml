@@ -174,8 +174,9 @@ jobs:
             cd .. &&
             pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_MACOS: x86_64
+          # In CC, not CFLAGS: setuptools replaces Python's own compile flags with an environment CFLAGS.
           CIBW_ENVIRONMENT_MACOS : >
-            MACOSX_DEPLOYMENT_TARGET=13.7
+            CC="clang -Werror=unguarded-availability"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -199,8 +200,9 @@ jobs:
             python -c "import talib; assert talib._ta_lib._ta_get_runtime_info('vmath.transcendental') == 1, 'TA-Lib C is not using vForce'" &&
             pytest -k "not RSI and not threading" {project}/tests
           CIBW_ARCHS_MACOS: arm64
+          # In CC, not CFLAGS: setuptools replaces Python's own compile flags with an environment CFLAGS.
           CIBW_ENVIRONMENT_MACOS : >
-            MACOSX_DEPLOYMENT_TARGET=14.0
+            CC="clang -Werror=unguarded-availability"
             PIP_NO_BUILD_ISOLATION=false
       - name: Upload wheels
         uses: actions/upload-artifact@v7
