@@ -5,7 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "TA-Lib"
 version = "0.8.4"
-description = "Python wrapper for TA-Lib"
+description = "Python wrapper for TA-Lib, the technical analysis library"
+keywords = ["technical analysis", "technical indicators", "candlestick", "streaming", "trading", "finance", "numpy", "pandas", "polars", "talib"]
 readme = "README.md"
 license-files = ["LICENSE"]
 authors = [
